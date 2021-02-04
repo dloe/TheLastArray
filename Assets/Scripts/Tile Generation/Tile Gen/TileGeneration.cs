@@ -77,8 +77,8 @@ public class TileGeneration : MonoBehaviour
     //does not include the path
     //private int totalSingleTilesInLevel = 3;
 
-    public Tile _startTile;
-    public Tile _endTile;
+    Tile _startTile;
+    Tile _endTile;
     int _pathNumber = 0;
 
     public List<Tile> levelPath = new List<Tile>();
@@ -97,7 +97,7 @@ public class TileGeneration : MonoBehaviour
 
     bool startLine = false;
     
-    //[HideInInspector]
+    [HideInInspector]
     public bool debugPathOn = false;
     LineRenderer _lr;
 
@@ -399,7 +399,7 @@ public class TileGeneration : MonoBehaviour
         //chooses random tile, then sees if we can add a room to it
         //if we can we add room otherwise we check again
         //cant add rooms to boss room
-        Debug.Log("Adding Random Rooms");
+       // Debug.Log("Adding Random Rooms");
 
         //copy level tiles to all active tiles
         _allActiveTiles = new List<Tile>(levelPath);
@@ -436,7 +436,7 @@ public class TileGeneration : MonoBehaviour
         //default to rooms left over/row count
         branchCount = Random.Range(1, ((grid2DArray.Length - levelPath.Count) / _levelWidth) + 1);
 
-        Debug.Log("Adding branches...");
+       // Debug.Log("Adding branches...");
         //start with making branches
         //change 1 to branchCount after im done debugging
         for(int branch = 0; branch < branchCount; branch++)
@@ -448,7 +448,7 @@ public class TileGeneration : MonoBehaviour
             //for now imma use the length or level
             //if at any point the path has no where to go, we move on to next branch or exit completely
             int branchlength = Random.Range(1, _levelWidth + 1);
-            Debug.Log("This branch will be " + branchlength + " Length");
+           // Debug.Log("This branch will be " + branchlength + " Length");
             //not sure we want to back track for branches, just end it when the reach a dead end
             
             Tile startingTile = _avalibleTileSpots[Random.Range(0, _avalibleTileSpots.Count)];
@@ -514,7 +514,7 @@ public class TileGeneration : MonoBehaviour
 
     void AddSingleRooms()
     {
-        Debug.Log("Adding Single Rooms");
+       // Debug.Log("Adding Single Rooms");
 
         //Debug.Log(_avalibleTileSpots.Count);
         //Debug.Log(grid2DArray.Length / (_levelWidth * 2));

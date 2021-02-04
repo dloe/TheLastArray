@@ -164,6 +164,7 @@ MonoBehaviour:
   debugPathOn: 0
   myLevelAssetSpawn: {fileID: 76700767}
   myLevelAssetsData: {fileID: 11400000, guid: 92ab8452f29185041b2d0ac31e64e594, type: 2}
+  hasDoors: 0
 --- !u!4 &76700766
 Transform:
   m_ObjectHideFlags: 0
@@ -450,6 +451,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 7905213247294608223, guid: 8461dab126d97b943947e0d29a957261,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7905213248872402604, guid: 8461dab126d97b943947e0d29a957261,
         type: 3}
       propertyPath: m_RootOrder
@@ -513,7 +519,7 @@ PrefabInstance:
     - target: {fileID: 7905213248872402610, guid: 8461dab126d97b943947e0d29a957261,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8461dab126d97b943947e0d29a957261, type: 3}
