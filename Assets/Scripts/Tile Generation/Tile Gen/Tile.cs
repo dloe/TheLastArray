@@ -65,10 +65,13 @@ public class Tile : MonoBehaviour
     public LevelAssetsData myLevelAssetData;
     public bool levelAssetPlaced = false;
 
+    private TileGeneration myTileGen;
+
     public string description = "";
 
     private void Start()
     {
+        myTileGen = GameObject.Find("TileGen").GetComponent<TileGeneration>();
         if(!hasDoors)
         {
             foreach (GameObject door in doors)
@@ -708,7 +711,8 @@ public class Tile : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = _nodeColor;
-        Gizmos.DrawSphere(transform.position, 5);
+        if(myTileGen == null || myTileGen.debugPathOn)
+            Gizmos.DrawSphere(transform.position, 5);
     }
 
     int[] reshuffle(int[] ar)

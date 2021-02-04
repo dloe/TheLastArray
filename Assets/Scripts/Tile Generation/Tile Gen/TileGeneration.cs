@@ -137,8 +137,10 @@ public class TileGeneration : MonoBehaviour
             //Debug.Log(t);
             _lr.SetPosition(t, levelPath[t].transform.position);
         }
-        //lr.SetPosition(levelPath.Count - 1, _endTile.transform.position);
-        Debug.Log("running");
+
+        //turn on colored spheres on each tile
+
+        //Debug.Log("running");
     }
 
     void DeactivateInActiveRooms()
