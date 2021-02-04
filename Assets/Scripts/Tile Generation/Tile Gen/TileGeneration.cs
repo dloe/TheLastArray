@@ -62,8 +62,8 @@ public class TileGeneration : MonoBehaviour
 
     //gets these values from somewhere
     //so far ive only test with width and height being the same number, same number recommended (might need to make slight adjustments to one line to test both being different)
-    private int _levelWidth = 4;
-    private int _levelHeight = 4;
+    public int _levelWidth = 4;
+    public int _levelHeight = 4;
 
     //tile prefab
     public GameObject tilePlaceholder;
@@ -77,8 +77,8 @@ public class TileGeneration : MonoBehaviour
     //does not include the path
     //private int totalSingleTilesInLevel = 3;
 
-    Tile _startTile;
-    Tile _endTile;
+    public Tile _startTile;
+    public Tile _endTile;
     int _pathNumber = 0;
 
     public List<Tile> levelPath = new List<Tile>();
@@ -356,8 +356,15 @@ public class TileGeneration : MonoBehaviour
         Debug.Log("Added Random Rooms");
 
         
+        //this will be removed eventaully
         ActivateAllDoors();
+
+
+        FinalTileSetup();
+
+
         
+
         startLine = true;
 
 
@@ -677,7 +684,7 @@ public class TileGeneration : MonoBehaviour
         }
         Debug.Log("Synced doors");
 
-        FinalTileSetup();
+        
     }
 
     /// <summary>
@@ -691,6 +698,9 @@ public class TileGeneration : MonoBehaviour
         foreach (Tile t in _allActiveTiles)
         {
             t.ChooseTileMap();
+
+            //turn on walls at borders of path
+
         }
     }
 

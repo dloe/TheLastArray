@@ -150,11 +150,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 426f1c04d2bb9ae44b54ebe4c043c6e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _levelWidth: 4
+  _levelHeight: 4
   tilePlaceholder: {fileID: 7905213248872402610, guid: 8461dab126d97b943947e0d29a957261,
     type: 3}
   _startTile: {fileID: 0}
   _endTile: {fileID: 0}
   levelPath: []
+  _allActiveTiles: []
+  branchCount: 0
+  fillerRooms: 0
+  debugPathOn: 0
 --- !u!4 &76700766
 Transform:
   m_ObjectHideFlags: 0
@@ -353,6 +359,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 7905213248872402604, guid: 8461dab126d97b943947e0d29a957261,
         type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7905213248872402604, guid: 8461dab126d97b943947e0d29a957261,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -368,6 +379,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7905213248872402604, guid: 8461dab126d97b943947e0d29a957261,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7905213248872402604, guid: 8461dab126d97b943947e0d29a957261,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
@@ -380,16 +396,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7905213248872402604, guid: 8461dab126d97b943947e0d29a957261,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7905213248872402604, guid: 8461dab126d97b943947e0d29a957261,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7905213248872402604, guid: 8461dab126d97b943947e0d29a957261,
         type: 3}

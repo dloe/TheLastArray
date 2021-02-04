@@ -99,6 +99,15 @@ public class Tile : MonoBehaviour
         
     }
 
+    //if a neighbor is null, add a wall
+    public void ActivateWalls()
+    {
+        if(upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom)
+        {
+            
+        }
+    }
+
     public void ActivateDoorsBranch()
     {
         bool firstBranchDoor = false;
