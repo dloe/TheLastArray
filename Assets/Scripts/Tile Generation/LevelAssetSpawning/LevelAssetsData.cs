@@ -12,5 +12,7 @@ public class LevelAssetsData : ScriptableObject
 
     public GameObject[] EnterenceRooms;
 
+    public GameObject levelWall;
 
+    public float tileSize = 100;
 }

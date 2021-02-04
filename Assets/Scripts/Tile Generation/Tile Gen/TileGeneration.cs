@@ -83,7 +83,7 @@ public class TileGeneration : MonoBehaviour
 
     public List<Tile> levelPath = new List<Tile>();
     //public List<Tile> inactiveRooms = new List<Tile>();
-
+    [HideInInspector]
     public List<Tile> _allActiveTiles = new List<Tile>();
 
     List<Tile> backtrackTempHistory = new List<Tile>();
@@ -91,6 +91,7 @@ public class TileGeneration : MonoBehaviour
     //adding random rooms
     public int branchCount;
     public int fillerRooms;
+    
     List<Tile> _avalibleTileSpots = new List<Tile>();
     List<Tile> _branch = new List<Tile>();
 
@@ -100,9 +101,16 @@ public class TileGeneration : MonoBehaviour
     public bool debugPathOn = false;
     LineRenderer _lr;
 
+    public LevelAssetSpawn myLevelAssetSpawn;
+    public LevelAssetsData myLevelAssetsData;
+
+    public bool hasDoors = false;
+
 // Start is called before the first frame update
     void Start()
     {
+        distanceBetweenNodes = myLevelAssetsData.tileSize/2;
+
         //test = reshuffle(test);
         CreateGrid();
 
@@ -164,7 +172,13 @@ public class TileGeneration : MonoBehaviour
                 tilePlaceholderRef.name = "Tile_" + rows.ToString() + ":" + col.ToString();
                 tilePlaceholderRef.transform.parent = nodeTile.transform;
                 tilePlaceholderRef.GetComponent<Tile>().posOnGrid = new Vector2(rows, col);
-                tilePlaceholderRef.GetComponent<Tile>().LabelDoors();
+                tilePlaceholderRef.GetComponent<Tile>().hasDoors = hasDoors;
+
+                //DOORS
+                if (hasDoors)
+                {
+                    tilePlaceholderRef.GetComponent<Tile>().LabelDoors();
+                }
                 
                 nodeTile.transform.parent = this.gameObject.transform;
 
@@ -355,19 +369,24 @@ public class TileGeneration : MonoBehaviour
         AddRandomRooms();
         Debug.Log("Added Random Rooms");
 
-        
+
         //this will be removed eventaully
-        ActivateAllDoors();
+        if (hasDoors)
+        {
+            ActivateAllDoors();
+        }
+ 
 
 
-        FinalTileSetup();
+       // FinalTileSetup();
 
 
         
 
         startLine = true;
 
-
+        //start asset spawning 
+        myLevelAssetSpawn.PopulateGrid();
         
         
     }
@@ -437,7 +456,12 @@ public class TileGeneration : MonoBehaviour
 
             CheckTileBranch(startingTile, _branch, branchlength);
             //Debug.Log("ended branch");
-            _branch[0].ActivateDoorToPath();
+
+            //DOORS
+            if (hasDoors)
+            {
+                _branch[0].ActivateDoorToPath();
+            }
             //activate these rooms
             //Debug.Log(_branch.Count);
             for ( int t = 0; t < _branch.Count; t++)
@@ -458,12 +482,18 @@ public class TileGeneration : MonoBehaviour
 
                 }
             }
-            
-            for (int t = 1; t < _branch.Count; t++)
+
+            //---------------------
+            //DOORS
+            //---------------------
+            if (hasDoors)
             {
-                if (_branch[t].tileStatus == Tile.TileStatus.room)
+                for (int t = 1; t < _branch.Count; t++)
                 {
-                    _branch[t].ActivateDoorsBranch();
+                    if (_branch[t].tileStatus == Tile.TileStatus.room)
+                    {
+                        _branch[t].ActivateDoorsBranch();
+                    }
                 }
             }
 
@@ -510,7 +540,12 @@ public class TileGeneration : MonoBehaviour
                     current.description = "random room";
                     //activate doors
                     //remake avaliblespots
-                    current.ActivateDoorsRandom();
+
+                    //DOORS
+                    if (hasDoors)
+                    {
+                        current.ActivateDoorsRandom();
+                    }
                     RemakeAvalibleSpots();
                 }
             }
@@ -675,34 +710,19 @@ public class TileGeneration : MonoBehaviour
             t.ActivateDoors();
         }
         DeactivateInActiveRooms();
-        Debug.Log("Activated doors");
+        //Debug.Log("Activated doors");
 
         //sync doors to have doors actually connect between tiles
         foreach (Tile t in _allActiveTiles)
         {
             t.SyncDoors();
         }
-        Debug.Log("Synced doors");
+        //Debug.Log("Synced doors");
 
         
     }
 
-    /// <summary>
-    /// - final setup for tiles
-    ///     - tile maps finialized
-    ///     - other setup
-    /// </summary>
-    void FinalTileSetup()
-    {
-        //must go though all active tiles 
-        foreach (Tile t in _allActiveTiles)
-        {
-            t.ChooseTileMap();
-
-            //turn on walls at borders of path
-
-        }
-    }
+    
 
 
     int failsafeCount = 0;
@@ -1019,6 +1039,27 @@ public class TileGeneration : MonoBehaviour
 
         //Debug.Log("Generating Main Path...");
         GeneratePath();
+    }
+
+
+    /// <summary>
+    /// --------------------------------------------------
+    /// NOT IN USE
+    /// --------------------------------------------------
+    /// - final setup for tiles
+    ///     - tile maps finialized
+    ///     - other setup
+    /// </summary>
+    void FinalTileSetup()
+    {
+        //must go though all active tiles 
+        foreach (Tile t in _allActiveTiles)
+        {
+            t.ChooseTileMap();
+
+            //turn on walls at borders of path handled in levelassetspawn
+
+        }
     }
 }
 

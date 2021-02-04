@@ -53,6 +53,8 @@ public class Tile : MonoBehaviour
 
     public int doorsActivated = 0;
 
+    public bool hasDoors = false;
+
     //when door is activated, it will not spawn any blockage or enviornment where the door is located, otherwise that direction/doorway will be blocked for the player
     public GameObject[] doors;
 
@@ -60,7 +62,21 @@ public class Tile : MonoBehaviour
 
     private Color _nodeColor = Color.red;
 
+    public LevelAssetsData myLevelAssetData;
+    public bool levelAssetPlaced = false;
+
     public string description = "";
+
+    private void Start()
+    {
+        if(!hasDoors)
+        {
+            foreach (GameObject door in doors)
+            {
+                Destroy(door);
+            }
+        }
+    }
 
     public void ShadeNull()
     {
@@ -102,8 +118,46 @@ public class Tile : MonoBehaviour
     //if a neighbor is null, add a wall
     public void ActivateWalls()
     {
+        //Debug.Log(posOnGrid.x + " " + posOnGrid.y);
         if(upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom)
         {
+            //Debug.Log("up");
+            //tile length / 2 
+            //spawn at local pos -25, 10, 0 with rotation of -90, 0, -90
+            GameObject wall = Instantiate(myLevelAssetData.levelWall, transform.position, transform.rotation);
+            wall.transform.parent = this.transform;
+            wall.transform.localPosition = new Vector3(-25, 10, 0);
+            wall.transform.eulerAngles = new Vector3(-90, 0, -90);
+            
+        }
+        if(downNeighbor == null || downNeighbor.tileStatus == TileStatus.nullRoom)
+        {
+           // Debug.Log("down");
+            //spawn at local pos 25, 10, 0 with rotation of -90, 0, 90
+            GameObject wall = Instantiate(myLevelAssetData.levelWall, transform.position, transform.rotation);
+            wall.transform.parent = this.transform;
+            wall.transform.localPosition = new Vector3(25, 10, 0);
+            wall.transform.eulerAngles = new Vector3(-90, 0, 90);
+            
+        }
+        if(leftNeighbor == null || leftNeighbor.tileStatus == TileStatus.nullRoom)
+        {
+           // Debug.Log("left");
+            //spawn at local pos 0, 10, 25 with rotation of -90, 0, -180
+            GameObject wall = Instantiate(myLevelAssetData.levelWall, transform.position, transform.rotation);
+            wall.transform.parent = this.transform;
+            wall.transform.localPosition = new Vector3(0, 10, -25);
+            wall.transform.eulerAngles = new Vector3(-90, 0, -180);
+            
+        }
+        if(rightNeighbor == null || rightNeighbor.tileStatus == TileStatus.nullRoom)
+        {
+            //Debug.Log("right");
+            //spawn at local pos 0, 10, -25 with rotation of -90, 0, 0
+            GameObject wall = Instantiate(myLevelAssetData.levelWall, transform.position, transform.rotation);
+            wall.transform.parent = this.transform;
+            wall.transform.localPosition = new Vector3(0, 10, 25);
+            wall.transform.eulerAngles = new Vector3(-90, 0, 0);
             
         }
     }
@@ -670,7 +724,25 @@ public class Tile : MonoBehaviour
         return ar;
     }
 
+
+
+
+
+
+    /*-------------------------------------------------------------------------------------
+     *                      DOOR SYSTEM - NOT IN USE CURRENTLY
+     *-------------------------------------------------------------------------------------
+     * 
+     * - Planed to be used in last level
+     * 
+     * 
+     * 
+     */
+
     /// <summary>
+    /// ---------------------------------------------------------------------------------
+    /// NOT IN USE
+    /// --------------------------------------------------------------------------------
     /// - When the doors are set, there are certain patterns that the tile can choose from
     /// - Door setups can have multiple shapes
     ///     - T shape (t shape if there are 3 total doors on - doesnt matter where)
