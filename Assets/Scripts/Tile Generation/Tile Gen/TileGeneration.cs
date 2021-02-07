@@ -386,7 +386,7 @@ public class TileGeneration : MonoBehaviour
  
 
 
-       // FinalTileSetup();
+        FinalTileSetup();
 
 
         
@@ -995,8 +995,27 @@ public class TileGeneration : MonoBehaviour
     }
 
     /// <summary>
+    /// - final setup for tiles
+    ///     - remove null rooms
+    /// </summary>
+    void FinalTileSetup()
+    {
+        //must go though all active tiles 
+        foreach (GameObject tile in grid2DArray)
+        {
+            if (tile.transform.GetChild(0).GetComponent<Tile>().tileStatus == Tile.TileStatus.nullRoom)
+            {
+               // Debug.Log(tile.name);
+                Destroy(tile);
+            }
+            //turn on walls at borders of path handled in levelassetspawn
+
+        }
+    }
+
+    /// <summary>
     /// ---------------------------------------------
-    /// UNUSED - jk this works better than og because the waiting makes unity not crash
+    /// NOT IN USE
     /// ---------------------------------------------
     /// </summary>
     IEnumerator Delay()
@@ -1041,17 +1060,17 @@ public class TileGeneration : MonoBehaviour
         endX = _levelWidth - startX - 1;
         endY = _levelHeight - startY - 1;
         //Debug.Log("Potential end: " + endX + " " +endY);
-        
+
         //add a little variation so boss room can anywhere in that quarter
         int xBuffer = _levelWidth / 2;
         endXF = endX + Random.Range(-xBuffer + 1, xBuffer - 1);
         //Debug.Log(endXF);
         int yBuffer = _levelHeight / 2;
         endYF = endY + Random.Range(-yBuffer + 1, yBuffer - 1);
-       // Debug.Log(endYF);
+        // Debug.Log(endYF);
 
         //should always try to keep a minimum distance from start (the xBuffer), cant be on same x as buffer
-        
+
         while (endXF > _levelWidth - 1 || endXF == startX || endXF < 0)
         {
             endXF = endX + Random.Range(-xBuffer + 1, xBuffer);
@@ -1078,14 +1097,14 @@ public class TileGeneration : MonoBehaviour
             if (Random.value < 0.5f)
             {
                 endXF = endX + Random.Range(-xBuffer + 1, xBuffer);
-               // for (int x = 0; x < 4; x++)
-               // {
-                    while (endXF > _levelWidth - 1 || endXF == startX || endXF < 0 || endXF == oldX)
-                    {
-                        oldX = endXF;
-                        endXF = endX + Random.Range(-xBuffer + 1, xBuffer);
-                       // break;
-                    }
+                // for (int x = 0; x < 4; x++)
+                // {
+                while (endXF > _levelWidth - 1 || endXF == startX || endXF < 0 || endXF == oldX)
+                {
+                    oldX = endXF;
+                    endXF = endX + Random.Range(-xBuffer + 1, xBuffer);
+                    // break;
+                }
                 //}
             }
             else
@@ -1093,43 +1112,22 @@ public class TileGeneration : MonoBehaviour
                 endYF = endY + Random.Range(-yBuffer + 1, yBuffer);
                 //for (int x = 0; x < 4; x++)
                 //{
-                    while (endYF > _levelHeight - 1 || endYF == startY || endYF < 0 || endYF == oldY)
-                    {
-                        oldY = endYF;
-                        endYF = endY + Random.Range(-yBuffer + 1, yBuffer);
-                       // break;
-                    }
+                while (endYF > _levelHeight - 1 || endYF == startY || endYF < 0 || endYF == oldY)
+                {
+                    oldY = endYF;
+                    endYF = endY + Random.Range(-yBuffer + 1, yBuffer);
+                    // break;
+                }
                 //}
             }
         }
-       // Debug.Log("End Point: " + endXF + " " + endYF);
+        // Debug.Log("End Point: " + endXF + " " + endYF);
         _endTile = grid2DArray[endXF, endYF].transform.GetChild(0).GetComponent<Tile>();
         _endTile.tileStatus = Tile.TileStatus.boss;
         _endTile.ShadeBoosRoom();
 
         //Debug.Log("Generating Main Path...");
         GeneratePath();
-    }
-
-
-    /// <summary>
-    /// --------------------------------------------------
-    /// NOT IN USE
-    /// --------------------------------------------------
-    /// - final setup for tiles
-    ///     - tile maps finialized
-    ///     - other setup
-    /// </summary>
-    void FinalTileSetup()
-    {
-        //must go though all active tiles 
-        foreach (Tile t in _allActiveTiles)
-        {
-            t.ChooseTileMap();
-
-            //turn on walls at borders of path handled in levelassetspawn
-
-        }
     }
 }
 

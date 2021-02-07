@@ -103,7 +103,7 @@ public class Tile : MonoBehaviour
     }
     public void ShadeStarting()
     {
-        Debug.Log(posOnGrid.x + " " + posOnGrid.y);
+        //Debug.Log(posOnGrid.x + " " + posOnGrid.y);
         _nodeColor = Color.blue;
         tileStatus = Tile.TileStatus.startingRoom;
     }
