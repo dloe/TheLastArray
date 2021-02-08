@@ -29,7 +29,7 @@ public class BaseEnemy : MonoBehaviour
     int _tickRate;
 
     // what is the enemy targting
-    GameObject _target;
+    public GameObject _target;
 
     // is the enemy agro
     public bool agro;
@@ -43,25 +43,37 @@ public class BaseEnemy : MonoBehaviour
     //This is the distance around its spawn the enemy will explore
     public float wonderRadius;
 
+    //objects that are being avoided 
+    public List<GameObject> surrounding = new List<GameObject>();
 
+    //this is the layer that the enemy will avoide 
+    LayerMask _mask;
+    LayerMask _playerMask;
 
     private void Start()
     {
+        _tickRate = 5;
         _spawnPoint = transform.position;
+        _mask = LayerMask.GetMask("Enviroment");
+        _playerMask = LayerMask.GetMask("Player");
+        StartCoroutine(Tick());
 
     }
 
     private void Update()
     {
-        
+        Move();
     }
 
     /// <summary>
     /// this will handles functions that do not need to be run in update 
     /// </summary>
-    private void Tick()
+    IEnumerator Tick()
     {
-
+        CheckSurondings();
+        SetTarget();
+        yield return new WaitForSeconds(_tickRate);
+        StartCoroutine(Tick());
     }
 
     /// <summary>
@@ -69,7 +81,15 @@ public class BaseEnemy : MonoBehaviour
     /// </summary>
     private void Move()
     {
-        
+        if(_target != null)
+        {
+            float mag = Vector3.Distance(transform.position, _target.gameObject.transform.position);
+            print(mag);
+            if(mag >= agroLoseDis)
+            {
+                _target = null;
+            }
+        }
     }
 
     /// <summary>
@@ -85,6 +105,13 @@ public class BaseEnemy : MonoBehaviour
     /// </summary>
     void SetTarget()
     {
+        Collider[] targets = Physics.OverlapSphere(transform.position, detectionRadius, _playerMask);
+        if(targets.Length > 0)
+        {
+            _target = targets[0].gameObject;
+        }
+
+
 
     }
 
@@ -96,14 +123,27 @@ public class BaseEnemy : MonoBehaviour
 
     }
 
+    void MakePath()
+    {
+
+    }
+
     /// <summary>
     /// Using rays from the enemy this will make sure it is not runing into anything
     /// </summary>
     void CheckSurondings()
     {
-        RaycastHit ray;
 
-        
+        float radi = 2f;
+        Collider[] hit = Physics.OverlapSphere(transform.position, radi, _mask);
+
+        foreach (Collider thing in hit)
+        {
+            if (!surrounding.Contains(thing.gameObject))
+                surrounding.Add(thing.gameObject);
+        }
+
+
 
     }
 
@@ -112,18 +152,18 @@ public class BaseEnemy : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.blue;
+        Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
-
+        
         Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, 2f);
+
+        Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(_spawnPoint, wonderRadius);
 
-        RaycastHit ray;
-        float surrounding = 2f;
-
-        bool isHit = Physics.SphereCast(transform.position,)
 
 
-        
+
+
     }
 }
