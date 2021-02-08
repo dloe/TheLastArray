@@ -69,7 +69,7 @@ public class BaseEnemy : MonoBehaviour
     /// </summary>
     private void Move()
     {
-
+        
     }
 
     /// <summary>
@@ -101,6 +101,9 @@ public class BaseEnemy : MonoBehaviour
     /// </summary>
     void CheckSurondings()
     {
+        RaycastHit ray;
+
+        
 
     }
 
@@ -115,7 +118,12 @@ public class BaseEnemy : MonoBehaviour
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(_spawnPoint, wonderRadius);
 
-        //Gizmos.color = Color.red;
+        RaycastHit ray;
+        float surrounding = 2f;
+
+        bool isHit = Physics.SphereCast(transform.position,)
+
+
         
     }
 }
