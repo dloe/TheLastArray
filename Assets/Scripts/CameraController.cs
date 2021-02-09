@@ -8,67 +8,73 @@ public class CameraController : MonoBehaviour
     public Vector3 offset;
     public float offsetLimitX = 1f;
     public float offsetLimitZ = 1f;
+    public float horizontalNeutralZone = 6f;
+    public float verticalNeutralZone = 4f;
     public float panSpeed = 5f;
     private Vector3 baseOffset;
+
+    
 
     // Start is called before the first frame update
     void Start()
     {
-        if(player == null)
+        if (player == null)
         {
             player = GameObject.FindGameObjectWithTag("Player");
         }
 
         offset = transform.position - player.transform.position;
         baseOffset = offset;
-       
 
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
         transform.position = player.transform.position + offset;
         panCamera();
         clampOffset();
-        
+
     }
 
     private void panCamera()
     {
-        
 
-        float xModifier = Mathf.Abs(Input.mousePosition.x - Screen.currentResolution.width / 2) / (Screen.currentResolution.width /2);
-        float zModifier = Mathf.Abs(Input.mousePosition.y - Screen.currentResolution.height / 2 ) / (Screen.currentResolution.height / 2);
-        
 
-        if (Input.mousePosition.x < (Screen.currentResolution.width / 2f) - (Screen.currentResolution.width / 6f))
+        float xModifier = Mathf.Abs(Input.mousePosition.x - getScrnFrac(true, 2f)) / getScrnFrac(true, 2f);
+        float zModifier = Mathf.Abs(Input.mousePosition.y - getScrnFrac(false, 2f)) / getScrnFrac(false, 2f);
+
+
+        if (Input.mousePosition.x < getScrnFrac(true, 2f) - getScrnFrac(true, horizontalNeutralZone))
         {
             offset.x -= xModifier * panSpeed * Time.deltaTime;
-            
+
         }
-        else if (Input.mousePosition.x > (Screen.currentResolution.width / 2f) + (Screen.currentResolution.width / 6f))
+        else if (Input.mousePosition.x > getScrnFrac(true, 2f) + getScrnFrac(true, horizontalNeutralZone))
         {
             offset.x += xModifier * panSpeed * Time.deltaTime;
-            
+
         }
         else
         {
-            offset.x = Mathf.SmoothStep(offset.x, baseOffset.x, 8f * Time.deltaTime);
+            //offset.x = Mathf.SmoothStep(offset.x, baseOffset.x, panSpeed * 3f * Time.deltaTime);
+            offset.x = Mathf.Lerp(offset.x, baseOffset.x, panSpeed * 0.5f * Time.deltaTime);
         }
 
-        if (Input.mousePosition.y < Screen.currentResolution.height / 2f - Screen.currentResolution.height / 4f)
+        if (Input.mousePosition.y < getScrnFrac(false, 2f) - getScrnFrac(false, verticalNeutralZone))
         {
             offset.z -= zModifier * panSpeed * Time.deltaTime;
         }
-        else if (Input.mousePosition.y > Screen.currentResolution.height / 2f + Screen.currentResolution.height / 4f)
+        else if (Input.mousePosition.y > getScrnFrac(false, 2f) + getScrnFrac(false, verticalNeutralZone))
         {
             offset.z += zModifier * panSpeed * Time.deltaTime;
         }
         else
         {
-            offset.z = Mathf.SmoothStep(offset.z, baseOffset.z, panSpeed * 1.2f * Time.deltaTime);
+            //offset.z = Mathf.SmoothStep(offset.z, baseOffset.z, panSpeed * 3f * Time.deltaTime);
+            offset.z = Mathf.Lerp(offset.z, baseOffset.z, panSpeed * 0.4f * Time.deltaTime);
         }
     }
 
@@ -78,9 +84,32 @@ public class CameraController : MonoBehaviour
         offset.z = Mathf.Clamp(offset.z, baseOffset.z - offsetLimitZ, baseOffset.z + offsetLimitZ);
     }
 
+    /// <summary>
+    /// Returns either width or height divided by amountToDivide
+    /// </summary>
+    /// <param name="widthOrHeight">True to get width, false to get height</param>
+    /// <param name="amountToDivide">Number to divide the width or height by</param>
+    /// <returns></returns>
+    private float getScrnFrac(bool widthOrHeight, float amountToDivide)
+    {
+        float result;
+        if(widthOrHeight)
+        {
+            result = Screen.currentResolution.width / amountToDivide;
+        }
+        else
+        {
+            result = Screen.currentResolution.height / amountToDivide;
+        }
+
+        return result;
+    }
+
     private void OnDrawGizmos()
     {
-        Rect rect = new Rect((Screen.currentResolution.width / 2f - Screen.currentResolution.width / 6f), Screen.currentResolution.height / 2f - Screen.currentResolution.height / 4f, (Screen.currentResolution.width / 2f + Screen.currentResolution.width / 6f) - (Screen.currentResolution.width / 2f - Screen.currentResolution.width / 6f), (Screen.currentResolution.height / 2f + Screen.currentResolution.height / 4f) - (Screen.currentResolution.height / 2f - Screen.currentResolution.height / 4f));
+        Rect rect = new Rect(getScrnFrac(true, 2f) - getScrnFrac(true,horizontalNeutralZone), getScrnFrac(false,2f) - getScrnFrac(false, verticalNeutralZone), 
+            (getScrnFrac(true, 2f) + getScrnFrac(true, horizontalNeutralZone)) - (getScrnFrac(true, 2f) - getScrnFrac(true, horizontalNeutralZone)), 
+            (getScrnFrac(false, 2f) + getScrnFrac(false, verticalNeutralZone)) - (getScrnFrac(false, 2f) - getScrnFrac(false, verticalNeutralZone)));
         UnityEditor.Handles.BeginGUI();
         UnityEditor.Handles.DrawSolidRectangleWithOutline(rect, Color.clear, Color.red);
         UnityEditor.Handles.EndGUI();

@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     Vector3 lookDir;
     Plane rayPlane = new Plane(Vector3.up, 0);
 
+    public List<GameObject> inventory;
 
     public float moveSpeed = 5f;
     public float xLookOffset = 3f;
