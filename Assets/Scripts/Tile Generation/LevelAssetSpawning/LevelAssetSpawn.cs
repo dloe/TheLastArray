@@ -55,6 +55,7 @@ public class LevelAssetSpawn : MonoBehaviour
         int index = Random.Range(0, myLevelAsset.presetTileAssets.Count);
         Debug.Log(index);
         GameObject preset = Instantiate(myLevelAsset.presetTileAssets[index], tile.transform.position, tile.transform.rotation);
+        preset.transform.parent = tile.transform.parent;
 
         assetCountArray[index] += 1;
 
