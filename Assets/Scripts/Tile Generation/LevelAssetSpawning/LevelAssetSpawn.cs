@@ -81,14 +81,23 @@ public class LevelAssetSpawn : MonoBehaviour
                                 fourSomeTile.transform.parent = this.transform;
                                 foreach (Tile tile2 in tArray)
                                 {
-                                    Debug.Log("ap");
                                     av += tile2.transform.position;
+                                }
+                                av = av / 4;
+                                Debug.Log(av);
+                                fourSomeTile.transform.position = av;
+                                foreach (Tile tile2 in tArray)
+                                {
+                                    //Debug.Log("ap");
                                     tile2.checkFor4Some = true;
                                     tile2.transform.parent = fourSomeTile.transform;
                                 }
-                                av = av / 4;
-                                fourSomeTile.transform.position = av;
+                                
+
+
                                 SpawnLevelBigAsset(fourSomeTile);
+                                
+                                return;
                             }
                             else
                                 Debug.Log("jebait");
