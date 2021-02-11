@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    public GameObject player;
+    private GameObject playerObject;
     public Vector3 offset;
     public float offsetLimitX = 1f;
     public float offsetLimitZ = 1f;
@@ -18,12 +18,12 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (player == null)
+        if (playerObject == null)
         {
-            player = GameObject.FindGameObjectWithTag("Player");
+            playerObject = Player.Instance.gameObject;
         }
 
-        offset = transform.position - player.transform.position;
+        offset = transform.position - playerObject.transform.position;
         baseOffset = offset;
 
         
@@ -33,7 +33,7 @@ public class CameraController : MonoBehaviour
     void Update()
     {
 
-        transform.position = player.transform.position + offset;
+        transform.position = playerObject.transform.position + offset;
         panCamera();
         clampOffset();
 

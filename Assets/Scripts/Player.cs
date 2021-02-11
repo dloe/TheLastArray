@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance;
     //transform of the player
     Transform _mainTransform;
 
@@ -18,7 +19,14 @@ public class Player : MonoBehaviour
     public float zLookOffset = 3f;
 
 
-    
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(Instance.gameObject);
+        }
+        Instance = this;
+    }
 
     // Start is called before the first frame update
     void Start()
