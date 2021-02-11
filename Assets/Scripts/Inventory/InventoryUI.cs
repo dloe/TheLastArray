@@ -7,7 +7,7 @@ public class InventoryUI : MonoBehaviour
 {
     public static InventoryUI Instance;
     public Transform slotParent;
-    public Transform selector;
+    //public Transform selector;
     private Player player;
     public Inventory inventory;
     public int selectedItemIndex = 0;
@@ -42,11 +42,11 @@ public class InventoryUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetAxis(_zoomAxis) > 0)
+        if(Input.GetAxis(_zoomAxis) < 0)
         {
             SetIndex(selectedItemIndex + 1);
         }
-        else if(Input.GetAxis(_zoomAxis) < 0)
+        else if(Input.GetAxis(_zoomAxis) > 0)
         {
             SetIndex(selectedItemIndex - 1);
         }
