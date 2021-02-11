@@ -14,6 +14,13 @@ public class LevelAssetSpawn : MonoBehaviour
     //to prevent to many of one asset spawning
     public int[] assetCountArray;
 
+    private void Awake()
+    {
+       // Debug.Log("y");
+        assetCountArray = new int[myLevelAsset.presetTileAssets.Count];
+        Debug.Log("n");
+    }
+
     //populate grid with assets, called from TileGeneration once it is done setting up
     public void PopulateGrid()
     {
@@ -43,6 +50,15 @@ public class LevelAssetSpawn : MonoBehaviour
     /// </summary>
     void SpawnLevelAsset(Tile tile)
     {
+        Debug.Log("PRE");
+        //will pick the least used preset but for now it will be random
+        int index = Random.Range(0, myLevelAsset.presetTileAssets.Count);
+        Debug.Log(index);
+        GameObject preset = Instantiate(myLevelAsset.presetTileAssets[index], tile.transform.position, tile.transform.rotation);
+        preset.transform.parent = tile.transform.parent;
+
+        assetCountArray[index] += 1;
+
         tile.levelAssetPlaced = true;
     }
 }
