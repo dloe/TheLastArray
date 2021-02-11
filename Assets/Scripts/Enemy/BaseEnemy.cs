@@ -97,9 +97,14 @@ public class BaseEnemy : MonoBehaviour
         {
             Move(_target.transform.position, disToTarget, combatRadi, combatSpeed, angleToTarget, _timer);
             transform.LookAt(_target.transform);
+
         }
         else if (!agro)
+        {
+            timerAgro = 0;
+            phase = false;
             Move(_spawnPoint, disToSpawn, wonderRadius, wanderSpeed, angleToSpawn, _timer);
+        }
     }
 
     /// <summary>
@@ -112,20 +117,47 @@ public class BaseEnemy : MonoBehaviour
         yield return new WaitForSeconds(_tickRate);
         StartCoroutine(Tick());
     }
-
+    public bool phase = false;
+    public float timerAgro = 0;
     /// <summary>
     /// this function will handle the movment of the enmey when agro is true  WRONGS
     /// </summary>
     private void Move(Vector3 poi, float disToPoi, float radi, float rotationSpeed, float angleBetweenObjects, float timer)
     {
-        if (disToPoi >= radi)//&& attacking = false)
+        float timeTemp;
+        if (agro && !phase)
+        {
+            phase = true;
+
+            Vector3 offset = transform.position - poi;
+
+
+            
+            if (!float.IsNaN(Mathf.Acos(offset.x)))
+                timerAgro = -Mathf.Acos(offset.x);
+            // Debug.Log(Mathf.Acos(offset.x));
+          //  if (!float.IsNaN(Mathf.Asin(offset.z)))
+          //      Debug.Log(Mathf.Asin(offset.z));
+            timeTemp = timerAgro;
+
+        }
+        else
+            timeTemp = timer;
+
+        if(agro)
+            timerAgro += Time.deltaTime;
+
+        if (disToPoi >= radi)
+        {
             transform.position = Vector3.MoveTowards(transform.position, poi, baseSpeed * Time.deltaTime);
+            //phase = false;
+        }
         else if (disToPoi <= radi)//&& attacking = false)
         {
+            
 
 
-
-            Wander(poi, rotationSpeed, radi, angleBetweenObjects, timer);
+            Wander(poi, rotationSpeed, radi, angleBetweenObjects, timeTemp);
         }
     }
 
