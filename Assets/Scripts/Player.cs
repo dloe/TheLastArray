@@ -45,14 +45,41 @@ public class Player : MonoBehaviour
         mouseLook();
         Debug.DrawRay(_mainTransform.position, lookDir, Color.green);
 
-        if(Input.GetKeyDown(KeyCode.E) && itemToGrab)
+        if(Input.GetKeyDown(KeyCode.E) && itemToGrab && !inventory.IsFull())
         {
             inventory.AddItem(new Item { itemType = itemToGrab.itemType });
             Destroy(itemToGrab.gameObject);
             itemToGrab = null;
         }
+
+        if(Input.GetMouseButtonDown(0) && inventory.selectedItem != null)
+        {
+            switch (inventory.selectedItem.itemType)
+            {
+                case Item.ItemType.MeleeWeapon:
+                    meleeAttack();
+                    break;
+                case Item.ItemType.Pistol:
+                case Item.ItemType.Rifle:
+                    rangedAttack(inventory.selectedItem.itemType);
+                    break;
+                case Item.ItemType.MedKit:
+                default:
+                    break;
+            }
+            
+        }
+
+        if(Input.GetKeyDown(KeyCode.Q) && inventory.selectedItem != null && !itemToGrab)
+        {
+            inventory.DropItem();
+        }
+        
     }
 
+    /// <summary>
+    /// Moves Player Based On WASD
+    /// </summary>
     private void doMovement()
     {
         moveDir = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
@@ -60,11 +87,11 @@ public class Player : MonoBehaviour
         moveDir *= Time.deltaTime * moveSpeed;
         _mainTransform.Translate(moveDir, Space.World);
 
-
-
-
     }
 
+    /// <summary>
+    /// Makes Player Look in Direction of Mouse
+    /// </summary>
     private void mouseLook()
     {
          
@@ -84,14 +111,14 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void rangedAttack()
+    private void rangedAttack(Item.ItemType itemType)
     {
-
+        Debug.Log("Fire Weapon: " + itemType);
     }
 
     private void meleeAttack()
     {
-
+        Debug.Log("Melee Attack");
     }
 
     private void OnTriggerEnter(Collider other)
@@ -104,7 +131,7 @@ public class Player : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.tag == "Item")
+        if(other.tag == "Item" && itemToGrab && other.gameObject == itemToGrab.gameObject)
         {
             itemToGrab = null;
         }
