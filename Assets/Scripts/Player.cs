@@ -12,9 +12,12 @@ public class Player : MonoBehaviour
     Vector3 lookDir;
     Plane rayPlane = new Plane(Vector3.up, 0);
 
-    public List<GameObject> inventory;
+    public Inventory inventory;
+    public WorldItem itemToGrab;
 
     public float moveSpeed = 5f;
+
+    [Header("Used to adjust look Direction to better align to mouse")]
     public float xLookOffset = 3f;
     public float zLookOffset = 3f;
 
@@ -32,7 +35,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         _mainTransform = transform;
-        
+        inventory = new Inventory();
     }
 
     // Update is called once per frame
@@ -41,6 +44,13 @@ public class Player : MonoBehaviour
         doMovement();
         mouseLook();
         Debug.DrawRay(_mainTransform.position, lookDir, Color.green);
+
+        if(Input.GetKeyDown(KeyCode.E) && itemToGrab)
+        {
+            inventory.AddItem(new Item { itemType = itemToGrab.itemType });
+            Destroy(itemToGrab.gameObject);
+            itemToGrab = null;
+        }
     }
 
     private void doMovement()
@@ -49,6 +59,8 @@ public class Player : MonoBehaviour
         moveDir.Normalize();
         moveDir *= Time.deltaTime * moveSpeed;
         _mainTransform.Translate(moveDir, Space.World);
+
+
 
 
     }
@@ -80,5 +92,21 @@ public class Player : MonoBehaviour
     private void meleeAttack()
     {
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.tag == "Item" )
+        {
+            itemToGrab = other.GetComponent<WorldItem>();
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.tag == "Item")
+        {
+            itemToGrab = null;
+        }
     }
 }
