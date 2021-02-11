@@ -69,6 +69,8 @@ public class Tile : MonoBehaviour
 
     public string description = "";
 
+    public bool checkFor4Some = false;
+
     private void Start()
     {
         myTileGen = GameObject.Find("TileGen").GetComponent<TileGeneration>();
