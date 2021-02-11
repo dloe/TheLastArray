@@ -22,6 +22,11 @@ public class BaseEnemy : MonoBehaviour
     // the base move speed
     public float baseSpeed;
 
+    // this is the speed at which the enemy will wonder around
+    public float wanderSpeed;
+
+    public float combatSpeed;
+
     // the radius around the enemy that it will ditect its target
     public float detectionRadius;
 
@@ -49,10 +54,15 @@ public class BaseEnemy : MonoBehaviour
     //this is the layer that the enemy will avoide 
     LayerMask _mask;
     LayerMask _playerMask;
+    float _angle = 0;
+    public float disToTarget = 0;
+
+    public float combatRadi;
+    bool attacking = false;
 
     private void Start()
     {
-        _tickRate = 5;
+        _tickRate = 2;
         _spawnPoint = transform.position;
         _mask = LayerMask.GetMask("Enviroment");
         _playerMask = LayerMask.GetMask("Player");
@@ -62,7 +72,12 @@ public class BaseEnemy : MonoBehaviour
 
     private void Update()
     {
-        Move();
+        if (_target)
+            disToTarget = Vector3.Distance(transform.position, _target.gameObject.transform.position);
+        if (agro)
+            Move(_target);
+        else if (!agro)
+            Wander(_spawnPoint, wanderSpeed, wonderRadius);
     }
 
     /// <summary>
@@ -77,19 +92,32 @@ public class BaseEnemy : MonoBehaviour
     }
 
     /// <summary>
-    /// this function will handle the movment of the enmey
+    /// this function will handle the movment of the enmey when agro is true
     /// </summary>
-    private void Move()
+    private void Move(GameObject poi)
     {
-        if(_target != null)
+        if (_target)
         {
-            float mag = Vector3.Distance(transform.position, _target.gameObject.transform.position);
-            print(mag);
-            if(mag >= agroLoseDis)
+            if (disToTarget >= combatRadi)//&& attacking = false)
+                transform.position = Vector3.MoveTowards(transform.position, poi.transform.position, baseSpeed * Time.deltaTime);
+            else if (disToTarget <= combatRadi)//&& attacking = false)
             {
-                _target = null;
+                Wander(poi.transform.position, combatSpeed, combatRadi);
             }
         }
+
+
+    }
+
+    /// <summary>
+    /// this will handle the base enemy movment on spawn
+    /// </summary>
+    void Wander(Vector3 poi, float speed, float radius)
+    {
+        //speed += Random.Range(-1000000, 1000000000);
+        _angle += Time.deltaTime * speed;
+        Vector3 offSet = new Vector3(Mathf.Cos(_angle), 0, Mathf.Sin(_angle)) * radius; //Mathf.Cos(_angle * Mathf.PI);
+        transform.position = poi + offSet;
     }
 
     /// <summary>
@@ -106,9 +134,20 @@ public class BaseEnemy : MonoBehaviour
     void SetTarget()
     {
         Collider[] targets = Physics.OverlapSphere(transform.position, detectionRadius, _playerMask);
-        if(targets.Length > 0)
+        if (targets.Length > 0)
         {
             _target = targets[0].gameObject;
+            print("added target");
+            OnAgro();
+        }
+        if (_target)
+        {
+
+            if (disToTarget >= agroLoseDis)
+            {
+                _target = null;
+                agro = false;
+            }
         }
 
 
@@ -120,7 +159,7 @@ public class BaseEnemy : MonoBehaviour
     /// </summary>
     void OnAgro()
     {
-
+        agro = true;
     }
 
     void MakePath()
@@ -154,12 +193,21 @@ public class BaseEnemy : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
-        
+
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, 2f);
 
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(_spawnPoint, wonderRadius);
+
+        if (_target)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(transform.position, _target.transform.position);
+
+            Gizmos.color = Color.black;
+            Gizmos.DrawWireSphere(_target.transform.position, combatRadi);
+        }
 
 
 
