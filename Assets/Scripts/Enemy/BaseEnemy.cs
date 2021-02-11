@@ -53,9 +53,11 @@ public class BaseEnemy : MonoBehaviour
 
     //this is the layer that the enemy will avoide 
     LayerMask _mask;
-    LayerMask _playerMask;
-    float _angle = 0;
-    public float disToTarget = 0;
+
+    public float _timer = 0;
+    public float disToTarget, disToSpawn;
+
+    public float angleToTarget, angleToSpawn;
 
     public float combatRadi;
     bool attacking = false;
@@ -63,21 +65,41 @@ public class BaseEnemy : MonoBehaviour
     private void Start()
     {
         _tickRate = 2;
+
         _spawnPoint = transform.position;
+
         _mask = LayerMask.GetMask("Enviroment");
-        _playerMask = LayerMask.GetMask("Player");
+
+        disToTarget = Vector3.Distance(transform.position, _target.gameObject.transform.position);
+
         StartCoroutine(Tick());
+
+        _target = Player.Instance.gameObject;
 
     }
 
     private void Update()
     {
-        if (_target)
-            disToTarget = Vector3.Distance(transform.position, _target.gameObject.transform.position);
+        disToTarget = Vector3.Distance(transform.position, _target.gameObject.transform.position);
+        disToSpawn = Vector3.Distance(transform.position, _spawnPoint);
+
+
+        _timer += Time.deltaTime;
+
+        Vector3 temp = transform.position - _target.transform.position;
+        angleToTarget = Mathf.Atan2(temp.x, temp.z) * Mathf.Rad2Deg;
+
+        Vector3 temp2 = transform.position - _spawnPoint;
+        angleToSpawn = Mathf.Atan2(temp2.x, temp2.z) * Mathf.Rad2Deg;
+
+
         if (agro)
-            Move(_target);
+        {
+            Move(_target.transform.position, disToTarget, combatRadi, combatSpeed, angleToTarget, _timer);
+            transform.LookAt(_target.transform);
+        }
         else if (!agro)
-            Wander(_spawnPoint, wanderSpeed, wonderRadius);
+            Move(_spawnPoint, disToSpawn, wonderRadius, wanderSpeed, angleToSpawn, _timer);
     }
 
     /// <summary>
@@ -92,31 +114,28 @@ public class BaseEnemy : MonoBehaviour
     }
 
     /// <summary>
-    /// this function will handle the movment of the enmey when agro is true
+    /// this function will handle the movment of the enmey when agro is true  WRONGS
     /// </summary>
-    private void Move(GameObject poi)
+    private void Move(Vector3 poi, float disToPoi, float radi, float rotationSpeed, float angleBetweenObjects, float timer)
     {
-        if (_target)
+        if (disToPoi >= radi)//&& attacking = false)
+            transform.position = Vector3.MoveTowards(transform.position, poi, baseSpeed * Time.deltaTime);
+        else if (disToPoi <= radi)//&& attacking = false)
         {
-            if (disToTarget >= combatRadi)//&& attacking = false)
-                transform.position = Vector3.MoveTowards(transform.position, poi.transform.position, baseSpeed * Time.deltaTime);
-            else if (disToTarget <= combatRadi)//&& attacking = false)
-            {
-                Wander(poi.transform.position, combatSpeed, combatRadi);
-            }
+
+
+
+            Wander(poi, rotationSpeed, radi, angleBetweenObjects, timer);
         }
-
-
     }
 
     /// <summary>
-    /// this will handle the base enemy movment on spawn
+    /// this will handle the base enemy movment on spawn BADDDDDDDDD
     /// </summary>
-    void Wander(Vector3 poi, float speed, float radius)
+    void Wander(Vector3 poi, float speed, float radius, float startingAngle, float timer)
     {
-        //speed += Random.Range(-1000000, 1000000000);
-        _angle += Time.deltaTime * speed;
-        Vector3 offSet = new Vector3(Mathf.Cos(_angle), 0, Mathf.Sin(_angle)) * radius; //Mathf.Cos(_angle * Mathf.PI);
+        timer = speed * timer;
+        Vector3 offSet = new Vector3(Mathf.Cos(timer), 0, Mathf.Sin(timer)) * radius; //Mathf.Cos(_angle * Mathf.PI);
         transform.position = poi + offSet;
     }
 
@@ -133,25 +152,15 @@ public class BaseEnemy : MonoBehaviour
     /// </summary>
     void SetTarget()
     {
-        Collider[] targets = Physics.OverlapSphere(transform.position, detectionRadius, _playerMask);
-        if (targets.Length > 0)
+        if (disToTarget <= detectionRadius)
         {
-            _target = targets[0].gameObject;
-            print("added target");
             OnAgro();
         }
-        if (_target)
+
+        else if (disToTarget >= agroLoseDis)
         {
-
-            if (disToTarget >= agroLoseDis)
-            {
-                _target = null;
-                agro = false;
-            }
+            agro = false;
         }
-
-
-
     }
 
     /// <summary>
@@ -191,16 +200,22 @@ public class BaseEnemy : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
 
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, 2f);
+        if (!agro)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, detectionRadius);
 
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(_spawnPoint, wonderRadius);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(_spawnPoint, wonderRadius);
 
-        if (_target)
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(transform.position, _spawnPoint);
+        }
+
+        if (agro)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawLine(transform.position, _target.transform.position);
