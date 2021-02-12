@@ -8,6 +8,8 @@ public class LevelAssetsData : ScriptableObject
 {
     public List<GameObject> presetTileAssets;
 
+    public List<GameObject> presetBigTileAssets;
+
     public List<GameObject> AssetsSpawned;
 
     public GameObject[] EnterenceRooms;

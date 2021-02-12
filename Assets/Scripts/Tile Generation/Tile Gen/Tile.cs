@@ -71,6 +71,8 @@ public class Tile : MonoBehaviour
 
     public bool checkFor4Some = false;
 
+    public GameObject presetTile;
+
     private void Start()
     {
         myTileGen = GameObject.Find("TileGen").GetComponent<TileGeneration>();

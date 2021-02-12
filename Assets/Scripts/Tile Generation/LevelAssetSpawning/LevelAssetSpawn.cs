@@ -13,11 +13,13 @@ public class LevelAssetSpawn : MonoBehaviour
 
     //to prevent to many of one asset spawning
     public int[] assetCountArray;
+    public int[] bigAssetCountArray;
 
     private void Awake()
     {
        // Debug.Log("y");
         assetCountArray = new int[myLevelAsset.presetTileAssets.Count];
+        bigAssetCountArray = new int[myLevelAsset.presetBigTileAssets.Count];
         //Debug.Log("n");
     }
 
@@ -34,9 +36,9 @@ public class LevelAssetSpawn : MonoBehaviour
         }
     }
 
-    public Tile[] tArray;
+    Tile[] tArray;
     public int fourSomeCount = 0;
-    public Vector3 av;
+    Vector3 av;
     //Analyze Tile, looking at an individual tile, for asset choosing and spawning
     //also checks if 4 tiles can be linked, links them if they are and decide weather to use this link to spawn big asset
     void AnalyzeTile(Tile tile)
@@ -84,19 +86,18 @@ public class LevelAssetSpawn : MonoBehaviour
                                     av += tile2.transform.position;
                                 }
                                 av = av / 4;
-                                Debug.Log(av);
+                                //Debug.Log(av);
                                 fourSomeTile.transform.position = av;
                                 foreach (Tile tile2 in tArray)
                                 {
                                     //Debug.Log("ap");
+                                    tile2.levelAssetPlaced = true;
+                                    Destroy(tile2.presetTile.gameObject);
                                     tile2.checkFor4Some = true;
                                     tile2.transform.parent = fourSomeTile.transform;
                                 }
                                 
-
-
                                 SpawnLevelBigAsset(fourSomeTile);
-                                
                                 return;
                             }
                             else
@@ -124,8 +125,9 @@ public class LevelAssetSpawn : MonoBehaviour
         }
        // else
        // {
-            if (!tile.levelAssetPlaced)
+            if (!tile.levelAssetPlaced )
             {
+               // Debug.Log(tile.posOnGrid.x + " " + tile.posOnGrid.y);
                 SpawnLevelSmallAsset(tile);
             }
        // }
@@ -144,7 +146,7 @@ public class LevelAssetSpawn : MonoBehaviour
         //Debug.Log(index);
         GameObject preset = Instantiate(myLevelAsset.presetTileAssets[index], tile.transform.position, tile.transform.rotation);
         preset.transform.parent = tile.transform.parent;
-
+        tile.presetTile = preset;
         assetCountArray[index] += 1;
 
         tile.levelAssetPlaced = true;
@@ -153,5 +155,11 @@ public class LevelAssetSpawn : MonoBehaviour
     void SpawnLevelBigAsset(GameObject bigTile)
     {
         Debug.Log("Spawned big boi");
+        //will pick the least used preset but for now it will be random
+        int index = Random.Range(0, myLevelAsset.presetBigTileAssets.Count);
+        GameObject preset = Instantiate(myLevelAsset.presetBigTileAssets[index], bigTile.transform.position, bigTile.transform.rotation);
+        preset.transform.parent = bigTile.transform;
+
+        bigAssetCountArray[index] += 1;
     }
 }

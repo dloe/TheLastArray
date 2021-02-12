@@ -375,7 +375,7 @@ public class TileGeneration : MonoBehaviour
 
         //add random rooms to dungeon
         AddRandomRooms();
-        Debug.Log("Added Random Rooms");
+        //Debug.Log("Added Random Rooms");
 
 
         //this will be removed eventaully
@@ -513,7 +513,7 @@ public class TileGeneration : MonoBehaviour
             _branch.Clear();
         }
 
-        Debug.Log("Branches added");
+        //Debug.Log("Branches added");
 
         AddSingleRooms();
     }
@@ -564,7 +564,7 @@ public class TileGeneration : MonoBehaviour
             }
         }
         //Debug.Log("Tile Generation Finished, you can now order panda express.");
-        Debug.Log("added single rooms");
+        //Debug.Log("added single rooms");
     }
 
     void RemakeAvalibleSpots()
