@@ -42,31 +42,35 @@ public class InventoryUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetAxis(_zoomAxis) < 0)
+        if(!UI.Instance.PausedStatus)
         {
-            SetIndex(selectedItemIndex + 1);
-        }
-        else if(Input.GetAxis(_zoomAxis) > 0)
-        {
-            SetIndex(selectedItemIndex - 1);
-        }
+            if (Input.GetAxis(_zoomAxis) < 0)
+            {
+                SetIndex(selectedItemIndex + 1);
+            }
+            else if (Input.GetAxis(_zoomAxis) > 0)
+            {
+                SetIndex(selectedItemIndex - 1);
+            }
 
-        if(Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            SetIndex(0);
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                SetIndex(0);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                SetIndex(1);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha3))
+            {
+                SetIndex(2);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                SetIndex(3);
+            }
         }
-        else if(Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            SetIndex(1);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            SetIndex(2);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            SetIndex(3);
-        }
+       
 
         
     }
