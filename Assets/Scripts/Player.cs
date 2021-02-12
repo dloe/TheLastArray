@@ -10,11 +10,15 @@ public class Player : MonoBehaviour
     [Header("Prefabs for Bullet")]
     public GameObject pistolBulletPrefab;
     public GameObject rifleBulletPrefab;
+    
+    //inventory of the player
     public Inventory inventory;
     
     //Item that Player is currently able to grab
     [Header("Current Grabbable Item")]
     public WorldItem itemToGrab;
+    [Header("Current Grabbable Resource")]
+    public Resource resourceToGrab;
 
     public float moveSpeed = 5f;
 
@@ -22,7 +26,7 @@ public class Player : MonoBehaviour
     public float xLookOffset = 3f;
     public float zLookOffset = 3f;
 
-    
+    #region Health Variables
     public int Health
     {
         get
@@ -51,6 +55,39 @@ public class Player : MonoBehaviour
     public int maxHealth = 10;
     public int medKitHealAmount = 6;
     public Text healthText;
+    #endregion
+
+    #region Resource Variables
+    public int ScrapCount
+    {
+        get
+        {
+            return scrapCount;
+        }
+        set
+        {
+            scrapCount = value;
+            scrapText.text = scrapCount.ToString();
+        }
+    }
+    private int scrapCount = 0;
+
+    public int MedsCount
+    {
+        get
+        {
+            return medsCount;
+        }
+        set
+        {
+            medsCount = value;
+            medsText.text = medsCount.ToString();
+        }
+    }
+    private int medsCount = 0;
+
+    public Text scrapText, medsText;
+    #endregion
 
 
     //transform of the player
@@ -76,6 +113,8 @@ public class Player : MonoBehaviour
         _mainTransform = transform;
         inventory = new Inventory();
         Health = maxHealth;
+        ScrapCount = scrapCount;
+        MedsCount = medsCount;
     }
 
     // Update is called once per frame
@@ -86,11 +125,31 @@ public class Player : MonoBehaviour
         Debug.DrawRay(_mainTransform.position, lookDir, Color.green);
 
         //if there is a grabbable item and the inventory is not full, then E picks up item
-        if(Input.GetKeyDown(KeyCode.E) && itemToGrab && !inventory.IsFull())
+        if(Input.GetKeyDown(KeyCode.E) )
         {
-            inventory.AddItem(new Item { itemType = itemToGrab.itemType });
-            Destroy(itemToGrab.gameObject);
-            itemToGrab = null;
+            if (itemToGrab && !inventory.IsFull())
+            {
+                inventory.AddItem(new Item { itemType = itemToGrab.itemType });
+                Destroy(itemToGrab.gameObject);
+                itemToGrab = null;
+            }
+            else if(resourceToGrab)
+            {
+                switch (resourceToGrab.resourceType)
+                {
+                    case Resource.ResourceType.scrap:
+                        ScrapCount += resourceToGrab.amountToAdd;
+                        break;
+                    case Resource.ResourceType.meds:
+                        MedsCount += resourceToGrab.amountToAdd;
+                        break;
+                    default:
+                        break;
+                }
+                Debug.Log("Resource Picked Up: " +  resourceToGrab.amountToAdd + " " + resourceToGrab.resourceType );
+                Destroy(resourceToGrab.gameObject);
+                resourceToGrab = null;
+            }
         }
 
         //uses currently selected item
@@ -199,6 +258,10 @@ public class Player : MonoBehaviour
         {
             itemToGrab = other.GetComponent<WorldItem>();
         }
+        else if(other.tag == "Resource")
+        {
+            resourceToGrab = other.GetComponent<Resource>();
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -206,6 +269,10 @@ public class Player : MonoBehaviour
         if(other.tag == "Item" && itemToGrab && other.gameObject == itemToGrab.gameObject)
         {
             itemToGrab = null;
+        }
+        else if(other.tag == "Resource" && resourceToGrab && other.gameObject == resourceToGrab.gameObject)
+        {
+            resourceToGrab = null;
         }
     }
 }
