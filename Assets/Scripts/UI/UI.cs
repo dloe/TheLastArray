@@ -55,7 +55,7 @@ public class UI : MonoBehaviour
             {
                 UnPause();
             }
-            else if ( Time.timeSinceLevelLoad > 1)
+            else 
             {
                 Pause();
             }
@@ -137,8 +137,8 @@ public class UI : MonoBehaviour
     {
         if (value)
         {
-            // Time.timeScale = 1;
-            // SceneManager.LoadScene("MainMenuTest");
+            Time.timeScale = 1;
+            SceneManager.LoadScene("MainMenuTest");
             Debug.Log("Go To Main Menu");
         }
         else
