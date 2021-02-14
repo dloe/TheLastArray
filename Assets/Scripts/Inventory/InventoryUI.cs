@@ -79,13 +79,13 @@ public class InventoryUI : MonoBehaviour
     {
         
 
-        if(index > 3)
+        if(index > slotList.Count-1)
         {
             selectedItemIndex = 0;
         }
         else if(index < 0)
         {
-            selectedItemIndex = 3;
+            selectedItemIndex = slotList.Count - 1;
         }
         else
         {

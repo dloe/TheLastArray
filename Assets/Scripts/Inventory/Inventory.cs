@@ -23,6 +23,20 @@ public class Inventory
         invUI = InventoryUI.Instance;
     }
 
+    public bool Contains(Item.ItemType itemType)
+    {
+        bool result = false;
+        foreach(Item item in itemList)
+        {
+            if(item.itemType == itemType)
+            {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
    public void AddItem(Item item)
     {
         itemList.Add(item);
@@ -44,7 +58,8 @@ public class Inventory
 
     public bool IsFull()
     {
-        return itemList.Count == 4;
+        
+        return itemList.Count == invUI.slotList.Count;
     }
 
     public void Equip(int slotIndex)
