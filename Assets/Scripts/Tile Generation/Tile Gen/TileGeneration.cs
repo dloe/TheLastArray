@@ -62,9 +62,11 @@ public class TileGeneration : MonoBehaviour
 
     //gets these values from somewhere
     //so far ive only test with width and height being the same number, same number recommended (might need to make slight adjustments to one line to test both being different)
+    [Header("Grid Size")]
     public int _levelWidth = 4;
     public int _levelHeight = 4;
 
+    [Space(10)]
     //tile prefab
     public GameObject tilePlaceholder;
 
@@ -81,6 +83,8 @@ public class TileGeneration : MonoBehaviour
     Tile _endTile;
     int _pathNumber = 0;
 
+    [Space(10)]
+    [Header("List of Level Path Tiles")]
     public List<Tile> levelPath = new List<Tile>();
     //public List<Tile> inactiveRooms = new List<Tile>();
     [HideInInspector]
@@ -88,8 +92,11 @@ public class TileGeneration : MonoBehaviour
 
     List<Tile> backtrackTempHistory = new List<Tile>();
 
+    [Space(10)]
+    [Header("Amount of branches from main path")]
     //adding random rooms
     public int branchCount;
+    [Header("Amount of extra single rooms added")]
     public int fillerRooms;
     
     List<Tile> _avalibleTileSpots = new List<Tile>();
@@ -101,9 +108,13 @@ public class TileGeneration : MonoBehaviour
     public bool debugPathOn = false;
     LineRenderer _lr;
 
+    [Space(10)]
+    [Header("Level Asset Script")]
     public LevelAssetSpawn myLevelAssetSpawn;
+    [Header("Level Asset Data Obj")]
     public LevelAssetsData myLevelAssetsData;
-
+    [Space(10)]
+    [Header("Will level have doors generate?")]
     public bool hasDoors = false;
 
     private void Awake()

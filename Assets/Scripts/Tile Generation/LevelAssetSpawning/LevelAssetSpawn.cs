@@ -4,16 +4,24 @@ using UnityEngine;
 
 public class LevelAssetSpawn : MonoBehaviour
 {
+    [Header("Tile Gen Script")]
     //ref to tile gen script
     public TileGeneration myTileGeneration;
-
+    [Header("Level Asset Data Obj")]
     public LevelAssetsData myLevelAsset;
-
+    [Header("Player Data Obj")]
     public PlayerData myPlayerData;
 
     //to prevent to many of one asset spawning
+    [Space(10)]
+    [Header("How many of which assets are spawned in")]
     public int[] assetCountArray;
     public int[] bigAssetCountArray;
+
+    Tile[] tArray;
+    [Header("How many big tiles have been spawned")]
+    public int fourSomeCount = 0;
+    Vector3 av;
 
     private void Awake()
     {
@@ -36,9 +44,7 @@ public class LevelAssetSpawn : MonoBehaviour
         }
     }
 
-    Tile[] tArray;
-    public int fourSomeCount = 0;
-    Vector3 av;
+    
     //Analyze Tile, looking at an individual tile, for asset choosing and spawning
     //also checks if 4 tiles can be linked, links them if they are and decide weather to use this link to spawn big asset
     void AnalyzeTile(Tile tile)
