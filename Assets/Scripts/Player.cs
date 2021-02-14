@@ -125,7 +125,7 @@ public class Player : MonoBehaviour
         Debug.DrawRay(_mainTransform.position, lookDir, Color.green);
 
         //if there is a grabbable item and the inventory is not full, then E picks up item
-        if(Input.GetKeyDown(KeyCode.E) )
+        if(Input.GetKeyDown(KeyCode.E) && !UI.Instance.PausedStatus)
         {
             if (itemToGrab && !inventory.IsFull())
             {
@@ -153,7 +153,7 @@ public class Player : MonoBehaviour
         }
 
         //uses currently selected item
-        if(Input.GetMouseButtonDown(0) && inventory.selectedItem != null)
+        if(Input.GetMouseButtonDown(0) && inventory.selectedItem != null && !UI.Instance.PausedStatus)
         {
             switch (inventory.selectedItem.itemType)
             {
@@ -178,12 +178,12 @@ public class Player : MonoBehaviour
         }
 
         //drops currently selected item on the ground at the player's feet
-        if(Input.GetKeyDown(KeyCode.Q) && inventory.selectedItem != null && !itemToGrab)
+        if(Input.GetKeyDown(KeyCode.Q) && inventory.selectedItem != null && !itemToGrab && !UI.Instance.PausedStatus)
         {
             inventory.DropItem();
         }
 
-        if(Input.GetKeyDown(KeyCode.F))
+        if(Input.GetKeyDown(KeyCode.F) && !UI.Instance.PausedStatus)
         {
             TakeDamage(1);
         }
