@@ -15,7 +15,7 @@ public class InventoryUI : MonoBehaviour
 
     public Text equipedItemLabelText;
     public Text equipedWeaponAmmoText;
-    public Text equipedWeaponReseversText;
+    public Text equipedWeaponReservesText;
     public Text equipedWeaponDashText;
    // public Text equipedItem
 
@@ -133,20 +133,24 @@ public class InventoryUI : MonoBehaviour
                 case Item.ItemType.MeleeWeapon:
                     //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
                     equipedWeaponAmmoText.text = "";
-                    equipedWeaponReseversText.text = "";
+                    equipedWeaponReservesText.text = "";
                     equipedWeaponDashText.gameObject.SetActive(false);
                     break;
                 case Item.ItemType.Pistol:
                     //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
                     equipedWeaponDashText.gameObject.SetActive(true);
+                    equipedWeaponAmmoText.text = inventory.selectedItem.weaponAmmo.ToString();
+                    equipedWeaponReservesText.text = inventory.selectedItem.weaponReserves.ToString();
                     break;
                 case Item.ItemType.Rifle:
                     //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
                     equipedWeaponDashText.gameObject.SetActive(true);
+                    equipedWeaponAmmoText.text = inventory.selectedItem.weaponAmmo.ToString();
+                    equipedWeaponReservesText.text = inventory.selectedItem.weaponReserves.ToString();
                     break;
                 case Item.ItemType.MedKit:
                     equipedWeaponAmmoText.text = "";
-                    equipedWeaponReseversText.text = "";
+                    equipedWeaponReservesText.text = "";
                     equipedWeaponDashText.gameObject.SetActive(false);
                     break;
                 default:
@@ -157,7 +161,7 @@ public class InventoryUI : MonoBehaviour
         {
             equipedItemLabelText.text = "None";
             equipedWeaponAmmoText.text = "";
-            equipedWeaponReseversText.text = "";
+            equipedWeaponReservesText.text = "";
             equipedWeaponDashText.gameObject.SetActive(false);
         }
     }

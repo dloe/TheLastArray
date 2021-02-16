@@ -13,6 +13,8 @@ public class Item
     }
 
     public ItemType itemType;
-    
+
+    public int weaponAmmo = 0;
+    public int weaponReserves = 0;
 
 }
