@@ -18,10 +18,15 @@ public class LevelAssetSpawn : MonoBehaviour
     public int[] assetCountArray;
     public int[] bigAssetCountArray;
 
-    Tile[] tArray;
+    Tile[] _tArray;
     [Header("How many big tiles have been spawned")]
     public int fourSomeCount = 0;
-    Vector3 av;
+    Vector3 _av;
+
+    //each tile preset has possible locations for resources, those go here
+    List<GameObject> _possibleResources = new List<GameObject>();
+    [Header("Resources In Level")]
+    List<GameObject> resourcesInLevel = new List<GameObject>();
 
     private void Awake()
     {
@@ -31,7 +36,9 @@ public class LevelAssetSpawn : MonoBehaviour
         //Debug.Log("n");
     }
 
-    //populate grid with assets, called from TileGeneration once it is done setting up
+    /// <summary>
+    /// Populate grid with assets, called from TileGeneration once it is done setting up
+    /// </summary>
     public void PopulateGrid()
     {
         Debug.Log("Populating Level with Assets...");
@@ -44,13 +51,15 @@ public class LevelAssetSpawn : MonoBehaviour
         }
     }
 
-    
-    //Analyze Tile, looking at an individual tile, for asset choosing and spawning
-    //also checks if 4 tiles can be linked, links them if they are and decide weather to use this link to spawn big asset
+    /// <summary>
+    /// - Analyze Tile, looking at an individual tile, for asset choosing and spawning
+    /// - also checks if 4 tiles can be linked, links them if they are and decide weather to use this link to spawn big asset
+    /// </summary>
+    /// <param name="tile">Tile being analyzed</param>
     void AnalyzeTile(Tile tile)
     {
         //will first see if we can link tiles
-        tArray = new Tile[4];
+        _tArray = new Tile[4];
         //check neighbors, first up, then left, then right then down
         if (!tile.checkFor4Some)
         {
@@ -60,41 +69,40 @@ public class LevelAssetSpawn : MonoBehaviour
             {
 
                 t = tile.upNeighbor;
-                tArray[0] = t;
+                _tArray[0] = t;
                 //Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
                 if (t.rightNeighbor != null && t.rightNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.rightNeighbor.checkFor4Some)
                 {
                     t = t.rightNeighbor;
-                    tArray[1] = t;
+                    _tArray[1] = t;
                     //Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
                     if (t.downNeighbor != null && t.downNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.downNeighbor.checkFor4Some)
                     {
                         t = t.downNeighbor;
-                        tArray[2] = t;
+                        _tArray[2] = t;
                         // Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
                         if (t.leftNeighbor != null && t.leftNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.leftNeighbor.checkFor4Some)
                         {
                             //all of these tiles can be linked
                             t = t.leftNeighbor;
                             // Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
-                            tArray[3] = t;
+                            _tArray[3] = t;
 
                             //random chance we dont use this 4 some tile and have og be single
                             if (Random.value <= 0.25)
                             {
                                 fourSomeCount++;
                                 GameObject fourSomeTile = new GameObject("BigTile_" + fourSomeCount);
-                                //fourSomeTile.transform.position = new Vector3(tArray[3].transform.position.x + 5, 0, tArray[3].transform.position.z + 5);
-                                av = Vector3.zero;
+                                _av = Vector3.zero;
                                 fourSomeTile.transform.parent = this.transform;
-                                foreach (Tile tile2 in tArray)
+                                foreach (Tile tile2 in _tArray)
                                 {
-                                    av += tile2.transform.position;
+                                    _av += tile2.transform.position;
                                 }
-                                av = av / 4;
+                                _av = _av / 4;
                                 //Debug.Log(av);
-                                fourSomeTile.transform.position = av;
-                                foreach (Tile tile2 in tArray)
+                                fourSomeTile.transform.position = _av;
+                                foreach (Tile tile2 in _tArray)
                                 {
                                     //Debug.Log("ap");
                                     tile2.levelAssetPlaced = true;
@@ -111,39 +119,36 @@ public class LevelAssetSpawn : MonoBehaviour
                         }
                         else
                         {
-                            tArray[0] = null;
-                            tArray[1] = null;
-                            tArray[2] = null;
+                            _tArray[0] = null;
+                            _tArray[1] = null;
+                            _tArray[2] = null;
                         }
                     }
                     else
                     {
-                        tArray[0] = null;
-                        tArray[1] = null;
+                        _tArray[0] = null;
+                        _tArray[1] = null;
                     }
                 }
                 else
                 {
-                    tArray[0] = null;
+                    _tArray[0] = null;
                 }
             }
 
         }
-       // else
-       // {
             if (!tile.levelAssetPlaced )
             {
                // Debug.Log(tile.posOnGrid.x + " " + tile.posOnGrid.y);
                 SpawnLevelSmallAsset(tile);
             }
-       // }
-
     }
 
     /// <summary>
-    /// spawn level asset, called in analyze tile. Spawns in and adds to assetCount array
-    ///     - will determine position and rotation of where asset goes on tile
+    /// - spawn level asset, called in analyze tile. Spawns in and adds to assetCount array
+    /// - will determine position and rotation of where asset goes on tile
     /// </summary>
+    /// <param name="tile"> Tile being analyzed and spawned on </param>
     void SpawnLevelSmallAsset(Tile tile)
     {
         //Debug.Log("PRE");
@@ -158,6 +163,10 @@ public class LevelAssetSpawn : MonoBehaviour
         tile.levelAssetPlaced = true;
     }
 
+    /// <summary>
+    /// - spawns bigger 4 tile asset
+    /// </summary>
+    /// <param name="bigTile"> The parent of the 4 linked tiles being analyzed and spawned on. </param>
     void SpawnLevelBigAsset(GameObject bigTile)
     {
         Debug.Log("Spawned big boi");
