@@ -51,8 +51,16 @@ public class LevelAssetSpawn : MonoBehaviour
             t.ActivateWalls();
             AnalyzeTile(t);
         }
+
+        //SPAWN IN RESOURCES
+        ActivateResources();
+
+        //ACTIVATE ENEMIES
+
+
     }
 
+    #region Preset Spawning
     /// <summary>
     /// - Analyze Tile, looking at an individual tile, for asset choosing and spawning
     /// - also checks if 4 tiles can be linked, links them if they are and decide weather to use this link to spawn big asset
@@ -165,6 +173,18 @@ public class LevelAssetSpawn : MonoBehaviour
         assetCountArray[index] += 1;
 
         tile.levelAssetPlaced = true;
+
+
+        //Check this tile for any possible locations of resources AND ENEMIES
+        //add those spots to the possible resources in level
+        //later we can go through as activate these resources (maybe look at how far each of is from other active ones to ensure mass distribution - no clusters of resources)
+        if (preset.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
+        {
+            for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetResources.Length; posResourceCount++)
+            {
+                _possibleResources.Add(mPresetTileInfo.possiblePresetResources[posResourceCount]);
+            }
+        }
     }
 
     /// <summary>
@@ -182,6 +202,17 @@ public class LevelAssetSpawn : MonoBehaviour
         preset.transform.parent = bigTile.transform;
 
         bigAssetCountArray[index] += 1;
+
+
+        if (preset.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
+        {
+            for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetResources.Length; posResourceCount++)
+            {
+                _possibleResources.Add(mPresetTileInfo.possiblePresetResources[posResourceCount]);
+            }
+        }
+
+
     }
 
     //first number represents the number of times tiles in that list were spawned
@@ -189,6 +220,8 @@ public class LevelAssetSpawn : MonoBehaviour
     List<List<int>> _magAssetCount;
     /// <summary>
     /// Finds the least popular asset or if there are multiple assets at the same number, choose a random one
+    /// 
+    /// CURRENTLY NO MAGATUDE CHECK FOR BIG TILE PRESETS SINCE THEY DONT SPAWN AS MUCH :)
     /// </summary>
     /// <returns> Least Popular asset index to spawn</returns>
     int FindLowestMagnatudeSMOL()
@@ -215,10 +248,10 @@ public class LevelAssetSpawn : MonoBehaviour
         {
             if(_magAssetCount[listFinder].Count != 0)
             {
-                for(int test = 0; test < _magAssetCount[listFinder].Count; test++)
-                {
-                    Debug.Log(_magAssetCount[listFinder][test]);
-                }
+               // for(int test = 0; test < _magAssetCount[listFinder].Count; test++)
+               // {
+                //    Debug.Log(_magAssetCount[listFinder][test]);
+                //}
                 int ranIndex = Random.Range(0, _magAssetCount[listFinder].Count);
                 return _magAssetCount[listFinder][ranIndex];
             }
@@ -227,7 +260,27 @@ public class LevelAssetSpawn : MonoBehaviour
         return 0;//Random.Range(0, myLevelAsset.presetTileAssets.Count);
     }
 
-    //For Debuging whats in list
+    #endregion
+
+
+    #region Resources
+    void ActivateResources()
+    {
+        //resources can either spawn at random or based on distance from any other existing resource
+        //when activated that gameobject will be removed from the possibleResources and added to resourcesInLevel List
+
+
+    }
+    #endregion
+
+    #region Enemies
+    void ActivateEnemies()
+    {
+
+    }
+    #endregion
+
+    //For Debuging whats in list - NOT IN USE
     void ListDebugger()
     {
         for (int count = 0; count < _magAssetCount.Count; count++)
@@ -245,4 +298,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
         
     }
+
+
+
 }
