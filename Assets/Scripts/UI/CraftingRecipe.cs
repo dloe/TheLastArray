@@ -28,6 +28,7 @@ public class CraftingRecipe : ScriptableObject
         bool result = false;
         foreach(ResourceRequirement requirement in Requirements)
         {
+            result = false;
             switch (requirement.Resource)
             {
                 case Resource.ResourceType.scrap:
@@ -43,10 +44,10 @@ public class CraftingRecipe : ScriptableObject
                     }
                     break;
                 case Resource.ResourceType.cloth:
-                   //if (requirement.Amount == player.clothCount)
-                   //{
-                   //    result = true;
-                   //}
+                    if (requirement.Amount <= player.ClothCount)
+                    {
+                        result = true;
+                    }
                     break;
                 default:
                     break;
