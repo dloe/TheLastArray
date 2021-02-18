@@ -32,7 +32,7 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
         transform.position = playerObject.transform.position + offset;
         panCamera();
         clampOffset();

@@ -125,13 +125,13 @@ public class InventoryUI : MonoBehaviour
                 Instantiate(melee, dropPos, melee.transform.rotation);
                 break;
             case Item.ItemType.Pistol:
-                Instantiate(pistol, dropPos, melee.transform.rotation);
+                Instantiate(pistol, dropPos, pistol.transform.rotation);
                 break;
             case Item.ItemType.Rifle:
-                Instantiate(rifle, dropPos, melee.transform.rotation);
+                Instantiate(rifle, dropPos, rifle.transform.rotation);
                 break;
             case Item.ItemType.MedKit:
-                Instantiate(medkit, dropPos, melee.transform.rotation);
+                Instantiate(medkit, dropPos, medkit.transform.rotation);
                 break;
             default:
                 break;

@@ -25,7 +25,7 @@ public class UI : MonoBehaviour
 
     public bool PausedStatus { get { return _isPaused; } }
 
-
+    Player player;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -42,7 +42,7 @@ public class UI : MonoBehaviour
         //SetGraphics(PlayerPrefs.GetInt("Quality Level", 5));
 
 
-
+        player = Player.Instance;
 
     }
 
@@ -55,7 +55,7 @@ public class UI : MonoBehaviour
             {
                 UnPause();
             }
-            else 
+            else if(player.Health > 0)
             {
                 Pause();
             }
@@ -115,7 +115,7 @@ public class UI : MonoBehaviour
     /// </summary>
     public void Restart()
     {
-        Debug.Log("Restart Level");
+        Debug.Log("Restart Level(Currently just loads current active scene for testing purposes");
         Time.timeScale = 1;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
