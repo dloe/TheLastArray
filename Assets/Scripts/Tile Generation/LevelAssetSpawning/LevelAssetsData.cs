@@ -18,6 +18,10 @@ public class LevelAssetsData : ScriptableObject
     public GameObject levelWall;
     [Header("Tile Size")]
     public float tileSize = 100;
-    [Header("ResourcePrefabs")]
+    [Header("Resource Drop Prefabs")]
     public List<GameObject> resourcesList;
+    [Header("Weapon Drop Prefabs")]
+    public List<GameObject> weaponList;
+    [Header("Item Drop Prefabs")]
+    public List<GameObject> itemList;
 }

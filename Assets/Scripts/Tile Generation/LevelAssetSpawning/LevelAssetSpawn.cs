@@ -25,9 +25,24 @@ public class LevelAssetSpawn : MonoBehaviour
     Vector3 _av;
 
     //each tile preset has possible locations for resources, those go here
-    List<GameObject> _possibleResources = new List<GameObject>();
+    public List<GameObject> _possibleItems = new List<GameObject>();
     [Header("Resources In Level")]
-    List<GameObject> resourcesInLevel = new List<GameObject>();
+    public List<GameObject> resourcesInLevelList = new List<GameObject>();
+    [Header("Items In Level")]
+    public List<GameObject> itemsInLevelList = new List<GameObject>();
+    [Header("Weapons In Level")]
+    public List<GameObject> weaponsInLevelList = new List<GameObject>();
+
+    //get these values from scriptable obj
+    int _weaponsInLevel = 1;
+    int _itemsInLevel = 4;
+    int __resourcesInLevel = 10;
+
+   
+
+    //first number represents the number of times tiles in that list were spawned
+    //second number represents the tile numbers that were spawned that amount of times
+    List<List<int>> _magAssetCount;
 
     private void Awake()
     {
@@ -53,7 +68,7 @@ public class LevelAssetSpawn : MonoBehaviour
         }
 
         //SPAWN IN RESOURCES
-        ActivateResources();
+        //ActivateItems();
 
         //ACTIVATE ENEMIES
 
@@ -180,9 +195,10 @@ public class LevelAssetSpawn : MonoBehaviour
         //later we can go through as activate these resources (maybe look at how far each of is from other active ones to ensure mass distribution - no clusters of resources)
         if (preset.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
         {
-            for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetResources.Length; posResourceCount++)
+            Debug.Log(preset.name);
+            for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetItems.Length; posResourceCount++)
             {
-                _possibleResources.Add(mPresetTileInfo.possiblePresetResources[posResourceCount]);
+                _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
             }
         }
     }
@@ -206,18 +222,16 @@ public class LevelAssetSpawn : MonoBehaviour
 
         if (preset.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
         {
-            for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetResources.Length; posResourceCount++)
+            for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetItems.Length; posResourceCount++)
             {
-                _possibleResources.Add(mPresetTileInfo.possiblePresetResources[posResourceCount]);
+                _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
             }
         }
 
 
     }
 
-    //first number represents the number of times tiles in that list were spawned
-    //second number represents the tile numbers that were spawned that amount of times
-    List<List<int>> _magAssetCount;
+    
     /// <summary>
     /// Finds the least popular asset or if there are multiple assets at the same number, choose a random one
     /// 
@@ -263,13 +277,59 @@ public class LevelAssetSpawn : MonoBehaviour
     #endregion
 
 
-    #region Resources
-    void ActivateResources()
+    #region Items
+    void ActivateItems()
     {
         //resources can either spawn at random or based on distance from any other existing resource
         //when activated that gameobject will be removed from the possibleResources and added to resourcesInLevel List
+        //when item is activated can either be a weapon, resource or other item
+
+        //first spawn in X amount of weapons
+        for(int weaponCount = 0; weaponCount < _weaponsInLevel; weaponCount++)
+        {
+            if (_possibleItems.Count != 0)
+            {
+                int index = Random.Range(0, _possibleItems.Count);
+                GameObject weaponTemp = _possibleItems[index];
+                //spawn in actual weapon item prefab from scritable item
+                _possibleItems.RemoveAt(index);
+                int wIndex = Random.Range(0, myLevelAsset.weaponList.Count);
+                GameObject weapon = Instantiate(myLevelAsset.weaponList[wIndex], weaponTemp.transform.position, weaponTemp.transform.rotation);
+                Destroy(weaponTemp);
+                weaponsInLevelList.Add(weapon);
+            }
+        }
+
+        //then spawn in Y amount of items
+        for(int itemCount = 0; itemCount < _itemsInLevel; itemCount++)
+        {
+            if (_possibleItems.Count != 0)
+            {
+                int index = Random.Range(0, _possibleItems.Count);
+                GameObject itemTemp = _possibleItems[index];
+                _possibleItems.RemoveAt(index);
+                int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
+                GameObject item = Instantiate(myLevelAsset.itemList[iIndex], itemTemp.transform.position, itemTemp.transform.rotation);
+                Destroy(itemTemp);
+                itemsInLevelList.Add(item);
+            }
+        }
 
 
+        //then spawn in Z amount of resources
+        for(int resourceCount = 0; resourceCount < __resourcesInLevel; resourceCount++)
+        {
+            if (_possibleItems.Count != 0)
+            {
+                int index = Random.Range(0, _possibleItems.Count);
+                GameObject resourceTemp = _possibleItems[index];
+                _possibleItems.RemoveAt(index);
+                int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
+                GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], resourceTemp.transform.position, resourceTemp.transform.rotation);
+                Destroy(resourceTemp);
+                resourcesInLevelList.Add(resource);
+            }
+        }
     }
     #endregion
 
