@@ -68,7 +68,7 @@ public class LevelAssetSpawn : MonoBehaviour
         }
 
         //SPAWN IN RESOURCES
-       // ActivateItems();
+        ActivateItems();
 
         //ACTIVATE ENEMIES
 
@@ -219,13 +219,13 @@ public class LevelAssetSpawn : MonoBehaviour
            // Debug.Log(preset.name);
             for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetItems.Length; posResourceCount++)
             {
-                co++;
+                //co++;
                // Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                 _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
             }
         }
     }
-    public int co = 0;
+    //public int co = 0;
     /// <summary>
     /// - spawns bigger 4 tile asset
     /// </summary>
@@ -247,7 +247,7 @@ public class LevelAssetSpawn : MonoBehaviour
         {
             for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetItems.Length; posResourceCount++)
             {
-                co++;
+                //co++;
                 //Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                 _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
             }
@@ -326,35 +326,35 @@ public class LevelAssetSpawn : MonoBehaviour
         }
 
         //then spawn in Y amount of items
-     //   for(int itemCount = 0; itemCount < _itemsInLevel; itemCount++)
-    //    {
-    //        if (_possibleItems.Count != 0)
-    //        {
-    //            int index = Random.Range(0, _possibleItems.Count);
-    //            GameObject itemTemp = _possibleItems[index];
-    //            _possibleItems.RemoveAt(index);
-    //            int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
-    //            GameObject item = Instantiate(myLevelAsset.itemList[iIndex], itemTemp.transform.position, itemTemp.transform.rotation);
-    //            Destroy(itemTemp);
-    //            itemsInLevelList.Add(item);
-    //        }
-    //    }
+        for(int itemCount = 0; itemCount < _itemsInLevel; itemCount++)
+        {
+            if (_possibleItems.Count != 0)
+            {
+                int index = Random.Range(0, _possibleItems.Count);
+                GameObject itemTemp = _possibleItems[index];
+                _possibleItems.RemoveAt(index);
+                int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
+                GameObject item = Instantiate(myLevelAsset.itemList[iIndex], itemTemp.transform.position, itemTemp.transform.rotation);
+                Destroy(itemTemp);
+                itemsInLevelList.Add(item);
+            }
+        }
 
 
         //then spawn in Z amount of resources
-     //   for(int resourceCount = 0; resourceCount < __resourcesInLevel; resourceCount++)
-    //    {
-     //       if (_possibleItems.Count != 0)
-     //       {
-     //           int index = Random.Range(0, _possibleItems.Count);
-     // //          GameObject resourceTemp = _possibleItems[index];
-     //           _possibleItems.RemoveAt(index);
-     //           int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
-     //           GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], resourceTemp.transform.position, resourceTemp.transform.rotation);
-      //          Destroy(resourceTemp);
-      //          resourcesInLevelList.Add(resource);
-       //     }
-        //}
+       for(int resourceCount = 0; resourceCount < __resourcesInLevel; resourceCount++)
+        {
+            if (_possibleItems.Count != 0)
+            {
+                int index = Random.Range(0, _possibleItems.Count);
+                GameObject resourceTemp = _possibleItems[index];
+                _possibleItems.RemoveAt(index);
+                int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
+                GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], resourceTemp.transform.position, resourceTemp.transform.rotation);
+                Destroy(resourceTemp);
+                resourcesInLevelList.Add(resource);
+            }
+        }
     }
     #endregion
 
