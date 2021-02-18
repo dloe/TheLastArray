@@ -51,8 +51,6 @@ public class LevelAssetSpawn : MonoBehaviour
             t.ActivateWalls();
             AnalyzeTile(t);
         }
-
-        Debug.Log(FindLowestMagnatude());
     }
 
     /// <summary>
@@ -157,7 +155,7 @@ public class LevelAssetSpawn : MonoBehaviour
     {
         //Debug.Log("PRE");
         //will pick the least used preset but for now it will be random
-        int index = FindLowestMagnatude();//Random.Range(0, myLevelAsset.presetTileAssets.Count);
+        int index = FindLowestMagnatudeSMOL();//Random.Range(0, myLevelAsset.presetTileAssets.Count);
 
 
         //Debug.Log(index);
@@ -188,11 +186,14 @@ public class LevelAssetSpawn : MonoBehaviour
 
     //first number represents the number of times tiles in that list were spawned
     //second number represents the tile numbers that were spawned that amount of times
-    public int[][] normAssetCountMagJaged;
-    List<List<int>> magAssetCount;
-    int FindLowestMagnatude()
+    List<List<int>> _magAssetCount;
+    /// <summary>
+    /// Finds the least popular asset or if there are multiple assets at the same number, choose a random one
+    /// </summary>
+    /// <returns> Least Popular asset index to spawn</returns>
+    int FindLowestMagnatudeSMOL()
     {
-        magAssetCount = new List<List<int>>();
+        _magAssetCount = new List<List<int>>();
 
         for (int firstNumCount = 0; firstNumCount <= 8; firstNumCount++)
         {
@@ -206,36 +207,36 @@ public class LevelAssetSpawn : MonoBehaviour
                 }
 
             }
-            magAssetCount.Add(temp);
+            _magAssetCount.Add(temp);
         }
 
         //start from first num, and see if its empty, if it is move on to next. Else use random index for second num and return this value
-        for(int listFinder = 0; listFinder < magAssetCount.Count; listFinder++)
+        for(int listFinder = 0; listFinder < _magAssetCount.Count; listFinder++)
         {
-            if(magAssetCount[listFinder].Count != 0)
+            if(_magAssetCount[listFinder].Count != 0)
             {
-                for(int test = 0; test < magAssetCount[listFinder].Count; test++)
+                for(int test = 0; test < _magAssetCount[listFinder].Count; test++)
                 {
-                    Debug.Log(magAssetCount[listFinder][test]);
+                    Debug.Log(_magAssetCount[listFinder][test]);
                 }
-                int ranIndex = Random.Range(0, magAssetCount[listFinder].Count);
-                return magAssetCount[listFinder][ranIndex];
+                int ranIndex = Random.Range(0, _magAssetCount[listFinder].Count);
+                return _magAssetCount[listFinder][ranIndex];
             }
         }
 
-        return 0;
+        return 0;//Random.Range(0, myLevelAsset.presetTileAssets.Count);
     }
 
     //For Debuging whats in list
     void ListDebugger()
     {
-        for (int count = 0; count < magAssetCount.Count; count++)
+        for (int count = 0; count < _magAssetCount.Count; count++)
         {
 
             string tempS = "Spawned Tile: ";
-            for (int c2 = 0; c2 < magAssetCount[count].Count; c2++)
+            for (int c2 = 0; c2 < _magAssetCount[count].Count; c2++)
             {
-                tempS += magAssetCount[count][c2];
+                tempS += _magAssetCount[count][c2];
                 tempS += " ";
             }
             tempS += " At a Count of: " + count.ToString();
