@@ -68,7 +68,7 @@ public class LevelAssetSpawn : MonoBehaviour
         }
 
         //SPAWN IN RESOURCES
-        //ActivateItems();
+       // ActivateItems();
 
         //ACTIVATE ENEMIES
 
@@ -127,13 +127,31 @@ public class LevelAssetSpawn : MonoBehaviour
                                 _av = _av / 4;
                                 //Debug.Log(av);
                                 fourSomeTile.transform.position = _av;
-                                foreach (Tile tile2 in _tArray)
+                                foreach (Tile tile3 in _tArray)
                                 {
                                     //Debug.Log("ap");
-                                    tile2.levelAssetPlaced = true;
-                                    Destroy(tile2.presetTile.gameObject);
-                                    tile2.checkFor4Some = true;
-                                    tile2.transform.parent = fourSomeTile.transform;
+                                    tile3.levelAssetPlaced = true;
+
+                                    if (tile3.presetNum != -1)
+                                    {
+                                       // Debug.Log(tile3.presetNum);
+                                        //remove its possible items from _possileItems if it has already assigned preset tile
+                                        assetCountArray[tile3.presetNum] -= 1;
+                                        if (tile3.presetTile.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
+                                        {
+                                            foreach (GameObject item in mPresetTileInfo.GetComponent<PresetTileInfo>().possiblePresetItems)
+                                            {
+                                                _possibleItems.Remove(item);
+                                            }
+                                        }
+                                    }
+
+                                    
+                                    Destroy(tile3.presetTile.gameObject);
+
+
+                                    tile3.checkFor4Some = true;
+                                    tile3.transform.parent = fourSomeTile.transform;
                                 }
                                 
                                 SpawnLevelBigAsset(fourSomeTile);
@@ -169,6 +187,7 @@ public class LevelAssetSpawn : MonoBehaviour
             }
     }
 
+
     /// <summary>
     /// - spawn level asset, called in analyze tile. Spawns in and adds to assetCount array
     /// - will determine position and rotation of where asset goes on tile
@@ -181,8 +200,9 @@ public class LevelAssetSpawn : MonoBehaviour
         int index = FindLowestMagnatudeSMOL();//Random.Range(0, myLevelAsset.presetTileAssets.Count);
 
 
-        //Debug.Log(index);
+       // Debug.Log(index);
         GameObject preset = Instantiate(myLevelAsset.presetTileAssets[index], tile.transform.position, tile.transform.rotation);
+        tile.presetNum = index;
         preset.transform.parent = tile.transform.parent;
         tile.presetTile = preset;
         assetCountArray[index] += 1;
@@ -195,14 +215,17 @@ public class LevelAssetSpawn : MonoBehaviour
         //later we can go through as activate these resources (maybe look at how far each of is from other active ones to ensure mass distribution - no clusters of resources)
         if (preset.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
         {
-            Debug.Log(preset.name);
+            
+           // Debug.Log(preset.name);
             for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetItems.Length; posResourceCount++)
             {
+                co++;
+               // Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                 _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
             }
         }
     }
-
+    public int co = 0;
     /// <summary>
     /// - spawns bigger 4 tile asset
     /// </summary>
@@ -224,6 +247,8 @@ public class LevelAssetSpawn : MonoBehaviour
         {
             for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetItems.Length; posResourceCount++)
             {
+                co++;
+                //Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                 _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
             }
         }
@@ -301,35 +326,35 @@ public class LevelAssetSpawn : MonoBehaviour
         }
 
         //then spawn in Y amount of items
-        for(int itemCount = 0; itemCount < _itemsInLevel; itemCount++)
-        {
-            if (_possibleItems.Count != 0)
-            {
-                int index = Random.Range(0, _possibleItems.Count);
-                GameObject itemTemp = _possibleItems[index];
-                _possibleItems.RemoveAt(index);
-                int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
-                GameObject item = Instantiate(myLevelAsset.itemList[iIndex], itemTemp.transform.position, itemTemp.transform.rotation);
-                Destroy(itemTemp);
-                itemsInLevelList.Add(item);
-            }
-        }
+     //   for(int itemCount = 0; itemCount < _itemsInLevel; itemCount++)
+    //    {
+    //        if (_possibleItems.Count != 0)
+    //        {
+    //            int index = Random.Range(0, _possibleItems.Count);
+    //            GameObject itemTemp = _possibleItems[index];
+    //            _possibleItems.RemoveAt(index);
+    //            int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
+    //            GameObject item = Instantiate(myLevelAsset.itemList[iIndex], itemTemp.transform.position, itemTemp.transform.rotation);
+    //            Destroy(itemTemp);
+    //            itemsInLevelList.Add(item);
+    //        }
+    //    }
 
 
         //then spawn in Z amount of resources
-        for(int resourceCount = 0; resourceCount < __resourcesInLevel; resourceCount++)
-        {
-            if (_possibleItems.Count != 0)
-            {
-                int index = Random.Range(0, _possibleItems.Count);
-                GameObject resourceTemp = _possibleItems[index];
-                _possibleItems.RemoveAt(index);
-                int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
-                GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], resourceTemp.transform.position, resourceTemp.transform.rotation);
-                Destroy(resourceTemp);
-                resourcesInLevelList.Add(resource);
-            }
-        }
+     //   for(int resourceCount = 0; resourceCount < __resourcesInLevel; resourceCount++)
+    //    {
+     //       if (_possibleItems.Count != 0)
+     //       {
+     //           int index = Random.Range(0, _possibleItems.Count);
+     // //          GameObject resourceTemp = _possibleItems[index];
+     //           _possibleItems.RemoveAt(index);
+     //           int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
+     //           GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], resourceTemp.transform.position, resourceTemp.transform.rotation);
+      //          Destroy(resourceTemp);
+      //          resourcesInLevelList.Add(resource);
+       //     }
+        //}
     }
     #endregion
 

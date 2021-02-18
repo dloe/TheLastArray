@@ -74,7 +74,8 @@ public class Tile : MonoBehaviour
     public bool checkFor4Some = false;
     [Header("Tile Preset")]
     public GameObject presetTile;
-
+    [HideInInspector]
+    public int presetNum = -1;
 
     #region Door Variables
     /// <summary>
