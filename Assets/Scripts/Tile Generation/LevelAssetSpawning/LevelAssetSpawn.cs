@@ -17,6 +17,7 @@ public class LevelAssetSpawn : MonoBehaviour
     [Header("How many of which assets are spawned in")]
     public int[] assetCountArray;
     public int[] bigAssetCountArray;
+   // public int[][] normAssetCountMagJaged;
 
     Tile[] _tArray;
     [Header("How many big tiles have been spawned")]
@@ -33,6 +34,7 @@ public class LevelAssetSpawn : MonoBehaviour
        // Debug.Log("y");
         assetCountArray = new int[myLevelAsset.presetTileAssets.Count];
         bigAssetCountArray = new int[myLevelAsset.presetBigTileAssets.Count];
+
         //Debug.Log("n");
     }
 
@@ -49,6 +51,8 @@ public class LevelAssetSpawn : MonoBehaviour
             t.ActivateWalls();
             AnalyzeTile(t);
         }
+
+        Debug.Log(FindLowestMagnatude());
     }
 
     /// <summary>
@@ -114,8 +118,8 @@ public class LevelAssetSpawn : MonoBehaviour
                                 SpawnLevelBigAsset(fourSomeTile);
                                 return;
                             }
-                            else
-                                Debug.Log("jebait");
+                            //else
+                                //Debug.Log("jebait");
                         }
                         else
                         {
@@ -153,7 +157,9 @@ public class LevelAssetSpawn : MonoBehaviour
     {
         //Debug.Log("PRE");
         //will pick the least used preset but for now it will be random
-        int index = Random.Range(0, myLevelAsset.presetTileAssets.Count);
+        int index = FindLowestMagnatude();//Random.Range(0, myLevelAsset.presetTileAssets.Count);
+
+
         //Debug.Log(index);
         GameObject preset = Instantiate(myLevelAsset.presetTileAssets[index], tile.transform.position, tile.transform.rotation);
         preset.transform.parent = tile.transform.parent;
@@ -172,9 +178,70 @@ public class LevelAssetSpawn : MonoBehaviour
         Debug.Log("Spawned big boi");
         //will pick the least used preset but for now it will be random
         int index = Random.Range(0, myLevelAsset.presetBigTileAssets.Count);
+
+
         GameObject preset = Instantiate(myLevelAsset.presetBigTileAssets[index], bigTile.transform.position, bigTile.transform.rotation);
         preset.transform.parent = bigTile.transform;
 
         bigAssetCountArray[index] += 1;
+    }
+
+    //first number represents the number of times tiles in that list were spawned
+    //second number represents the tile numbers that were spawned that amount of times
+    public int[][] normAssetCountMagJaged;
+    List<List<int>> magAssetCount;
+    int FindLowestMagnatude()
+    {
+        magAssetCount = new List<List<int>>();
+
+        for (int firstNumCount = 0; firstNumCount <= 8; firstNumCount++)
+        {
+            List<int> temp = new List<int>();
+            for (int c = 0; c < assetCountArray.Length; c++)
+            {
+                if (assetCountArray[c] == firstNumCount)
+                {
+                    temp.Add(c);
+
+                }
+
+            }
+            magAssetCount.Add(temp);
+        }
+
+        //start from first num, and see if its empty, if it is move on to next. Else use random index for second num and return this value
+        for(int listFinder = 0; listFinder < magAssetCount.Count; listFinder++)
+        {
+            if(magAssetCount[listFinder].Count != 0)
+            {
+                for(int test = 0; test < magAssetCount[listFinder].Count; test++)
+                {
+                    Debug.Log(magAssetCount[listFinder][test]);
+                }
+                int ranIndex = Random.Range(0, magAssetCount[listFinder].Count);
+                return magAssetCount[listFinder][ranIndex];
+            }
+        }
+
+        return 0;
+    }
+
+    //For Debuging whats in list
+    void ListDebugger()
+    {
+        for (int count = 0; count < magAssetCount.Count; count++)
+        {
+
+            string tempS = "Spawned Tile: ";
+            for (int c2 = 0; c2 < magAssetCount[count].Count; c2++)
+            {
+                tempS += magAssetCount[count][c2];
+                tempS += " ";
+            }
+            tempS += " At a Count of: " + count.ToString();
+            Debug.Log(tempS);
+        }
+
+        
     }
 }
