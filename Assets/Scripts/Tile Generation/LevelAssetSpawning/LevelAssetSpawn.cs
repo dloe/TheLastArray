@@ -320,6 +320,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 _possibleItems.RemoveAt(index);
                 int wIndex = Random.Range(0, myLevelAsset.weaponList.Count);
                 GameObject weapon = Instantiate(myLevelAsset.weaponList[wIndex], weaponTemp.transform.position, weaponTemp.transform.rotation);
+                weapon.transform.parent = weaponTemp.transform.parent;
                 Destroy(weaponTemp);
                 weaponsInLevelList.Add(weapon);
             }
@@ -335,6 +336,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 _possibleItems.RemoveAt(index);
                 int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
                 GameObject item = Instantiate(myLevelAsset.itemList[iIndex], itemTemp.transform.position, itemTemp.transform.rotation);
+                item.transform.parent = itemTemp.transform.parent;
                 Destroy(itemTemp);
                 itemsInLevelList.Add(item);
             }
@@ -351,6 +353,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 _possibleItems.RemoveAt(index);
                 int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
                 GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], resourceTemp.transform.position, resourceTemp.transform.rotation);
+                resource.transform.parent = resourceTemp.transform.parent;
                 Destroy(resourceTemp);
                 resourcesInLevelList.Add(resource);
             }
