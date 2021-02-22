@@ -33,6 +33,10 @@ public class LevelAssetSpawn : MonoBehaviour
     [Header("Weapons In Level")]
     public List<GameObject> weaponsInLevelList = new List<GameObject>();
 
+    [Header("Enemies In Level")]
+    public List<GameObject> enemiesInLevel = new List<GameObject>();
+    public List<GameObject> _possibleEnemiesInLevel = new List<GameObject>();
+
     //get these values from scriptable obj
     int _weaponsInLevel = 1;
     int _itemsInLevel = 4;
@@ -223,6 +227,10 @@ public class LevelAssetSpawn : MonoBehaviour
                // Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                 _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
             }
+            for (int posEnemyCount = 0; posEnemyCount < mPresetTileInfo.enemiesOnPreset.Length; posEnemyCount++)
+            {
+                _possibleEnemiesInLevel.Add(mPresetTileInfo.enemiesOnPreset[posEnemyCount]);
+            }
         }
     }
     //public int co = 0;
@@ -250,6 +258,10 @@ public class LevelAssetSpawn : MonoBehaviour
                 //co++;
                 //Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                 _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
+            }
+            for(int posEnemyCount = 0; posEnemyCount < mPresetTileInfo.enemiesOnPreset.Length; posEnemyCount++)
+            {
+                _possibleEnemiesInLevel.Add(mPresetTileInfo.enemiesOnPreset[posEnemyCount]);
             }
         }
 
@@ -361,8 +373,75 @@ public class LevelAssetSpawn : MonoBehaviour
     }
     #endregion
 
+    public int enemyCount;
     #region Enemies
+
+
     void ActivateEnemies()
+    {
+        switch (myLevelAsset.levelTier)
+        {
+            case 1:
+                ActivateEnemiesTier1();
+                break;
+            case 2:
+                ActivateEnemiesTier2();
+                break;
+            case 3:
+                ActivateEnemiesTier3();
+                break;
+            default:
+                break;
+        }
+    }
+    /// <summary>
+    /// enemy spawning depends on tier
+    /// </summary>
+    void ActivateEnemiesTier1()
+    {
+        //each level has a range of enemies it spawns
+        for(enemyCount = 0; enemyCount < _possibleEnemiesInLevel.Count; enemyCount++)
+        {
+            if(_possibleEnemiesInLevel[enemyCount].TryGetComponent<PossibleEnemy>(out PossibleEnemy mPossibleEnemy))
+            {
+                switch (mPossibleEnemy.type)
+                {
+                    case EnemyWeightType.None:
+                        //picks between outcasts, dog or lost ones
+                        break;
+                    case EnemyWeightType.Outcast:
+                        //tier 1
+                        break;
+                    case EnemyWeightType.Dog:
+                        //tier 1
+                        break;
+                    case EnemyWeightType.Warden:
+                        //other types not in tier 1 will default to random teir 1
+                        break;
+                    case EnemyWeightType.Stalker:
+                        break;
+                    case EnemyWeightType.Splitter:
+                        break;
+                    case EnemyWeightType.Shadow:
+                        break;
+                    case EnemyWeightType.LostOne:
+                        //tier 1
+                        break;
+                    case EnemyWeightType.Fugly:
+                        break;
+                    case EnemyWeightType.Dozer:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+    void ActivateEnemiesTier2()
+    {
+
+    }
+    void ActivateEnemiesTier3()
     {
 
     }

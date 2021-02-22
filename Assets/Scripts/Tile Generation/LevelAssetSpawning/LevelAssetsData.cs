@@ -24,4 +24,6 @@ public class LevelAssetsData : ScriptableObject
     public List<GameObject> weaponList;
     [Header("Item Drop Prefabs")]
     public List<GameObject> itemList;
+    [Header("Level Tier")]
+    public int levelTier = 0;
 }
