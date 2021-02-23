@@ -37,7 +37,7 @@ public class LevelAssetSpawn : MonoBehaviour
     public List<GameObject> enemiesInLevel = new List<GameObject>();
     public List<GameObject> _possibleEnemiesInLevel = new List<GameObject>();
 
-    //get these values from scriptable obj
+    //get these values from scriptable obj. Total amount we spawn in (will replace theses)
     int _weaponsInLevel = 1;
     int _itemsInLevel = 4;
     int __resourcesInLevel = 10;
@@ -404,36 +404,190 @@ public class LevelAssetSpawn : MonoBehaviour
         {
             if(_possibleEnemiesInLevel[enemyCount].TryGetComponent<PossibleEnemy>(out PossibleEnemy mPossibleEnemy))
             {
+                GameObject enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                int choice;
                 switch (mPossibleEnemy.type)
                 {
                     case EnemyWeightType.None:
                         //picks between outcasts, dog or lost ones
+                        choice = Random.Range(0, 3);
+                        switch (choice)
+                        {
+                            case 1:
+                                //outcast
+                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                break;
+                            case 2:
+                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                //dog
+                                break;
+                            case 3:
+                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                //lost ones
+                                break;
+                            default:
+                                break;
+                        }
                         break;
                     case EnemyWeightType.Outcast:
+                        enemy = myLevelAsset.enemyPrefab.outcastEnemy;
                         //tier 1
                         break;
                     case EnemyWeightType.Dog:
+                        enemy = myLevelAsset.enemyPrefab.dogEnemy;
                         //tier 1
                         break;
                     case EnemyWeightType.Warden:
-                        //other types not in tier 1 will default to random teir 1
+                        //other types not in tier 1 will default to random tier 1
+                        choice = Random.Range(0, 3);
+                        switch (choice)
+                        {
+                            case 1:
+                                //outcast
+                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                break;
+                            case 2:
+                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                //dog
+                                break;
+                            case 3:
+                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                //lost ones
+                                break;
+                            default:
+                                break;
+                        }
                         break;
                     case EnemyWeightType.Stalker:
+                        choice = Random.Range(0, 3);
+                        switch (choice)
+                        {
+                            case 1:
+                                //outcast
+                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                break;
+                            case 2:
+                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                //dog
+                                break;
+                            case 3:
+                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                //lost ones
+                                break;
+                            default:
+                                break;
+                        }
                         break;
                     case EnemyWeightType.Splitter:
+                        choice = Random.Range(0, 3);
+                        switch (choice)
+                        {
+                            case 1:
+                                //outcast
+                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                break;
+                            case 2:
+                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                //dog
+                                break;
+                            case 3:
+                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                //lost ones
+                                break;
+                            default:
+                                break;
+                        }
                         break;
                     case EnemyWeightType.Shadow:
+                        choice = Random.Range(0, 3);
+                        switch (choice)
+                        {
+                            case 1:
+                                //outcast
+                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                break;
+                            case 2:
+                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                //dog
+                                break;
+                            case 3:
+                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                //lost ones
+                                break;
+                            default:
+                                break;
+                        }
                         break;
                     case EnemyWeightType.LostOne:
+                        choice = Random.Range(0, 3);
+                        switch (choice)
+                        {
+                            case 1:
+                                //outcast
+                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                break;
+                            case 2:
+                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                //dog
+                                break;
+                            case 3:
+                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                //lost ones
+                                break;
+                            default:
+                                break;
+                        }
                         //tier 1
                         break;
                     case EnemyWeightType.Fugly:
+                        choice = Random.Range(0, 3);
+                        switch (choice)
+                        {
+                            case 1:
+                                //outcast
+                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                break;
+                            case 2:
+                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                //dog
+                                break;
+                            case 3:
+                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                //lost ones
+                                break;
+                            default:
+                                break;
+                        }
                         break;
                     case EnemyWeightType.Dozer:
+                        choice = Random.Range(0, 3);
+                        switch (choice)
+                        {
+                            case 1:
+                                //outcast
+                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                break;
+                            case 2:
+                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                //dog
+                                break;
+                            case 3:
+                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                //lost ones
+                                break;
+                            default:
+                                break;
+                        }
                         break;
                     default:
                         break;
                 }
+
+                //spawn in this enemy
+                enemy = Instantiate(enemy, mPossibleEnemy.transform.position, mPossibleEnemy.transform.rotation);
+                enemiesInLevel.Add(enemy);
+
+
             }
         }
     }
