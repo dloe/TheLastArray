@@ -75,7 +75,7 @@ public class LevelAssetSpawn : MonoBehaviour
         ActivateItems();
 
         //ACTIVATE ENEMIES
-
+        ActivateEnemies();
 
     }
 
