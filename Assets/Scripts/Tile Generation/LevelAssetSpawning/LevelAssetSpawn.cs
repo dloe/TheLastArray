@@ -317,6 +317,68 @@ public class LevelAssetSpawn : MonoBehaviour
     #region Items
     void ActivateItems()
     {
+
+        //check weight of possible item
+        //highly favor that weight but could still spawn other 2 types
+        //normal %:
+        //resources = 50%
+        //item = 35%
+        //weapon = 15%
+        //weight adds 30 to weapon
+        //adds 30 to item
+        //adds 30 to resoruce
+
+        for(int pItemC = 0; pItemC < _possibleItems.Count; pItemC++)
+        {
+            switch (_possibleItems[pItemC].GetComponent<PossibleItem>().objectWeight)
+            {
+                case ObjectWeightType.None:
+                    //randomly picks one of three types
+                    //default %
+                    if(Random.value > 0.85)
+                    {
+                        //50% chance its a resource
+                        //Debug.Log("15");
+
+                    }
+                    else if (Random.value > 0.65)
+                    {
+                        //35% for item
+                        //Debug.Log("35");
+
+                    }
+                    else if(Random.value > 0.5)
+                    {
+                        //15% for weapon
+                        //Debug.Log("50");
+
+                    }
+
+                    break;
+                case ObjectWeightType.Weapon:
+                    
+
+                    break;
+                case ObjectWeightType.Item:
+
+
+                    break;
+                case ObjectWeightType.Resource:
+
+
+                    break;
+                default:
+                    break;
+            }
+
+
+
+
+        }
+
+
+
+
         //resources can either spawn at random or based on distance from any other existing resource
         //when activated that gameobject will be removed from the possibleResources and added to resourcesInLevel List
         //when item is activated can either be a weapon, resource or other item
