@@ -251,7 +251,7 @@ public class Player : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         
         float dist;
-        if (rayPlane.Raycast(ray, out dist))
+        if (rayPlane.Raycast(ray, out dist) && Time.timeScale != 0)
         {
             //if(Input.mousePosition.x)
             lookDir = new Vector3(ray.GetPoint(dist - xLookOffset).x , _mainTransform.position.y, ray.GetPoint(dist - zLookOffset).z );
