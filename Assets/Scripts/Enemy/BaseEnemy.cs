@@ -62,6 +62,8 @@ public class BaseEnemy : MonoBehaviour
     public float combatRadi;
     bool attacking = false;
 
+    Vector3 pointToFollow = new Vector3();
+
     private void Start()
     {
         _tickRate = 2;
@@ -168,7 +170,9 @@ public class BaseEnemy : MonoBehaviour
     {
         timer = speed * timer;
         Vector3 offSet = new Vector3(Mathf.Cos(timer), 0, Mathf.Sin(timer)) * radius; //Mathf.Cos(_angle * Mathf.PI);
-        transform.position = poi + offSet;
+        pointToFollow = poi + offSet;
+        transform.Translate(Vector3.right * Time.deltaTime * Mathf.Sin(Time.time * Mathf.PI), Space.World);
+        transform.position = Vector3.MoveTowards(transform.position, pointToFollow, speed * 4 * Time.deltaTime);
     }
 
     /// <summary>
@@ -256,7 +260,8 @@ public class BaseEnemy : MonoBehaviour
             Gizmos.DrawWireSphere(_target.transform.position, combatRadi);
         }
 
-
+        Gizmos.color = Color.magenta;
+        Gizmos.DrawSphere(pointToFollow, .5f);
 
 
 
