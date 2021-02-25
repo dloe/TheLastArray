@@ -78,6 +78,7 @@ public class TileGeneration : MonoBehaviour
 
     //does not include the path
     //private int totalSingleTilesInLevel = 3;
+    [HideInInspector]
     public GameObject _playerSpawnPreset;
     Tile _startTile;
     Tile _endTile;
@@ -148,10 +149,10 @@ public class TileGeneration : MonoBehaviour
 
     void SetLineRenderer()
     {
+        
         _lr = GetComponent<LineRenderer>();
         for(int t = 0; t < levelPath.Count; t++)
         {
-            //Debug.Log(t);
             _lr.SetPosition(t, levelPath[t].transform.position);
         }
 
@@ -460,6 +461,8 @@ public class TileGeneration : MonoBehaviour
         }
         tile.transform.parent = startingNode.transform;
         tile.GetComponent<Tile>().tileStatus = Tile.TileStatus.startingRoom;
+        tile.GetComponent<Tile>().ShadeStarting();
+        
         tile.GetComponent<Tile>().levelAssetPlaced = true;
         _playerSpawnPreset.name = "PlayerBeginningSpawnTile";
         _playerSpawnPreset.transform.parent = startingNode.transform;
@@ -467,8 +470,10 @@ public class TileGeneration : MonoBehaviour
 
         //add to front of allActiveTiles
         _allActiveTiles[0].tileStatus = Tile.TileStatus.path;
+        _allActiveTiles[0].ShadePath();
         _allActiveTiles.Insert(0, tile.GetComponent<Tile>());
-        
+        levelPath.Insert(0, tile.GetComponent<Tile>());
+        _lr.positionCount = levelPath.Count;
     }
 
     void AddRandomRooms()
