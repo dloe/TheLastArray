@@ -34,7 +34,13 @@ public class CameraController : MonoBehaviour
     {
         
         transform.position = playerObject.transform.position + offset;
-        panCamera();
+
+        if(!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy)
+        {
+            
+            panCamera();
+        }
+        
         clampOffset();
 
     }

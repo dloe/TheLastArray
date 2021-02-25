@@ -10,6 +10,17 @@ public class CraftingTable : MonoBehaviour
     
     public List<CraftingRecipe> recipes;
 
+    public static CraftingTable Instance;
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Debug.LogError("You Have Two Crafting Tables in the Scene, Please remove one of them");
+            Destroy(Instance.gameObject);
+        }
+        Instance = this;
+    }
+
     private void Start()
     {
         Menu = UI.Instance.transform.Find("Crafting Menu").gameObject;
