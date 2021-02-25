@@ -970,7 +970,7 @@ public class TileGeneration : MonoBehaviour
         int startY = 0; //= Random.Range(0, _levelHeight);
 
         //can either be (0,x), (x, 0), (max, x), (x, max)
-        int num = Random.Range(0, 4);
+        int num = Random.Range(1, 5);
         switch (num)
         {
             case 1:
@@ -994,6 +994,8 @@ public class TileGeneration : MonoBehaviour
                 _side = spawnRoomSide.left;
                 break;
             default:
+                Debug.Log(num);
+                Debug.Log("No side picked?");
                 break;
         }
 
