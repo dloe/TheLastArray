@@ -78,7 +78,7 @@ public class TileGeneration : MonoBehaviour
 
     //does not include the path
     //private int totalSingleTilesInLevel = 3;
-
+    public GameObject _PlayerSpawnTile;
     Tile _startTile;
     Tile _endTile;
     int _pathNumber = 0;
@@ -388,6 +388,9 @@ public class TileGeneration : MonoBehaviour
         AddRandomRooms();
         //Debug.Log("Added Random Rooms");
 
+        //add Start Room (outside of grid)
+        CreateSpawnRoom();
+
 
         //this will be removed eventaully
         if (hasDoors)
@@ -410,6 +413,41 @@ public class TileGeneration : MonoBehaviour
         
     }
     
+    void CreateSpawnRoom()
+    {
+        Vector3 spawnPos;
+        //depending on start tile cords, we add starting room
+        switch (_side)
+        {
+            case spawnRoomSide.right:
+                
+                spawnPos = new Vector3(_startTile.transform.position.x - (myLevelAssetsData.tileSize/2), _startTile.transform.position.y, _startTile.transform.position.z);
+                Instantiate(tilePlaceholder, spawnPos, _startTile.transform.rotation);
+                _PlayerSpawnTile = Instantiate(myLevelAssetsData.presetStartingTileAssets[Random.Range(0, myLevelAssetsData.presetStartingTileAssets.Count)], spawnPos, _startTile.transform.rotation);
+                break;
+            case spawnRoomSide.left:
+                spawnPos = new Vector3(_startTile.transform.position.x + (myLevelAssetsData.tileSize / 2), _startTile.transform.position.y, _startTile.transform.position.z);
+                Instantiate(tilePlaceholder, spawnPos, _startTile.transform.rotation);
+                _PlayerSpawnTile = Instantiate(myLevelAssetsData.presetStartingTileAssets[Random.Range(0, myLevelAssetsData.presetStartingTileAssets.Count)], spawnPos, _startTile.transform.rotation);
+                break;
+            case spawnRoomSide.up:
+                spawnPos = new Vector3(_startTile.transform.position.x, _startTile.transform.position.y, _startTile.transform.position.z + (myLevelAssetsData.tileSize / 2));
+                Instantiate(tilePlaceholder, spawnPos, _startTile.transform.rotation);
+                _PlayerSpawnTile = Instantiate(myLevelAssetsData.presetStartingTileAssets[Random.Range(0, myLevelAssetsData.presetStartingTileAssets.Count)], spawnPos, _startTile.transform.rotation);
+                break;
+            case spawnRoomSide.down:
+                spawnPos = new Vector3(_startTile.transform.position.x, _startTile.transform.position.y, _startTile.transform.position.z - (myLevelAssetsData.tileSize / 2));
+                Instantiate(tilePlaceholder, spawnPos, _startTile.transform.rotation);
+                _PlayerSpawnTile = Instantiate(myLevelAssetsData.presetStartingTileAssets[Random.Range(0, myLevelAssetsData.presetStartingTileAssets.Count)], spawnPos, _startTile.transform.rotation);
+                break;
+            default:
+                break;
+        }
+
+        _PlayerSpawnTile.name = "PlayerBeginningSpawnTile";
+        _PlayerSpawnTile.transform.parent = this.transform;
+    }
+
     void AddRandomRooms()
     {
         
@@ -893,6 +931,14 @@ public class TileGeneration : MonoBehaviour
         }
     }
 
+    enum spawnRoomSide
+    {
+        right,
+        left,
+        up,
+        down
+    }
+    spawnRoomSide _side;
     void ChooseStartEndRooms()
     {
         //first we get the start room and end room
@@ -906,18 +952,22 @@ public class TileGeneration : MonoBehaviour
             case 1:
                 startX = 0;
                 startY = Random.Range(0, _levelHeight);
+                _side = spawnRoomSide.down;
                 break;
             case 2:
                 startX = Random.Range(0, _levelWidth);
                 startY = 0;
+                _side = spawnRoomSide.left;
                 break;
             case 3:
                 startX = _levelWidth - 1;
                 startY = Random.Range(0, _levelHeight);
+                _side = spawnRoomSide.up;
                 break;
             case 4:
                 startX = Random.Range(0, _levelWidth);
                 startY = _levelHeight - 1;
+                _side = spawnRoomSide.right;
                 break;
             default:
                 break;
