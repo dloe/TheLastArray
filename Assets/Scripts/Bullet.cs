@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    public int damageToDeal = 1;
     public float speed = 10f;
     public float lifeTime = 5f;
     // Start is called before the first frame update
@@ -15,7 +16,31 @@ public class Bullet : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        CheckCollision();
         transform.Translate(Vector3.forward * speed * Time.deltaTime, Space.Self);
+        
+    }
+
+    void CheckCollision()
+    {
+        
+        RaycastHit hit;
+        if(Physics.SphereCast(transform.position, 0.1f,transform.forward,out hit, 0.3f))
+        {
+            
+            if(LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
+            {
+
+                
+                Destroy(gameObject);
+            }
+
+        }
+    }
+    private void OnDrawGizmos()
+    {
+        
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(transform.position + transform.forward * 0.3f, 0.1f);
     }
 }

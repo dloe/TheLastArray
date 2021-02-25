@@ -28,6 +28,11 @@ public class Player : MonoBehaviour
     public float xLookOffset = 3f;
     public float zLookOffset = 3f;
 
+    [Header("Extents for Melee BoxCast")]
+    public Vector3 meleeExtents = new Vector3();
+    [Header("Melee Forward Detection Distance")]
+    public float meleeDist = 1f;
+
     #region UI Variables
     public GameObject loseScreen;
     #endregion
@@ -225,6 +230,7 @@ public class Player : MonoBehaviour
             }
 
             
+            
         }
         
     }
@@ -265,6 +271,7 @@ public class Player : MonoBehaviour
 
     private void rangedAttack(Item.ItemType itemType)
     {
+        
         if (itemType == Item.ItemType.Pistol)
         {
             Instantiate(pistolBulletPrefab, transform.position, transform.rotation);
@@ -278,6 +285,16 @@ public class Player : MonoBehaviour
 
     private void meleeAttack()
     {
+        RaycastHit hit;
+        if(Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward,out hit, _mainTransform.rotation, meleeDist))
+        {
+            if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
+            {
+
+
+                Debug.Log("yep enemy hit");
+            }
+        }
         Debug.Log("Melee Attack");
     }
 
@@ -322,5 +339,17 @@ public class Player : MonoBehaviour
             craftingTable.DeactivateMenu();
             craftingTable = null;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+        if(Application.isPlaying)
+        {
+            Gizmos.color = Color.red;
+            
+            Gizmos.DrawCube(_mainTransform.position + _mainTransform.forward * meleeDist, meleeExtents);
+        }
+        
+        
     }
 }
