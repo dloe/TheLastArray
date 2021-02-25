@@ -355,7 +355,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         Destroy(_possibleItems[pItemC]);
                         itemsInLevelList.Add(item);
                     }
-                    else if(Random.value > 0.5)
+                    else // if(Random.value > 0.5)
                     {
                         //50% chance its a resource
                         //Debug.Log("50");
@@ -387,7 +387,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         resourcesInLevelList.Add(resource);
 
                     }
-                    else if (Random.value > 0.80)
+                    else // if (Random.value > 0.80)
                     {
                         int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
                         GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, _possibleItems[pItemC].transform.rotation);
@@ -408,7 +408,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         Destroy(_possibleItems[pItemC]);
                         itemsInLevelList.Add(item);
                     }
-                    else if (Random.value > 0.65)
+                    else //if (Random.value > 0.65)
                     {
                         int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
                         GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, _possibleItems[pItemC].transform.rotation);
@@ -429,7 +429,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         Destroy(_possibleItems[pItemC]);
                         resourcesInLevelList.Add(resource);
                     }
-                    else if (Random.value > 0.80)
+                    else //if (Random.value > 0.80)
                     {
                         int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
                         GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, _possibleItems[pItemC].transform.rotation);
@@ -449,6 +449,10 @@ public class LevelAssetSpawn : MonoBehaviour
        
     }
 
+    /// <summary>
+    /// NOT IN USE
+    /// - Randomly picked objs to be items, resources, weapon
+    /// </summary>
     void oldS()
     {
         //first spawn in X amount of weapons
@@ -535,12 +539,13 @@ public class LevelAssetSpawn : MonoBehaviour
             if(_possibleEnemiesInLevel[enemyCount].TryGetComponent<PossibleEnemy>(out PossibleEnemy mPossibleEnemy))
             {
                 GameObject enemy = myLevelAsset.enemyPrefab.dogEnemy;
-                int choice;
+                int choice = 0;
                 switch (mPossibleEnemy.type)
                 {
                     case EnemyWeightType.None:
                         //picks between outcasts, dog or lost ones
                         choice = Random.Range(0, 3);
+                        
                         switch (choice)
                         {
                             case 0:
@@ -700,9 +705,13 @@ public class LevelAssetSpawn : MonoBehaviour
                 enemy = Instantiate(enemy, mPossibleEnemy.transform.position, mPossibleEnemy.transform.rotation);
                 enemiesInLevel.Add(enemy);
                 enemy.transform.parent = mPossibleEnemy.transform.parent;
-                _possibleEnemiesInLevel.RemoveAt(enemyCount);
-                //Destroy(mPossibleEnemy.gameObject);
+
+                Destroy(_possibleEnemiesInLevel[enemyCount]);
+                //_possibleEnemiesInLevel.RemoveAt(enemyCount);
+                //Debug.Log(enemyCount);
+
             }
+            
         }
     }
     void ActivateEnemiesTier2()
@@ -863,7 +872,8 @@ public class LevelAssetSpawn : MonoBehaviour
                 enemy = Instantiate(enemy, mPossibleEnemy.transform.position, mPossibleEnemy.transform.rotation);
                 enemiesInLevel.Add(enemy);
                 enemy.transform.parent = mPossibleEnemy.transform.parent;
-                _possibleEnemiesInLevel.RemoveAt(enemyCount);
+                Destroy(_possibleEnemiesInLevel[enemyCount]);
+                //_possibleEnemiesInLevel.RemoveAt(enemyCount);
                 //Destroy(mPossibleEnemy.gameObject);
 
             }
@@ -954,7 +964,8 @@ public class LevelAssetSpawn : MonoBehaviour
                 enemy = Instantiate(enemy, mPossibleEnemy.transform.position, mPossibleEnemy.transform.rotation);
                 enemiesInLevel.Add(enemy);
                 enemy.transform.parent = mPossibleEnemy.transform.parent;
-                _possibleEnemiesInLevel.RemoveAt(enemyCount);
+                Destroy(_possibleEnemiesInLevel[enemyCount]);
+                //_possibleEnemiesInLevel.RemoveAt(enemyCount);
                 //Destroy(mPossibleEnemy.gameObject);
 
             }

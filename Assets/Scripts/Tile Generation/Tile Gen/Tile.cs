@@ -149,7 +149,7 @@ public class Tile : MonoBehaviour
             //spawn at local pos -25, 10, 0 with rotation of -90, 0, -90
             GameObject wall = Instantiate(myLevelAssetData.levelWall, transform.position, transform.rotation);
             wall.transform.parent = this.transform;
-            wall.transform.localPosition = new Vector3(-12.5f, 10, 0);
+            wall.transform.localPosition = new Vector3(-12.5f, 5, 0);
             wall.transform.eulerAngles = new Vector3(-90, 0, -90);
             
         }
@@ -159,7 +159,7 @@ public class Tile : MonoBehaviour
             //spawn at local pos 25, 10, 0 with rotation of -90, 0, 90
             GameObject wall = Instantiate(myLevelAssetData.levelWall, transform.position, transform.rotation);
             wall.transform.parent = this.transform;
-            wall.transform.localPosition = new Vector3(12.5f, 10, 0);
+            wall.transform.localPosition = new Vector3(12.5f, 5, 0);
             wall.transform.eulerAngles = new Vector3(-90, 0, 90);
             
         }
@@ -169,7 +169,7 @@ public class Tile : MonoBehaviour
             //spawn at local pos 0, 10, 25 with rotation of -90, 0, -180
             GameObject wall = Instantiate(myLevelAssetData.levelWall, transform.position, transform.rotation);
             wall.transform.parent = this.transform;
-            wall.transform.localPosition = new Vector3(0, 10, -12.5f);
+            wall.transform.localPosition = new Vector3(0, 5, -12.5f);
             wall.transform.eulerAngles = new Vector3(-90, 0, -180);
             
         }
@@ -179,7 +179,7 @@ public class Tile : MonoBehaviour
             //spawn at local pos 0, 10, -25 with rotation of -90, 0, 0
             GameObject wall = Instantiate(myLevelAssetData.levelWall, transform.position, transform.rotation);
             wall.transform.parent = this.transform;
-            wall.transform.localPosition = new Vector3(0, 10, 12.5f);
+            wall.transform.localPosition = new Vector3(0, 5, 12.5f);
             wall.transform.eulerAngles = new Vector3(-90, 0, 0);
             
         }
