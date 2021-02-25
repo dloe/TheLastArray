@@ -69,6 +69,17 @@ public class LevelAssetSpawn : MonoBehaviour
         {
             t.ActivateWalls();
             AnalyzeTile(t);
+
+            //add starting tile resources
+            if(t.tileStatus == Tile.TileStatus.startingRoom)
+            {
+                for (int posResourceCount = 0; posResourceCount < t.presetTile.GetComponent<PresetTileInfo>().possiblePresetItems.Length; posResourceCount++)
+                {
+                    //co++;
+                    // Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
+                    _possibleItems.Add(t.presetTile.GetComponent<PresetTileInfo>().possiblePresetItems[posResourceCount]);
+                }
+            }
         }
 
         //SPAWN IN RESOURCES
