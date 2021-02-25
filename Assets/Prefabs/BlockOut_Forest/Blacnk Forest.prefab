@@ -1161,7 +1161,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dde518324ef83804f89fb12f0fc34bfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  possiblePresetItems: []
+  possiblePresetItems:
+  - {fileID: 3862389377761265072}
   enemiesOnPreset:
   - {fileID: 8528283239962747740}
 --- !u!1 &6788155082912626917
@@ -1769,6 +1770,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 6788155083712525617}
     m_Modifications:
+    - target: {fileID: 534348307021387147, guid: 530153e6e7c8e2949b56521beffa0a50,
+        type: 3}
+      propertyPath: objectWeight
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3166433898485085784, guid: 530153e6e7c8e2949b56521beffa0a50,
         type: 3}
       propertyPath: m_Enabled
@@ -1836,6 +1842,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 530153e6e7c8e2949b56521beffa0a50, type: 3}
+--- !u!1 &3862389377761265072 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6156492745671606667, guid: 530153e6e7c8e2949b56521beffa0a50,
+    type: 3}
+  m_PrefabInstance: {fileID: 6983314064570401851}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &427853466254003481 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7285062030292683042, guid: 530153e6e7c8e2949b56521beffa0a50,
