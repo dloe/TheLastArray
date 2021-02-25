@@ -709,9 +709,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 Destroy(_possibleEnemiesInLevel[enemyCount]);
                 //_possibleEnemiesInLevel.RemoveAt(enemyCount);
                 //Debug.Log(enemyCount);
-
             }
-            
         }
     }
     void ActivateEnemiesTier2()
