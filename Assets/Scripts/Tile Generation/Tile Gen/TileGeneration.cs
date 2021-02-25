@@ -430,7 +430,7 @@ public class TileGeneration : MonoBehaviour
                 _playerSpawnPreset = Instantiate(myLevelAssetsData.presetStartingTileAssets[Random.Range(0, myLevelAssetsData.presetStartingTileAssets.Count)], spawnPos, _startTile.transform.rotation);
                 tile.GetComponent<Tile>().downNeighbor = _allActiveTiles[0];
                 _allActiveTiles[0].upNeighbor = tile.GetComponent<Tile>();
-               // tile.transform.localEulerAngles = new Vector3(tile.transform.localEulerAngles.x, -90, tile.transform.localEulerAngles.z);
+                _playerSpawnPreset.transform.localEulerAngles = new Vector3(tile.transform.localEulerAngles.x, -90, tile.transform.localEulerAngles.z);
                 break;
             case spawnRoomSide.left:
                 spawnPos = new Vector3(_startTile.transform.position.x + (myLevelAssetsData.tileSize / 2), _startTile.transform.position.y, _startTile.transform.position.z);
@@ -438,7 +438,7 @@ public class TileGeneration : MonoBehaviour
                 _playerSpawnPreset = Instantiate(myLevelAssetsData.presetStartingTileAssets[Random.Range(0, myLevelAssetsData.presetStartingTileAssets.Count)], spawnPos, _startTile.transform.rotation);
                 tile.GetComponent<Tile>().upNeighbor = _allActiveTiles[0];
                 _allActiveTiles[0].downNeighbor = tile.GetComponent<Tile>();
-                //tile.transform.localEulerAngles = new Vector3(tile.transform.localEulerAngles.x, 90, tile.transform.localEulerAngles.z);
+                _playerSpawnPreset.transform.localEulerAngles = new Vector3(tile.transform.localEulerAngles.x, 90, tile.transform.localEulerAngles.z);
                 break;
             case spawnRoomSide.up:
                 spawnPos = new Vector3(_startTile.transform.position.x, _startTile.transform.position.y, _startTile.transform.position.z + (myLevelAssetsData.tileSize / 2));
@@ -453,7 +453,7 @@ public class TileGeneration : MonoBehaviour
                 _playerSpawnPreset = Instantiate(myLevelAssetsData.presetStartingTileAssets[Random.Range(0, myLevelAssetsData.presetStartingTileAssets.Count)], spawnPos, _startTile.transform.rotation);
                 tile.GetComponent<Tile>().rightNeighbor = _allActiveTiles[0];
                 _allActiveTiles[0].leftNeighbor = tile.GetComponent<Tile>();
-                tile.transform.localEulerAngles = new Vector3(tile.transform.localEulerAngles.x, 180, tile.transform.localEulerAngles.z);
+                _playerSpawnPreset.transform.localEulerAngles = new Vector3(tile.transform.localEulerAngles.x, 180, tile.transform.localEulerAngles.z);
                 break;
             default:
                 break;
@@ -956,6 +956,7 @@ public class TileGeneration : MonoBehaviour
 
     enum spawnRoomSide
     {
+        none,
         right,
         left,
         up,
