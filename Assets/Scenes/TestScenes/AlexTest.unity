@@ -321,7 +321,7 @@ GameObject:
   - component: {fileID: 459650364}
   - component: {fileID: 459650362}
   - component: {fileID: 459650363}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Basic Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -354,7 +354,11 @@ MonoBehaviour:
   _timer: 0
   disToTarget: 0
   disToSpawn: 0
+  angleToTarget: 0
+  angleToSpawn: 0
   combatRadi: 4
+  phase: 0
+  timerAgro: 0
 --- !u!54 &459650363
 Rigidbody:
   m_ObjectHideFlags: 0
