@@ -51,6 +51,7 @@ public class LevelAssetSpawn : MonoBehaviour
     //first number represents the number of times tiles in that list were spawned
     //second number represents the tile numbers that were spawned that amount of times
     List<List<int>> _magAssetCount;
+    public int enemyCount;
 
     private void Awake()
     {
@@ -579,7 +580,7 @@ public class LevelAssetSpawn : MonoBehaviour
     }
     #endregion
 
-    public int enemyCount;
+    
     #region Enemies
 
 
