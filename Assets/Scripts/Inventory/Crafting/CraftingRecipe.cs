@@ -12,11 +12,19 @@ public struct ResourceRequirement
     public int Amount;
 }
 
+[Serializable]
+public struct ItemResult
+{
+    public Item.ItemType itemType;
+    public ItemData itemData;
+}
+
 [CreateAssetMenu]
 public class CraftingRecipe : ScriptableObject
 {
     public List<ResourceRequirement> Requirements;
-    public Item.ItemType Result;
+    
+    public ItemResult Result;
 
     /// <summary>
     /// Returns True if This Item is Craftable
@@ -90,7 +98,7 @@ public class CraftingRecipe : ScriptableObject
                 }
                 
             }
-            player.inventory.AddItem(new Item{ itemType = Result });
+            player.inventory.AddItem(new Item(Result.itemType, Result.itemData));
         }
 
         player.craftingTable.UpdateCraftingTable();

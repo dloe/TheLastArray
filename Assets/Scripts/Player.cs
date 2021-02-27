@@ -162,7 +162,7 @@ public class Player : MonoBehaviour
             {
                 if (itemToGrab && !inventory.IsFull())
                 {
-                    inventory.AddItem(new Item { itemType = itemToGrab.itemType });
+                    inventory.AddItem(new Item(itemToGrab.itemType, itemToGrab.worldItemData));
                     Destroy(itemToGrab.gameObject);
                     itemToGrab = null;
                 }
@@ -204,7 +204,7 @@ public class Player : MonoBehaviour
                     case Item.ItemType.Rifle:
                         rangedAttack(inventory.selectedItem.itemType);
                         break;
-                    case Item.ItemType.MedKit:
+                    case Item.ItemType.Heal:
                         if (Health < maxHealth)
                         {
                             heal();
@@ -285,22 +285,38 @@ public class Player : MonoBehaviour
 
     private void meleeAttack()
     {
+        Debug.Log("Melee Attack");
         RaycastHit hit;
-        if(Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward,out hit, _mainTransform.rotation, meleeDist))
+        if(Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward,out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange))
         {
             if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
             {
-
+                Debug.Log("Durability Before: " + inventory.selectedItem.itemData.durability);
+                if(inventory.selectedItem.itemData.hasDurability)
+                {
+                    inventory.selectedItem.itemData.durability--;
+                    Debug.Log("Durability After: " + inventory.selectedItem.itemData.durability);
+                    if (inventory.selectedItem.itemData.durability <= 0)
+                    {
+                        if(inventory.selectedItem.itemData.name.Contains("Instance"))
+                        {
+                            Destroy(inventory.selectedItem.itemData);
+                            inventory.RemoveItem(inventory.selectedItem);
+                            
+                        }
+                        
+                    }
+                }
 
                 Debug.Log("yep enemy hit");
             }
         }
-        Debug.Log("Melee Attack");
+        
     }
 
     private void heal()
     {
-        Health += medKitHealAmount;
+        Health += inventory.selectedItem.itemData.amountToHeal;
     }
 
     public void TakeDamage(int damage)
@@ -343,11 +359,11 @@ public class Player : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if(Application.isPlaying)
+        if(Application.isPlaying && inventory.selectedItem != null)
         {
             Gizmos.color = Color.red;
             
-            Gizmos.DrawCube(_mainTransform.position + _mainTransform.forward * meleeDist, meleeExtents);
+            Gizmos.DrawCube(_mainTransform.position + _mainTransform.forward * inventory.selectedItem.itemData.meleeRange, meleeExtents);
         }
         
         
