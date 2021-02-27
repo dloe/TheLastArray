@@ -25,7 +25,7 @@ public class LevelAssetSpawn : MonoBehaviour
     Vector3 _av;
 
     //each tile preset has possible locations for resources, those go here
-    public List<GameObject> _possibleItems = new List<GameObject>();
+    List<GameObject> _possibleItems = new List<GameObject>();
     [Header("Resources In Level")]
     public List<GameObject> resourcesInLevelList = new List<GameObject>();
     [Header("Items In Level")]
@@ -33,16 +33,20 @@ public class LevelAssetSpawn : MonoBehaviour
     [Header("Weapons In Level")]
     public List<GameObject> weaponsInLevelList = new List<GameObject>();
 
+    public List<GameObject> _possibleObjectives = new List<GameObject>();
+
     [Header("Enemies In Level")]
     public List<GameObject> enemiesInLevel = new List<GameObject>();
-    public List<GameObject> _possibleEnemiesInLevel = new List<GameObject>();
+    List<GameObject> _possibleEnemiesInLevel = new List<GameObject>();
 
     //get these values from scriptable obj. Total amount we spawn in (will replace theses)
     int _weaponsInLevel = 1;
     int _itemsInLevel = 4;
     int __resourcesInLevel = 10;
 
-   
+    GameObject endObjTile;
+    [Header("Objectives In Level")]
+    public List<GameObject> objectivesInLevel = new List<GameObject>();
 
     //first number represents the number of times tiles in that list were spawned
     //second number represents the tile numbers that were spawned that amount of times
@@ -88,7 +92,26 @@ public class LevelAssetSpawn : MonoBehaviour
         //ACTIVATE ENEMIES
         ActivateEnemies();
 
+        //ACTIVATE OBJECTIVES
+        ActivateObjectives();
     }
+
+    #region Objective Spawn
+    /// <summary>
+    /// - objective will spawn on boss tile
+    /// - if final tile is on a 2 x 2, get that tile and spawn an objective from it
+    /// 
+    /// 
+    /// </summary>
+    public void ActivateObjectives()
+    {
+        objectivesInLevel.Add(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
+
+        //picks random objective
+
+
+    }
+    #endregion
 
     #region Preset Spawning
     /// <summary>
@@ -100,6 +123,7 @@ public class LevelAssetSpawn : MonoBehaviour
     {
         //will first see if we can link tiles
         _tArray = new Tile[4];
+        bool obj = false;
         //check neighbors, first up, then left, then right then down
         if (!tile.checkFor4Some)
         {
@@ -147,6 +171,12 @@ public class LevelAssetSpawn : MonoBehaviour
                                     //Debug.Log("ap");
                                     tile3.levelAssetPlaced = true;
 
+                                    if(tile3.tileStatus == Tile.TileStatus.boss)
+                                    {
+                                        Debug.Log("big tile has objectvie");
+                                        obj = true;
+                                    }
+
                                     if (tile3.presetNum != -1)
                                     {
                                        // Debug.Log(tile3.presetNum);
@@ -169,7 +199,10 @@ public class LevelAssetSpawn : MonoBehaviour
                                     tile3.transform.parent = fourSomeTile.transform;
                                 }
                                 
-                                SpawnLevelBigAsset(fourSomeTile);
+                                SpawnLevelBigAsset(fourSomeTile, obj);
+
+                                
+
                                 return;
                             }
                             //else
@@ -214,16 +247,33 @@ public class LevelAssetSpawn : MonoBehaviour
         //will pick the least used preset but for now it will be random
         int index = FindLowestMagnatudeSMOL();//Random.Range(0, myLevelAsset.presetTileAssets.Count);
 
+        GameObject preset = null;
+        // Debug.Log(index);
+        if (tile.tileStatus != Tile.TileStatus.boss)
+        {
+            preset = Instantiate(myLevelAsset.presetTileAssets[index], tile.transform.position, tile.transform.rotation);
+            tile.presetNum = index;
+            preset.transform.parent = tile.transform.parent;
+            tile.presetTile = preset;
+            assetCountArray[index] += 1;
 
-       // Debug.Log(index);
-        GameObject preset = Instantiate(myLevelAsset.presetTileAssets[index], tile.transform.position, tile.transform.rotation);
-        tile.presetNum = index;
-        preset.transform.parent = tile.transform.parent;
-        tile.presetTile = preset;
-        assetCountArray[index] += 1;
-
-        tile.levelAssetPlaced = true;
-
+            tile.levelAssetPlaced = true;
+        }
+        else
+        {
+            //if  this tile is the final room, make sure it has an objective
+            preset = Instantiate(myLevelAsset.presetObjectiveTiles[Random.Range(0, myLevelAsset.presetObjectiveTiles.Count)], tile.transform.position, tile.transform.rotation);
+            
+            preset.transform.parent = tile.transform.parent;
+            tile.presetTile = preset;
+            int tileIndex = myLevelAsset.presetTileAssets.IndexOf(myLevelAsset.presetObjectiveTiles[Random.Range(0, myLevelAsset.presetObjectiveTiles.Count)]);
+            //Debug.Log(tileIndex);
+            assetCountArray[tileIndex] += 1;
+            tile.presetNum = tileIndex;
+            tile.levelAssetPlaced = true;
+            endObjTile = preset;
+            //Debug.Log("FINAL ROOM OBJECTIVE PLACED");
+        }
 
         //Check this tile for any possible locations of resources AND ENEMIES
         //add those spots to the possible resources in level
@@ -249,17 +299,28 @@ public class LevelAssetSpawn : MonoBehaviour
     /// - spawns bigger 4 tile asset
     /// </summary>
     /// <param name="bigTile"> The parent of the 4 linked tiles being analyzed and spawned on. </param>
-    void SpawnLevelBigAsset(GameObject bigTile)
+    void SpawnLevelBigAsset(GameObject bigTile, bool hasObj)
     {
         Debug.Log("Spawned big boi");
         //will pick the least used preset but for now it will be random
         int index = Random.Range(0, myLevelAsset.presetBigTileAssets.Count);
+        GameObject preset;
+        if (!hasObj)
+        {
+            preset = Instantiate(myLevelAsset.presetBigTileAssets[index], bigTile.transform.position, bigTile.transform.rotation);
+            preset.transform.parent = bigTile.transform;
 
+            bigAssetCountArray[index] += 1;
+        }
+        else
+        {
+            preset = Instantiate(myLevelAsset.presetBigTileAssets[1], bigTile.transform.position, bigTile.transform.rotation);
+            preset.transform.parent = bigTile.transform;
 
-        GameObject preset = Instantiate(myLevelAsset.presetBigTileAssets[index], bigTile.transform.position, bigTile.transform.rotation);
-        preset.transform.parent = bigTile.transform;
-
-        bigAssetCountArray[index] += 1;
+            bigAssetCountArray[1] += 1;
+            endObjTile = preset;
+            Debug.Log("BIG ASSET WITH OBJ");
+        }
 
 
         if (preset.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))

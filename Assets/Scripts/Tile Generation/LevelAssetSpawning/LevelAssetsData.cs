@@ -45,5 +45,8 @@ public class LevelAssetsData : ScriptableObject
     public List<GameObject> presetBigTileAssets;
     [Space(10)]
     public EnemyPrefab enemyPrefab;
+    [Space(10)]
+    [Header("Tile Prefabs with objectives")]
+    public List<GameObject> presetObjectiveTiles;
 }
 
