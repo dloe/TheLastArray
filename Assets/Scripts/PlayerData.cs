@@ -6,4 +6,10 @@ using UnityEngine;
 public class PlayerData : ScriptableObject
 {
     public bool levelLoaded;
+
+    public int previouslyCompletedObj;
+
+    public string currentObjString;
+    public int objectiveCount;
+    public bool objectiveComplete;
 }
