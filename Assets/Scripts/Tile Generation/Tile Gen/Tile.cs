@@ -36,38 +36,57 @@ public class Tile : MonoBehaviour
     [Space(5)]
     public TileStatus tileStatus;
 
-    //public NodeRef nodeColor;
-    public GameObject doorRef;
-
+    [Header("Tiles Neighbors - One on each side of square")]
     public Tile upNeighbor;
     public Tile downNeighbor;
     public Tile leftNeighbor;
     public Tile rightNeighbor;
 
+    [HideInInspector]
+    //last tile in path or branch
     public Tile previousTile;
-
+    [HideInInspector]
+    //has been checked in tile system 
     public bool checkedForPath = false;
+    [HideInInspector]
+    //tile exists on path itself
     public bool partOfPath = false;
 
+    [HideInInspector]
+    //what number does this tile have on path (-1 means not on path)
     public int pathNumber = -1;
 
-    public int doorsActivated = 0;
-
-    public bool hasDoors = false;
-
-    //when door is activated, it will not spawn any blockage or enviornment where the door is located, otherwise that direction/doorway will be blocked for the player
-    public GameObject[] doors;
-
+    
+    [HideInInspector]
+    //is this tile connected to path (like branch or other)
     public bool connectedToPath = false;
 
     private Color _nodeColor = Color.red;
-
+    [Header("Level Asset Scriptable Obj")]
     public LevelAssetsData myLevelAssetData;
     public bool levelAssetPlaced = false;
 
     private TileGeneration myTileGen;
-
+    //small details about tile for debugging
     public string description = "";
+    [HideInInspector]
+    //checked and linked to giant preset
+    public bool checkFor4Some = false;
+    [Header("Tile Preset")]
+    public GameObject presetTile;
+    [HideInInspector]
+    public int presetNum = -1;
+
+    #region Door Variables
+    /// <summary>
+    /// Door vars will only be used in final level
+    /// </summary>
+    public int doorsActivated = 0;
+    public GameObject doorRef;
+    public bool hasDoors = false;
+    //when door is activated, it will not spawn any blockage or enviornment where the door is located, otherwise that direction/doorway will be blocked for the player
+    public GameObject[] doors;
+    #endregion
 
     private void Start()
     {
@@ -130,7 +149,7 @@ public class Tile : MonoBehaviour
             //spawn at local pos -25, 10, 0 with rotation of -90, 0, -90
             GameObject wall = Instantiate(myLevelAssetData.levelWall, transform.position, transform.rotation);
             wall.transform.parent = this.transform;
-            wall.transform.localPosition = new Vector3(-25, 10, 0);
+            wall.transform.localPosition = new Vector3(-12.5f, 5, 0);
             wall.transform.eulerAngles = new Vector3(-90, 0, -90);
             
         }
@@ -140,7 +159,7 @@ public class Tile : MonoBehaviour
             //spawn at local pos 25, 10, 0 with rotation of -90, 0, 90
             GameObject wall = Instantiate(myLevelAssetData.levelWall, transform.position, transform.rotation);
             wall.transform.parent = this.transform;
-            wall.transform.localPosition = new Vector3(25, 10, 0);
+            wall.transform.localPosition = new Vector3(12.5f, 5, 0);
             wall.transform.eulerAngles = new Vector3(-90, 0, 90);
             
         }
@@ -150,7 +169,7 @@ public class Tile : MonoBehaviour
             //spawn at local pos 0, 10, 25 with rotation of -90, 0, -180
             GameObject wall = Instantiate(myLevelAssetData.levelWall, transform.position, transform.rotation);
             wall.transform.parent = this.transform;
-            wall.transform.localPosition = new Vector3(0, 10, -25);
+            wall.transform.localPosition = new Vector3(0, 5, -12.5f);
             wall.transform.eulerAngles = new Vector3(-90, 0, -180);
             
         }
@@ -160,552 +179,9 @@ public class Tile : MonoBehaviour
             //spawn at local pos 0, 10, -25 with rotation of -90, 0, 0
             GameObject wall = Instantiate(myLevelAssetData.levelWall, transform.position, transform.rotation);
             wall.transform.parent = this.transform;
-            wall.transform.localPosition = new Vector3(0, 10, 25);
+            wall.transform.localPosition = new Vector3(0, 5, 12.5f);
             wall.transform.eulerAngles = new Vector3(-90, 0, 0);
             
-        }
-    }
-
-    public void ActivateDoorsBranch()
-    {
-        bool firstBranchDoor = false;
-        int[] doorsToCheck = new int[] { 1, 2, 3, 4 };
-        doorsToCheck = reshuffle(doorsToCheck);
-
-        for (int count = 0; count < 4; count++)
-        {
-            // Debug.Log(count);
-            //will see which of its neighbors are paths/or active
-            switch (doorsToCheck[count])
-            {
-                case 1:
-                   // Debug.Log(0);
-                    //if any neighbor is boss room, or path, deactivate that door
-                    if (upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom || upNeighbor.tileStatus == TileStatus.boss || upNeighbor.tileStatus == TileStatus.path)
-                    {
-                        //Debug.Log("off");
-                        doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
-                    }
-                    else 
-                    {
-                        //50% chance of activating door if neighbor is starting room
-                        if (upNeighbor.tileStatus == TileStatus.startingRoom && Random.value < 0.5f)
-                        {
-                            doorsActivated++;
-                            doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
-                        }
-                        //checks 4 neighbors, if it has a neighbor that is that tiles previous, turn on that door
-                        //have a 20% chance of looking at another neighbor and turning on door if they are just a basic room
-                        else if (upNeighbor == previousTile)
-                        {
-                            if (firstBranchDoor == false)
-                            {
-                                firstBranchDoor = true;
-                                doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
-                                doorsActivated++;
-                            }
-                            else if (Random.value < 0.2f)
-                            {
-                                doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
-                                doorsActivated++;
-                            }
-                            else
-                                doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
-
-                        }
-                    }
-                    break;
-                case 2:
-                   // Debug.Log(1);
-                    //if any neighbor is boss room, or path, deactivate that door
-                    if (downNeighbor == null || downNeighbor.tileStatus == TileStatus.nullRoom || downNeighbor.tileStatus == TileStatus.boss || downNeighbor.tileStatus == TileStatus.path)
-                    {
-                        //Debug.Log("off");
-                        doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
-                    }
-                    else
-                    {
-                        //50% chance of activating door if neighbor is starting room
-                        if (downNeighbor.tileStatus == TileStatus.startingRoom && Random.value < 0.5f)
-                        {
-                            doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
-                            doorsActivated++;
-                        }
-                        //checks 4 neighbors, if it has a neighbor that is that tiles previous, turn on that door
-                        //have a 20% chance of looking at another neighbor and turning on door if they are just a basic room
-                        else if (downNeighbor == previousTile)
-                        {
-                            if (firstBranchDoor == false)
-                            {
-                                firstBranchDoor = true;
-                                doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
-                                doorsActivated++;
-                            }
-                            else if (Random.value < 0.2f)
-                            {
-                                doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
-                                doorsActivated++;
-                            }
-                            else
-                                doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
-
-                        }
-                    }
-                    break;
-                case 3:
-                   // Debug.Log(2);
-                    //if any neighbor is boss room, or path, deactivate that door
-                    if (leftNeighbor == null || leftNeighbor.tileStatus == TileStatus.nullRoom || leftNeighbor.tileStatus == TileStatus.boss || leftNeighbor.tileStatus == TileStatus.path)
-                    {
-                        //Debug.Log("off");
-                        doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
-                    }
-                    else
-                    {
-                        //50% chance of activating door if neighbor is starting room
-                        if (leftNeighbor.tileStatus == TileStatus.startingRoom && Random.value < 0.5f)
-                        {
-                            doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
-                            doorsActivated++;
-                        }
-                        //checks 4 neighbors, if it has a neighbor that is that tiles previous, turn on that door
-                        //have a 20% chance of looking at another neighbor and turning on door if they are just a basic room
-                        else if (leftNeighbor == previousTile)
-                        {
-                            if (firstBranchDoor == false)
-                            {
-                                firstBranchDoor = true;
-                                doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
-                                doorsActivated++;
-                            }
-                            else if (Random.value < 0.2f)
-                            {
-                                doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
-                                doorsActivated++;
-                            }
-                            else
-                                doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
-
-                        }
-                    }
-                    break;
-                case 4:
-                  //  Debug.Log(3);
-                    //if any neighbor is boss room, or path, deactivate that door
-                    if (rightNeighbor == null || rightNeighbor.tileStatus == TileStatus.nullRoom || rightNeighbor.tileStatus == TileStatus.boss || rightNeighbor.tileStatus == TileStatus.path)
-                    {
-                        //Debug.Log("off");
-                        doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
-                    }
-                    else
-                    {
-                        //50% chance of activating door if neighbor is starting room
-                        if (rightNeighbor.tileStatus == TileStatus.startingRoom && Random.value < 0.5f)
-                        {
-                            doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
-                            doorsActivated++;
-                        }
-                        //checks 4 neighbors, if it has a neighbor that is that tiles previous, turn on that door
-                        //have a 20% chance of looking at another neighbor and turning on door if they are just a basic room
-                        else if (rightNeighbor == previousTile)
-                        {
-                            if (firstBranchDoor == false)
-                            {
-                                firstBranchDoor = true;
-                                doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
-                                doorsActivated++;
-                            }
-                            else if (Random.value < 0.2f)
-                            {
-                                doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
-                                doorsActivated++;
-                            }
-                            else
-                                doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
-
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        
-        
-
-    }
-
-    //for rooms not on branches or paths
-    public void ActivateDoorsRandom()
-    {
-        bool activateGarantee = false;
-        int doorsOn = 0;
-        //goes through and turns on 1 door garenteed, then has a very low chance of turning on another door, and even lower chance of another door and even lower chance of another door, etc
-
-        //bool firstBranchDoor = false;
-        int[] doorsToCheck = new int[] { 1, 2, 3, 4 };
-        doorsToCheck = reshuffle(doorsToCheck);
-
-        for (int count = 0; count < 4; count++)
-        {
-            // Debug.Log(count);
-            //will see which of its neighbors are paths/or active
-            switch (doorsToCheck[count])
-            {
-                case 1:
-                    // Debug.Log(0);
-                    //if any neighbor is null, boss room, or path, deactivate that door
-                    if (upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom || upNeighbor.tileStatus == TileStatus.boss)
-                    {
-                        //Debug.Log("off");
-                        doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
-                    }
-                    else
-                    {
-                        //if its part of path, or a basic room
-                        if(upNeighbor.tileStatus == TileStatus.startingRoom || upNeighbor.tileStatus == TileStatus.room || upNeighbor.tileStatus == TileStatus.path)
-                        {
-                            if (activateGarantee == false)
-                            {
-                                //Debug.Log("on");
-                                activateGarantee = true;
-                                doorsOn++;
-                                doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
-                                doorsActivated++;
-                            }
-                            else if (Random.value < (float)0.3 / doorsOn)
-                            {
-                                //Debug.Log("on");
-                                doorsOn++;
-                                doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
-                                doorsActivated++;
-                            }
-                            else
-                            {
-                                //Debug.Log("off");
-                                doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
-                            }
-                        }
-                    }
-                    break;
-                case 2:
-                    // Debug.Log(1);
-                    //if any neighbor is null, boss room, or path, deactivate that door
-                    if (downNeighbor == null || downNeighbor.tileStatus == TileStatus.nullRoom || downNeighbor.tileStatus == TileStatus.boss)
-                    {
-                        //Debug.Log("off");
-                        doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
-                    }
-                    else
-                    {
-                        //if its part of path, or a basic room
-                        if (downNeighbor.tileStatus == TileStatus.startingRoom || downNeighbor.tileStatus == TileStatus.room || downNeighbor.tileStatus == TileStatus.path)
-                        {
-                            if (activateGarantee == false)
-                            {
-                                //Debug.Log("on");
-                                activateGarantee = true;
-                                doorsOn++;
-                                doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
-                                doorsActivated++;
-                            }
-                            else if (Random.value < (float)0.3 / doorsOn)
-                            {
-                                //Debug.Log("on");
-                                doorsOn++;
-                                doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
-                                doorsActivated++;
-                            }
-                            else
-                            {
-                                //Debug.Log("off");
-                                doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
-                            }
-                        }
-                    }
-                    break;
-                case 3:
-                    if (leftNeighbor == null || leftNeighbor.tileStatus == TileStatus.nullRoom || leftNeighbor.tileStatus == TileStatus.boss)
-                    {
-                        //Debug.Log("off");
-                        doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
-                    }
-                    else
-                    {
-                        //if its part of path, or a basic room
-                        if (leftNeighbor.tileStatus == TileStatus.startingRoom || leftNeighbor.tileStatus == TileStatus.room || leftNeighbor.tileStatus == TileStatus.path)
-                        {
-                            if (activateGarantee == false)
-                            {
-                                //Debug.Log("on");
-                                activateGarantee = true;
-                                doorsOn++;
-                                doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
-                                doorsActivated++;
-                            }
-                            else if (Random.value < (float)0.3 / doorsOn)
-                            {
-                                //Debug.Log("on");
-                                doorsOn++;
-                                doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
-                                doorsActivated++;
-                            }
-                            else
-                            {
-                                //Debug.Log("off");
-                                doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
-                            }
-                        }
-                    }
-                    break;
-                case 4:
-                    if (rightNeighbor == null || rightNeighbor.tileStatus == TileStatus.nullRoom || rightNeighbor.tileStatus == TileStatus.boss)
-                    {
-                        //Debug.Log("off");
-                        doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
-                    }
-                    else
-                    {
-                        //if its part of path, or a basic room
-                        if (rightNeighbor.tileStatus == TileStatus.startingRoom || rightNeighbor.tileStatus == TileStatus.room || rightNeighbor.tileStatus == TileStatus.path)
-                        {
-                            if (activateGarantee == false)
-                            {
-                                //Debug.Log("on");
-                                activateGarantee = true;
-                                doorsOn++;
-                                doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
-                                doorsActivated++;
-                            }
-                            else if (Random.value < (float)0.3 / doorsOn)
-                            {
-                                //Debug.Log("on");
-                                doorsOn++;
-                                doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
-                                doorsActivated++;
-                            }
-                            else
-                            {
-                                //Debug.Log("off");
-                                doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
-                            }
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        doorsActivated = doorsOn;
-    }
- 
-    public void ActivateDoorToPath()
-    {
-        //int totalDoors = 4;
-       // Debug.Log(posOnGrid.x + " " + posOnGrid.y);
-        int[] doorsToCheck = new int[] { 1, 2, 3, 4 };
-        doorsToCheck = reshuffle(doorsToCheck);
-
-        // doorsToCheck.
-        
-        //checks with neighbor is part of path and turn that door on (only if neighbor is starting room or path)
-        for (int count = 0; count < 4; count++)
-        {
-           // Debug.Log(count);
-            switch (doorsToCheck[count])
-            {
-                case 1:
-                    //Debug.Log(0);
-                    //will see which of its neighbors are paths/or active
-                    if (upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom || upNeighbor.tileStatus == TileStatus.boss || connectedToPath)
-                    {
-                      //  Debug.Log("off");
-                        doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
-                    }
-                    else if (upNeighbor.tileStatus == TileStatus.path || upNeighbor.tileStatus == TileStatus.startingRoom)
-                    {
-                       // Debug.Log("on");
-                        doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
-                        doorsActivated++;
-                        connectedToPath = true;
-                    }
-                    break;
-                case 2:
-                   // Debug.Log(1);
-                    //dont want to add doors that create shortcuts through path
-                    if (downNeighbor == null || downNeighbor.tileStatus == TileStatus.nullRoom || downNeighbor.tileStatus == TileStatus.boss || connectedToPath)
-                    {
-                       // Debug.Log("off");
-                        doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
-                    }
-                    else if ((downNeighbor.tileStatus == TileStatus.path || downNeighbor.tileStatus == TileStatus.startingRoom))
-                    {
-                       // Debug.Log("on");
-                        doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
-                        doorsActivated++;
-                        connectedToPath = true;
-                    }
-                    break;
-                case 3:
-                    //Debug.Log(2);
-                    if (leftNeighbor == null || leftNeighbor.tileStatus == TileStatus.nullRoom || leftNeighbor.tileStatus == TileStatus.boss || connectedToPath)
-                    {
-                       // Debug.Log("off");
-                        doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
-                    }
-                    else if (leftNeighbor.tileStatus == TileStatus.path || leftNeighbor.tileStatus == TileStatus.startingRoom)
-                    {
-                       // Debug.Log("on");
-                        doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
-                        doorsActivated++;
-                        connectedToPath = true;
-                    }
-                    break;
-                case 4:
-                    //Debug.Log(3);
-                    if (rightNeighbor == null || rightNeighbor.tileStatus == TileStatus.nullRoom || rightNeighbor.tileStatus == TileStatus.boss || connectedToPath)
-                    {
-                       // Debug.Log("off");
-                        doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
-                    }
-                    else if (rightNeighbor.tileStatus == TileStatus.path || rightNeighbor.tileStatus == TileStatus.startingRoom)
-                    {
-                       //  Debug.Log("on");
-
-                        // Debug.Log("This number: " + pathNumber + " vs right n number: " + rightNeighbor.pathNumber);
-                        doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
-                        doorsActivated++;
-                        connectedToPath = true;
-
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-
-    public void ActivateDoors()
-    {
-        //Debug.Log(this.name);
-        //will see which of its neighbors are paths/or active
-        if ((upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom))
-        {
-            //Debug.Log("off");
-            doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
-        }
-        else if ((upNeighbor.tileStatus == TileStatus.path || upNeighbor.tileStatus == TileStatus.room || upNeighbor.tileStatus == TileStatus.boss))
-        {
-            //   Debug.Log("on");
-            if (pathNumber + 1 == upNeighbor.pathNumber)
-            {
-               // Debug.Log("This number: " + pathNumber + " vs up n number: " + upNeighbor.pathNumber);
-                doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
-                doorsActivated++;
-            }
-            else
-            {
-               // Debug.Log("This number: " + pathNumber + " vs up n number: " + upNeighbor.pathNumber);
-                doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
-            }
-        }
-        else if (upNeighbor.tileStatus == TileStatus.startingRoom && (pathNumber - 1 != upNeighbor.pathNumber || pathNumber + 1 != upNeighbor.pathNumber))
-        {
-            //if this tile is next to starting room and not the next tile in path
-            doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
-        }
-
-
-        //dont want to add doors that create shortcuts through path
-        if ((downNeighbor == null || downNeighbor.tileStatus == TileStatus.nullRoom))
-        {
-           // Debug.Log("off");
-                doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
-        }
-        else if((downNeighbor.tileStatus == TileStatus.path || downNeighbor.tileStatus == TileStatus.room || downNeighbor.tileStatus == TileStatus.boss))
-        {
-            // Debug.Log("on");
-            if (pathNumber + 1 == downNeighbor.pathNumber)
-            {
-               // Debug.Log("This number: " + pathNumber + " vs down n number: " + downNeighbor.pathNumber);
-                doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
-                doorsActivated++;
-            }
-            else
-            {
-               // Debug.Log("This number: " + pathNumber + " vs down n number: " + downNeighbor.pathNumber);
-                doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
-            }
-        }
-        else if(downNeighbor.tileStatus == TileStatus.startingRoom && (pathNumber - 1 != downNeighbor.pathNumber || pathNumber + 1 != downNeighbor.pathNumber))
-        {
-            //if this tile is next to starting room and not the next tile in path
-            doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
-        }
-
-
-        if ((leftNeighbor == null || leftNeighbor.tileStatus == TileStatus.nullRoom))
-        {
-           // Debug.Log("off");
-            doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
-        }
-        else if ((leftNeighbor.tileStatus == TileStatus.path || leftNeighbor.tileStatus == TileStatus.room || leftNeighbor.tileStatus == TileStatus.boss))
-        {
-            //Debug.Log("on");
-            if (pathNumber + 1 == leftNeighbor.pathNumber)
-            {
-               // Debug.Log("This number: " + pathNumber + " vs left n number: " + leftNeighbor.pathNumber);
-                doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
-                doorsActivated++;
-            }
-            else
-            {
-               // Debug.Log("This number: " + pathNumber + " vs left n number: " + leftNeighbor.pathNumber);
-                doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
-            }
-        }
-        else if (leftNeighbor.tileStatus == TileStatus.startingRoom && (pathNumber - 1 != leftNeighbor.pathNumber || pathNumber + 1 != leftNeighbor.pathNumber))
-        {
-            //if this tile is next to starting room and not the next tile in path
-            doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
-        }
-
-
-        if ((rightNeighbor == null || rightNeighbor.tileStatus == TileStatus.nullRoom))
-        {
-           // Debug.Log("off");
-            doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
-        }
-        else if ((rightNeighbor.tileStatus == TileStatus.path || rightNeighbor.tileStatus == TileStatus.room || rightNeighbor.tileStatus == TileStatus.boss))
-        {
-            // Debug.Log("on");
-            if (pathNumber + 1 == rightNeighbor.pathNumber)
-            {
-               // Debug.Log("This number: " + pathNumber + " vs right n number: " + rightNeighbor.pathNumber);
-                doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
-                doorsActivated++;
-            }
-            else
-            {
-               // Debug.Log("This number: " + pathNumber + " vs right n number: " + rightNeighbor.pathNumber);
-                doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
-            }
-        }
-        else if (rightNeighbor.tileStatus == TileStatus.startingRoom && (pathNumber - 1 != rightNeighbor.pathNumber || pathNumber + 1 != rightNeighbor.pathNumber))
-        {
-            //if this tile is next to starting room and not the next tile in path
-            doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
-        }
-
-        //  Debug.Log("Done " + this.name);
-    }
-
-    public void DeactivateDoors()
-    {
-        foreach (GameObject door in doors)
-        {
-            door.GetComponent<DoorBehavior>().ActivateDoor(false);
         }
     }
 
@@ -713,7 +189,7 @@ public class Tile : MonoBehaviour
     {
         Gizmos.color = _nodeColor;
         if(myTileGen == null || myTileGen.debugPathOn)
-            Gizmos.DrawSphere(transform.position, 5);
+            Gizmos.DrawSphere(transform.position, 2);
     }
 
     int[] reshuffle(int[] ar)
@@ -731,9 +207,6 @@ public class Tile : MonoBehaviour
 
 
 
-
-
-
     /*-------------------------------------------------------------------------------------
      *                      DOOR SYSTEM - NOT IN USE CURRENTLY
      *-------------------------------------------------------------------------------------
@@ -744,6 +217,7 @@ public class Tile : MonoBehaviour
      * 
      */
 
+    #region Doors
     /// <summary>
     /// ---------------------------------------------------------------------------------
     /// NOT IN USE
@@ -926,6 +400,550 @@ public class Tile : MonoBehaviour
             }
 
     }
+
+    public void ActivateDoorsBranch()
+    {
+        bool firstBranchDoor = false;
+        int[] doorsToCheck = new int[] { 1, 2, 3, 4 };
+        doorsToCheck = reshuffle(doorsToCheck);
+
+        for (int count = 0; count < 4; count++)
+        {
+            // Debug.Log(count);
+            //will see which of its neighbors are paths/or active
+            switch (doorsToCheck[count])
+            {
+                case 1:
+                    // Debug.Log(0);
+                    //if any neighbor is boss room, or path, deactivate that door
+                    if (upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom || upNeighbor.tileStatus == TileStatus.boss || upNeighbor.tileStatus == TileStatus.path)
+                    {
+                        //Debug.Log("off");
+                        doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
+                    }
+                    else
+                    {
+                        //50% chance of activating door if neighbor is starting room
+                        if (upNeighbor.tileStatus == TileStatus.startingRoom && Random.value < 0.5f)
+                        {
+                            doorsActivated++;
+                            doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
+                        }
+                        //checks 4 neighbors, if it has a neighbor that is that tiles previous, turn on that door
+                        //have a 20% chance of looking at another neighbor and turning on door if they are just a basic room
+                        else if (upNeighbor == previousTile)
+                        {
+                            if (firstBranchDoor == false)
+                            {
+                                firstBranchDoor = true;
+                                doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
+                                doorsActivated++;
+                            }
+                            else if (Random.value < 0.2f)
+                            {
+                                doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
+                                doorsActivated++;
+                            }
+                            else
+                                doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
+
+                        }
+                    }
+                    break;
+                case 2:
+                    // Debug.Log(1);
+                    //if any neighbor is boss room, or path, deactivate that door
+                    if (downNeighbor == null || downNeighbor.tileStatus == TileStatus.nullRoom || downNeighbor.tileStatus == TileStatus.boss || downNeighbor.tileStatus == TileStatus.path)
+                    {
+                        //Debug.Log("off");
+                        doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
+                    }
+                    else
+                    {
+                        //50% chance of activating door if neighbor is starting room
+                        if (downNeighbor.tileStatus == TileStatus.startingRoom && Random.value < 0.5f)
+                        {
+                            doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
+                            doorsActivated++;
+                        }
+                        //checks 4 neighbors, if it has a neighbor that is that tiles previous, turn on that door
+                        //have a 20% chance of looking at another neighbor and turning on door if they are just a basic room
+                        else if (downNeighbor == previousTile)
+                        {
+                            if (firstBranchDoor == false)
+                            {
+                                firstBranchDoor = true;
+                                doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
+                                doorsActivated++;
+                            }
+                            else if (Random.value < 0.2f)
+                            {
+                                doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
+                                doorsActivated++;
+                            }
+                            else
+                                doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
+
+                        }
+                    }
+                    break;
+                case 3:
+                    // Debug.Log(2);
+                    //if any neighbor is boss room, or path, deactivate that door
+                    if (leftNeighbor == null || leftNeighbor.tileStatus == TileStatus.nullRoom || leftNeighbor.tileStatus == TileStatus.boss || leftNeighbor.tileStatus == TileStatus.path)
+                    {
+                        //Debug.Log("off");
+                        doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
+                    }
+                    else
+                    {
+                        //50% chance of activating door if neighbor is starting room
+                        if (leftNeighbor.tileStatus == TileStatus.startingRoom && Random.value < 0.5f)
+                        {
+                            doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
+                            doorsActivated++;
+                        }
+                        //checks 4 neighbors, if it has a neighbor that is that tiles previous, turn on that door
+                        //have a 20% chance of looking at another neighbor and turning on door if they are just a basic room
+                        else if (leftNeighbor == previousTile)
+                        {
+                            if (firstBranchDoor == false)
+                            {
+                                firstBranchDoor = true;
+                                doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
+                                doorsActivated++;
+                            }
+                            else if (Random.value < 0.2f)
+                            {
+                                doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
+                                doorsActivated++;
+                            }
+                            else
+                                doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
+
+                        }
+                    }
+                    break;
+                case 4:
+                    //  Debug.Log(3);
+                    //if any neighbor is boss room, or path, deactivate that door
+                    if (rightNeighbor == null || rightNeighbor.tileStatus == TileStatus.nullRoom || rightNeighbor.tileStatus == TileStatus.boss || rightNeighbor.tileStatus == TileStatus.path)
+                    {
+                        //Debug.Log("off");
+                        doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
+                    }
+                    else
+                    {
+                        //50% chance of activating door if neighbor is starting room
+                        if (rightNeighbor.tileStatus == TileStatus.startingRoom && Random.value < 0.5f)
+                        {
+                            doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
+                            doorsActivated++;
+                        }
+                        //checks 4 neighbors, if it has a neighbor that is that tiles previous, turn on that door
+                        //have a 20% chance of looking at another neighbor and turning on door if they are just a basic room
+                        else if (rightNeighbor == previousTile)
+                        {
+                            if (firstBranchDoor == false)
+                            {
+                                firstBranchDoor = true;
+                                doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
+                                doorsActivated++;
+                            }
+                            else if (Random.value < 0.2f)
+                            {
+                                doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
+                                doorsActivated++;
+                            }
+                            else
+                                doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
+
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+
+    }
+
+    //for rooms not on branches or paths
+    public void ActivateDoorsRandom()
+    {
+        bool activateGarantee = false;
+        int doorsOn = 0;
+        //goes through and turns on 1 door garenteed, then has a very low chance of turning on another door, and even lower chance of another door and even lower chance of another door, etc
+
+        //bool firstBranchDoor = false;
+        int[] doorsToCheck = new int[] { 1, 2, 3, 4 };
+        doorsToCheck = reshuffle(doorsToCheck);
+
+        for (int count = 0; count < 4; count++)
+        {
+            // Debug.Log(count);
+            //will see which of its neighbors are paths/or active
+            switch (doorsToCheck[count])
+            {
+                case 1:
+                    // Debug.Log(0);
+                    //if any neighbor is null, boss room, or path, deactivate that door
+                    if (upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom || upNeighbor.tileStatus == TileStatus.boss)
+                    {
+                        //Debug.Log("off");
+                        doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
+                    }
+                    else
+                    {
+                        //if its part of path, or a basic room
+                        if (upNeighbor.tileStatus == TileStatus.startingRoom || upNeighbor.tileStatus == TileStatus.room || upNeighbor.tileStatus == TileStatus.path)
+                        {
+                            if (activateGarantee == false)
+                            {
+                                //Debug.Log("on");
+                                activateGarantee = true;
+                                doorsOn++;
+                                doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
+                                doorsActivated++;
+                            }
+                            else if (Random.value < (float)0.3 / doorsOn)
+                            {
+                                //Debug.Log("on");
+                                doorsOn++;
+                                doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
+                                doorsActivated++;
+                            }
+                            else
+                            {
+                                //Debug.Log("off");
+                                doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
+                            }
+                        }
+                    }
+                    break;
+                case 2:
+                    // Debug.Log(1);
+                    //if any neighbor is null, boss room, or path, deactivate that door
+                    if (downNeighbor == null || downNeighbor.tileStatus == TileStatus.nullRoom || downNeighbor.tileStatus == TileStatus.boss)
+                    {
+                        //Debug.Log("off");
+                        doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
+                    }
+                    else
+                    {
+                        //if its part of path, or a basic room
+                        if (downNeighbor.tileStatus == TileStatus.startingRoom || downNeighbor.tileStatus == TileStatus.room || downNeighbor.tileStatus == TileStatus.path)
+                        {
+                            if (activateGarantee == false)
+                            {
+                                //Debug.Log("on");
+                                activateGarantee = true;
+                                doorsOn++;
+                                doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
+                                doorsActivated++;
+                            }
+                            else if (Random.value < (float)0.3 / doorsOn)
+                            {
+                                //Debug.Log("on");
+                                doorsOn++;
+                                doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
+                                doorsActivated++;
+                            }
+                            else
+                            {
+                                //Debug.Log("off");
+                                doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
+                            }
+                        }
+                    }
+                    break;
+                case 3:
+                    if (leftNeighbor == null || leftNeighbor.tileStatus == TileStatus.nullRoom || leftNeighbor.tileStatus == TileStatus.boss)
+                    {
+                        //Debug.Log("off");
+                        doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
+                    }
+                    else
+                    {
+                        //if its part of path, or a basic room
+                        if (leftNeighbor.tileStatus == TileStatus.startingRoom || leftNeighbor.tileStatus == TileStatus.room || leftNeighbor.tileStatus == TileStatus.path)
+                        {
+                            if (activateGarantee == false)
+                            {
+                                //Debug.Log("on");
+                                activateGarantee = true;
+                                doorsOn++;
+                                doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
+                                doorsActivated++;
+                            }
+                            else if (Random.value < (float)0.3 / doorsOn)
+                            {
+                                //Debug.Log("on");
+                                doorsOn++;
+                                doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
+                                doorsActivated++;
+                            }
+                            else
+                            {
+                                //Debug.Log("off");
+                                doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
+                            }
+                        }
+                    }
+                    break;
+                case 4:
+                    if (rightNeighbor == null || rightNeighbor.tileStatus == TileStatus.nullRoom || rightNeighbor.tileStatus == TileStatus.boss)
+                    {
+                        //Debug.Log("off");
+                        doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
+                    }
+                    else
+                    {
+                        //if its part of path, or a basic room
+                        if (rightNeighbor.tileStatus == TileStatus.startingRoom || rightNeighbor.tileStatus == TileStatus.room || rightNeighbor.tileStatus == TileStatus.path)
+                        {
+                            if (activateGarantee == false)
+                            {
+                                //Debug.Log("on");
+                                activateGarantee = true;
+                                doorsOn++;
+                                doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
+                                doorsActivated++;
+                            }
+                            else if (Random.value < (float)0.3 / doorsOn)
+                            {
+                                //Debug.Log("on");
+                                doorsOn++;
+                                doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
+                                doorsActivated++;
+                            }
+                            else
+                            {
+                                //Debug.Log("off");
+                                doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
+                            }
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        doorsActivated = doorsOn;
+    }
+
+    public void ActivateDoorToPath()
+    {
+        //int totalDoors = 4;
+        // Debug.Log(posOnGrid.x + " " + posOnGrid.y);
+        int[] doorsToCheck = new int[] { 1, 2, 3, 4 };
+        doorsToCheck = reshuffle(doorsToCheck);
+
+        // doorsToCheck.
+
+        //checks with neighbor is part of path and turn that door on (only if neighbor is starting room or path)
+        for (int count = 0; count < 4; count++)
+        {
+            // Debug.Log(count);
+            switch (doorsToCheck[count])
+            {
+                case 1:
+                    //Debug.Log(0);
+                    //will see which of its neighbors are paths/or active
+                    if (upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom || upNeighbor.tileStatus == TileStatus.boss || connectedToPath)
+                    {
+                        //  Debug.Log("off");
+                        doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
+                    }
+                    else if (upNeighbor.tileStatus == TileStatus.path || upNeighbor.tileStatus == TileStatus.startingRoom)
+                    {
+                        // Debug.Log("on");
+                        doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
+                        doorsActivated++;
+                        connectedToPath = true;
+                    }
+                    break;
+                case 2:
+                    // Debug.Log(1);
+                    //dont want to add doors that create shortcuts through path
+                    if (downNeighbor == null || downNeighbor.tileStatus == TileStatus.nullRoom || downNeighbor.tileStatus == TileStatus.boss || connectedToPath)
+                    {
+                        // Debug.Log("off");
+                        doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
+                    }
+                    else if ((downNeighbor.tileStatus == TileStatus.path || downNeighbor.tileStatus == TileStatus.startingRoom))
+                    {
+                        // Debug.Log("on");
+                        doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
+                        doorsActivated++;
+                        connectedToPath = true;
+                    }
+                    break;
+                case 3:
+                    //Debug.Log(2);
+                    if (leftNeighbor == null || leftNeighbor.tileStatus == TileStatus.nullRoom || leftNeighbor.tileStatus == TileStatus.boss || connectedToPath)
+                    {
+                        // Debug.Log("off");
+                        doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
+                    }
+                    else if (leftNeighbor.tileStatus == TileStatus.path || leftNeighbor.tileStatus == TileStatus.startingRoom)
+                    {
+                        // Debug.Log("on");
+                        doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
+                        doorsActivated++;
+                        connectedToPath = true;
+                    }
+                    break;
+                case 4:
+                    //Debug.Log(3);
+                    if (rightNeighbor == null || rightNeighbor.tileStatus == TileStatus.nullRoom || rightNeighbor.tileStatus == TileStatus.boss || connectedToPath)
+                    {
+                        // Debug.Log("off");
+                        doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
+                    }
+                    else if (rightNeighbor.tileStatus == TileStatus.path || rightNeighbor.tileStatus == TileStatus.startingRoom)
+                    {
+                        //  Debug.Log("on");
+
+                        // Debug.Log("This number: " + pathNumber + " vs right n number: " + rightNeighbor.pathNumber);
+                        doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
+                        doorsActivated++;
+                        connectedToPath = true;
+
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public void ActivateDoors()
+    {
+        //Debug.Log(this.name);
+        //will see which of its neighbors are paths/or active
+        if ((upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom))
+        {
+            //Debug.Log("off");
+            doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
+        }
+        else if ((upNeighbor.tileStatus == TileStatus.path || upNeighbor.tileStatus == TileStatus.room || upNeighbor.tileStatus == TileStatus.boss))
+        {
+            //   Debug.Log("on");
+            if (pathNumber + 1 == upNeighbor.pathNumber)
+            {
+                // Debug.Log("This number: " + pathNumber + " vs up n number: " + upNeighbor.pathNumber);
+                doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
+                doorsActivated++;
+            }
+            else
+            {
+                // Debug.Log("This number: " + pathNumber + " vs up n number: " + upNeighbor.pathNumber);
+                doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
+            }
+        }
+        else if (upNeighbor.tileStatus == TileStatus.startingRoom && (pathNumber - 1 != upNeighbor.pathNumber || pathNumber + 1 != upNeighbor.pathNumber))
+        {
+            //if this tile is next to starting room and not the next tile in path
+            doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
+        }
+
+
+        //dont want to add doors that create shortcuts through path
+        if ((downNeighbor == null || downNeighbor.tileStatus == TileStatus.nullRoom))
+        {
+            // Debug.Log("off");
+            doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
+        }
+        else if ((downNeighbor.tileStatus == TileStatus.path || downNeighbor.tileStatus == TileStatus.room || downNeighbor.tileStatus == TileStatus.boss))
+        {
+            // Debug.Log("on");
+            if (pathNumber + 1 == downNeighbor.pathNumber)
+            {
+                // Debug.Log("This number: " + pathNumber + " vs down n number: " + downNeighbor.pathNumber);
+                doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
+                doorsActivated++;
+            }
+            else
+            {
+                // Debug.Log("This number: " + pathNumber + " vs down n number: " + downNeighbor.pathNumber);
+                doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
+            }
+        }
+        else if (downNeighbor.tileStatus == TileStatus.startingRoom && (pathNumber - 1 != downNeighbor.pathNumber || pathNumber + 1 != downNeighbor.pathNumber))
+        {
+            //if this tile is next to starting room and not the next tile in path
+            doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
+        }
+
+
+        if ((leftNeighbor == null || leftNeighbor.tileStatus == TileStatus.nullRoom))
+        {
+            // Debug.Log("off");
+            doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
+        }
+        else if ((leftNeighbor.tileStatus == TileStatus.path || leftNeighbor.tileStatus == TileStatus.room || leftNeighbor.tileStatus == TileStatus.boss))
+        {
+            //Debug.Log("on");
+            if (pathNumber + 1 == leftNeighbor.pathNumber)
+            {
+                // Debug.Log("This number: " + pathNumber + " vs left n number: " + leftNeighbor.pathNumber);
+                doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
+                doorsActivated++;
+            }
+            else
+            {
+                // Debug.Log("This number: " + pathNumber + " vs left n number: " + leftNeighbor.pathNumber);
+                doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
+            }
+        }
+        else if (leftNeighbor.tileStatus == TileStatus.startingRoom && (pathNumber - 1 != leftNeighbor.pathNumber || pathNumber + 1 != leftNeighbor.pathNumber))
+        {
+            //if this tile is next to starting room and not the next tile in path
+            doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
+        }
+
+
+        if ((rightNeighbor == null || rightNeighbor.tileStatus == TileStatus.nullRoom))
+        {
+            // Debug.Log("off");
+            doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
+        }
+        else if ((rightNeighbor.tileStatus == TileStatus.path || rightNeighbor.tileStatus == TileStatus.room || rightNeighbor.tileStatus == TileStatus.boss))
+        {
+            // Debug.Log("on");
+            if (pathNumber + 1 == rightNeighbor.pathNumber)
+            {
+                // Debug.Log("This number: " + pathNumber + " vs right n number: " + rightNeighbor.pathNumber);
+                doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
+                doorsActivated++;
+            }
+            else
+            {
+                // Debug.Log("This number: " + pathNumber + " vs right n number: " + rightNeighbor.pathNumber);
+                doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
+            }
+        }
+        else if (rightNeighbor.tileStatus == TileStatus.startingRoom && (pathNumber - 1 != rightNeighbor.pathNumber || pathNumber + 1 != rightNeighbor.pathNumber))
+        {
+            //if this tile is next to starting room and not the next tile in path
+            doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
+        }
+
+        //  Debug.Log("Done " + this.name);
+    }
+
+    public void DeactivateDoors()
+    {
+        foreach (GameObject door in doors)
+        {
+            door.GetComponent<DoorBehavior>().ActivateDoor(false);
+        }
+    }
+    #endregion
 }
 
 /// <summary>

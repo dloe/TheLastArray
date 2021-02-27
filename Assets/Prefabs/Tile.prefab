@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2768348017971070912}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 25, y: 0, z: 0}
+  m_LocalPosition: {x: 12.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5734143143925060520}
@@ -135,7 +135,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5985681384618470616}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -25}
+  m_LocalPosition: {x: 0, y: 0, z: -12.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5734143143925060520}
@@ -242,7 +242,7 @@ Transform:
   m_GameObject: {fileID: 7905213247294608223}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 5, y: 1, z: 5}
+  m_LocalScale: {x: 2.5, y: 1, z: 2.5}
   m_Children: []
   m_Father: {fileID: 7905213248872402604}
   m_RootOrder: 0
@@ -356,7 +356,6 @@ MonoBehaviour:
   mapType: 0
   posOnGrid: {x: 0, y: 0}
   tileStatus: 0
-  doorRef: {fileID: 8852843698857881759}
   upNeighbor: {fileID: 0}
   downNeighbor: {fileID: 0}
   leftNeighbor: {fileID: 0}
@@ -365,15 +364,21 @@ MonoBehaviour:
   checkedForPath: 0
   partOfPath: 0
   pathNumber: -1
+  connectedToPath: 0
+  myLevelAssetData: {fileID: 11400000, guid: 92ab8452f29185041b2d0ac31e64e594, type: 2}
+  levelAssetPlaced: 0
+  description: 
+  checkFor4Some: 0
+  presetTile: {fileID: 0}
+  presetNum: -1
   doorsActivated: 0
+  doorRef: {fileID: 8852843698857881759}
+  hasDoors: 0
   doors:
   - {fileID: 8453652135793040491}
   - {fileID: 2768348017971070912}
   - {fileID: 5985681384618470616}
   - {fileID: 8332564351730876658}
-  connectedToPath: 0
-  myLevelAssetData: {fileID: 11400000, guid: 92ab8452f29185041b2d0ac31e64e594, type: 2}
-  description: 
 --- !u!1 &8332564351730876658
 GameObject:
   m_ObjectHideFlags: 0
@@ -402,7 +407,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8332564351730876658}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 25}
+  m_LocalPosition: {x: 0, y: 0, z: 12.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5734143143925060520}
@@ -509,7 +514,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8453652135793040491}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -25, y: 0, z: 0}
+  m_LocalPosition: {x: -12.5, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5734143143925060520}

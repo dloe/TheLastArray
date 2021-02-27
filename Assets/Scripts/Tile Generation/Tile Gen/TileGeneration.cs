@@ -62,17 +62,19 @@ public class TileGeneration : MonoBehaviour
 
     //gets these values from somewhere
     //so far ive only test with width and height being the same number, same number recommended (might need to make slight adjustments to one line to test both being different)
+    [Header("Grid Size")]
     public int _levelWidth = 4;
     public int _levelHeight = 4;
 
+    [Space(10)]
     //tile prefab
     public GameObject tilePlaceholder;
 
     //for visible nodes
-    GameObject[,] grid2DArray;
+    GameObject[,] _grid2DArray;
 
     //depends on size of indivual tiles to ensure no overlap
-    float distanceBetweenNodes = 50.0f;
+    float _distanceBetweenNodes = 50.0f;
 
     //does not include the path
     //private int totalSingleTilesInLevel = 3;
@@ -81,6 +83,8 @@ public class TileGeneration : MonoBehaviour
     Tile _endTile;
     int _pathNumber = 0;
 
+    [Space(10)]
+    [Header("List of Level Path Tiles")]
     public List<Tile> levelPath = new List<Tile>();
     //public List<Tile> inactiveRooms = new List<Tile>();
     [HideInInspector]
@@ -88,22 +92,29 @@ public class TileGeneration : MonoBehaviour
 
     List<Tile> backtrackTempHistory = new List<Tile>();
 
+    [Space(10)]
+    [Header("Amount of branches from main path")]
     //adding random rooms
     public int branchCount;
+    [Header("Amount of extra single rooms added")]
     public int fillerRooms;
     
     List<Tile> _avalibleTileSpots = new List<Tile>();
     List<Tile> _branch = new List<Tile>();
 
-    bool startLine = false;
+    bool _startLine = false;
     
     [HideInInspector]
     public bool debugPathOn = false;
     LineRenderer _lr;
 
+    [Space(10)]
+    [Header("Level Asset Script")]
     public LevelAssetSpawn myLevelAssetSpawn;
+    [Header("Level Asset Data Obj")]
     public LevelAssetsData myLevelAssetsData;
-
+    [Space(10)]
+    [Header("Will level have doors generate?")]
     public bool hasDoors = false;
 
     private void Awake()
@@ -118,7 +129,7 @@ public class TileGeneration : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        distanceBetweenNodes = myLevelAssetsData.tileSize/2;
+        _distanceBetweenNodes = myLevelAssetsData.tileSize/2;
 
         //test = reshuffle(test);
         CreateGrid();
@@ -129,7 +140,7 @@ public class TileGeneration : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(startLine && debugPathOn)
+        if(_startLine && debugPathOn)
             SetLineRenderer();
 
         _lr.enabled = debugPathOn;
@@ -152,7 +163,7 @@ public class TileGeneration : MonoBehaviour
     void DeactivateInActiveRooms()
     {
         //go through array
-        foreach (GameObject tileP in grid2DArray)
+        foreach (GameObject tileP in _grid2DArray)
         {
             //get child
 
@@ -165,7 +176,7 @@ public class TileGeneration : MonoBehaviour
     
     void CreateGrid()
     {
-        grid2DArray = new GameObject[_levelWidth, _levelHeight];
+        _grid2DArray = new GameObject[_levelWidth, _levelHeight];
 
         //runs throug grid
         for (int rows = 0; rows < _levelWidth; rows++)
@@ -191,14 +202,14 @@ public class TileGeneration : MonoBehaviour
                 nodeTile.transform.parent = this.gameObject.transform;
 
                 //assigning transforms in the world
-                float x = col * distanceBetweenNodes;
-                float y = rows * distanceBetweenNodes;
+                float x = col * _distanceBetweenNodes;
+                float y = rows * _distanceBetweenNodes;
                 nodeTile.transform.position = new Vector3(x, 0, y);
 
                 //renaming
                 nodeTile.name = "Grid_Node_" + rows.ToString() + ":" + col.ToString();
                 //Debug.Log("Assiging nodeTile: " + nodeTile.name);
-                grid2DArray[rows, col] = nodeTile;
+                _grid2DArray[rows, col] = nodeTile;
                 //inactiveRooms.Add(nodeTile.GetComponent<Tile>());
             }
         }
@@ -214,7 +225,7 @@ public class TileGeneration : MonoBehaviour
 
                 //Debug.Log(rows.ToString() + " " + col.ToString());
                 //Debug.Log();
-                Tile tile = grid2DArray[rows, col].transform.GetChild(0).GetComponent<Tile>();
+                Tile tile = _grid2DArray[rows, col].transform.GetChild(0).GetComponent<Tile>();
                 //Debug.Log(grid2DArray[rows, col].transform.GetChild(0).name);
                 // Debug.Log(grid2DArray[rows, col].name);
                 int newRef;
@@ -225,21 +236,21 @@ public class TileGeneration : MonoBehaviour
                      newRef = rows + 1;
                     // Debug.Log("Row: " + newRef + " " + _levelWidth);
                    //  Debug.Log(" right neighbor = " + grid2DArray[newRef, col].transform.GetChild(0).name);
-                     tile.rightNeighbor = grid2DArray[newRef, col].transform.GetChild(0).GetComponent<Tile>();
+                     tile.rightNeighbor = _grid2DArray[newRef, col].transform.GetChild(0).GetComponent<Tile>();
                  }
                  if (rows > 0)
                  {
                      newRef = rows - 1;
                     // Debug.Log("Row: " + newRef + " " + _levelWidth);
                      //Debug.Log(" left neighbor = " + grid2DArray[newRef, col].transform.GetChild(0).name);
-                     tile.leftNeighbor = grid2DArray[newRef, col].transform.GetChild(0).GetComponent<Tile>();
+                     tile.leftNeighbor = _grid2DArray[newRef, col].transform.GetChild(0).GetComponent<Tile>();
                  }
                  if(col < _levelHeight - 1)
                  {
                     newRef = col + 1;
                     //Debug.Log("Col: " + newRef + " " + _levelHeight);
                    // Debug.Log(" down neighbor = " + grid2DArray[newRef, col].transform.GetChild(0).name);
-                    tile.downNeighbor = grid2DArray[rows, newRef].transform.GetChild(0).GetComponent<Tile>();
+                    tile.downNeighbor = _grid2DArray[rows, newRef].transform.GetChild(0).GetComponent<Tile>();
                     //  tile.
                 }
                  if(col > 0)
@@ -247,7 +258,7 @@ public class TileGeneration : MonoBehaviour
                     newRef = col - 1;
                     //Debug.Log("Col: " + newRef + " " + _levelHeight);
                     //Debug.Log(" up neighbor = " + grid2DArray[newRef, col].transform.GetChild(0).name);
-                    tile.upNeighbor = grid2DArray[rows, newRef].transform.GetChild(0).GetComponent<Tile>();
+                    tile.upNeighbor = _grid2DArray[rows, newRef].transform.GetChild(0).GetComponent<Tile>();
                 }
             }
         }
@@ -375,7 +386,7 @@ public class TileGeneration : MonoBehaviour
 
         //add random rooms to dungeon
         AddRandomRooms();
-        Debug.Log("Added Random Rooms");
+        //Debug.Log("Added Random Rooms");
 
 
         //this will be removed eventaully
@@ -391,7 +402,7 @@ public class TileGeneration : MonoBehaviour
 
         
 
-        startLine = true;
+        _startLine = true;
 
         //start asset spawning 
         myLevelAssetSpawn.PopulateGrid();
@@ -440,7 +451,7 @@ public class TileGeneration : MonoBehaviour
 
         
         //default to rooms left over/row count
-        branchCount = Random.Range(1, ((grid2DArray.Length - levelPath.Count) / _levelWidth) + 1);
+        branchCount = Random.Range(1, ((_grid2DArray.Length - levelPath.Count) / _levelWidth) + 1);
 
        // Debug.Log("Adding branches...");
         //start with making branches
@@ -513,7 +524,7 @@ public class TileGeneration : MonoBehaviour
             _branch.Clear();
         }
 
-        Debug.Log("Branches added");
+        //Debug.Log("Branches added");
 
         AddSingleRooms();
     }
@@ -527,12 +538,12 @@ public class TileGeneration : MonoBehaviour
         //when we add a room, remove from _avalibleTileSpots, add to _allActiveTileSpots
 
         //default to half the rooms left over
-        fillerRooms = Random.Range(1, (grid2DArray.Length - _allActiveTiles.Count) - ((grid2DArray.Length - _allActiveTiles.Count)/4));
+        fillerRooms = Random.Range(1, (_grid2DArray.Length - _allActiveTiles.Count) - ((_grid2DArray.Length - _allActiveTiles.Count)/4));
         //Debug.Log(fillerRooms);
 
         for (int tileCount = 0; tileCount < fillerRooms; tileCount++)
         {
-            if(grid2DArray.Length - _allActiveTiles.Count >= grid2DArray.Length/ (_levelWidth * 2))
+            if(_grid2DArray.Length - _allActiveTiles.Count >= _grid2DArray.Length/ (_levelWidth * 2))
             {
                // Debug.Log("adding random tile");
                 
@@ -564,7 +575,7 @@ public class TileGeneration : MonoBehaviour
             }
         }
         //Debug.Log("Tile Generation Finished, you can now order panda express.");
-        Debug.Log("added single rooms");
+        //Debug.Log("added single rooms");
     }
 
     void RemakeAvalibleSpots()
@@ -913,7 +924,7 @@ public class TileGeneration : MonoBehaviour
         }
 
         //Debug.Log(startX + " " + startY);
-        _startTile = grid2DArray[startX, startY].transform.GetChild(0).GetComponent<Tile>();
+        _startTile = _grid2DArray[startX, startY].transform.GetChild(0).GetComponent<Tile>();
         _startTile.tileStatus = Tile.TileStatus.startingRoom;
         _startTile.ShadeStarting();
         //Debug.Log(_startTile.posOnGrid.x + " " + _startTile.posOnGrid.y);
@@ -986,7 +997,7 @@ public class TileGeneration : MonoBehaviour
             }
         }
         // Debug.Log("End Point: " + endXF + " " + endYF);
-        _endTile = grid2DArray[endXF, endYF].transform.GetChild(0).GetComponent<Tile>();
+        _endTile = _grid2DArray[endXF, endYF].transform.GetChild(0).GetComponent<Tile>();
         _endTile.tileStatus = Tile.TileStatus.boss;
         _endTile.ShadeBoosRoom();
 
@@ -1001,7 +1012,7 @@ public class TileGeneration : MonoBehaviour
     void FinalTileSetup()
     {
         //must go though all active tiles 
-        foreach (GameObject tile in grid2DArray)
+        foreach (GameObject tile in _grid2DArray)
         {
             if (tile.transform.GetChild(0).GetComponent<Tile>().tileStatus == Tile.TileStatus.nullRoom)
             {
@@ -1049,7 +1060,7 @@ public class TileGeneration : MonoBehaviour
         }
 
         //Debug.Log(startX + " " + startY);
-        _startTile = grid2DArray[startX, startY].transform.GetChild(0).GetComponent<Tile>();
+        _startTile = _grid2DArray[startX, startY].transform.GetChild(0).GetComponent<Tile>();
         _startTile.tileStatus = Tile.TileStatus.startingRoom;
         _startTile.ShadeStarting();
         //Debug.Log(_startTile.posOnGrid.x + " " + _startTile.posOnGrid.y);
@@ -1122,7 +1133,7 @@ public class TileGeneration : MonoBehaviour
             }
         }
         // Debug.Log("End Point: " + endXF + " " + endYF);
-        _endTile = grid2DArray[endXF, endYF].transform.GetChild(0).GetComponent<Tile>();
+        _endTile = _grid2DArray[endXF, endYF].transform.GetChild(0).GetComponent<Tile>();
         _endTile.tileStatus = Tile.TileStatus.boss;
         _endTile.ShadeBoosRoom();
 
