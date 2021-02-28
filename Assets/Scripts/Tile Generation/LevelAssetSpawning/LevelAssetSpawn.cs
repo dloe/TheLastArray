@@ -47,6 +47,7 @@ public class LevelAssetSpawn : MonoBehaviour
     GameObject endObjTile;
     [Header("Objectives In Level")]
     public List<GameObject> objectivesInLevel = new List<GameObject>();
+    public List<GameObject> _possibleTileObjectivesInLevel = new List<GameObject>();
 
     //first number represents the number of times tiles in that list were spawned
     //second number represents the tile numbers that were spawned that amount of times
@@ -189,6 +190,7 @@ public class LevelAssetSpawn : MonoBehaviour
                                             {
                                                 _possibleItems.Remove(item);
                                             }
+                                            _possibleTileObjectivesInLevel.Remove(tile3.presetTile);
                                         }
                                     }
 
@@ -273,6 +275,7 @@ public class LevelAssetSpawn : MonoBehaviour
             tile.presetNum = tileIndex;
             tile.levelAssetPlaced = true;
             endObjTile = preset;
+            //_tileObjectivesInLevel.Add(tile);
             //Debug.Log("FINAL ROOM OBJECTIVE PLACED");
         }
 
@@ -292,6 +295,10 @@ public class LevelAssetSpawn : MonoBehaviour
             for (int posEnemyCount = 0; posEnemyCount < mPresetTileInfo.enemiesOnPreset.Length; posEnemyCount++)
             {
                 _possibleEnemiesInLevel.Add(mPresetTileInfo.enemiesOnPreset[posEnemyCount]);
+            }
+            if(mPresetTileInfo.objectiveSpawn != null)
+            {
+                _possibleTileObjectivesInLevel.Add(preset);
             }
         }
     }
@@ -335,6 +342,10 @@ public class LevelAssetSpawn : MonoBehaviour
             for(int posEnemyCount = 0; posEnemyCount < mPresetTileInfo.enemiesOnPreset.Length; posEnemyCount++)
             {
                 _possibleEnemiesInLevel.Add(mPresetTileInfo.enemiesOnPreset[posEnemyCount]);
+            }
+            if (mPresetTileInfo.objectiveSpawn != null)
+            {
+                _possibleTileObjectivesInLevel.Add(preset);
             }
         }
 
