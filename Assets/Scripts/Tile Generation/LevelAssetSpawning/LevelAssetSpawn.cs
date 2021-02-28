@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class LevelAssetSpawn : MonoBehaviour
 {
+    /// <summary>
+    /// REQURIES:
+    ///     - a LevelInfo Prefab
+    /// </summary>
     [Header("Tile Gen Script")]
     //ref to tile gen script
     public TileGeneration myTileGeneration;
@@ -53,6 +57,7 @@ public class LevelAssetSpawn : MonoBehaviour
     //second number represents the tile numbers that were spawned that amount of times
     List<List<int>> _magAssetCount;
     public int enemyCount;
+    LocalLevel _myLocalLevel;
 
     private void Awake()
     {
@@ -63,6 +68,10 @@ public class LevelAssetSpawn : MonoBehaviour
         //Debug.Log("n");
     }
 
+    private void Start()
+    {
+        _myLocalLevel = FindObjectOfType<LocalLevel>();
+    }
     /// <summary>
     /// Populate grid with assets, called from TileGeneration once it is done setting up
     /// </summary>
@@ -99,10 +108,11 @@ public class LevelAssetSpawn : MonoBehaviour
     }
 
     #region Objective Spawn
+    
     /// <summary>
     /// - objective will spawn on boss tile
     /// - if final tile is on a 2 x 2, get that tile and spawn an objective from it
-    /// 
+    ///  - UNSURE: if this should be what picks the objective or if localLevel handles that
     /// 
     /// </summary>
     public void ActivateObjectives()
@@ -110,8 +120,12 @@ public class LevelAssetSpawn : MonoBehaviour
         objectivesInLevel.Add(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
 
         //picks random objective
+        _myLocalLevel.ChooseObjective();
+        //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
 
-
+        //spawns in objectives (each one gets a designated number based on their index in array they are added to)
+        //sets a an array of bools  - for keeping progress on which are complete
+        //update levelinfo object with objetive info
     }
     #endregion
 

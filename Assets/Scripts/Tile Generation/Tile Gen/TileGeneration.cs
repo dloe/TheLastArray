@@ -421,7 +421,7 @@ public class TileGeneration : MonoBehaviour
         startingNode.transform.parent = this.transform;
         Vector3 spawnPos;
         GameObject tile = null;
-        Debug.Log(_side);
+        //Debug.Log(_side);
         //depending on start tile cords, we add starting room
         switch (_side)
         {
