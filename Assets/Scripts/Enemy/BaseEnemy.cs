@@ -50,6 +50,7 @@ public class BaseEnemy : MonoBehaviour
 
     //objects that are being avoided 
     public List<GameObject> surrounding = new List<GameObject>();
+    private Vector3 avoidence;
 
     //this is the layer that the enemy will avoide 
     LayerMask _mask;
@@ -66,7 +67,7 @@ public class BaseEnemy : MonoBehaviour
 
     private void Start()
     {
-        _tickRate = 2;
+        _tickRate = 1;
 
         _spawnPoint = transform.position;
 
@@ -115,6 +116,7 @@ public class BaseEnemy : MonoBehaviour
     IEnumerator Tick()
     {
         CheckSurondings();
+        MakePath();
         SetTarget();
         yield return new WaitForSeconds(_tickRate);
         StartCoroutine(Tick());
@@ -131,10 +133,8 @@ public class BaseEnemy : MonoBehaviour
         {
             phase = true;
 
-            Vector3 offset = transform.position - poi;
+            Vector3 offset = transform.position - poi - avoidence;
 
-
-            
             if (!float.IsNaN(Mathf.Acos(offset.x)))
                 timerAgro = -Mathf.Acos(offset.x);
             // Debug.Log(Mathf.Acos(offset.x));
@@ -209,7 +209,12 @@ public class BaseEnemy : MonoBehaviour
 
     void MakePath()
     {
-
+        print("avoidence " + this.gameObject + "vector " + avoidence);
+        avoidence = Vector3.zero;
+        foreach(GameObject g in surrounding)
+        {
+            avoidence += g.transform.position;
+        }
     }
 
     /// <summary>
@@ -217,6 +222,7 @@ public class BaseEnemy : MonoBehaviour
     /// </summary>
     void CheckSurondings()
     {
+        surrounding.Clear();
 
         float radi = 2f;
         Collider[] hit = Physics.OverlapSphere(transform.position, radi, _mask);
@@ -224,7 +230,10 @@ public class BaseEnemy : MonoBehaviour
         foreach (Collider thing in hit)
         {
             if (!surrounding.Contains(thing.gameObject))
+            {
                 surrounding.Add(thing.gameObject);
+            }
+               
         }
 
 
