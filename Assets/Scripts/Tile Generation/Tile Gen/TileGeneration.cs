@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(TileGeneration))]
 public class TileGenerationInspector : Editor
 {
@@ -46,6 +47,7 @@ public class TileGenerationInspector : Editor
         base.OnInspectorGUI();
     }
 }
+#endif
 
 
 public class TileGeneration : MonoBehaviour

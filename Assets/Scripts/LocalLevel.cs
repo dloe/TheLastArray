@@ -47,8 +47,10 @@ public class LocalLevel : MonoBehaviour
             _posObjectives.RemoveAt(myPlayerData.previouslyCompletedObj);
             _posObjectives = reshuffle(_posObjectives);
             objective = _posObjectives[Random.Range(0, _posObjectives.Count)];
-            
         }
+
+
+
         Debug.Log(objective);
     }
 
