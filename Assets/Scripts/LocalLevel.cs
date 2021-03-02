@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class LocalLevel : MonoBehaviour
@@ -23,6 +24,47 @@ public class LocalLevel : MonoBehaviour
         _myTileGen = FindObjectOfType<TileGeneration>();
         //number of objectives
         _posObjectives = new List<int> { 1, 2, 3 };
+        //LevelFadeIn();
+        StartFadeIn();
+    }
+
+    public void StartFadeIn()
+    {
+       // Debug.Log("on");
+        fadeIn = true;
+        ctc = true;
+        u = 1.0f;
+    }
+
+    public void StartFadeOut()
+    {
+        fadeOut = true;
+        ctc = true;
+        u = 0.0f;
+    }
+
+    public bool fadeIn = false;
+    public bool fadeOut = false;
+    public float timeStart;
+    public float u;
+    public bool ctc = false;
+    public float a0, a1;
+    public bool fading = false;
+    [SerializeField]
+    public Image transBar;
+    public float a01;
+
+
+    private void Update()
+    {
+        if(fadeIn)
+        {
+            LevelFadeIn();
+        }
+        else if(fadeOut)
+        {
+            LevelFadeOut();
+        }
     }
 
     /// <summary>
@@ -45,11 +87,11 @@ public class LocalLevel : MonoBehaviour
         else
         {
             //exclude previous obj index from choice
-            Debug.Log(_posObjectives.Count);
+            //Debug.Log(_posObjectives.Count);
             //_posObjectives.RemoveAt(myPlayerData.previouslyCompletedObj);
             _posObjectives.Remove(myPlayerData.previouslyCompletedObj);
             _posObjectives = reshuffle(_posObjectives);
-            Debug.Log(_posObjectives.Count);
+            //Debug.Log(_posObjectives.Count);
             objective = _posObjectives[Random.Range(0, _posObjectives.Count)];
         }
 
@@ -71,4 +113,73 @@ public class LocalLevel : MonoBehaviour
         }
         return ar;
     }
+
+    #region Scene Transitions
+
+    /// <summary>
+    /// Scene Transitions, will incorperate a fade in and out
+    /// - will not use animator on canvas to avoid stuff being in update
+    /// - will use interpolation on panels alpha
+    /// </summary>
+    public void LevelFadeOut()
+    {
+        if(ctc)
+        {
+            a0 = 0f;
+            a1 = 1.0f;
+            ctc = false;
+            fading = true;
+            timeStart = Time.time;
+        }
+        if(fading)
+        {
+            u = (Time.time - timeStart);
+            u = 1 - u;
+            if (u >= 1.0)
+            {
+                u = 1;
+                fading = false;
+                fadeIn = false;
+                Debug.Log("off");
+            }
+
+            a01 = (1 - u) * a0 + u * a1;
+
+            Color temp = transBar.color;
+            temp.a = 1 - a01;
+            transBar.color = temp;
+        }
+    }
+
+    
+    public void LevelFadeIn()
+    {
+        if (ctc)
+        {
+            a0 = 1.0f;
+            a1 = 0f;
+            ctc = false;
+            fading = true;
+            timeStart = Time.time;
+        }
+        if (fading)
+        {
+            u = (Time.time - timeStart) / 1.0f;
+            u = 1 - u;
+            if (u <= 0.0f)
+            {
+                u = 0;
+                fading = false;
+                fadeIn = false;
+               // Debug.Log("off");
+            }
+
+            a01 = (1 - u) * a0 + u * a1;
+
+            Color temp = transBar.color;
+            temp.a = 1 - a01;
+            transBar.color = temp;
+        }
+    }
+    #endregion
 }
