@@ -13,7 +13,7 @@ public class InventoryUI : MonoBehaviour
     public int selectedItemIndex = 0;
     public List<Transform> slotList = new List<Transform>();
 
-    public GameObject pistol, rifle, melee, medkit;
+    public GameObject emptyWorldItem;
 
     private readonly string _zoomAxis = "Mouse ScrollWheel";
 
@@ -104,7 +104,7 @@ public class InventoryUI : MonoBehaviour
         {
             if(inventory.ItemAtIndex(index) != null)
             {
-                slotList[index].GetComponentInChildren<Text>().text = inventory.ItemAtIndex(index).itemType.ToString();
+                slotList[index].GetComponentInChildren<Text>().text = inventory.ItemAtIndex(index).itemData.itemName;
                 
             }
             else
@@ -119,23 +119,10 @@ public class InventoryUI : MonoBehaviour
     public void SpawnItem(Item item)
     {
         Vector3 dropPos = new Vector3(player.transform.position.x, 1, player.transform.position.z);
-        switch (item.itemType)
-        {
-            case Item.ItemType.MeleeWeapon:
-                Instantiate(melee, dropPos, melee.transform.rotation);
-                break;
-            case Item.ItemType.Pistol:
-                Instantiate(pistol, dropPos, melee.transform.rotation);
-                break;
-            case Item.ItemType.Rifle:
-                Instantiate(rifle, dropPos, melee.transform.rotation);
-                break;
-            case Item.ItemType.MedKit:
-                Instantiate(medkit, dropPos, melee.transform.rotation);
-                break;
-            default:
-                break;
-        }
+        WorldItem worldItem = Instantiate(emptyWorldItem, dropPos, emptyWorldItem.transform.rotation).GetComponent<WorldItem>();
+
+        worldItem.itemType = item.itemType;
+        worldItem.worldItemData = item.itemData;
         
     }
 

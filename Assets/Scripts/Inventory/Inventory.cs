@@ -23,6 +23,8 @@ public class Inventory
         invUI = InventoryUI.Instance;
     }
 
+
+
     public bool Contains(Item.ItemType itemType)
     {
         bool result = false;
