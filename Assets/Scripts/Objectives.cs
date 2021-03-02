@@ -12,7 +12,7 @@ public enum Condition
 public class Objectives : MonoBehaviour
 {
     public static Objectives Instance;
-    public GameObject emptyWorldItem;
+    public GameObject emptyWorldItem, generatorObject;
     public List<ItemData> possibleItems;
     public List<Objective> objectives;
 
@@ -24,6 +24,7 @@ public class Objectives : MonoBehaviour
         public Condition condition;
         public string objectiveMessage = "blank";
         public ItemData itemData;
+        public Generator generator;
         public bool complete;
     }
     void Awake()
@@ -49,15 +50,15 @@ public class Objectives : MonoBehaviour
                 objective.condition = Condition.KillEnemy;
                 break;
             case 2:
-            case 3:
                 objective.condition = Condition.GetKeyItem;
                 objective.itemData = possibleItems[Random.Range(0, possibleItems.Count)];
                 WorldItem objItem = Instantiate(emptyWorldItem, spot.transform.position, emptyWorldItem.transform.rotation).GetComponent<WorldItem>();
                 objItem.worldItemData = objective.itemData;
                 break;
-            //case 3:
-            //    objective.condition = Condition.ReachArea;
-            //    break;
+            case 3:
+                objective.condition = Condition.FindGenerator;
+                objective.generator = Instantiate(generatorObject, spot.transform.position, generatorObject.transform.rotation).GetComponent<Generator>();
+                break;
             default:
                 break;
         }
@@ -66,8 +67,9 @@ public class Objectives : MonoBehaviour
         objectives.Add(objective);
     }
 
-    public WorldItem AddObjectiveRef(int objectiveInt, GameObject spot)
+    public GameObject AddObjectiveRef(int objectiveInt, GameObject spot)
     {
+        GameObject returnObj = null;
         WorldItem objItem = null;
         Objective objective = new Objective();
         switch (objectiveInt)
@@ -76,15 +78,17 @@ public class Objectives : MonoBehaviour
                 objective.condition = Condition.KillEnemy;
                 break;
             case 2:
-            case 3:
                 objective.condition = Condition.GetKeyItem;
                 objective.itemData = possibleItems[Random.Range(0, possibleItems.Count)];
                 objItem = Instantiate(emptyWorldItem, spot.transform.position, emptyWorldItem.transform.rotation).GetComponent<WorldItem>();
                 objItem.worldItemData = objective.itemData;
+                returnObj = objItem.gameObject;
                 break;
-            //case 3:
-            //    objective.condition = Condition.ReachArea;
-            //    break;
+            case 3:
+                objective.condition = Condition.FindGenerator;
+                objective.generator = Instantiate(generatorObject, spot.transform.position, generatorObject.transform.rotation).GetComponent<Generator>();
+                returnObj = objective.generator.gameObject;
+                break;
             default:
                 break;
         }
@@ -92,7 +96,7 @@ public class Objectives : MonoBehaviour
 
         objectives.Add(objective);
 
-        return objItem;
+        return returnObj;
     }
 
     public bool CheckWinCondition(Condition condition)
@@ -119,7 +123,7 @@ public class Objectives : MonoBehaviour
                         objective.complete = Player.Instance.inventory.Contains(objective.itemData);
                         break;
                     case Condition.FindGenerator:
-                        objective.complete = false;
+                        objective.complete = objective.generator.isActivated;
                         break;
                     default:
                         break;
