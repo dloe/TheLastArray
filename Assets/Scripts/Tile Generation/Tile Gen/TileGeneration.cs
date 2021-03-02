@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 [CustomEditor(typeof(TileGeneration))]
 public class TileGenerationInspector : Editor
 {
@@ -46,6 +47,7 @@ public class TileGenerationInspector : Editor
         base.OnInspectorGUI();
     }
 }
+#endif
 
 
 public class TileGeneration : MonoBehaviour
@@ -78,7 +80,8 @@ public class TileGeneration : MonoBehaviour
 
     //does not include the path
     //private int totalSingleTilesInLevel = 3;
-
+    [HideInInspector]
+    public GameObject _playerSpawnPreset;
     Tile _startTile;
     Tile _endTile;
     int _pathNumber = 0;
@@ -148,10 +151,10 @@ public class TileGeneration : MonoBehaviour
 
     void SetLineRenderer()
     {
+        
         _lr = GetComponent<LineRenderer>();
         for(int t = 0; t < levelPath.Count; t++)
         {
-            //Debug.Log(t);
             _lr.SetPosition(t, levelPath[t].transform.position);
         }
 
@@ -388,6 +391,9 @@ public class TileGeneration : MonoBehaviour
         AddRandomRooms();
         //Debug.Log("Added Random Rooms");
 
+        //add Start Room (outside of grid)
+        CreateSpawnRoom();
+
 
         //this will be removed eventaully
         if (hasDoors)
@@ -410,6 +416,68 @@ public class TileGeneration : MonoBehaviour
         
     }
     
+    void CreateSpawnRoom()
+    {
+        GameObject startingNode = new GameObject();
+        startingNode.name = "StartingNode";
+        startingNode.transform.parent = this.transform;
+        Vector3 spawnPos;
+        GameObject tile = null;
+        //Debug.Log(_side);
+        //depending on start tile cords, we add starting room
+        switch (_side)
+        {
+            case spawnRoomSide.right:
+                spawnPos = new Vector3(_startTile.transform.position.x - (myLevelAssetsData.tileSize/2), _startTile.transform.position.y, _startTile.transform.position.z);
+                tile = Instantiate(tilePlaceholder, spawnPos, _startTile.transform.rotation);
+                _playerSpawnPreset = Instantiate(myLevelAssetsData.presetStartingTileAssets[Random.Range(0, myLevelAssetsData.presetStartingTileAssets.Count)], spawnPos, _startTile.transform.rotation);
+                tile.GetComponent<Tile>().downNeighbor = _allActiveTiles[0];
+                _allActiveTiles[0].upNeighbor = tile.GetComponent<Tile>();
+                _playerSpawnPreset.transform.localEulerAngles = new Vector3(tile.transform.localEulerAngles.x, -90, tile.transform.localEulerAngles.z);
+                break;
+            case spawnRoomSide.left:
+                spawnPos = new Vector3(_startTile.transform.position.x + (myLevelAssetsData.tileSize / 2), _startTile.transform.position.y, _startTile.transform.position.z);
+                tile = Instantiate(tilePlaceholder, spawnPos, _startTile.transform.rotation);
+                _playerSpawnPreset = Instantiate(myLevelAssetsData.presetStartingTileAssets[Random.Range(0, myLevelAssetsData.presetStartingTileAssets.Count)], spawnPos, _startTile.transform.rotation);
+                tile.GetComponent<Tile>().upNeighbor = _allActiveTiles[0];
+                _allActiveTiles[0].downNeighbor = tile.GetComponent<Tile>();
+                _playerSpawnPreset.transform.localEulerAngles = new Vector3(tile.transform.localEulerAngles.x, 90, tile.transform.localEulerAngles.z);
+                break;
+            case spawnRoomSide.up:
+                spawnPos = new Vector3(_startTile.transform.position.x, _startTile.transform.position.y, _startTile.transform.position.z + (myLevelAssetsData.tileSize / 2));
+                tile = Instantiate(tilePlaceholder, spawnPos, _startTile.transform.rotation);
+                _playerSpawnPreset = Instantiate(myLevelAssetsData.presetStartingTileAssets[Random.Range(0, myLevelAssetsData.presetStartingTileAssets.Count)], spawnPos, _startTile.transform.rotation);
+                tile.GetComponent<Tile>().leftNeighbor = _allActiveTiles[0];
+                _allActiveTiles[0].rightNeighbor = tile.GetComponent<Tile>();
+                break;
+            case spawnRoomSide.down:
+                spawnPos = new Vector3(_startTile.transform.position.x, _startTile.transform.position.y, _startTile.transform.position.z - (myLevelAssetsData.tileSize / 2));
+                tile = Instantiate(tilePlaceholder, spawnPos, _startTile.transform.rotation);
+                _playerSpawnPreset = Instantiate(myLevelAssetsData.presetStartingTileAssets[Random.Range(0, myLevelAssetsData.presetStartingTileAssets.Count)], spawnPos, _startTile.transform.rotation);
+                tile.GetComponent<Tile>().rightNeighbor = _allActiveTiles[0];
+                _allActiveTiles[0].leftNeighbor = tile.GetComponent<Tile>();
+                _playerSpawnPreset.transform.localEulerAngles = new Vector3(tile.transform.localEulerAngles.x, 180, tile.transform.localEulerAngles.z);
+                break;
+            default:
+                break;
+        }
+        tile.transform.parent = startingNode.transform;
+        tile.GetComponent<Tile>().tileStatus = Tile.TileStatus.startingRoom;
+        tile.GetComponent<Tile>().ShadeStarting();
+        
+        tile.GetComponent<Tile>().levelAssetPlaced = true;
+        _playerSpawnPreset.name = "PlayerBeginningSpawnTile";
+        _playerSpawnPreset.transform.parent = startingNode.transform;
+        tile.GetComponent<Tile>().presetTile = _playerSpawnPreset;
+
+        //add to front of allActiveTiles
+        _allActiveTiles[0].tileStatus = Tile.TileStatus.path;
+        _allActiveTiles[0].ShadePath();
+        _allActiveTiles.Insert(0, tile.GetComponent<Tile>());
+        levelPath.Insert(0, tile.GetComponent<Tile>());
+        _lr.positionCount = levelPath.Count;
+    }
+
     void AddRandomRooms()
     {
         
@@ -893,6 +961,15 @@ public class TileGeneration : MonoBehaviour
         }
     }
 
+    enum spawnRoomSide
+    {
+        none,
+        right,
+        left,
+        up,
+        down
+    }
+    spawnRoomSide _side;
     void ChooseStartEndRooms()
     {
         //first we get the start room and end room
@@ -900,26 +977,32 @@ public class TileGeneration : MonoBehaviour
         int startY = 0; //= Random.Range(0, _levelHeight);
 
         //can either be (0,x), (x, 0), (max, x), (x, max)
-        int num = Random.Range(0, 4);
+        int num = Random.Range(1, 5);
         switch (num)
         {
             case 1:
                 startX = 0;
                 startY = Random.Range(0, _levelHeight);
+                _side = spawnRoomSide.down;
                 break;
             case 2:
                 startX = Random.Range(0, _levelWidth);
                 startY = 0;
+                _side = spawnRoomSide.right;
                 break;
             case 3:
                 startX = _levelWidth - 1;
                 startY = Random.Range(0, _levelHeight);
+                _side = spawnRoomSide.up;
                 break;
             case 4:
                 startX = Random.Range(0, _levelWidth);
                 startY = _levelHeight - 1;
+                _side = spawnRoomSide.left;
                 break;
             default:
+                Debug.Log(num);
+                Debug.Log("No side picked?");
                 break;
         }
 

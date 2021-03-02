@@ -36,11 +36,17 @@ public class LevelAssetsData : ScriptableObject
     public List<GameObject> itemList;
     [Header("Level Tier")]
     public int levelTier = 0;
+    [Space(10)]
+    [Header("Starting Tile Prefabs")]
+    public List<GameObject> presetStartingTileAssets;
     [Header("The Small 1 Tile Preset Variations")]
     public List<GameObject> presetTileAssets;
     [Header("The Big 4 Tile Preset Variations")]
     public List<GameObject> presetBigTileAssets;
     [Space(10)]
     public EnemyPrefab enemyPrefab;
+    [Space(10)]
+    [Header("Tile Prefabs with objectives")]
+    public List<GameObject> presetObjectiveTiles;
 }
 
