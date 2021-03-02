@@ -162,7 +162,7 @@ public class Player : MonoBehaviour
             {
                 if (itemToGrab && !inventory.IsFull())
                 {
-                    inventory.AddItem(new Item(itemToGrab.itemType, itemToGrab.worldItemData));
+                    inventory.AddItem(new Item(itemToGrab.worldItemData));
                     Destroy(itemToGrab.gameObject);
                     itemToGrab = null;
                 }
@@ -195,16 +195,16 @@ public class Player : MonoBehaviour
             //uses currently selected item
             if (Input.GetMouseButtonDown(0) && inventory.selectedItem != null)
             {
-                switch (inventory.selectedItem.itemType)
+                switch (inventory.selectedItem.itemData.itemType)
                 {
-                    case Item.ItemType.MeleeWeapon:
+                    case ItemType.MeleeWeapon:
                         meleeAttack();
                         break;
-                    case Item.ItemType.Pistol:
-                    case Item.ItemType.Rifle:
-                        rangedAttack(inventory.selectedItem.itemType);
+                    case ItemType.Pistol:
+                    case ItemType.Rifle:
+                        rangedAttack(inventory.selectedItem.itemData.itemType);
                         break;
-                    case Item.ItemType.Heal:
+                    case ItemType.Heal:
                         if (Health < maxHealth)
                         {
                             heal();
@@ -269,10 +269,10 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void rangedAttack(Item.ItemType itemType)
+    private void rangedAttack(ItemType itemType)
     {
         
-        if (itemType == Item.ItemType.Pistol)
+        if (itemType == ItemType.Pistol)
         {
             Instantiate(pistolBulletPrefab, transform.position, transform.rotation);
         }

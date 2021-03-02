@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class WorldItem : MonoBehaviour
 {
-    public Item.ItemType itemType;
     public ItemData worldItemData;
 
     private void Start()

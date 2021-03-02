@@ -4,26 +4,19 @@ using UnityEngine;
 
 public class Item
 {
-    public enum ItemType
-    {
-        MeleeWeapon,
-        Pistol,
-        Rifle,
-        Heal
-    }
-
-    public ItemType itemType;
+    
     public ItemData itemData;
 
-    public Item(ItemType type, ItemData data)
+    public Item(ItemData data)
     {
-        itemType = type;
+        
         if(!data.name.Contains("Instance"))
         {
             itemData = ScriptableObject.CreateInstance<ItemData>();
 
             itemData.itemName = data.itemName;
             itemData.itemSprite = data.itemSprite;
+            itemData.itemType = data.itemType;
             if (data.isMeleeWeapon)
             {
                 itemData.isMeleeWeapon = data.isMeleeWeapon;

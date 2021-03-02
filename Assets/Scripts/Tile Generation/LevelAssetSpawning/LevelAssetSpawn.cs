@@ -108,19 +108,19 @@ public class LevelAssetSpawn : MonoBehaviour
     }
 
     #region Objective Spawn
-    
+
     /// <summary>
     /// - objective will spawn on boss tile
     /// - if final tile is on a 2 x 2, get that tile and spawn an objective from it
     ///  - UNSURE: if this should be what picks the objective or if localLevel handles that
-    /// 
+    ///
     /// </summary>
     public void ActivateObjectives()
     {
         objectivesInLevel.Add(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
 
-        //picks random objective - might have this start on awake and LevelAssetSpawn reads it here instead
-        _myLocalLevel.ChooseObjective();
+        //picks random objective
+        _myLocalLevel.ChooseObjective(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
         //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
 
         //spawns in objectives (each one gets a designated number based on their index in array they are added to)
@@ -211,17 +211,17 @@ public class LevelAssetSpawn : MonoBehaviour
                                         }
                                     }
 
-                                    
+
                                     Destroy(tile3.presetTile.gameObject);
 
 
                                     tile3.checkFor4Some = true;
                                     tile3.transform.parent = fourSomeTile.transform;
                                 }
-                                
+
                                 SpawnLevelBigAsset(fourSomeTile, obj);
 
-                                
+
 
                                 return;
                             }
@@ -283,7 +283,7 @@ public class LevelAssetSpawn : MonoBehaviour
         {
             //if  this tile is the final room, make sure it has an objective
             preset = Instantiate(myLevelAsset.presetObjectiveTiles[Random.Range(0, myLevelAsset.presetObjectiveTiles.Count)], tile.transform.position, tile.transform.rotation);
-            
+
             preset.transform.parent = tile.transform.parent;
             tile.presetTile = preset;
             int tileIndex = myLevelAsset.presetTileAssets.IndexOf(myLevelAsset.presetObjectiveTiles[Random.Range(0, myLevelAsset.presetObjectiveTiles.Count)]);
@@ -301,7 +301,7 @@ public class LevelAssetSpawn : MonoBehaviour
         //later we can go through as activate these resources (maybe look at how far each of is from other active ones to ensure mass distribution - no clusters of resources)
         if (preset.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
         {
-            
+
            // Debug.Log(preset.name);
             for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetItems.Length; posResourceCount++)
             {
@@ -369,10 +369,10 @@ public class LevelAssetSpawn : MonoBehaviour
 
     }
 
-    
+
     /// <summary>
     /// Finds the least popular asset or if there are multiple assets at the same number, choose a random one
-    /// 
+    ///
     /// CURRENTLY NO MAGATUDE CHECK FOR BIG TILE PRESETS SINCE THEY DONT SPAWN AS MUCH :)
     /// </summary>
     /// <returns> Least Popular asset index to spawn</returns>
@@ -547,7 +547,7 @@ public class LevelAssetSpawn : MonoBehaviour
         //resources can either spawn at random or based on distance from any other existing resource
         //when activated that gameobject will be removed from the possibleResources and added to resourcesInLevel List
         //when item is activated can either be a weapon, resource or other item
-       
+
     }
 
     /// <summary>
@@ -608,7 +608,7 @@ public class LevelAssetSpawn : MonoBehaviour
     }
     #endregion
 
-    
+
     #region Enemies
 
 
@@ -646,7 +646,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     case EnemyWeightType.None:
                         //picks between outcasts, dog or lost ones
                         choice = Random.Range(0, 3);
-                        
+
                         switch (choice)
                         {
                             case 0:
@@ -1088,7 +1088,7 @@ public class LevelAssetSpawn : MonoBehaviour
             Debug.Log(tempS);
         }
 
-        
+
     }
 
 
