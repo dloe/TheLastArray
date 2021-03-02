@@ -12,4 +12,6 @@ public enum ObjectWeightType
 public class PossibleItem : MonoBehaviour
 {
     public ObjectWeightType objectWeight;
+   // [HideInInspector]
+   // public int itemIndex = -1;
 }

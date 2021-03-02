@@ -120,43 +120,49 @@ public class LevelAssetSpawn : MonoBehaviour
     public void ActivateObjectives()
     {
         //picks random objective in awake in LocalLevel script
-        GameObject obj = Objectives.Instance.AddObjectiveRef(_myLocalLevel.objective, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn).gameObject;
-        obj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
-        
-        objectivesInLevel.Add(obj);
-
-
-        //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
-        //if objective is certain types (ie type 3), choose more objectives and add to list
-
-        if(_myLocalLevel.objective == 3)
+        if (_myLocalLevel.objective != 1)
         {
-            //make sure we can spawn 2 more objectives!
-            for(int objCount = 0; objCount < 2; objCount++)
+            GameObject obj = Objectives.Instance.AddObjectiveRef(_myLocalLevel.objective, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn).gameObject;
+            obj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
+
+            objectivesInLevel.Add(obj);
+            _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
+
+            //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
+            //if objective is certain types (ie type 3), choose more objectives and add to list
+
+            if (_myLocalLevel.objective == 3)
             {
-                if(_possibleTileObjectivesInLevel.Count > 0)
+                //make sure we can spawn 2 more objectives!
+                for (int objCount = 0; objCount < 2; objCount++)
                 {
-                    //randomly pick an objective (or item?)
-                    int index = Random.Range(0, _possibleObjectives.Count);
-                   // Debug.Log(index);
-                    GameObject objMulti = Objectives.Instance.AddObjectiveRef(3, _possibleObjectives[index]).gameObject;
-                   // Debug.Log("poop");
-                    objMulti.transform.parent = _possibleObjectives[index].transform.parent;
-                    //Destroy(_possibleTileObjectivesInLevel[index]);
-                    objectivesInLevel.Add(objMulti);
-                    _possibleObjectives.RemoveAt(index);
-                    _possibleItems.Remove(_possibleObjectives[index]);
-                    //Debug.Log("added");
+                    if (_possibleTileObjectivesInLevel.Count > 0)
+                    {
+                        //randomly pick an objective (or item?)
+                        int indexO = Random.Range(0, _possibleObjectives.Count);
+                      //  Debug.Log(indexO);
+                        GameObject objMulti = Objectives.Instance.AddObjectiveRef(3, _possibleObjectives[indexO]).gameObject;
+                        // Debug.Log("poop");
+                        objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
+                        //Destroy(_possibleTileObjectivesInLevel[index]);
+                        objectivesInLevel.Add(objMulti);
+                       // Destroy(_possibleObjectives[indexO]);
+                        _possibleItems.Remove(_possibleObjectives[indexO]);
+                        _possibleObjectives.Remove(_possibleObjectives[indexO]);
+                        
+                        //
+                        Debug.Log("Added Objective");
+                    }
                 }
             }
+
+            //spawns in objectives (each one gets a designated number based on their index in array they are added to)
+
+            //sets a an array of bools  - for keeping progress on which are complete?
         }
-
-        //spawns in objectives (each one gets a designated number based on their index in array they are added to)
-
-        //sets a an array of bools  - for keeping progress on which are complete?
-
         //update Objectives object with objetive info
         Debug.Log("activated objs");
+       // ActivateItems();
     }
     #endregion
 
@@ -338,7 +344,8 @@ public class LevelAssetSpawn : MonoBehaviour
                 //co++;
                // Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                 _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
-                if(tile.tileStatus != Tile.TileStatus.startingRoom)
+               // mPresetTileInfo.possiblePresetItems[posResourceCount].GetComponent<PossibleItem>().itemIndex = _possibleItems.Count - 1;
+                if (tile.tileStatus != Tile.TileStatus.startingRoom)
                     _possibleObjectives.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
             }
             for (int posEnemyCount = 0; posEnemyCount < mPresetTileInfo.enemiesOnPreset.Length; posEnemyCount++)
@@ -388,6 +395,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 //co++;
                 //Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                 _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
+               // mPresetTileInfo.possiblePresetItems[posResourceCount].GetComponent<PossibleItem>().itemIndex = _possibleItems.Count;
                 //if()
                 _possibleObjectives.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
             }

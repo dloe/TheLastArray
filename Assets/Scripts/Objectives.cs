@@ -5,9 +5,9 @@ using UnityEngine;
 
 public enum Condition
 {
-    KillAllEnemies,
+    KillEnemy,
     GetKeyItem,
-    ReachArea
+    FindGenerator
 }
 public class Objectives : MonoBehaviour
 {
@@ -46,7 +46,7 @@ public class Objectives : MonoBehaviour
         switch (objectiveInt)
         {
             case 1:
-                objective.condition = Condition.KillAllEnemies;
+                objective.condition = Condition.KillEnemy;
                 break;
             case 2:
             case 3:
@@ -73,7 +73,7 @@ public class Objectives : MonoBehaviour
         switch (objectiveInt)
         {
             case 1:
-                objective.condition = Condition.KillAllEnemies;
+                objective.condition = Condition.KillEnemy;
                 break;
             case 2:
             case 3:
@@ -97,7 +97,7 @@ public class Objectives : MonoBehaviour
 
     public bool CheckWinCondition(Condition condition)
     {
-        if (condition == Condition.KillAllEnemies)
+        if (condition == Condition.KillEnemy)
         {
             return true;
         }
@@ -112,13 +112,13 @@ public class Objectives : MonoBehaviour
             {
                 switch (objective.condition)
                 {
-                    case Condition.KillAllEnemies:
+                    case Condition.KillEnemy:
                         objective.complete = enemyCount == 0;
                         break;
                     case Condition.GetKeyItem:
                         objective.complete = Player.Instance.inventory.Contains(objective.itemData);
                         break;
-                    case Condition.ReachArea:
+                    case Condition.FindGenerator:
                         objective.complete = false;
                         break;
                     default:
