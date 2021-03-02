@@ -66,6 +66,35 @@ public class Objectives : MonoBehaviour
         objectives.Add(objective);
     }
 
+    public WorldItem AddObjectiveRef(int objectiveInt, GameObject spot)
+    {
+        WorldItem objItem = null;
+        Objective objective = new Objective();
+        switch (objectiveInt)
+        {
+            case 1:
+                objective.condition = Condition.KillAllEnemies;
+                break;
+            case 2:
+            case 3:
+                objective.condition = Condition.GetKeyItem;
+                objective.itemData = possibleItems[Random.Range(0, possibleItems.Count)];
+                objItem = Instantiate(emptyWorldItem, spot.transform.position, emptyWorldItem.transform.rotation).GetComponent<WorldItem>();
+                objItem.worldItemData = objective.itemData;
+                break;
+            //case 3:
+            //    objective.condition = Condition.ReachArea;
+            //    break;
+            default:
+                break;
+        }
+        objective.objectiveMessage = objective.condition.ToString();
+
+        objectives.Add(objective);
+
+        return objItem;
+    }
+
     public bool CheckWinCondition(Condition condition)
     {
         if (condition == Condition.KillAllEnemies)

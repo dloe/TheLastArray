@@ -10,13 +10,26 @@ public class LocalLevel : MonoBehaviour
     ///     - a TileGen Prefab
     /// </summary>
 
-
     //holds objective info and game loop info
     //consider putting ui here maybe
     TileGeneration _myTileGen;
 
     public PlayerData myPlayerData;
+    [HideInInspector]
     public List<int> _posObjectives;
+
+    //interpolation
+    bool fadeIn = false;
+    bool fadeOut = false;
+    float timeStart;
+    float u;
+    bool ctc = false;
+    float a0, a1, a01;
+    bool fading = false;
+    [SerializeField]
+    public Image transBar;
+
+    public int objective;
 
     private void Awake()
     {
@@ -26,33 +39,12 @@ public class LocalLevel : MonoBehaviour
         _posObjectives = new List<int> { 1, 2, 3 };
         //LevelFadeIn();
         StartFadeIn();
+
+        ChooseObjective();
     }
 
-    public void StartFadeIn()
-    {
-       // Debug.Log("on");
-        fadeIn = true;
-        ctc = true;
-        u = 1.0f;
-    }
+    
 
-    public void StartFadeOut()
-    {
-        fadeOut = true;
-        ctc = true;
-        u = 0.0f;
-    }
-
-    public bool fadeIn = false;
-    public bool fadeOut = false;
-    public float timeStart;
-    public float u;
-    public bool ctc = false;
-    public float a0, a1;
-    public bool fading = false;
-    [SerializeField]
-    public Image transBar;
-    public float a01;
 
 
     private void Update()
@@ -72,10 +64,10 @@ public class LocalLevel : MonoBehaviour
     /// - remove previous obj from list
     /// - pick randomly from updated list
     /// </summary>
-    public void ChooseObjective(GameObject objectiveSpot)
+    public void ChooseObjective()
     {
         Debug.Log("picking obj");
-        int objective;
+        
         //picks objective - cant be the previous objective
         if(myPlayerData.previouslyCompletedObj == -1)
         {
@@ -95,7 +87,8 @@ public class LocalLevel : MonoBehaviour
             objective = _posObjectives[Random.Range(0, _posObjectives.Count)];
         }
 
-        Objectives.Instance.AddObjective(objective, objectiveSpot);
+        
+        
 
         Debug.Log(objective);
     }
@@ -115,7 +108,20 @@ public class LocalLevel : MonoBehaviour
     }
 
     #region Scene Transitions
+    public void StartFadeIn()
+    {
+        // Debug.Log("on");
+        fadeIn = true;
+        ctc = true;
+        u = 1.0f;
+    }
 
+    public void StartFadeOut()
+    {
+        fadeOut = true;
+        ctc = true;
+        u = 0.0f;
+    }
     /// <summary>
     /// Scene Transitions, will incorperate a fade in and out
     /// - will not use animator on canvas to avoid stuff being in update

@@ -117,11 +117,15 @@ public class LevelAssetSpawn : MonoBehaviour
     /// </summary>
     public void ActivateObjectives()
     {
-        objectivesInLevel.Add(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
+        //picks random objective in awake in LocalLevel script
+        GameObject obj = Objectives.Instance.AddObjectiveRef(_myLocalLevel.objective, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn).gameObject;
+        obj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
+        
+        objectivesInLevel.Add(obj);
 
-        //picks random objective
-        _myLocalLevel.ChooseObjective(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
+
         //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
+        //if objective is certain types, choose more objectives and add to list
 
         //spawns in objectives (each one gets a designated number based on their index in array they are added to)
 
