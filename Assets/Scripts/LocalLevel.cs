@@ -21,6 +21,7 @@ public class LocalLevel : MonoBehaviour
     {
         //assign tileGen obj
         _myTileGen = FindObjectOfType<TileGeneration>();
+        //number of objectives
         _posObjectives = new List<int> { 1, 2, 3 };
     }
 
@@ -44,12 +45,15 @@ public class LocalLevel : MonoBehaviour
         else
         {
             //exclude previous obj index from choice
-            _posObjectives.RemoveAt(myPlayerData.previouslyCompletedObj);
+            Debug.Log(_posObjectives.Count);
+            //_posObjectives.RemoveAt(myPlayerData.previouslyCompletedObj);
+            _posObjectives.Remove(myPlayerData.previouslyCompletedObj);
             _posObjectives = reshuffle(_posObjectives);
+            Debug.Log(_posObjectives.Count);
             objective = _posObjectives[Random.Range(0, _posObjectives.Count)];
         }
 
-
+        myPlayerData.previouslyCompletedObj = objective;
 
         Debug.Log(objective);
     }

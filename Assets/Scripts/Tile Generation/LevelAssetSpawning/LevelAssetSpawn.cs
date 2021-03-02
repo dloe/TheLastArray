@@ -119,13 +119,16 @@ public class LevelAssetSpawn : MonoBehaviour
     {
         objectivesInLevel.Add(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
 
-        //picks random objective
+        //picks random objective - might have this start on awake and LevelAssetSpawn reads it here instead
         _myLocalLevel.ChooseObjective();
         //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
 
         //spawns in objectives (each one gets a designated number based on their index in array they are added to)
+
         //sets a an array of bools  - for keeping progress on which are complete
+
         //update levelinfo object with objetive info
+
     }
     #endregion
 
