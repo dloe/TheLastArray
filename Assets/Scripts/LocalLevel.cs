@@ -29,7 +29,7 @@ public class LocalLevel : MonoBehaviour
     /// - remove previous obj from list
     /// - pick randomly from updated list
     /// </summary>
-    public void ChooseObjective()
+    public void ChooseObjective(GameObject objectiveSpot)
     {
         Debug.Log("picking obj");
         int objective;
@@ -49,7 +49,7 @@ public class LocalLevel : MonoBehaviour
             objective = _posObjectives[Random.Range(0, _posObjectives.Count)];
         }
 
-
+        Objectives.Instance.AddObjective(objective, objectiveSpot);
 
         Debug.Log(objective);
     }

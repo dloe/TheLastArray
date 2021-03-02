@@ -120,7 +120,7 @@ public class LevelAssetSpawn : MonoBehaviour
         objectivesInLevel.Add(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
 
         //picks random objective
-        _myLocalLevel.ChooseObjective();
+        _myLocalLevel.ChooseObjective(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
         //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
 
         //spawns in objectives (each one gets a designated number based on their index in array they are added to)

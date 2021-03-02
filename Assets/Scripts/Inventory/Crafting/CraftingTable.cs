@@ -31,7 +31,7 @@ public class CraftingTable : MonoBehaviour
         {
             tempOption = Instantiate(craftingOptionPrefab, optionParent.transform).GetComponent<CraftingOption>();
             tempOption.recipe = recipe;
-            tempOption.itemName.text = recipe.Result.ToString();
+            tempOption.itemName.text = recipe.Result.itemName;
             foreach (ResourceRequirement requirement in recipe.Requirements)
             {
                 switch (requirement.Resource)

@@ -6,17 +6,29 @@ using UnityEditor;
 using UnityEngine.UI;
 
 
-
+public enum AmmoType
+{
+    pistolAmmo,
+    rifleAmmo
+}
+public enum ItemType
+{
+    MeleeWeapon,
+    Pistol,
+    Rifle,
+    Heal,
+    KeyItem
+}
 [CreateAssetMenu]
 public class ItemData : ScriptableObject
 {
-    public enum AmmoType
-    {
-        pistolAmmo,
-        rifleAmmo
-    }
+    
+
+
+   
 
     public Sprite itemSprite;
+    public ItemType itemType;
     public string itemName = "write item name here";
 
     public bool isMeleeWeapon = false;
@@ -59,6 +71,8 @@ public class ItemDataEditor : Editor
 
         itemData.itemSprite = (Sprite)EditorGUILayout.ObjectField(itemData.itemSprite, typeof(Sprite), false, GUILayout.Width(80), GUILayout.Height(80));
 
+        itemData.itemType = (ItemType)EditorGUILayout.EnumPopup("Item Type", itemData.itemType);
+
         itemData.itemName = EditorGUILayout.TextField("Item's Name",itemData.itemName);
 
         if(!itemData.isRangedWeapon && !itemData.isHealingItem)
@@ -97,7 +111,7 @@ public class ItemDataEditor : Editor
         {
             itemData.damage = EditorGUILayout.IntField("Damage to Deal", itemData.damage);
             itemData.coolDownPeriod = EditorGUILayout.FloatField("Shot Cooldown", itemData.coolDownPeriod);
-            itemData.ammoType = (ItemData.AmmoType)EditorGUILayout.EnumPopup("Ammo Type", itemData.ammoType);
+            itemData.ammoType = (AmmoType)EditorGUILayout.EnumPopup("Ammo Type", itemData.ammoType);
             itemData.reloadTime = EditorGUILayout.FloatField("Reload Time(seconds)", itemData.reloadTime);
             itemData.magSize = EditorGUILayout.IntField("Magazine Size", itemData.magSize);
         }

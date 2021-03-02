@@ -25,12 +25,12 @@ public class Inventory
 
 
 
-    public bool Contains(Item.ItemType itemType)
+    public bool Contains(ItemData itemData)
     {
         bool result = false;
         foreach(Item item in itemList)
         {
-            if(item.itemType == itemType)
+            if(item.itemData.itemName == itemData.itemName)
             {
                 result = true;
                 break;
@@ -42,14 +42,14 @@ public class Inventory
    public void AddItem(Item item)
     {
         itemList.Add(item);
-        Debug.Log("Item Added: " + item.itemType);
+        Debug.Log("Item Added: " + item.itemData.itemType);
         invUI.RefreshUI();
     }
 
     public void RemoveItem(Item item)
     {
         itemList.Remove(item);
-        Debug.Log("Item Removed: " + item.itemType);
+        Debug.Log("Item Removed: " + item.itemData.itemType);
         invUI.RefreshUI();
     }
     public void DropItem()
@@ -74,7 +74,7 @@ public class Inventory
         else
         {
             selectedItem = itemList[slotIndex];
-            Debug.Log("Item Equipped: " + selectedItem.itemType);
+            Debug.Log("Item Equipped: " + selectedItem.itemData.itemType);
         }
         
     }
