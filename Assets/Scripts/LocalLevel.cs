@@ -31,8 +31,17 @@ public class LocalLevel : MonoBehaviour
 
     public int objective;
 
+    public static LocalLevel Instance;
+
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(Instance.gameObject);
+        }
+        Instance = this;
+
+
         //assign tileGen obj
         _myTileGen = FindObjectOfType<TileGeneration>();
         //number of objectives
@@ -66,11 +75,11 @@ public class LocalLevel : MonoBehaviour
     /// </summary>
     public void ChooseObjective()
     {
-        Debug.Log("picking obj");
+        //Debug.Log("picking obj");
 
 
-        objective = 3;
-        return;
+       // objective = 3;
+      //  return;
 
         //picks objective - cant be the previous objective
         if(myPlayerData.previouslyCompletedObj == -1)
@@ -94,7 +103,7 @@ public class LocalLevel : MonoBehaviour
         
         
 
-        Debug.Log(objective);
+        Debug.Log("Picked Objective: " + objective);
     }
 
     //reshuffle list

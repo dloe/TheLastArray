@@ -37,7 +37,7 @@ public class LevelAssetSpawn : MonoBehaviour
     [Header("Weapons In Level")]
     public List<GameObject> weaponsInLevelList = new List<GameObject>();
 
-    public List<GameObject> _possibleObjectives = new List<GameObject>();
+    List<GameObject> _possibleObjectives = new List<GameObject>();
 
     [Header("Enemies In Level")]
     public List<GameObject> enemiesInLevel = new List<GameObject>();
@@ -51,7 +51,7 @@ public class LevelAssetSpawn : MonoBehaviour
     GameObject endObjTile;
     [Header("Objectives In Level")]
     public List<GameObject> objectivesInLevel = new List<GameObject>();
-    public List<GameObject> _possibleTileObjectivesInLevel = new List<GameObject>();
+    List<GameObject> _possibleTileObjectivesInLevel = new List<GameObject>();
 
     //first number represents the number of times tiles in that list were spawned
     //second number represents the tile numbers that were spawned that amount of times
@@ -77,7 +77,7 @@ public class LevelAssetSpawn : MonoBehaviour
     /// </summary>
     public void PopulateGrid()
     {
-        Debug.Log("Populating Level with Assets...");
+        //Debug.Log("Populating Level with Assets...");
 
         //activate walls
         foreach (Tile t in myTileGeneration._allActiveTiles)
@@ -142,11 +142,8 @@ public class LevelAssetSpawn : MonoBehaviour
                         int indexO = Random.Range(0, _possibleObjectives.Count);
                       //  Debug.Log(indexO);
                         GameObject objMulti = Objectives.Instance.AddObjectiveRef(3, _possibleObjectives[indexO]).gameObject;
-                        // Debug.Log("poop");
                         objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
-                        //Destroy(_possibleTileObjectivesInLevel[index]);
                         objectivesInLevel.Add(objMulti);
-                       // Destroy(_possibleObjectives[indexO]);
                         _possibleItems.Remove(_possibleObjectives[indexO]);
                         _possibleObjectives.Remove(_possibleObjectives[indexO]);
                         
@@ -155,14 +152,9 @@ public class LevelAssetSpawn : MonoBehaviour
                     }
                 }
             }
-
-            //spawns in objectives (each one gets a designated number based on their index in array they are added to)
-
-            //sets a an array of bools  - for keeping progress on which are complete?
         }
         //update Objectives object with objetive info
         Debug.Log("activated objs");
-       // ActivateItems();
     }
     #endregion
 
