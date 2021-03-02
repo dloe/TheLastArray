@@ -97,14 +97,16 @@ public class LevelAssetSpawn : MonoBehaviour
             }
         }
 
+        //ACTIVATE OBJECTIVES
+        ActivateObjectives();
+
         //SPAWN IN RESOURCES
         ActivateItems();
 
         //ACTIVATE ENEMIES
         ActivateEnemies();
 
-        //ACTIVATE OBJECTIVES
-        ActivateObjectives();
+        
     }
 
     #region Objective Spawn
@@ -125,14 +127,36 @@ public class LevelAssetSpawn : MonoBehaviour
 
 
         //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
-        //if objective is certain types, choose more objectives and add to list
+        //if objective is certain types (ie type 3), choose more objectives and add to list
+
+        if(_myLocalLevel.objective == 3)
+        {
+            //make sure we can spawn 2 more objectives!
+            for(int objCount = 0; objCount < 2; objCount++)
+            {
+                if(_possibleTileObjectivesInLevel.Count > 0)
+                {
+                    //randomly pick an objective (or item?)
+                    int index = Random.Range(0, _possibleObjectives.Count);
+                   // Debug.Log(index);
+                    GameObject objMulti = Objectives.Instance.AddObjectiveRef(3, _possibleObjectives[index]).gameObject;
+                   // Debug.Log("poop");
+                    objMulti.transform.parent = _possibleObjectives[index].transform.parent;
+                    //Destroy(_possibleTileObjectivesInLevel[index]);
+                    objectivesInLevel.Add(objMulti);
+                    _possibleObjectives.RemoveAt(index);
+                    _possibleItems.Remove(_possibleObjectives[index]);
+                    //Debug.Log("added");
+                }
+            }
+        }
 
         //spawns in objectives (each one gets a designated number based on their index in array they are added to)
 
-        //sets a an array of bools  - for keeping progress on which are complete
+        //sets a an array of bools  - for keeping progress on which are complete?
 
-        //update levelinfo object with objetive info
-
+        //update Objectives object with objetive info
+        Debug.Log("activated objs");
     }
     #endregion
 
@@ -210,8 +234,10 @@ public class LevelAssetSpawn : MonoBehaviour
                                             foreach (GameObject item in mPresetTileInfo.GetComponent<PresetTileInfo>().possiblePresetItems)
                                             {
                                                 _possibleItems.Remove(item);
+                                                _possibleObjectives.Remove(item);
                                             }
                                             _possibleTileObjectivesInLevel.Remove(tile3.presetTile);
+                                            
                                         }
                                     }
 
@@ -312,6 +338,8 @@ public class LevelAssetSpawn : MonoBehaviour
                 //co++;
                // Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                 _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
+                if(tile.tileStatus != Tile.TileStatus.startingRoom)
+                    _possibleObjectives.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
             }
             for (int posEnemyCount = 0; posEnemyCount < mPresetTileInfo.enemiesOnPreset.Length; posEnemyCount++)
             {
@@ -320,6 +348,7 @@ public class LevelAssetSpawn : MonoBehaviour
             if(mPresetTileInfo.objectiveSpawn != null)
             {
                 _possibleTileObjectivesInLevel.Add(preset);
+                _possibleObjectives.Add(mPresetTileInfo.objectiveSpawn);
             }
         }
     }
@@ -359,6 +388,8 @@ public class LevelAssetSpawn : MonoBehaviour
                 //co++;
                 //Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                 _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
+                //if()
+                _possibleObjectives.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
             }
             for(int posEnemyCount = 0; posEnemyCount < mPresetTileInfo.enemiesOnPreset.Length; posEnemyCount++)
             {
@@ -367,6 +398,7 @@ public class LevelAssetSpawn : MonoBehaviour
             if (mPresetTileInfo.objectiveSpawn != null)
             {
                 _possibleTileObjectivesInLevel.Add(preset);
+                _possibleObjectives.Add(mPresetTileInfo.objectiveSpawn);
             }
         }
 
