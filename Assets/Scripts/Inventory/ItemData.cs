@@ -19,7 +19,7 @@ public enum ItemType
     Heal,
     KeyItem
 }
-[CreateAssetMenu]
+[Serializable][CreateAssetMenu]
 public class ItemData : ScriptableObject
 {
     
@@ -31,9 +31,7 @@ public class ItemData : ScriptableObject
     public ItemType itemType;
     public string itemName = "write item name here";
 
-    public bool isMeleeWeapon = false;
     public bool hasDurability = false;
-    public bool isRangedWeapon = false;
     public int damage = 1;
     public int durability = -1;
     public float coolDownPeriod = 0.5f;
@@ -45,10 +43,69 @@ public class ItemData : ScriptableObject
     public int magSize = 5;
     
 
-    public bool isHealingItem = false;
     public int amountToHeal = 1;
 
     
+}
+
+[Serializable]
+public class ItemDataSave
+{
+   
+    public string objectName;
+    public Sprite itemSprite;
+    public ItemType itemType;
+    public string itemName ;
+
+    public bool hasDurability;
+    public int damage ;
+    public int durability;
+    public float coolDownPeriod ;
+    public float reloadTime;
+
+    public float meleeRange;
+
+    public AmmoType ammoType;
+    public int magSize;
+
+
+    public int amountToHeal;
+
+    public void SaveFromItemData(ItemData itemData)
+    {
+        objectName = itemData.name;
+        itemSprite = itemData.itemSprite;
+        itemType = itemData.itemType;
+        itemName = itemData.itemName;
+        hasDurability = itemData.hasDurability;
+        damage = itemData.damage;
+        durability = itemData.durability;
+        coolDownPeriod = itemData.coolDownPeriod;
+        reloadTime = itemData.reloadTime;
+        meleeRange = itemData.meleeRange;
+        ammoType = itemData.ammoType;
+        magSize = itemData.magSize;
+        amountToHeal = itemData.amountToHeal;
+    }
+
+    public void LoadToItemData(ItemData itemData)
+    {
+
+
+        itemData.name = objectName;
+        itemData.itemSprite = itemSprite;
+        itemData.itemType = itemType;
+        itemData.itemName = itemName;
+        itemData.hasDurability = hasDurability;
+        itemData.damage = damage;
+        itemData.durability = durability;
+        itemData.coolDownPeriod = coolDownPeriod;
+        itemData.reloadTime= reloadTime;
+        itemData.meleeRange = meleeRange;
+        itemData.ammoType = ammoType;
+        itemData.magSize = magSize;
+        itemData.amountToHeal = amountToHeal;
+    }
 }
 
 #if UNITY_EDITOR
@@ -75,23 +132,23 @@ public class ItemDataEditor : Editor
 
         itemData.itemName = EditorGUILayout.TextField("Item's Name",itemData.itemName);
 
-        if(!itemData.isRangedWeapon && !itemData.isHealingItem)
-        {
-            itemData.isMeleeWeapon = EditorGUILayout.Toggle("Melee Weapon?", itemData.isMeleeWeapon);
-            
-        }
+        //if(!itemData.isRangedWeapon && !itemData.isHealingItem)
+        //{
+        //    itemData.isMeleeWeapon = EditorGUILayout.Toggle("Melee Weapon?", itemData.isMeleeWeapon);
+        //    
+        //}
+        //
+        //if (!itemData.isMeleeWeapon && !itemData.isHealingItem)
+        //{
+        //    itemData.isRangedWeapon = EditorGUILayout.Toggle("Ranged Weapon?", itemData.isRangedWeapon);
+        //}
+        //
+        //if (!itemData.isRangedWeapon && !itemData.isMeleeWeapon)
+        //{
+        //    itemData.isHealingItem = EditorGUILayout.Toggle("Healing Item?", itemData.isHealingItem);
+        //}
 
-        if (!itemData.isMeleeWeapon && !itemData.isHealingItem)
-        {
-            itemData.isRangedWeapon = EditorGUILayout.Toggle("Ranged Weapon?", itemData.isRangedWeapon);
-        }
-
-        if (!itemData.isRangedWeapon && !itemData.isMeleeWeapon)
-        {
-            itemData.isHealingItem = EditorGUILayout.Toggle("Healing Item?", itemData.isHealingItem);
-        }
-
-        if(itemData.isMeleeWeapon)
+        if(itemData.itemType == ItemType.MeleeWeapon)
         {
             itemData.hasDurability = EditorGUILayout.Toggle("Durability?", itemData.hasDurability);
             if(itemData.hasDurability)
@@ -107,7 +164,7 @@ public class ItemDataEditor : Editor
             itemData.meleeRange = EditorGUILayout.FloatField("Melee Range", itemData.meleeRange);
         }
 
-        if (itemData.isRangedWeapon)
+        if (itemData.itemType == ItemType.Pistol || itemData.itemType == ItemType.Rifle)
         {
             itemData.damage = EditorGUILayout.IntField("Damage to Deal", itemData.damage);
             itemData.coolDownPeriod = EditorGUILayout.FloatField("Shot Cooldown", itemData.coolDownPeriod);
@@ -116,7 +173,7 @@ public class ItemDataEditor : Editor
             itemData.magSize = EditorGUILayout.IntField("Magazine Size", itemData.magSize);
         }
 
-        if(itemData.isHealingItem)
+        if(itemData.itemType == ItemType.Heal)
         {
             itemData.amountToHeal = EditorGUILayout.IntField("Amount to Heal", itemData.amountToHeal);
             

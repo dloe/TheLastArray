@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Item
 {
     
@@ -17,27 +18,24 @@ public class Item
             itemData.itemName = data.itemName;
             itemData.itemSprite = data.itemSprite;
             itemData.itemType = data.itemType;
-            if (data.isMeleeWeapon)
+            if (data.itemType == ItemType.MeleeWeapon)
             {
-                itemData.isMeleeWeapon = data.isMeleeWeapon;
                 itemData.damage = data.damage;
                 itemData.coolDownPeriod = data.coolDownPeriod;
                 itemData.meleeRange = data.meleeRange;
                 itemData.hasDurability = data.hasDurability;
                 itemData.durability = data.durability;
             }
-            else if (data.isRangedWeapon)
+            else if (data.itemType == ItemType.Pistol || data.itemType == ItemType.Rifle)
             {
-                itemData.isRangedWeapon = data.isRangedWeapon;
                 itemData.damage = data.damage;
                 itemData.coolDownPeriod = data.coolDownPeriod;
                 itemData.ammoType = data.ammoType;
                 itemData.reloadTime = data.reloadTime;
                 itemData.magSize = data.magSize;
             }
-            else if (data.isHealingItem)
+            else if (data.itemType == ItemType.Heal)
             {
-                itemData.isHealingItem = data.isHealingItem;
                 itemData.amountToHeal = data.amountToHeal;
             }
 
@@ -50,6 +48,7 @@ public class Item
         }
         
     }
+
 
     
 }

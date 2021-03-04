@@ -1,8 +1,10 @@
 ﻿using System.Collections;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PlayerData", menuName = "ScritableObjects/PlayerData", order = 2)]
+[System.Serializable][CreateAssetMenu(fileName = "PlayerData", menuName = "ScritableObjects/PlayerData", order = 2)]
 public class PlayerData : ScriptableObject
 {
 
@@ -21,6 +23,17 @@ public class PlayerData : ScriptableObject
 
     //player stats
     //placeholders for right now
+    public int maxHealth = 15;
     public int health = 15;
-    public int speed = 5;
+    public int dmgResist = 1;
+    public int speedStat = 5;
+    public int scrap, cloth, meds;
+    public int skillPoints = 0;
+
+
+
+
+
+
+
 }

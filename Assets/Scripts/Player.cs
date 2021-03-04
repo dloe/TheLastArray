@@ -1,18 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     public static Player Instance;
+
+    public PlayerData baseData;
     
     [Header("Prefabs for Bullet")]
     public GameObject pistolBulletPrefab;
     public GameObject rifleBulletPrefab;
     
     //inventory of the player
-    public Inventory inventory;
+    public Inventory inventory = new Inventory();
     
     //Item that Player is currently able to grab
     [Header("Current Grabbable Item")]
@@ -22,7 +26,13 @@ public class Player : MonoBehaviour
     [Header("Current Usable Crafting Table")]
     public CraftingTable craftingTable;
 
-    public float moveSpeed = 5f;
+    public int speedStat = 5;
+    public int dmgResist;
+    public int skillPoints = 0;
+
+    //public int healthUpgradesLeft;
+    //public int dmgResistUpgradesLeft;
+    //public int speedUpgradesLeft;
 
     [Header("Used to adjust look Direction to better align to mouse")]
     public float xLookOffset = 3f;
@@ -141,17 +151,13 @@ public class Player : MonoBehaviour
     void Start()
     {
         _mainTransform = transform;
-        inventory = new Inventory();
-        Health = maxHealth;
-        ScrapCount = scrapCount;
-        MedsCount = medsCount;
-        ClothCount = clothCount;
+        SetStatsToBase();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!UI.Instance.PausedStatus)
+        if (!UI.Instance.PausedStatus && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
         {
             doMovement();
             mouseLook();
@@ -229,8 +235,23 @@ public class Player : MonoBehaviour
                 TakeDamage(1);
             }
 
+            if (Input.GetKey(KeyCode.RightShift))
+            {
+                if (Input.GetKeyDown(KeyCode.Equals))
+                {
+                    Debug.Log("Trying To Save...");
+                    SavePlayer();
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Minus))
+            {
+                Debug.Log("Trying To Load...");
+                LoadPlayer();
+            }
             
             
+
+
         }
         
     }
@@ -242,7 +263,7 @@ public class Player : MonoBehaviour
     {
         moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         moveDir.Normalize();
-        moveDir *= Time.deltaTime * moveSpeed;
+        moveDir *= Time.deltaTime * speedStat;
         _mainTransform.Translate(moveDir, Space.World);
 
     }
@@ -357,15 +378,105 @@ public class Player : MonoBehaviour
         }
     }
 
+    
+
+    
+
+    public void SetStatsToBase()
+    {
+        maxHealth = baseData.maxHealth;
+        Health = baseData.health;
+        dmgResist = baseData.dmgResist;
+
+       
+        
+        ScrapCount = baseData.scrap;
+        ClothCount = baseData.cloth;
+        MedsCount = baseData.meds;
+        skillPoints = baseData.skillPoints;
+        inventory.selectedItem = null;
+    }
+
+    #region Saving / Loading
+    public void SavePlayer()
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(Application.persistentDataPath + "/player_save.dat");
+
+        PlayerSave playerSave = new PlayerSave();
+
+        playerSave.maxHealth = maxHealth;
+        playerSave.health = Health;
+        playerSave.dmgResist = dmgResist;
+        playerSave.speedStat = speedStat;
+        playerSave.scrap = ScrapCount;
+        playerSave.cloth = ClothCount;
+        playerSave.meds = MedsCount;
+        playerSave.skillPoints = skillPoints;
+        //playerSave.healthUpgradesLeft = healthUpgradesLeft;
+        //playerSave.dmgResistUpgradesLeft = dmgResistUpgradesLeft;
+        //playerSave.speedUpgradesLeft = speedUpgradesLeft;
+
+        playerSave.invJsonList = inventory.SaveToJsonList();
+
+        bf.Serialize(file, playerSave);
+        file.Close();
+    }
+
+    public void LoadPlayer()
+    {
+        if (File.Exists(Application.persistentDataPath + "/player_save.dat"))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + "/player_save.dat", FileMode.Open);
+            PlayerSave playerSave = (PlayerSave)bf.Deserialize(file);
+            file.Close();
+
+            maxHealth = playerSave.maxHealth;
+            Health = playerSave.health;
+            dmgResist = playerSave.dmgResist;
+            speedStat = playerSave.speedStat;
+            ScrapCount = playerSave.scrap;
+            ClothCount = playerSave.cloth;
+            MedsCount = playerSave.meds;
+            skillPoints = playerSave.skillPoints;
+            //healthUpgradesLeft = playerSave.healthUpgradesLeft;
+            //dmgResistUpgradesLeft = playerSave.dmgResistUpgradesLeft;
+            //speedUpgradesLeft = playerSave.speedUpgradesLeft;
+
+            inventory.LoadFromJsonList(playerSave.invJsonList);
+        }
+    }
+    #endregion
+
     private void OnDrawGizmos()
     {
-        if(Application.isPlaying && inventory.selectedItem != null)
+        if (Application.isPlaying && inventory.selectedItem != null)
         {
             Gizmos.color = Color.red;
-            
+
             Gizmos.DrawCube(_mainTransform.position + _mainTransform.forward * inventory.selectedItem.itemData.meleeRange, meleeExtents);
         }
-        
-        
+
+
     }
 }
+
+[System.Serializable]
+public class PlayerSave
+{
+    public int maxHealth;
+    public int health;
+    public int dmgResist;
+    public int speedStat;
+    public int scrap, cloth, meds;
+    public int skillPoints;
+
+   // public int healthUpgradesLeft;
+   // public int dmgResistUpgradesLeft;
+   // public int speedUpgradesLeft;
+
+    public List<string> invJsonList;
+}
+
+

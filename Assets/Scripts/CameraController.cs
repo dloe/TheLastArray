@@ -35,7 +35,7 @@ public class CameraController : MonoBehaviour
         
         transform.position = playerObject.transform.position + offset;
 
-        if(!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy)
+        if((!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy) && !Upgrades.Instance.upgradeMenu.activeInHierarchy )
         {
             
             panCamera();
