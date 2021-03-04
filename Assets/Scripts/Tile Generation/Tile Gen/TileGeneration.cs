@@ -476,6 +476,7 @@ public class TileGeneration : MonoBehaviour
         _allActiveTiles.Insert(0, tile.GetComponent<Tile>());
         levelPath.Insert(0, tile.GetComponent<Tile>());
         _lr.positionCount = levelPath.Count;
+        //myLevelAssetSpawn.playerSpawn = tile.GetComponent<Tile>().
     }
 
     void AddRandomRooms()

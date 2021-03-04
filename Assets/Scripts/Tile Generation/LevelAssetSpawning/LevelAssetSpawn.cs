@@ -59,6 +59,10 @@ public class LevelAssetSpawn : MonoBehaviour
     public int enemyCount;
     LocalLevel _myLocalLevel;
 
+    public GameObject playerPref;
+    [HideInInspector]
+    public GameObject playerSpawn;
+
     private void Awake()
     {
        // Debug.Log("y");
@@ -94,12 +98,16 @@ public class LevelAssetSpawn : MonoBehaviour
                     // Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                     _possibleItems.Add(t.presetTile.GetComponent<PresetTileInfo>().possiblePresetItems[posResourceCount]);
                 }
+                playerSpawn = t.presetTile.GetComponent<PresetTileInfo>().playerSpawn;
+                //SPAWN PLAYER
+                Instantiate(playerPref, playerSpawn.transform.position, playerSpawn.transform.rotation);
+                _myLocalLevel.ChooseObjective();
             }
         }
 
         //ACTIVATE OBJECTIVES
         ActivateObjectives();
-
+        
         //SPAWN IN RESOURCES
         ActivateItems();
 
