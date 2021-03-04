@@ -23,14 +23,14 @@ public class Inventory
     public Inventory()
     {
         itemList = new List<Item>();
-        Debug.Log("Inventory Created");
+       // Debug.Log("Inventory Created");
         
     }
 
     public Inventory(Inventory invToCopy)
     {
         itemList = new List<Item>(invToCopy.itemList);
-        Debug.Log("Inventory Created");
+        //Debug.Log("Inventory Created");
         
     }
 

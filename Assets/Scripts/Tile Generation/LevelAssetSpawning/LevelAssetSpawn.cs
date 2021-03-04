@@ -15,6 +15,8 @@ public class LevelAssetSpawn : MonoBehaviour
     public LevelAssetsData myLevelAsset;
     [Header("Player Data Obj")]
     public PlayerData myPlayerData;
+    [Header("Local Level Data")]
+    public LocalLevel myLocalLevel;
 
     //to prevent to many of one asset spawning
     [Space(10)]
@@ -57,7 +59,7 @@ public class LevelAssetSpawn : MonoBehaviour
     //second number represents the tile numbers that were spawned that amount of times
     List<List<int>> _magAssetCount;
     public int enemyCount;
-    LocalLevel _myLocalLevel;
+    
 
     public GameObject playerPref;
     [HideInInspector]
@@ -74,7 +76,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
     private void Start()
     {
-        _myLocalLevel = FindObjectOfType<LocalLevel>();
+       // _myLocalLevel = FindObjectOfType<LocalLevel>();
     }
     /// <summary>
     /// Populate grid with assets, called from TileGeneration once it is done setting up
@@ -101,10 +103,10 @@ public class LevelAssetSpawn : MonoBehaviour
                 playerSpawn = t.presetTile.GetComponent<PresetTileInfo>().playerSpawn;
                 //SPAWN PLAYER
                 Instantiate(playerPref, playerSpawn.transform.position, playerSpawn.transform.rotation);
-                _myLocalLevel.ChooseObjective();
+                
             }
         }
-
+        myLocalLevel.ChooseObjective();
         //ACTIVATE OBJECTIVES
         ActivateObjectives();
         
@@ -128,9 +130,9 @@ public class LevelAssetSpawn : MonoBehaviour
     public void ActivateObjectives()
     {
         //picks random objective in awake in LocalLevel script
-        if (_myLocalLevel.objective != 1)
+        if (myLocalLevel.objective != 1)
         {
-            GameObject obj = Objectives.Instance.SetObjectiveRef(_myLocalLevel.objective, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn).gameObject;
+            GameObject obj = Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn).gameObject;
             obj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
 
             objectivesInLevel.Add(obj);
@@ -139,7 +141,7 @@ public class LevelAssetSpawn : MonoBehaviour
             //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
             //if objective is certain types (ie type 3), choose more objectives and add to list
 
-            if (_myLocalLevel.objective == 3 )
+            if (myLocalLevel.objective == 3 )
             {
                 //make sure we can spawn 2 more objectives!
                 for (int objCount = 0; objCount < 2; objCount++)
@@ -159,7 +161,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     }
                 }
             }
-            else if(_myLocalLevel.objective == 2)
+            else if(myLocalLevel.objective == 2)
             {
                 //make sure we can spawn 2 more objectives!
                 for (int objCount = 0; objCount < 2; objCount++)

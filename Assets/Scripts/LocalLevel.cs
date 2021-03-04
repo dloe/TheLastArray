@@ -83,7 +83,7 @@ public class LocalLevel : MonoBehaviour
     /// </summary>
     public void ChooseObjective()
     {
-        //Debug.Log("picking obj");
+       // Debug.Log("picking obj");
 
 
        // objective = 3;
@@ -107,31 +107,12 @@ public class LocalLevel : MonoBehaviour
             //Debug.Log(_posObjectives.Count);
             objective = _posObjectives[Random.Range(0, _posObjectives.Count)];
         }
-        _myObjs = FindObjectOfType<Objectives>();
-         PlayerUIHolder myUIVARs = FindObjectOfType<PlayerUIHolder>();
+        //_myObjs = FindObjectOfType<Objectives>();
+         //PlayerUIHolder myUIVARs = FindObjectOfType<PlayerUIHolder>();
         //player = GameObject.Find("PlayerHolder");
-        objectiveText = myUIVARs.objectiveText;
+        //objectiveText = myUIVARs.objectiveText;
         // objectiveText.text = objective.ToString();
         //  transBar = myUIVARs.panel;
-        
-        //set text for objectives
-        switch (objective)
-        {
-            case 1:
-               // objectiveCountStart = _myObjs.objectives.Count;
-                objectiveText.text = "Kill the enemy";
-                break;
-            case 2:
-                objectiveCountStart = _myObjs.objectives.Count;
-                objectiveText.text = "Collect Gas: " + _myObjs.objectives.Count + "/" + objectiveCountStart;
-                break;
-            case 3:
-                objectiveCountStart = _myObjs.objectives.Count;
-                objectiveText.text = "Collect Generator: " + _myObjs.objectives.Count + "/" + objectiveCountStart;
-                break;
-            default:
-                break;
-        }
 
 
         Debug.Log("Picked Objective: " + objective);
