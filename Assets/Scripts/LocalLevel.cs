@@ -146,32 +146,7 @@ public class LocalLevel : MonoBehaviour
         myPlayerData.currentLevelNumber++;
 
         //transition scene
-        if(myPlayerData.currentLevelNumber > 4)
-        {
-            //take to win screen
-
-        }
-        else
-        {
-            switch (myPlayerData.currentLevelNumber)
-            {
-                case 1:
-                    SceneManager.LoadScene("Level1");
-                    break;
-                case 2:
-                    SceneManager.LoadScene("Level2");
-                    break;
-                case 3:
-                    SceneManager.LoadScene("Level3");
-                    break;
-                case 4:
-                    SceneManager.LoadScene("Level4");
-                    break;
-                default:
-                    break;
-            }
-        }
-        //SceneManager.LoadScene(1);
+        SceneManager.LoadScene("Train");
         
         Debug.Log("Loading next scene");
     }
