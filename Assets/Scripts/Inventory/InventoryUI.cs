@@ -14,6 +14,10 @@ public class InventoryUI : MonoBehaviour
     public List<Transform> slotList = new List<Transform>();
 
     public GameObject emptyWorldItem;
+    public Text equipedItemLabelText;
+    public Text equipedWeaponAmmoText;
+    public Text equipedWeaponReservesText;
+    public Text equipedWeaponDashText;
 
     private readonly string _zoomAxis = "Mouse ScrollWheel";
 
@@ -114,6 +118,48 @@ public class InventoryUI : MonoBehaviour
         }
         SelectSlot(selectedItemIndex);
         inventory.Equip(selectedItemIndex);
+
+        //DYLAN WAS HERE
+        //for currently equiped item text
+        if (inventory.selectedItem != null)
+        {
+            equipedItemLabelText.text = inventory.selectedItem.itemData.itemType.ToString();
+            switch (inventory.selectedItem.itemData.itemType)
+            {
+                case ItemType.MeleeWeapon:
+                    //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
+                    equipedWeaponAmmoText.text = "";
+                    //equipedWeaponReservesText.text = "";
+                    equipedWeaponDashText.gameObject.SetActive(false);
+                    break;
+                case ItemType.Pistol:
+                    //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
+                    equipedWeaponDashText.gameObject.SetActive(true);
+                    equipedWeaponAmmoText.text = inventory.selectedItem.itemData.magSize.ToString();
+                    //equipedWeaponReservesText.text = inventory.selectedItem.weaponReserves.ToString();
+                    break;
+                case ItemType.Rifle:
+                    //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
+                    equipedWeaponDashText.gameObject.SetActive(true);
+                    equipedWeaponAmmoText.text = inventory.selectedItem.itemData.magSize.ToString();
+                    //equipedWeaponReservesText.text = inventory.selectedItem.weaponReserves.ToString();
+                    break;
+                case ItemType.Heal:
+                    equipedWeaponAmmoText.text = "";
+                   // equipedWeaponReservesText.text = "";
+                    equipedWeaponDashText.gameObject.SetActive(false);
+                    break;
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            equipedItemLabelText.text = "None";
+            equipedWeaponAmmoText.text = "";
+           // equipedWeaponReservesText.text = "";
+            equipedWeaponDashText.gameObject.SetActive(false);
+        }
     }
 
     public void SpawnItem(Item item)

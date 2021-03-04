@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 
 public class LocalLevel : MonoBehaviour
@@ -9,7 +10,7 @@ public class LocalLevel : MonoBehaviour
     /// REQURIES:
     ///     - a TileGen Prefab
     /// </summary>
-
+    public bool tempEndLevel = false;
     //holds objective info and game loop info
     //consider putting ui here maybe
     TileGeneration _myTileGen;
@@ -52,10 +53,6 @@ public class LocalLevel : MonoBehaviour
         ChooseObjective();
     }
 
-    
-
-
-
     private void Update()
     {
         if(fadeIn)
@@ -65,6 +62,13 @@ public class LocalLevel : MonoBehaviour
         else if(fadeOut)
         {
             LevelFadeOut();
+        }
+
+        //temp test of level transition
+        if(tempEndLevel)
+        {
+            LevelBeat();
+            tempEndLevel = false;
         }
     }
 
@@ -104,6 +108,29 @@ public class LocalLevel : MonoBehaviour
         
 
         Debug.Log("Picked Objective: " + objective);
+    }
+
+    public void LevelBeat()
+    {
+        StartCoroutine(LevelWonEvent());
+    }
+
+    /// <summary>
+    ///  - when player accomplishes object and gets to extraction
+    ///     - saves data to scriptable obj
+    ///     - fade out
+    ///     - player leaves this scene, goes to crafting scene (for now next level)
+    ///     - update levels beaten var
+    /// </summary>
+    IEnumerator LevelWonEvent()
+    {
+        StartFadeOut();
+        //save player data to scriptable obj
+
+        yield return new WaitForSeconds(1.0f);
+        //transition scene
+        SceneManager.LoadScene(1);
+        Debug.Log("Loading next scene");
     }
 
     //reshuffle list
@@ -153,19 +180,19 @@ public class LocalLevel : MonoBehaviour
         if(fading)
         {
             u = (Time.time - timeStart);
-            u = 1 - u;
+            //u = 1 - u;
             if (u >= 1.0)
             {
                 u = 1;
                 fading = false;
-                fadeIn = false;
+                fadeOut = false;
                 Debug.Log("off");
             }
 
             a01 = (1 - u) * a0 + u * a1;
 
             Color temp = transBar.color;
-            temp.a = 1 - a01;
+            temp.a = a01;
             transBar.color = temp;
         }
     }
