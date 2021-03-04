@@ -102,8 +102,8 @@ public class LevelAssetSpawn : MonoBehaviour
                 }
                 playerSpawn = t.presetTile.GetComponent<PresetTileInfo>().playerSpawn;
                 //SPAWN PLAYER
-                Instantiate(playerPref, playerSpawn.transform.position, playerSpawn.transform.rotation);
-                
+                GameObject play = Instantiate(playerPref, playerSpawn.transform.position, playerSpawn.transform.rotation);
+                myLocalLevel.myPlayer = play.transform.GetChild(0).gameObject.GetComponent<Player>();
             }
         }
         myLocalLevel.ChooseObjective();

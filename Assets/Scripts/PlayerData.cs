@@ -20,7 +20,8 @@ public class PlayerData : ScriptableObject
     [Header("Current Level")]
     //starts at 1 -> 4
     public int currentLevelNumber = 1;
-
+    [Space(10)]
+    [Header("Player Stats")]
     //player stats
     //placeholders for right now
     public int maxHealth = 15;

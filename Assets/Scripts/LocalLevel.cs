@@ -30,12 +30,17 @@ public class LocalLevel : MonoBehaviour
     [SerializeField]
     public Image transBar;
 
+    [Header("Objective Number - choosen in this script")]
     public int objective;
+    [Header("Objective Asset Obj")]
     public Objectives _myObjs;
+    [Header("Local Player Script")]
+    public Player myPlayer;
 
-    public Text objectiveText;
-    private int objectiveCountStart = 0;
+    //public Text objectiveText;
+    //private int objectiveCountStart = 0;
     public static LocalLevel Instance;
+    
 
     private void Awake()
     {
@@ -75,7 +80,6 @@ public class LocalLevel : MonoBehaviour
         }
     }
 
-    //PlayerUIHolder myUIVARs;
     /// <summary>
     /// - list of objectives
     /// - remove previous obj from list
@@ -123,12 +127,6 @@ public class LocalLevel : MonoBehaviour
         StartCoroutine(LevelWonEvent());
     }
 
-    //updates when objectives are choosen and when objectives are met (or steps of it are met)
-    public void UpdateObjectiveUI()
-    {
-
-    }
-
     /// <summary>
     ///  - when player accomplishes object and gets to extraction
     ///     - saves data to scriptable obj
@@ -141,9 +139,15 @@ public class LocalLevel : MonoBehaviour
         StartFadeOut();
         //save player data to scriptable obj
 
+        myPlayer.SavePlayer();
+
         yield return new WaitForSeconds(1.0f);
+
+        myPlayerData.currentLevelNumber++;
+
         //transition scene
         SceneManager.LoadScene(1);
+        
         Debug.Log("Loading next scene");
     }
 
