@@ -158,14 +158,14 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!UI.Instance.PausedStatus && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
+        if (!UI.Instance.PausedStatus && (!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy))
         {
             doMovement();
             mouseLook();
             Debug.DrawRay(_mainTransform.position, lookDir, Color.green);
 
             //if there is a grabbable item and the inventory is not full, then E picks up item
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
             {
                 if (itemToGrab && !inventory.IsFull())
                 {
@@ -203,6 +203,7 @@ public class Player : MonoBehaviour
                 else if(thingToActivate)
                 {
                     thingToActivate.Activate();
+                    
                 }
                 else if(craftingTableToUse)
                 {
@@ -211,7 +212,7 @@ public class Player : MonoBehaviour
             }
 
             //uses currently selected item
-            if (Input.GetMouseButtonDown(0) && inventory.selectedItem != null)
+            if (Input.GetMouseButtonDown(0) && inventory.selectedItem != null && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
             {
                 switch (inventory.selectedItem.itemData.itemType)
                 {
@@ -371,9 +372,10 @@ public class Player : MonoBehaviour
         {
             craftingTableToUse = other.GetComponent<CraftingTable>();
         }
-        else if(other.tag == "Generator")
+        else if(other.tag == "Activatable")
         {
-            thingToActivate = other.GetComponent<Generator>();
+            Debug.Log("cock");
+            thingToActivate = other.GetComponent<Activatable>();
         }
     }
 
@@ -387,7 +389,7 @@ public class Player : MonoBehaviour
         {
             resourceToGrab = null;
         }
-        else if (other.tag == "Generator" && thingToActivate && other.gameObject == thingToActivate.gameObject)
+        else if (other.tag == "Activatable" && thingToActivate && other.gameObject == thingToActivate.gameObject)
         {
             thingToActivate = null;
         }
