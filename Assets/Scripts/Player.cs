@@ -24,7 +24,8 @@ public class Player : MonoBehaviour
     [Header("Current Grabbable Resource")]
     public Resource resourceToGrab;
     [Header("Current Usable Crafting Table")]
-    public CraftingTable craftingTable;
+    public CraftingTable craftingTableToUse;
+    public Generator generatorToActivate;
 
     public int speedStat = 5;
     public int dmgResist;
@@ -168,7 +169,14 @@ public class Player : MonoBehaviour
             {
                 if (itemToGrab && !inventory.IsFull())
                 {
-                    inventory.AddItem(new Item(itemToGrab.worldItemData));
+                    if (itemToGrab.worldItemData.itemType == ItemType.Gasoline)
+                    {
+                        Objectives.Instance.SendCompletedMessage(Condition.GetGasCan);
+                    }
+                    else
+                    {
+                        inventory.AddItem(new Item(itemToGrab.worldItemData));
+                    }
                     Destroy(itemToGrab.gameObject);
                     itemToGrab = null;
                 }
@@ -192,9 +200,14 @@ public class Player : MonoBehaviour
                     Destroy(resourceToGrab.gameObject);
                     resourceToGrab = null;
                 }
-                else if(craftingTable)
+                else if(generatorToActivate)
                 {
-                    craftingTable.ActivateMenu();
+                    generatorToActivate.Activate();
+                    
+                }
+                else if(craftingTableToUse)
+                {
+                    craftingTableToUse.ActivateMenu();
                 }
             }
 
@@ -357,7 +370,11 @@ public class Player : MonoBehaviour
         }
         else if(other.tag == "Crafting")
         {
-            craftingTable = other.GetComponent<CraftingTable>();
+            craftingTableToUse = other.GetComponent<CraftingTable>();
+        }
+        else if(other.tag == "Generator")
+        {
+            generatorToActivate = other.GetComponent<Generator>();
         }
     }
 
@@ -371,10 +388,14 @@ public class Player : MonoBehaviour
         {
             resourceToGrab = null;
         }
+        else if (other.tag == "Generator" && generatorToActivate && other.gameObject == generatorToActivate.gameObject)
+        {
+            generatorToActivate = null;
+        }
         else if(other.tag == "Crafting")
         {
-            craftingTable.DeactivateMenu();
-            craftingTable = null;
+            craftingTableToUse.DeactivateMenu();
+            craftingTableToUse = null;
         }
     }
 
@@ -451,7 +472,7 @@ public class Player : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (Application.isPlaying && inventory.selectedItem != null)
+        if (Input.GetKey(KeyCode.Semicolon) && Application.isPlaying && inventory.selectedItem != null)
         {
             Gizmos.color = Color.red;
 

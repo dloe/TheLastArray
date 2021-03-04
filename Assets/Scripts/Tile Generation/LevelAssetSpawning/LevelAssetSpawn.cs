@@ -122,7 +122,7 @@ public class LevelAssetSpawn : MonoBehaviour
         //picks random objective in awake in LocalLevel script
         if (_myLocalLevel.objective != 1)
         {
-            GameObject obj = Objectives.Instance.AddObjectiveRef(_myLocalLevel.objective, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn).gameObject;
+            GameObject obj = Objectives.Instance.SetObjectiveRef(_myLocalLevel.objective, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn).gameObject;
             obj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
 
             objectivesInLevel.Add(obj);
@@ -131,7 +131,7 @@ public class LevelAssetSpawn : MonoBehaviour
             //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
             //if objective is certain types (ie type 3), choose more objectives and add to list
 
-            if (_myLocalLevel.objective == 3 || _myLocalLevel.objective == 2)
+            if (_myLocalLevel.objective == 3 )
             {
                 //make sure we can spawn 2 more objectives!
                 for (int objCount = 0; objCount < 2; objCount++)
@@ -141,12 +141,32 @@ public class LevelAssetSpawn : MonoBehaviour
                         //randomly pick an objective (or item?)
                         int indexO = Random.Range(0, _possibleObjectives.Count);
                       //  Debug.Log(indexO);
-                        GameObject objMulti = Objectives.Instance.AddObjectiveRef(3, _possibleObjectives[indexO]).gameObject;
+                        GameObject objMulti = Objectives.Instance.SetObjectiveRef(3, _possibleObjectives[indexO]).gameObject;
                         objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
                         objectivesInLevel.Add(objMulti);
                         _possibleItems.Remove(_possibleObjectives[indexO]);
                         _possibleObjectives.Remove(_possibleObjectives[indexO]);
                         
+                        //Debug.Log("Added Objective");
+                    }
+                }
+            }
+            else if(_myLocalLevel.objective == 2)
+            {
+                //make sure we can spawn 2 more objectives!
+                for (int objCount = 0; objCount < 2; objCount++)
+                {
+                    if (_possibleTileObjectivesInLevel.Count > 0)
+                    {
+                        //randomly pick an objective (or item?)
+                        int indexO = Random.Range(0, _possibleObjectives.Count);
+                        //  Debug.Log(indexO);
+                        GameObject objMulti = Objectives.Instance.SetObjectiveRef(2, _possibleObjectives[indexO]).gameObject;
+                        objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
+                        objectivesInLevel.Add(objMulti);
+                        _possibleItems.Remove(_possibleObjectives[indexO]);
+                        _possibleObjectives.Remove(_possibleObjectives[indexO]);
+
                         //Debug.Log("Added Objective");
                     }
                 }

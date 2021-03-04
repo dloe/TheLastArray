@@ -1,20 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public enum Condition
 {
     KillEnemy,
-    GetKeyItem,
+    GetGasCan,
     FindGenerator
 }
 public class Objectives : MonoBehaviour
 {
     public static Objectives Instance;
     public GameObject emptyWorldItem, generatorObject;
-    public List<ItemData> possibleItems;
-    public List<Objective> objectives;
+    public string killMessage, gasMessage, generatorMessage;
+    public ItemData gasolineData;
+    public Objective mainObjective;
+    public int objectiveCount = 0;
+
+    public Text objectiveText;
 
     public int enemyCount;
 
@@ -24,8 +29,10 @@ public class Objectives : MonoBehaviour
         public Condition condition;
         public string objectiveMessage = "blank";
         public ItemData itemData;
-        public Generator generator;
         public bool complete;
+
+        public int numTimes = 0;
+
     }
     void Awake()
     {
@@ -41,101 +48,132 @@ public class Objectives : MonoBehaviour
         enemyCount = FindObjectsOfType<BaseEnemy>().Length;
     }
 
-    public void AddObjective(int objectiveInt, GameObject spot)
+
+    public void UpdateObjectiveText()
     {
-        Objective objective = new Objective();
-        switch (objectiveInt)
+        if(mainObjective.objectiveMessage == gasMessage || mainObjective.objectiveMessage == generatorMessage)
         {
-            case 1:
-                objective.condition = Condition.KillEnemy;
-                break;
-            case 2:
-                objective.condition = Condition.GetKeyItem;
-                objective.itemData = possibleItems[Random.Range(0, possibleItems.Count)];
-                WorldItem objItem = Instantiate(emptyWorldItem, spot.transform.position, emptyWorldItem.transform.rotation).GetComponent<WorldItem>();
-                objItem.worldItemData = objective.itemData;
-                break;
-            case 3:
-                objective.condition = Condition.FindGenerator;
-                objective.generator = Instantiate(generatorObject, spot.transform.position, generatorObject.transform.rotation).GetComponent<Generator>();
-                break;
-            default:
-                break;
+            objectiveText.text = mainObjective.objectiveMessage + " " + (objectiveCount- mainObjective.numTimes) + "/" + objectiveCount;
         }
-        objective.objectiveMessage = objective.condition.ToString();
-
-        objectives.Add(objective);
+        else
+        {
+            objectiveText.text = mainObjective.objectiveMessage;
+        }
     }
+    
 
-    public GameObject AddObjectiveRef(int objectiveInt, GameObject spot)
+    public GameObject SetObjectiveRef(int objectiveInt, GameObject spot)
     {
         GameObject returnObj = null;
         WorldItem objItem = null;
+        Generator objGenerator = null;
         Objective objective = new Objective();
         switch (objectiveInt)
         {
             case 1:
                 objective.condition = Condition.KillEnemy;
+                objective.objectiveMessage = killMessage;
                 break;
             case 2:
-                objective.condition = Condition.GetKeyItem;
-                objective.itemData = possibleItems[Random.Range(0, possibleItems.Count)];
+                objective.condition = Condition.GetGasCan;
+                objective.itemData = gasolineData;
                 objItem = Instantiate(emptyWorldItem, spot.transform.position, emptyWorldItem.transform.rotation).GetComponent<WorldItem>();
                 objItem.worldItemData = objective.itemData;
                 returnObj = objItem.gameObject;
+                objective.objectiveMessage = gasMessage;
+                
                 break;
             case 3:
                 objective.condition = Condition.FindGenerator;
-                objective.generator = Instantiate(generatorObject, spot.transform.position, generatorObject.transform.rotation).GetComponent<Generator>();
-                returnObj = objective.generator.gameObject;
+                objGenerator = Instantiate(generatorObject, spot.transform.position, generatorObject.transform.rotation).GetComponent<Generator>();
+                returnObj = objGenerator.gameObject;
+                objective.objectiveMessage = generatorMessage;
                 break;
             default:
                 break;
         }
-        objective.objectiveMessage = objective.condition.ToString();
+        
+        if(objective.objectiveMessage == mainObjective.objectiveMessage)
+        {
+            mainObjective.numTimes++;
+            objectiveCount++;
+        }
+        else
+        {
+            objective.numTimes = 1;
+            objectiveCount = 1;
+            mainObjective = objective;
+        }
 
-        objectives.Add(objective);
+        UpdateObjectiveText();
 
         return returnObj;
     }
 
-    public bool CheckWinCondition(Condition condition)
+    public bool CheckWinCondition()
     {
-        if (condition == Condition.KillEnemy)
-        {
-            return true;
-        }
-        if (objectives.Count == 0)
-        {
-            return false;
-        }
+        
+        
         bool objectivesComplete = true;
-        foreach (Objective objective in objectives)
+        
+        if (!mainObjective.complete)
         {
-            if (objective.condition == condition && !objective.complete)
+            switch (mainObjective.condition)
             {
-                switch (objective.condition)
-                {
-                    case Condition.KillEnemy:
-                        objective.complete = enemyCount == 0;
-                        break;
-                    case Condition.GetKeyItem:
-                        objective.complete = Player.Instance.inventory.Contains(objective.itemData);
-                        break;
-                    case Condition.FindGenerator:
-                        objective.complete = objective.generator.isActivated;
-                        break;
-                    default:
-                        break;
-                }
-            }
-            if (!objective.complete)
-            {
-                objectivesComplete = false;
-                
+                case Condition.KillEnemy:
+                    mainObjective.complete = enemyCount == 0;
+                    break;
+                case Condition.GetGasCan:
+                    if(Player.Instance.inventory.Contains(mainObjective.itemData))
+                    {
+                        mainObjective.numTimes--;
+                    }
+                    mainObjective.complete = mainObjective.numTimes == 0;
+                    break;
+                case Condition.FindGenerator:
+                    break;
+                default:
+                    break;
             }
         }
+        if (!mainObjective.complete)
+        {
+            objectivesComplete = false;
+            
+        }
+        
         return objectivesComplete;
+    }
+
+
+
+    public void SendCompletedMessage(Condition condition)
+    {
+        switch (condition)
+        {
+            case Condition.KillEnemy:
+                Debug.Log("Enemy Killed");
+                enemyCount--;
+                mainObjective.complete = enemyCount <= 0;
+                break;
+            case Condition.GetGasCan:
+                mainObjective.numTimes--;
+                mainObjective.complete = mainObjective.numTimes == 0;
+                break;
+            case Condition.FindGenerator:
+                mainObjective.numTimes--;
+                mainObjective.complete = mainObjective.numTimes == 0;
+                break;
+            default:
+                break;
+        }
+        UpdateObjectiveText();
+
+        if (mainObjective.complete)
+        {
+            objectiveText.text = "COMPLETE, Return to Train";
+        }
+        
     }
 
 }

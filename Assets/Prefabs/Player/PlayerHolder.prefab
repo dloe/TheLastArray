@@ -206,14 +206,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b27672c237dc8e4ebacf1f6b21c9935, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  baseData: {fileID: 11400000, guid: 56bd1463a4fbb7648baa0b3fb1fe334c, type: 2}
   pistolBulletPrefab: {fileID: 5517027755585076670, guid: 6fd44dad6d4bae8428a680ee4394d8ee,
     type: 3}
   rifleBulletPrefab: {fileID: 5517027755585076670, guid: f14aab1124168bf42b6e78aff1a1ea49,
     type: 3}
+  inventory:
+    itemList: []
+    selectedItem:
+      itemData: {fileID: 0}
   itemToGrab: {fileID: 0}
   resourceToGrab: {fileID: 0}
   craftingTable: {fileID: 0}
-  moveSpeed: 5
+  speedStat: 5
+  dmgResist: 0
+  skillPoints: 0
   xLookOffset: 2.21
   zLookOffset: 3
   meleeExtents: {x: 0, y: 0, z: 0}

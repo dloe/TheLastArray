@@ -50,17 +50,42 @@ public class Inventory
         return result;
     }
 
-   public void AddItem(Item item)
+    public bool Contains(Item item)
+    {
+        bool result = false;
+
+        foreach (Item invItem in itemList)
+        {
+            if (invItem.itemData.itemName == item.itemData.itemName)
+            {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public void AddItem(Item item)
     {
         itemList.Add(item);
-        Debug.Log("Item Added: " + item.itemData.itemType);
+        InventoryUI.Instance.RefreshUI();
+    }
+
+    public void AddItem(ItemData itemData)
+    {
+        itemList.Add(new Item(itemData));
         InventoryUI.Instance.RefreshUI();
     }
 
     public void RemoveItem(Item item)
     {
         itemList.Remove(item);
-        Debug.Log("Item Removed: " + item.itemData.itemType);
+        InventoryUI.Instance.RefreshUI();
+    }
+
+    public void RemoveItem(ItemData itemData)
+    {
+        itemList.Remove(new Item(itemData));
         InventoryUI.Instance.RefreshUI();
     }
 

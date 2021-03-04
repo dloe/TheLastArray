@@ -96,6 +96,6 @@ public class CraftingRecipe : ScriptableObject
             player.inventory.AddItem(new Item( Result));
         }
 
-        player.craftingTable.UpdateCraftingTable();
+        player.craftingTableToUse.UpdateCraftingTable();
     }
 }

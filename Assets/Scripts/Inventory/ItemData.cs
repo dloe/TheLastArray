@@ -17,7 +17,7 @@ public enum ItemType
     Pistol,
     Rifle,
     Heal,
-    KeyItem
+    Gasoline
 }
 [Serializable][CreateAssetMenu]
 public class ItemData : ScriptableObject
