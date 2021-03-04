@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
     public Resource resourceToGrab;
     [Header("Current Usable Crafting Table")]
     public CraftingTable craftingTableToUse;
-    public Generator generatorToActivate;
+    public Activatable thingToActivate;
 
     public int speedStat = 5;
     public int dmgResist;
@@ -200,10 +200,9 @@ public class Player : MonoBehaviour
                     Destroy(resourceToGrab.gameObject);
                     resourceToGrab = null;
                 }
-                else if(generatorToActivate)
+                else if(thingToActivate)
                 {
-                    generatorToActivate.Activate();
-                    
+                    thingToActivate.Activate();
                 }
                 else if(craftingTableToUse)
                 {
@@ -374,7 +373,7 @@ public class Player : MonoBehaviour
         }
         else if(other.tag == "Generator")
         {
-            generatorToActivate = other.GetComponent<Generator>();
+            thingToActivate = other.GetComponent<Generator>();
         }
     }
 
@@ -388,9 +387,9 @@ public class Player : MonoBehaviour
         {
             resourceToGrab = null;
         }
-        else if (other.tag == "Generator" && generatorToActivate && other.gameObject == generatorToActivate.gameObject)
+        else if (other.tag == "Generator" && thingToActivate && other.gameObject == thingToActivate.gameObject)
         {
-            generatorToActivate = null;
+            thingToActivate = null;
         }
         else if(other.tag == "Crafting")
         {
