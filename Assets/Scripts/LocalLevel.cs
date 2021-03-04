@@ -113,17 +113,20 @@ public class LocalLevel : MonoBehaviour
         objectiveText = myUIVARs.objectiveText;
         // objectiveText.text = objective.ToString();
         //  transBar = myUIVARs.panel;
-        objectiveCountStart = _myObjs.objectives.Count;
+        
         //set text for objectives
         switch (objective)
         {
             case 1:
-                objectiveText.text = "Kill the enemy " + _myObjs.objectives[0].complete + "/0";
+               // objectiveCountStart = _myObjs.objectives.Count;
+                objectiveText.text = "Kill the enemy";
                 break;
             case 2:
+                objectiveCountStart = _myObjs.objectives.Count;
                 objectiveText.text = "Collect Gas: " + _myObjs.objectives.Count + "/" + objectiveCountStart;
                 break;
             case 3:
+                objectiveCountStart = _myObjs.objectives.Count;
                 objectiveText.text = "Collect Generator: " + _myObjs.objectives.Count + "/" + objectiveCountStart;
                 break;
             default:

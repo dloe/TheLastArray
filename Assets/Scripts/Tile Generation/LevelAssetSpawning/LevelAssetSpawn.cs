@@ -107,7 +107,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
         //ACTIVATE OBJECTIVES
         ActivateObjectives();
-
+        
         //SPAWN IN RESOURCES
         ActivateItems();
 
