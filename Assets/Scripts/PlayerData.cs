@@ -11,6 +11,14 @@ public class PlayerData : ScriptableObject
     public bool levelLoaded;
     [Header("Previously completed objective")]
     public int previouslyCompletedObj;
+    [Header("Names of Levels and Train Scene")]
+    public string trainSceneName;
+    public string levelOneName;
+    public string levelTwoName; 
+    public string levelThreeName;
+    public string levelFourName;
+    [Header("Previous Level Name")]
+    public string previousLevelName;
 
     [Header("Current Objective Info")]
     public string currentObjString;
