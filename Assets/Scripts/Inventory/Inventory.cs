@@ -1,13 +1,17 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 using UnityEngine;
 
+[System.Serializable]
 public class Inventory
 {
+    [SerializeField]
     private List<Item> itemList;
 
     public Item selectedItem;
-    public InventoryUI invUI;
+
     public int Count
     {
         get
@@ -19,16 +23,25 @@ public class Inventory
     public Inventory()
     {
         itemList = new List<Item>();
-        Debug.Log("Inventory Created");
-        invUI = InventoryUI.Instance;
+       // Debug.Log("Inventory Created");
+        
     }
 
-    public bool Contains(Item.ItemType itemType)
+    public Inventory(Inventory invToCopy)
+    {
+        itemList = new List<Item>(invToCopy.itemList);
+        //Debug.Log("Inventory Created");
+        
+    }
+
+
+
+    public bool Contains(ItemData itemData)
     {
         bool result = false;
         foreach(Item item in itemList)
         {
-            if(item.itemType == itemType)
+            if(item.itemData.itemName == itemData.itemName)
             {
                 result = true;
                 break;
@@ -37,29 +50,70 @@ public class Inventory
         return result;
     }
 
-   public void AddItem(Item item)
+    public bool Contains(Item item)
+    {
+        bool result = false;
+
+        foreach (Item invItem in itemList)
+        {
+            if (invItem.itemData.itemName == item.itemData.itemName)
+            {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public void AddItem(Item item)
     {
         itemList.Add(item);
-        Debug.Log("Item Added: " + item.itemType);
-        invUI.RefreshUI();
+        InventoryUI.Instance.RefreshUI();
+    }
+
+    public void AddItem(ItemData itemData)
+    {
+        itemList.Add(new Item(itemData));
+        InventoryUI.Instance.RefreshUI();
     }
 
     public void RemoveItem(Item item)
     {
         itemList.Remove(item);
-        Debug.Log("Item Removed: " + item.itemType);
-        invUI.RefreshUI();
+        InventoryUI.Instance.RefreshUI();
     }
+
+    public void RemoveItem(ItemData itemData)
+    {
+        itemList.Remove(new Item(itemData));
+        InventoryUI.Instance.RefreshUI();
+    }
+
+    public void Clear()
+    {
+        foreach(Item item in itemList)
+        {
+            if(item.itemData.name.Contains("Instance"))
+            {
+                Object.Destroy(item.itemData);
+            }
+            
+        }
+        itemList.Clear();
+        selectedItem = null;
+        Debug.Log("Inventory Cleared Count is Now: " + Count);
+    }
+
     public void DropItem()
     {
-        invUI.SpawnItem(selectedItem);
+        InventoryUI.Instance.SpawnItem(selectedItem);
         RemoveItem(selectedItem);
     }
 
     public bool IsFull()
     {
         
-        return itemList.Count == invUI.slotList.Count;
+        return itemList.Count == InventoryUI.Instance.slotList.Count;
     }
 
     public void Equip(int slotIndex)
@@ -67,12 +121,12 @@ public class Inventory
         if(slotIndex > itemList.Count-1)
         {
             selectedItem = null;
-            Debug.Log("Item Equipped: none");
+            //Debug.Log("Item Equipped: none");
         }
         else
         {
             selectedItem = itemList[slotIndex];
-            Debug.Log("Item Equipped: " + selectedItem.itemType);
+            //Debug.Log("Item Equipped: " + selectedItem.itemData.itemType);
         }
         
     }
@@ -90,5 +144,39 @@ public class Inventory
         }
 
         return result;
+    }
+
+    //public List<Item> GetItemList()
+    //{
+    //    return itemList;
+    //}
+
+    public List<string> SaveToJsonList()
+    {
+        List<string> jsonList = new List<string>();
+        ItemDataSave itemSave;
+        foreach (Item item in itemList)
+        {
+            itemSave = new ItemDataSave();
+            itemSave.SaveFromItemData(item.itemData);
+            jsonList.Add(JsonUtility.ToJson(item.itemData));
+        }
+
+        return jsonList;
+    }
+
+    public void LoadFromJsonList(List<string> jsonList)
+    {
+        ItemDataSave itemSave;
+        ItemData itemData;
+        foreach (string json in jsonList)
+        {
+            itemSave = new ItemDataSave();
+            JsonUtility.FromJsonOverwrite(json, itemSave);
+            itemData = ScriptableObject.CreateInstance<ItemData>();
+            itemSave.LoadToItemData(itemData);
+
+            AddItem(new Item(itemData));
+        }
     }
 }

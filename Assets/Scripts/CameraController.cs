@@ -32,9 +32,15 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        
         transform.position = playerObject.transform.position + offset;
-        panCamera();
+
+        if((!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy) && !Upgrades.Instance.upgradeMenu.activeInHierarchy )
+        {
+            
+            panCamera();
+        }
+        
         clampOffset();
 
     }

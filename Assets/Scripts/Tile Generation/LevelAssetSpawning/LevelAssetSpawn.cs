@@ -15,6 +15,8 @@ public class LevelAssetSpawn : MonoBehaviour
     public LevelAssetsData myLevelAsset;
     [Header("Player Data Obj")]
     public PlayerData myPlayerData;
+    [Header("Local Level Data")]
+    public LocalLevel myLocalLevel;
 
     //to prevent to many of one asset spawning
     [Space(10)]
@@ -37,7 +39,7 @@ public class LevelAssetSpawn : MonoBehaviour
     [Header("Weapons In Level")]
     public List<GameObject> weaponsInLevelList = new List<GameObject>();
 
-    public List<GameObject> _possibleObjectives = new List<GameObject>();
+    List<GameObject> _possibleObjectives = new List<GameObject>();
 
     [Header("Enemies In Level")]
     public List<GameObject> enemiesInLevel = new List<GameObject>();
@@ -51,13 +53,17 @@ public class LevelAssetSpawn : MonoBehaviour
     GameObject endObjTile;
     [Header("Objectives In Level")]
     public List<GameObject> objectivesInLevel = new List<GameObject>();
-    public List<GameObject> _possibleTileObjectivesInLevel = new List<GameObject>();
+    List<GameObject> _possibleTileObjectivesInLevel = new List<GameObject>();
 
     //first number represents the number of times tiles in that list were spawned
     //second number represents the tile numbers that were spawned that amount of times
     List<List<int>> _magAssetCount;
     public int enemyCount;
-    LocalLevel _myLocalLevel;
+    
+
+    public GameObject playerPref;
+    [HideInInspector]
+    public GameObject playerSpawn;
 
     private void Awake()
     {
@@ -70,14 +76,14 @@ public class LevelAssetSpawn : MonoBehaviour
 
     private void Start()
     {
-        _myLocalLevel = FindObjectOfType<LocalLevel>();
+       // _myLocalLevel = FindObjectOfType<LocalLevel>();
     }
     /// <summary>
     /// Populate grid with assets, called from TileGeneration once it is done setting up
     /// </summary>
     public void PopulateGrid()
     {
-        Debug.Log("Populating Level with Assets...");
+        //Debug.Log("Populating Level with Assets...");
 
         //activate walls
         foreach (Tile t in myTileGeneration._allActiveTiles)
@@ -94,38 +100,90 @@ public class LevelAssetSpawn : MonoBehaviour
                     // Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                     _possibleItems.Add(t.presetTile.GetComponent<PresetTileInfo>().possiblePresetItems[posResourceCount]);
                 }
+                playerSpawn = t.presetTile.GetComponent<PresetTileInfo>().playerSpawn;
+                //SPAWN PLAYER
+                Instantiate(playerPref, playerSpawn.transform.position, playerSpawn.transform.rotation);
+                
             }
         }
-
+        myLocalLevel.ChooseObjective();
+        //ACTIVATE OBJECTIVES
+        ActivateObjectives();
+        
         //SPAWN IN RESOURCES
         ActivateItems();
 
         //ACTIVATE ENEMIES
         ActivateEnemies();
 
-        //ACTIVATE OBJECTIVES
-        ActivateObjectives();
+        
     }
 
     #region Objective Spawn
-    
+
     /// <summary>
     /// - objective will spawn on boss tile
     /// - if final tile is on a 2 x 2, get that tile and spawn an objective from it
     ///  - UNSURE: if this should be what picks the objective or if localLevel handles that
-    /// 
+    ///
     /// </summary>
     public void ActivateObjectives()
     {
-        objectivesInLevel.Add(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
+        //picks random objective in awake in LocalLevel script
+        if (myLocalLevel.objective != 1)
+        {
+            GameObject obj = Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn).gameObject;
+            obj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
 
-        //picks random objective
-        _myLocalLevel.ChooseObjective();
-        //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
+            objectivesInLevel.Add(obj);
+            _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
 
-        //spawns in objectives (each one gets a designated number based on their index in array they are added to)
-        //sets a an array of bools  - for keeping progress on which are complete
-        //update levelinfo object with objetive info
+            //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
+            //if objective is certain types (ie type 3), choose more objectives and add to list
+
+            if (myLocalLevel.objective == 3 )
+            {
+                //make sure we can spawn 2 more objectives!
+                for (int objCount = 0; objCount < 2; objCount++)
+                {
+                    if (_possibleTileObjectivesInLevel.Count > 0)
+                    {
+                        //randomly pick an objective (or item?)
+                        int indexO = Random.Range(0, _possibleObjectives.Count);
+                      //  Debug.Log(indexO);
+                        GameObject objMulti = Objectives.Instance.SetObjectiveRef(3, _possibleObjectives[indexO]).gameObject;
+                        objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
+                        objectivesInLevel.Add(objMulti);
+                        _possibleItems.Remove(_possibleObjectives[indexO]);
+                        _possibleObjectives.Remove(_possibleObjectives[indexO]);
+                        
+                        //Debug.Log("Added Objective");
+                    }
+                }
+            }
+            else if(myLocalLevel.objective == 2)
+            {
+                //make sure we can spawn 2 more objectives!
+                for (int objCount = 0; objCount < 2; objCount++)
+                {
+                    if (_possibleTileObjectivesInLevel.Count > 0)
+                    {
+                        //randomly pick an objective (or item?)
+                        int indexO = Random.Range(0, _possibleObjectives.Count);
+                        //  Debug.Log(indexO);
+                        GameObject objMulti = Objectives.Instance.SetObjectiveRef(2, _possibleObjectives[indexO]).gameObject;
+                        objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
+                        objectivesInLevel.Add(objMulti);
+                        _possibleItems.Remove(_possibleObjectives[indexO]);
+                        _possibleObjectives.Remove(_possibleObjectives[indexO]);
+
+                        //Debug.Log("Added Objective");
+                    }
+                }
+            }
+        }
+        //update Objectives object with objetive info
+        Debug.Log("activated objs");
     }
     #endregion
 
@@ -203,22 +261,24 @@ public class LevelAssetSpawn : MonoBehaviour
                                             foreach (GameObject item in mPresetTileInfo.GetComponent<PresetTileInfo>().possiblePresetItems)
                                             {
                                                 _possibleItems.Remove(item);
+                                                _possibleObjectives.Remove(item);
                                             }
                                             _possibleTileObjectivesInLevel.Remove(tile3.presetTile);
+                                            
                                         }
                                     }
 
-                                    
+
                                     Destroy(tile3.presetTile.gameObject);
 
 
                                     tile3.checkFor4Some = true;
                                     tile3.transform.parent = fourSomeTile.transform;
                                 }
-                                
+
                                 SpawnLevelBigAsset(fourSomeTile, obj);
 
-                                
+
 
                                 return;
                             }
@@ -280,7 +340,7 @@ public class LevelAssetSpawn : MonoBehaviour
         {
             //if  this tile is the final room, make sure it has an objective
             preset = Instantiate(myLevelAsset.presetObjectiveTiles[Random.Range(0, myLevelAsset.presetObjectiveTiles.Count)], tile.transform.position, tile.transform.rotation);
-            
+
             preset.transform.parent = tile.transform.parent;
             tile.presetTile = preset;
             int tileIndex = myLevelAsset.presetTileAssets.IndexOf(myLevelAsset.presetObjectiveTiles[Random.Range(0, myLevelAsset.presetObjectiveTiles.Count)]);
@@ -298,13 +358,16 @@ public class LevelAssetSpawn : MonoBehaviour
         //later we can go through as activate these resources (maybe look at how far each of is from other active ones to ensure mass distribution - no clusters of resources)
         if (preset.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
         {
-            
+
            // Debug.Log(preset.name);
             for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetItems.Length; posResourceCount++)
             {
                 //co++;
                // Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                 _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
+               // mPresetTileInfo.possiblePresetItems[posResourceCount].GetComponent<PossibleItem>().itemIndex = _possibleItems.Count - 1;
+                if (tile.tileStatus != Tile.TileStatus.startingRoom)
+                    _possibleObjectives.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
             }
             for (int posEnemyCount = 0; posEnemyCount < mPresetTileInfo.enemiesOnPreset.Length; posEnemyCount++)
             {
@@ -313,6 +376,7 @@ public class LevelAssetSpawn : MonoBehaviour
             if(mPresetTileInfo.objectiveSpawn != null)
             {
                 _possibleTileObjectivesInLevel.Add(preset);
+                _possibleObjectives.Add(mPresetTileInfo.objectiveSpawn);
             }
         }
     }
@@ -323,7 +387,7 @@ public class LevelAssetSpawn : MonoBehaviour
     /// <param name="bigTile"> The parent of the 4 linked tiles being analyzed and spawned on. </param>
     void SpawnLevelBigAsset(GameObject bigTile, bool hasObj)
     {
-        Debug.Log("Spawned big boi");
+        //Debug.Log("Spawned big boi");
         //will pick the least used preset but for now it will be random
         int index = Random.Range(0, myLevelAsset.presetBigTileAssets.Count);
         GameObject preset;
@@ -341,7 +405,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
             bigAssetCountArray[1] += 1;
             endObjTile = preset;
-            Debug.Log("BIG ASSET WITH OBJ");
+            //Debug.Log("BIG ASSET WITH OBJ");
         }
 
 
@@ -352,6 +416,9 @@ public class LevelAssetSpawn : MonoBehaviour
                 //co++;
                 //Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                 _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
+               // mPresetTileInfo.possiblePresetItems[posResourceCount].GetComponent<PossibleItem>().itemIndex = _possibleItems.Count;
+                //if()
+                _possibleObjectives.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
             }
             for(int posEnemyCount = 0; posEnemyCount < mPresetTileInfo.enemiesOnPreset.Length; posEnemyCount++)
             {
@@ -360,16 +427,17 @@ public class LevelAssetSpawn : MonoBehaviour
             if (mPresetTileInfo.objectiveSpawn != null)
             {
                 _possibleTileObjectivesInLevel.Add(preset);
+                _possibleObjectives.Add(mPresetTileInfo.objectiveSpawn);
             }
         }
 
 
     }
 
-    
+
     /// <summary>
     /// Finds the least popular asset or if there are multiple assets at the same number, choose a random one
-    /// 
+    ///
     /// CURRENTLY NO MAGATUDE CHECK FOR BIG TILE PRESETS SINCE THEY DONT SPAWN AS MUCH :)
     /// </summary>
     /// <returns> Least Popular asset index to spawn</returns>
@@ -544,7 +612,7 @@ public class LevelAssetSpawn : MonoBehaviour
         //resources can either spawn at random or based on distance from any other existing resource
         //when activated that gameobject will be removed from the possibleResources and added to resourcesInLevel List
         //when item is activated can either be a weapon, resource or other item
-       
+
     }
 
     /// <summary>
@@ -605,7 +673,7 @@ public class LevelAssetSpawn : MonoBehaviour
     }
     #endregion
 
-    
+
     #region Enemies
 
 
@@ -643,7 +711,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     case EnemyWeightType.None:
                         //picks between outcasts, dog or lost ones
                         choice = Random.Range(0, 3);
-                        
+
                         switch (choice)
                         {
                             case 0:
@@ -1085,7 +1153,7 @@ public class LevelAssetSpawn : MonoBehaviour
             Debug.Log(tempS);
         }
 
-        
+
     }
 
 

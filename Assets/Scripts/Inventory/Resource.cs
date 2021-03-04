@@ -7,7 +7,8 @@ public class Resource : MonoBehaviour
     public enum ResourceType
     {
         scrap,
-        meds
+        meds,
+        cloth
     }
 
     public ResourceType resourceType;

@@ -2,28 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.UI;
 
 public class WorldItem : MonoBehaviour
 {
+    public ItemData worldItemData;
 
-    public Item.ItemType itemType;
+    private void Start()
+    {
+        
+        gameObject.GetComponentInChildren<Text>().text = worldItemData.itemName;
+        
+    }
 
 }
 
-#if UNITY_EDITOR
-[CustomEditor(typeof(WorldItem))]
-public class WorldItemEditor : Editor
-{
-    WorldItem worldItem;
-
-    private void OnEnable()
-    {
-        worldItem = (WorldItem)target;
-    }
-
-    public override void OnInspectorGUI()
-    {
-        worldItem.itemType = (Item.ItemType)EditorGUILayout.EnumPopup("Item Type", worldItem.itemType);
-    }
-}
-#endif
