@@ -13,6 +13,12 @@ public class InventoryUI : MonoBehaviour
     public int selectedItemIndex = 0;
     public List<Transform> slotList = new List<Transform>();
 
+    public Text equipedItemLabelText;
+    public Text equipedWeaponAmmoText;
+    public Text equipedWeaponReservesText;
+    public Text equipedWeaponDashText;
+   // public Text equipedItem
+
     public GameObject pistol, rifle, melee, medkit;
 
     private readonly string _zoomAxis = "Mouse ScrollWheel";
@@ -47,6 +53,7 @@ public class InventoryUI : MonoBehaviour
             if (Input.GetAxis(_zoomAxis) < 0)
             {
                 SetIndex(selectedItemIndex + 1);
+
             }
             else if (Input.GetAxis(_zoomAxis) > 0)
             {
@@ -114,6 +121,49 @@ public class InventoryUI : MonoBehaviour
         }
         SelectSlot(selectedItemIndex);
         inventory.Equip(selectedItemIndex);
+
+        //DYLAN WAS HERE
+        //for currently equiped item text
+        if (inventory.selectedItem != null)
+        {
+            equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
+            //if()
+            switch (inventory.selectedItem.itemType)
+            {
+                case Item.ItemType.MeleeWeapon:
+                    //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
+                    equipedWeaponAmmoText.text = "";
+                    equipedWeaponReservesText.text = "";
+                    equipedWeaponDashText.gameObject.SetActive(false);
+                    break;
+                case Item.ItemType.Pistol:
+                    //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
+                    equipedWeaponDashText.gameObject.SetActive(true);
+                    equipedWeaponAmmoText.text = inventory.selectedItem.weaponAmmo.ToString();
+                    equipedWeaponReservesText.text = inventory.selectedItem.weaponReserves.ToString();
+                    break;
+                case Item.ItemType.Rifle:
+                    //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
+                    equipedWeaponDashText.gameObject.SetActive(true);
+                    equipedWeaponAmmoText.text = inventory.selectedItem.weaponAmmo.ToString();
+                    equipedWeaponReservesText.text = inventory.selectedItem.weaponReserves.ToString();
+                    break;
+                case Item.ItemType.MedKit:
+                    equipedWeaponAmmoText.text = "";
+                    equipedWeaponReservesText.text = "";
+                    equipedWeaponDashText.gameObject.SetActive(false);
+                    break;
+                default:
+                    break;
+            }
+        }
+        else
+        {
+            equipedItemLabelText.text = "None";
+            equipedWeaponAmmoText.text = "";
+            equipedWeaponReservesText.text = "";
+            equipedWeaponDashText.gameObject.SetActive(false);
+        }
     }
 
     public void SpawnItem(Item item)
