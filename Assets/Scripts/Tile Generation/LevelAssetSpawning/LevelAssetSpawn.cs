@@ -147,8 +147,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         _possibleItems.Remove(_possibleObjectives[indexO]);
                         _possibleObjectives.Remove(_possibleObjectives[indexO]);
                         
-                        //
-                        Debug.Log("Added Objective");
+                        //Debug.Log("Added Objective");
                     }
                 }
             }
@@ -358,7 +357,7 @@ public class LevelAssetSpawn : MonoBehaviour
     /// <param name="bigTile"> The parent of the 4 linked tiles being analyzed and spawned on. </param>
     void SpawnLevelBigAsset(GameObject bigTile, bool hasObj)
     {
-        Debug.Log("Spawned big boi");
+        //Debug.Log("Spawned big boi");
         //will pick the least used preset but for now it will be random
         int index = Random.Range(0, myLevelAsset.presetBigTileAssets.Count);
         GameObject preset;
@@ -376,7 +375,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
             bigAssetCountArray[1] += 1;
             endObjTile = preset;
-            Debug.Log("BIG ASSET WITH OBJ");
+            //Debug.Log("BIG ASSET WITH OBJ");
         }
 
 

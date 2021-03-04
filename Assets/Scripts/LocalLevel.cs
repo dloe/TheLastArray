@@ -21,12 +21,12 @@ public class LocalLevel : MonoBehaviour
 
     //interpolation
     bool fadeIn = false;
-    public bool fadeOut = false;
+    bool fadeOut = false;
     float timeStart;
-    public float u;
+    float u;
     bool ctc = false;
-    public float a0, a1, a01;
-    public bool fading = false;
+    float a0, a1, a01;
+    bool fading = false;
     [SerializeField]
     public Image transBar;
 
