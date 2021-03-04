@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Generator : MonoBehaviour
+public class Generator : Activatable
 {
-    public bool isActivated = false;
+    
     public Text generatorText;
 
-    public void Activate()
+    public override void Activate()
     {
         if(!isActivated)
         {
