@@ -18,6 +18,8 @@ public class Objectives : MonoBehaviour
 
     public int enemyCount;
 
+    //public Objective mainObjective;
+
     [System.Serializable]
     public class Objective
     {
@@ -65,6 +67,7 @@ public class Objectives : MonoBehaviour
         objective.objectiveMessage = objective.condition.ToString();
 
         objectives.Add(objective);
+        //mainObjective = objectives[0];
     }
 
     public GameObject AddObjectiveRef(int objectiveInt, GameObject spot)
@@ -95,6 +98,7 @@ public class Objectives : MonoBehaviour
         objective.objectiveMessage = objective.condition.ToString();
 
         objectives.Add(objective);
+        //mainObjective = objectives[0];
 
         return returnObj;
     }

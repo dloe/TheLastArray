@@ -6,6 +6,7 @@ public class PresetTileInfo : MonoBehaviour
 {
     //stores info of possible resources and enemy locations to be accessed when tile spawns
     public GameObject objectiveSpawn;
+    public GameObject playerSpawn;
     [Space(10)]
     public GameObject[] possiblePresetItems;
 
