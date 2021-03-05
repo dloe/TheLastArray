@@ -144,7 +144,7 @@ public class LocalLevel : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
 
         myPlayerData.currentLevelNumber++;
-
+        myPlayerData.previousLevelName = SceneManager.GetActiveScene().name;
         //transition scene
         SceneManager.LoadScene("Train");
         
