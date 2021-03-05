@@ -25,9 +25,9 @@ public class PlayerData : ScriptableObject
     public int objectiveCount;
     public bool objectiveComplete;
 
-    [Header("Current Level")]
+    //[Header("Current Level")]
     //starts at 1 -> 4
-    public int currentLevelNumber = 1;
+    //public int currentLevelNumber = 1;
     
     [Space(10)]
     [Header("Player Stats")]
