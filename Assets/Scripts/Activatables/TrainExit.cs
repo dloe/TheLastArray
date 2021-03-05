@@ -14,7 +14,7 @@ public class TrainExit : Activatable
         {
             Debug.Log("Train Exit Called");
             isActivated = true;
-
+            Player.Instance.SavePlayer();
             StartCoroutine(ExitTransition());
         }
 

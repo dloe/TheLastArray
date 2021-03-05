@@ -164,8 +164,9 @@ public class InventoryUI : MonoBehaviour
 
     public void SpawnItem(Item item)
     {
-        Vector3 dropPos = new Vector3(player.transform.position.x, 1, player.transform.position.z);
-        WorldItem worldItem = Instantiate(emptyWorldItem, dropPos, emptyWorldItem.transform.rotation).GetComponent<WorldItem>();
+        Vector3 dropPos = new Vector3(player.transform.position.x, 0.5f, player.transform.position.z);
+
+        WorldItem worldItem = Instantiate(emptyWorldItem, dropPos, Player.Instance.playerHolderTransform.rotation).GetComponent<WorldItem>();
 
         
         worldItem.worldItemData = item.itemData;
