@@ -49,7 +49,7 @@ public class UI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && (!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy) && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
+        if (Input.GetKeyDown(KeyCode.Escape) && (!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy) && !Upgrades.Instance.upgradeMenu.activeInHierarchy && !Player.Instance.endScreen.activeInHierarchy)
         {
             if (_isPaused)
             {
@@ -120,13 +120,13 @@ public class UI : MonoBehaviour
     }
 
     /// <summary>
-    /// Restarts the Level
+    /// Restarts the Game
     /// </summary>
     public void Restart()
     {
-        Debug.Log("Restart Level(Currently just loads current active scene for testing purposes");
+        Debug.Log("Restart Level");
         Time.timeScale = 1;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(player.baseData.levelOneName);
     }
 
     /// <summary>

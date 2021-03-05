@@ -47,7 +47,8 @@ public class Player : MonoBehaviour
 
 
     #region UI Variables
-    public GameObject loseScreen;
+    public GameObject endScreen;
+    public Text endScreenText;
     #endregion
 
     #region Health Variables
@@ -74,7 +75,7 @@ public class Player : MonoBehaviour
             healthText.text = health + "/" + maxHealth;
             if(health == 0)
             {
-                loseScreen.SetActive(true);
+                endScreen.SetActive(true);
                 Time.timeScale = 0;
             }
         }

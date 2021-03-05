@@ -98,7 +98,7 @@ public class Upgrades : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Tab) && !UI.Instance.PausedStatus && (!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy))
+        if(Input.GetKeyDown(KeyCode.Tab) && !UI.Instance.PausedStatus && (!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy) && !Player.Instance.endScreen.activeInHierarchy)
         {
             ToggleUpgrades();
         }
@@ -122,8 +122,9 @@ public class Upgrades : MonoBehaviour
             DmgResistance = DmgResistance;
             Speed = Speed;
             UpdateDropDowns(player.ScrapCount, player.ClothCount, player.MedsCount);
-            UpdateExchangeButton();
+            
             upgradeMenu.SetActive(true);
+            UpdateExchangeButton();
         }
     }
 

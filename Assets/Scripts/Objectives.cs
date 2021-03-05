@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
 public enum Condition
@@ -46,6 +47,10 @@ public class Objectives : MonoBehaviour
     private void Start()
     {
         enemyCount = FindObjectsOfType<BaseEnemy>().Length;
+        if(SceneManager.GetActiveScene().name == Player.Instance.baseData.trainSceneName)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
 
@@ -171,7 +176,18 @@ public class Objectives : MonoBehaviour
 
         if (mainObjective.complete)
         {
-            objectiveText.text = "COMPLETE, Return to Train";
+            if(SceneManager.GetActiveScene().name == Player.Instance.baseData.levelFourName)
+            {
+                objectiveText.text = "YOU WIN!";
+                Player.Instance.endScreenText.text = "You Win!";
+                Time.timeScale = 0;
+                Player.Instance.endScreen.SetActive(true);
+            }
+            else
+            {
+                objectiveText.text = "COMPLETE, Return to Train";
+            }
+            
         }
         
     }

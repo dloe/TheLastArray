@@ -12,7 +12,7 @@ public class TrainEntry : Activatable
 
     public override void Activate()
     {
-        if (!isActivated)
+        if (!isActivated && Objectives.Instance.mainObjective.complete)
         {
             isActivated = true;
 
