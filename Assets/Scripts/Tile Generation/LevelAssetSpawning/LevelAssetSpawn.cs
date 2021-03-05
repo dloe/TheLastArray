@@ -142,6 +142,7 @@ public class LevelAssetSpawn : MonoBehaviour
         if (myLocalLevel.objective != 1)
         {
             GameObject obj = Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn).gameObject;
+            obj.transform.rotation = playerSpawn.transform.rotation;
             obj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
 
             objectivesInLevel.Add(obj);
