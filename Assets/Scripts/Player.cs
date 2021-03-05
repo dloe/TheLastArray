@@ -45,7 +45,6 @@ public class Player : MonoBehaviour
     [Header("Melee Forward Detection Distance")]
     public float meleeDist = 1f;
 
-    public Vector3 spawnPos;
 
     #region UI Variables
     public GameObject loseScreen;
@@ -160,7 +159,6 @@ public class Player : MonoBehaviour
         Debug.Log("Player Start");
         _mainTransform = transform;
         playerHolderTransform = transform.parent;
-        _mainTransform.position = spawnPos;
         if(SceneManager.GetActiveScene().name == baseData.levelOneName )
         {
             SetStatsToBase();
