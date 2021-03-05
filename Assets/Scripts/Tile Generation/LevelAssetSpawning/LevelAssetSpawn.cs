@@ -161,6 +161,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         int indexO = Random.Range(0, _possibleObjectives.Count);
                       //  Debug.Log(indexO);
                         GameObject objMulti = Objectives.Instance.SetObjectiveRef(3, _possibleObjectives[indexO]).gameObject;
+                        objMulti.transform.rotation = playerSpawn.transform.rotation;
                         objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
                         objectivesInLevel.Add(objMulti);
                         _possibleItems.Remove(_possibleObjectives[indexO]);
@@ -181,6 +182,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         int indexO = Random.Range(0, _possibleObjectives.Count);
                         //  Debug.Log(indexO);
                         GameObject objMulti = Objectives.Instance.SetObjectiveRef(2, _possibleObjectives[indexO]).gameObject;
+                        objMulti.transform.rotation = playerSpawn.transform.rotation;
                         objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
                         objectivesInLevel.Add(objMulti);
                         _possibleItems.Remove(_possibleObjectives[indexO]);
@@ -515,7 +517,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         //15% for weapon
                         //Debug.Log("15");
                         int wIndex = Random.Range(0, myLevelAsset.weaponList.Count);
-                        GameObject weapon = Instantiate(myLevelAsset.weaponList[wIndex], _possibleItems[pItemC].transform.position, _possibleItems[pItemC].transform.rotation);
+                        GameObject weapon = Instantiate(myLevelAsset.weaponList[wIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
                         weapon.transform.parent = _possibleItems[pItemC].transform.parent;
                         Destroy(_possibleItems[pItemC]);
                         weaponsInLevelList.Add(weapon);
@@ -525,7 +527,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         //35% for item
                         //Debug.Log("35");
                         int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
-                        GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, _possibleItems[pItemC].transform.rotation);
+                        GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
                         item.transform.parent = _possibleItems[pItemC].transform.parent;
                         Destroy(_possibleItems[pItemC]);
                         itemsInLevelList.Add(item);
@@ -535,7 +537,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         //50% chance its a resource
                         //Debug.Log("50");
                         int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
-                        GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, _possibleItems[pItemC].transform.rotation);
+                        GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
                         resource.transform.parent = _possibleItems[pItemC].transform.parent;
                         Destroy(_possibleItems[pItemC]);
                         resourcesInLevelList.Add(resource);
@@ -548,7 +550,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     if (Random.value > 0.55)
                     {
                         int wIndex = Random.Range(0, myLevelAsset.weaponList.Count);
-                        GameObject weapon = Instantiate(myLevelAsset.weaponList[wIndex], _possibleItems[pItemC].transform.position, _possibleItems[pItemC].transform.rotation);
+                        GameObject weapon = Instantiate(myLevelAsset.weaponList[wIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation); //_possibleItems[pItemC].transform.rotation);
                         weapon.transform.parent = _possibleItems[pItemC].transform.parent;
                         Destroy(_possibleItems[pItemC]);
                         weaponsInLevelList.Add(weapon);
@@ -556,7 +558,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     else if (Random.value > 0.65)
                     {
                         int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
-                        GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, _possibleItems[pItemC].transform.rotation);
+                        GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);// _possibleItems[pItemC].transform.rotation);
                         resource.transform.parent = _possibleItems[pItemC].transform.parent;
                         Destroy(_possibleItems[pItemC]);
                         resourcesInLevelList.Add(resource);
@@ -565,7 +567,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     else // if (Random.value > 0.80)
                     {
                         int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
-                        GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, _possibleItems[pItemC].transform.rotation);
+                        GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
                         item.transform.parent = _possibleItems[pItemC].transform.parent;
                         Destroy(_possibleItems[pItemC]);
                         itemsInLevelList.Add(item);
@@ -578,7 +580,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     if (Random.value > 0.35)
                     {
                         int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
-                        GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, _possibleItems[pItemC].transform.rotation);
+                        GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
                         item.transform.parent = _possibleItems[pItemC].transform.parent;
                         Destroy(_possibleItems[pItemC]);
                         itemsInLevelList.Add(item);
@@ -586,7 +588,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     else //if (Random.value > 0.65)
                     {
                         int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
-                        GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, _possibleItems[pItemC].transform.rotation);
+                        GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
                         resource.transform.parent = _possibleItems[pItemC].transform.parent;
                         Destroy(_possibleItems[pItemC]);
                         resourcesInLevelList.Add(resource);
@@ -599,7 +601,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     if (Random.value > 0.20)
                     {
                         int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
-                        GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, _possibleItems[pItemC].transform.rotation);
+                        GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
                         resource.transform.parent = _possibleItems[pItemC].transform.parent;
                         Destroy(_possibleItems[pItemC]);
                         resourcesInLevelList.Add(resource);
@@ -607,7 +609,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     else //if (Random.value > 0.80)
                     {
                         int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
-                        GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, _possibleItems[pItemC].transform.rotation);
+                        GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
                         item.transform.parent = _possibleItems[pItemC].transform.parent;
                         Destroy(_possibleItems[pItemC]);
                         itemsInLevelList.Add(item);
