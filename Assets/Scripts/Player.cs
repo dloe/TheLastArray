@@ -69,7 +69,7 @@ public class Player : MonoBehaviour
             {
                 health = value;
             }
-            healthText.text = health.ToString();
+            healthText.text = health + "/" + maxHealth;
             if(health == 0)
             {
                 loseScreen.SetActive(true);
