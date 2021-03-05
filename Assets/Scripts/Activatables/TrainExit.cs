@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class TrainExit : Activatable
 {
     public PlayerData playerData;
+    public Transitions myTransition;
     
     public override void Activate()
     {
@@ -14,9 +15,16 @@ public class TrainExit : Activatable
             Debug.Log("Train Exit Called");
             isActivated = true;
 
-            SceneManager.LoadScene(GetLevelToLoad(playerData.previousLevelName));
+            StartCoroutine(ExitTransition());
         }
 
+    }
+
+    IEnumerator ExitTransition()
+    {
+        myTransition.StartFadeOut();
+        yield return new WaitForSeconds(1.0f);
+        SceneManager.LoadScene(GetLevelToLoad(playerData.previousLevelName));
     }
 
     public string GetLevelToLoad(string previousLevelName)
