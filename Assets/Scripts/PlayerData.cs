@@ -11,12 +11,14 @@ public class PlayerData : ScriptableObject
     public bool levelLoaded;
     [Header("Previously completed objective")]
     public int previouslyCompletedObj;
+    [Space(10)]
     [Header("Names of Levels and Train Scene")]
     public string trainSceneName;
     public string levelOneName;
     public string levelTwoName; 
     public string levelThreeName;
     public string levelFourName;
+    [Space(10)]
     [Header("Previous Level Name")]
     public string previousLevelName;
 
@@ -30,7 +32,7 @@ public class PlayerData : ScriptableObject
     //public int currentLevelNumber = 1;
     
     [Space(10)]
-    [Header("Player Stats")]
+    [Header("Player Base Stats")]
     //player stats
     //placeholders for right now
     public int maxHealth = 15;
@@ -39,7 +41,7 @@ public class PlayerData : ScriptableObject
     public int speedStat = 5;
     public int scrap, cloth, meds;
     public int skillPoints = 0;
-
+    public ItemData initialItem;
 
 
 

@@ -23,7 +23,7 @@ public class CameraController : MonoBehaviour
             playerObject = Player.Instance.gameObject;
         }
 
-        offset = transform.position - playerObject.transform.position;
+        offset = transform.localPosition - Player.Instance.playerHolderTransform.TransformPoint(playerObject.transform.position);
         baseOffset = offset;
 
         
@@ -32,8 +32,11 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        transform.position = playerObject.transform.position + offset;
+
+        //transform.localPosition = playerObject.transform.localPosition + offset;
+
+        //transform.Translate((playerObject.transform.position + offset).normalized);
+        transform.position = playerObject.transform.position + Player.Instance.playerHolderTransform.TransformPoint(offset);
 
         if((!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy) && !Upgrades.Instance.upgradeMenu.activeInHierarchy )
         {

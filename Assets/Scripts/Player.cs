@@ -4,6 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -43,6 +44,8 @@ public class Player : MonoBehaviour
     public Vector3 meleeExtents = new Vector3();
     [Header("Melee Forward Detection Distance")]
     public float meleeDist = 1f;
+
+    public Vector3 spawnPos;
 
     #region UI Variables
     public GameObject loseScreen;
@@ -133,11 +136,13 @@ public class Player : MonoBehaviour
 
     //transform of the player
     Transform _mainTransform;
+    public Transform playerHolderTransform;
 
     Vector3 moveDir;
     Vector3 lookDir;
     Plane rayPlane = new Plane(Vector3.up, 0);
 
+    private bool doSetSpawn = true;
 
     private void Awake()
     {
@@ -146,13 +151,25 @@ public class Player : MonoBehaviour
             Destroy(Instance.gameObject);
         }
         Instance = this;
+        Debug.Log("Player Awake");
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Player Start");
         _mainTransform = transform;
-        SetStatsToBase();
+        playerHolderTransform = transform.parent;
+        _mainTransform.position = spawnPos;
+        if(SceneManager.GetActiveScene().name == baseData.levelOneName )
+        {
+            SetStatsToBase();
+        }
+        else
+        {
+            LoadPlayer();
+        }
+        
     }
 
     // Update is called once per frame
@@ -248,19 +265,19 @@ public class Player : MonoBehaviour
                 TakeDamage(1);
             }
 
-            if (Input.GetKey(KeyCode.RightShift))
-            {
-                if (Input.GetKeyDown(KeyCode.Equals))
-                {
-                    Debug.Log("Trying To Save...");
-                    SavePlayer();
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.Minus))
-            {
-                Debug.Log("Trying To Load...");
-                LoadPlayer();
-            }
+           //if (Input.GetKey(KeyCode.RightShift))
+           //{
+           //    if (Input.GetKeyDown(KeyCode.Equals))
+           //    {
+           //        Debug.Log("Trying To Save...");
+           //        SavePlayer();
+           //    }
+           //}
+           //else if (Input.GetKeyDown(KeyCode.Minus))
+           //{
+           //    Debug.Log("Trying To Load...");
+           //    LoadPlayer();
+           //}
             
             
 
@@ -268,6 +285,8 @@ public class Player : MonoBehaviour
         }
         
     }
+
+
 
     /// <summary>
     /// Moves Player Based On WASD
@@ -277,7 +296,10 @@ public class Player : MonoBehaviour
         moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         moveDir.Normalize();
         moveDir *= Time.deltaTime * speedStat;
-        _mainTransform.Translate(moveDir, Space.World);
+
+       // playerHolderTransform.TransformDirection(moveDir)
+
+        _mainTransform.Translate(playerHolderTransform.TransformDirection(moveDir), Space.World);
 
     }
 
@@ -417,6 +439,7 @@ public class Player : MonoBehaviour
         MedsCount = baseData.meds;
         skillPoints = baseData.skillPoints;
         inventory.selectedItem = null;
+        inventory.AddItem(new Item(baseData.initialItem));
     }
 
     #region Saving / Loading
@@ -447,7 +470,7 @@ public class Player : MonoBehaviour
 
     public void LoadPlayer()
     {
-        if (File.Exists(Application.persistentDataPath + "/player_save.dat"))
+        if (SaveExists())
         {
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Application.persistentDataPath + "/player_save.dat", FileMode.Open);
@@ -468,6 +491,11 @@ public class Player : MonoBehaviour
 
             inventory.LoadFromJsonList(playerSave.invJsonList);
         }
+    }
+
+    public bool SaveExists()
+    {
+        return File.Exists(Application.persistentDataPath + "/player_save.dat");
     }
     #endregion
 

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class Transitions : MonoBehaviour
 {
+
     //interpolation
     bool fadeIn = false;
     bool fadeOut = false;

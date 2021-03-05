@@ -102,7 +102,10 @@ public class LevelAssetSpawn : MonoBehaviour
                 }
                 playerSpawn = t.presetTile.GetComponent<PresetTileInfo>().playerSpawn;
                 //SPAWN PLAYER
-                GameObject play = Instantiate(playerPref, playerSpawn.transform.position, playerSpawn.transform.rotation);
+                GameObject play = Instantiate(playerPref, Vector3.zero, playerSpawn.transform.rotation);
+                Debug.Log("Player Spawn set");
+                StartCoroutine(setPlayerPosition(play, playerSpawn.transform.position));
+                
                 myLocalLevel.myPlayer = play.transform.GetChild(0).gameObject.GetComponent<Player>();
             }
         }
@@ -117,6 +120,12 @@ public class LevelAssetSpawn : MonoBehaviour
         ActivateEnemies();
 
         
+    }
+
+    IEnumerator setPlayerPosition(GameObject playerObj, Vector3 spawnPos)
+    {
+        yield return new WaitForSeconds(0.1f);
+        Player.Instance.transform.position = spawnPos;
     }
 
     #region Objective Spawn
