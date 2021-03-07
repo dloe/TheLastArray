@@ -6,12 +6,14 @@ public class AvoidenceTest : MonoBehaviour
 {
     public float speed = 10;
 
-    int rays = 11;
+    int rays = 25;
 
     float angle = 90;
 
 
     public float range = 2;
+
+    public GameObject target;
 
 
     private void Update()
@@ -44,6 +46,7 @@ public class AvoidenceTest : MonoBehaviour
         }
 
         this.transform.position += delta * Time.deltaTime;
+        this.transform.LookAt(target.transform);
     }
 
     private void OnDrawGizmos()
