@@ -187,13 +187,16 @@ public class Player : MonoBehaviour
                     if (itemToGrab.worldItemData.itemType == ItemType.Gasoline)
                     {
                         Objectives.Instance.SendCompletedMessage(Condition.GetGasCan);
+                        Destroy(itemToGrab.gameObject);
+                        itemToGrab = null;
                     }
                     else if(!inventory.IsFull())
                     {
                         inventory.AddItem(new Item(itemToGrab.worldItemData));
+                        Destroy(itemToGrab.gameObject);
+                        itemToGrab = null;
                     }
-                    Destroy(itemToGrab.gameObject);
-                    itemToGrab = null;
+                    
                 }
                 else if (resourceToGrab)
                 {
