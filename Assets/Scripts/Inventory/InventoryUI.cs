@@ -123,7 +123,7 @@ public class InventoryUI : MonoBehaviour
         //for currently equiped item text
         if (inventory.selectedItem != null)
         {
-            equipedItemLabelText.text = inventory.selectedItem.itemData.itemType.ToString();
+            equipedItemLabelText.text = inventory.selectedItem.itemData.itemName.ToString();
             switch (inventory.selectedItem.itemData.itemType)
             {
                 case ItemType.MeleeWeapon:
