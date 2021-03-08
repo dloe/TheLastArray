@@ -150,8 +150,8 @@ public class LevelAssetSpawn : MonoBehaviour
             //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
             //if objective is certain types (ie type 3), choose more objectives and add to list
 
-            if (myLocalLevel.objective == 3 )
-            {
+          //  if (myLocalLevel.objective == 3 )
+            //{
                 //make sure we can spawn 2 more objectives!
                 for (int objCount = 0; objCount < 2; objCount++)
                 {
@@ -170,7 +170,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         //Debug.Log("Added Objective");
                     }
                 }
-            }
+           // }
             
         }
         else if (myLocalLevel.objective == 1)
