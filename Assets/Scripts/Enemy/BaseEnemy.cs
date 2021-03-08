@@ -210,20 +210,7 @@ public class BaseEnemy : MonoBehaviour
                 }
                 break;
             case AttackType.ranged:
-                if (myState != enemyState.attacking && readyToAttack == true)
-                {
-                    this.transform.position += delta * Time.deltaTime;
-                }
-
-                else if (myState == enemyState.attacking && readyToAttack == true)
-                {
-                    //this.transform.position += delta * Time.deltaTime;
-                    attacking = true;
-                }
-                else if (myState == enemyState.attacking && readyToAttack == false)
-                {
-                    this.transform.position -= delta * (Time.deltaTime * .5f);
-                }
+                
                 break;
                 
 
