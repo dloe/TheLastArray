@@ -1161,6 +1161,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dde518324ef83804f89fb12f0fc34bfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectiveSpawn: {fileID: 0}
+  playerSpawn: {fileID: 0}
   possiblePresetItems:
   - {fileID: 3862389377761265072}
   enemiesOnPreset:
@@ -1773,7 +1775,7 @@ PrefabInstance:
     - target: {fileID: 534348307021387147, guid: 530153e6e7c8e2949b56521beffa0a50,
         type: 3}
       propertyPath: objectWeight
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3166433898485085784, guid: 530153e6e7c8e2949b56521beffa0a50,
         type: 3}
