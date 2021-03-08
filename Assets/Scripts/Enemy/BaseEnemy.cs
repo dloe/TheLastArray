@@ -110,6 +110,9 @@ public class BaseEnemy : MonoBehaviour
     //how far the enemy needs to get away from its target to lose agro
     public float agroLoseDis;
 
+    [Header("if reanged enemy")]
+    public GameObject projectile;
+
 
     private void Start()
     {
@@ -210,7 +213,20 @@ public class BaseEnemy : MonoBehaviour
                 }
                 break;
             case AttackType.ranged:
+                if(myState != enemyState.attacking && readyToAttack == true)
+                {
+                    this.transform.position += delta * Time.deltaTime;
+                }
                 
+                else if (myState == enemyState.attacking && readyToAttack == true)
+                {
+                    
+                    attacking = true;
+                }
+                else if (myState == enemyState.attacking && readyToAttack == false)
+                {
+                    this.transform.position -= delta * Time.deltaTime;
+                }
                 break;
                 
 
@@ -259,7 +275,16 @@ public class BaseEnemy : MonoBehaviour
         }
         else if (attackType == AttackType.ranged)
         {
+            if(myState == enemyState.attacking && attackCD <= 0 && readyToAttack == true)
+            {
+                attacking = false;
+                readyToAttack = false;
+                StartCoroutine(CoolDown());
+                Debug.Log("Bang Bang");
+                GameObject bullet = Instantiate(projectile, transform.position, transform.rotation);
+                bullet.GetComponent<Bullet>().damageToDeal = baseAttack;
 
+            }
         }
     }
     IEnumerator CoolDown()
