@@ -444,32 +444,40 @@ public class Player : MonoBehaviour
 
     private void meleeAttack()
     {
-        Debug.Log("Melee Attack");
+        
         RaycastHit hit;
-        if(Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward,out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange))
+        if(inventory.selectedItem.itemData.canAttack)
         {
-            if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
+            Debug.Log("Melee Attack");
+            if (Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward, out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange))
             {
-                Debug.Log("Durability Before: " + inventory.selectedItem.itemData.durability);
-                if(inventory.selectedItem.itemData.hasDurability)
+
+                
+                StartCoroutine(inventory.selectedItem.itemData.CoolDown());
+                if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
                 {
-                    inventory.selectedItem.itemData.durability--;
-                    Debug.Log("Durability After: " + inventory.selectedItem.itemData.durability);
-                    if (inventory.selectedItem.itemData.durability <= 0)
+                    Debug.Log("Durability Before: " + inventory.selectedItem.itemData.durability);
+                    if (inventory.selectedItem.itemData.hasDurability)
                     {
-                        if(inventory.selectedItem.itemData.name.Contains("Instance"))
+                        inventory.selectedItem.itemData.durability--;
+                        Debug.Log("Durability After: " + inventory.selectedItem.itemData.durability);
+                        if (inventory.selectedItem.itemData.durability <= 0)
                         {
-                            Destroy(inventory.selectedItem.itemData);
-                            inventory.RemoveItem(inventory.selectedItem);
-                            
+                            if (inventory.selectedItem.itemData.name.Contains("Instance"))
+                            {
+                                Destroy(inventory.selectedItem.itemData);
+                                inventory.RemoveItem(inventory.selectedItem);
+
+                            }
+
                         }
-                        
                     }
+                    hit.transform.GetComponent<BaseEnemy>().TakeDamage(inventory.selectedItem.itemData.damage);
+                    Debug.Log("yep enemy hit");
                 }
-                hit.transform.GetComponent<BaseEnemy>().TakeDamage(inventory.selectedItem.itemData.damage);
-                Debug.Log("yep enemy hit");
             }
         }
+        
         
     }
 

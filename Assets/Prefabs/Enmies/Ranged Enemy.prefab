@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 7515553172443960079}
   - component: {fileID: 7515553172443960078}
   m_Layer: 19
-  m_Name: Basic Enemy
+  m_Name: Ranged Enemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -271,6 +271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   norm: {fileID: 2100000, guid: 7653b51fdc8c58e4d97c2aaaa185bbec, type: 2}
   damaged: {fileID: 2100000, guid: a9021586276d2c0469733a3caaa23e02, type: 2}
+  key: {fileID: 2100000, guid: a338947236265e2418c8d544b89e1f94, type: 2}
   isObjectiveEnemy: 0
   myType: 0
   myState: 0
@@ -285,13 +286,13 @@ MonoBehaviour:
   attackType: 2
   agro: 0
   attackSpeed: 5
-  attackRange: 1
   combatSpeed: 2
   attackDistance: 6
   _target: {fileID: 0}
   attacking: 0
   readyToAttack: 1
   agroLoseDis: 10
+  attackRange: 1
   projectile: {fileID: 5517027755585076670, guid: 9b044fff9c938434b96328c50d1dd8c1,
     type: 3}
 --- !u!54 &7515553172443960078
