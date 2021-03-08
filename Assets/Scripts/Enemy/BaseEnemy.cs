@@ -218,7 +218,7 @@ public class BaseEnemy : MonoBehaviour
     
     float x;
     float z;
-    bool statechange = false;
+    
     bool start = false;
     void WanderingPoint()
     {
@@ -232,11 +232,9 @@ public class BaseEnemy : MonoBehaviour
             print(z);
             start = true;
         }
-        if (Vector3.Distance(wanderPoint, _spawnPoint) < wanderRadius && statechange == true)
+        if (Vector3.Distance(this.transform.position, _spawnPoint) < wanderRadius && agro == false)
         {
-            //do things
-
-           
+            myState = enemyState.wandering;  
         }
         if (Vector3.Distance(wanderPoint, _spawnPoint) >= wanderRadius)
         {
