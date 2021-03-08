@@ -620,8 +620,8 @@ public class LevelAssetSpawn : MonoBehaviour
                     break;
                 case ObjectWeightType.Resource:
                     //resource = 80
-                    //item = 20
-                    //weapon = 0
+                    //item = 30
+                    //weapon = 10
                     if (Random.value > 0.20)
                     {
                         int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
@@ -630,7 +630,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         Destroy(_possibleItems[pItemC]);
                         resourcesInLevelList.Add(resource);
                     }
-                    else if (Random.value > 0.70)
+                    else if (Random.value > 0.60)
                     {
                         int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
                         GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
