@@ -18,6 +18,7 @@ public class InventoryUI : MonoBehaviour
     public Text equipedWeaponAmmoText;
     public Text equipedWeaponReservesText;
     public Text equipedWeaponDashText;
+    public Text currentAmmoName;
 
     private readonly string _zoomAxis = "Mouse ScrollWheel";
 
@@ -131,23 +132,33 @@ public class InventoryUI : MonoBehaviour
                     equipedWeaponAmmoText.text = "";
                     //equipedWeaponReservesText.text = "";
                     equipedWeaponDashText.gameObject.SetActive(false);
+                    currentAmmoName.gameObject.SetActive(false);
+                    equipedWeaponReservesText.gameObject.SetActive(false);
                     break;
                 case ItemType.Pistol:
                     //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
                     equipedWeaponDashText.gameObject.SetActive(true);
+                    currentAmmoName.gameObject.SetActive(true);
+                    equipedWeaponReservesText.gameObject.SetActive(true);
                     equipedWeaponAmmoText.text = inventory.selectedItem.itemData.loadedAmmo.ToString();
                     equipedWeaponReservesText.text = Player.Instance.currentLightAmmo.ToString();
+                    currentAmmoName.text = inventory.selectedItem.itemData.ammoType.ToString();
                     break;
                 case ItemType.Rifle:
                     //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
                     equipedWeaponDashText.gameObject.SetActive(true);
+                    currentAmmoName.gameObject.SetActive(true);
+                    equipedWeaponReservesText.gameObject.SetActive(true);
                     equipedWeaponAmmoText.text = inventory.selectedItem.itemData.loadedAmmo.ToString();
                     equipedWeaponReservesText.text = Player.Instance.currentHeavyAmmo.ToString();
+                    currentAmmoName.text = inventory.selectedItem.itemData.ammoType.ToString();
                     break;
                 case ItemType.Heal:
                     equipedWeaponAmmoText.text = "";
                    // equipedWeaponReservesText.text = "";
                     equipedWeaponDashText.gameObject.SetActive(false);
+                    currentAmmoName.gameObject.SetActive(false);
+                    equipedWeaponReservesText.gameObject.SetActive(false);
                     break;
                 default:
                     break;
@@ -157,8 +168,9 @@ public class InventoryUI : MonoBehaviour
         {
             equipedItemLabelText.text = "None";
             equipedWeaponAmmoText.text = "";
-           // equipedWeaponReservesText.text = "";
+           //equipedWeaponReservesText.text = "";
             equipedWeaponDashText.gameObject.SetActive(false);
+            currentAmmoName.gameObject.SetActive(false);
         }
     }
 
