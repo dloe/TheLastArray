@@ -6,14 +6,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+public enum EnemyType
+{
+    basic
+}
+
+public enum AttackType
+{
+    none,
+    melee,
+    ranged
+}
+
+public enum enemyState
+{
+    wandering,
+    following,
+    attacking
+}
 
 public class BaseEnemy : MonoBehaviour
 {
-    //EnemyType basic
-
-    //AttackType null
-
     [Header("Base_Stats")]
+
+    public bool isObjectiveEnemy;
+
+    //what enemy am I
+    public EnemyType myType;
+
+    public enemyState myState = enemyState.wandering;
+
     // the base health of the enemy
     public int baseHealth = 5;
 
@@ -27,7 +49,10 @@ public class BaseEnemy : MonoBehaviour
     public float detectionRadius;
 
     // the internal timer used for the enemy makes it so not everything is not in update
-    public float _tickRate;
+    public float tickRate;
+
+    //currect object that has the enemys attention
+    Vector3 poi;
 
     [Header("Movement_Stats")]
 
@@ -37,50 +62,50 @@ public class BaseEnemy : MonoBehaviour
 
     float angle = 90;
 
-    
+
 
     [Header("Wander_Stats")]
     // this is the speed at which the enemy will wonder around
     public float wanderSpeed;
 
     //This is the distance around its spawn the enemy will explore
-    public float wonderRadius;
+    public float wanderRadius;
 
     //the starting point of the enemy
     Vector3 _spawnPoint;
 
-    Vector3 pointToFollow = new Vector3();
+    Vector3 wanderPoint = new Vector3();
 
     [Header("Combat_Stats")]
+    //how do I attack
+    public AttackType attackType;
+
     // is the enemy agro
     public bool agro;
 
     //rate at which the attack will come out
     public float attackSpeed;
 
+    //how close the enemy needs to be to attack the player
+    public float attackDistance;
+
     // what is the enemy targting
     public GameObject _target;
+
+    //is this enemy attacking
+    public bool attacking = false;
 
     //how far the enemy needs to get away from its target to lose agro
     public float agroLoseDis;
 
-    //how close the enemy needs to be to attack the player
-    public float combatRadi;
-
-    //is this enemy attacking
-    bool attacking = false;
-
 
     private void Start()
     {
-        _tickRate = 1;
 
         _spawnPoint = transform.position;
-
-
+        wanderPoint = _spawnPoint;
+        poi = wanderPoint;
         StartCoroutine(Tick());
-
-        //change soon
         _target = Player.Instance.gameObject;
 
     }
@@ -88,8 +113,12 @@ public class BaseEnemy : MonoBehaviour
     private void Update()
     {
         //as of 3/7/21
-
+        Atention();
         Stearing();
+        WanderingPoint();
+
+        if (baseHealth <= 0)
+        { OnDeath(); }
 
 
     }
@@ -99,16 +128,29 @@ public class BaseEnemy : MonoBehaviour
     /// </summary>
     IEnumerator Tick()
     {
-        //CheckSurondings();
-        //MakePath();
+        BaseAttack();
         SetTarget();
-        yield return new WaitForSeconds(_tickRate);
+        yield return new WaitForSeconds(tickRate);
         StartCoroutine(Tick());
     }
 
-   
+
     void Stearing()
     {
+        float speed = 0;
+        switch (myState)
+        {
+            case enemyState.wandering:
+                speed = wanderSpeed;
+                break;
+            case enemyState.following:
+                speed = baseSpeed;
+                break;
+            case enemyState.attacking:
+                speed = baseSpeed;
+                break;
+            
+        }
         Vector3 delta = Vector3.zero;
 
         for (int i = 0; i < rays; i++)
@@ -117,63 +159,105 @@ public class BaseEnemy : MonoBehaviour
             var rotMod = Quaternion.AngleAxis((i / ((float)rays - 1)) * angle * 2 - angle, this.transform.up);
             var dir = rot * rotMod * Vector3.forward;
 
-
             Ray ray = new Ray(this.transform.position, dir);
             RaycastHit hitInfo;
 
-
-
             if (Physics.Raycast(ray, out hitInfo, avodinceRange))
-            {
-                delta -= (1f / rays) * baseSpeed * dir;
-            }
+            { delta -= (1f / rays) * speed * dir; }
             else
-            {
-                delta += (1f / rays) * baseSpeed * dir;
-            }
+            { delta += (1f / rays) * speed * dir; }
 
-            //print(hitInfo);
         }
 
         this.transform.position += delta * Time.deltaTime;
-        this.transform.LookAt(_target.transform);
+        this.transform.LookAt(poi);
     }
 
     void BaseAttack()
     {
-
+        
+        if (attackType == AttackType.melee)
+        { }
+        else if (attackType == AttackType.ranged)
+        { }
     }
 
     /// <summary>
-    /// this function will be used to set the target
+    /// this function will be used to set agro
     /// </summary>
     void SetTarget()
     {
-
-        /*
-        if (disToTarget <= detectionRadius)
+        if (Vector3.Distance(transform.position, _target.gameObject.transform.position) <= detectionRadius)
         {
-            OnAgro();
+            agro = true;
+            myState = enemyState.following;
         }
 
-        else if (disToTarget >= agroLoseDis)
+        else if (Vector3.Distance(transform.position, _target.gameObject.transform.position) >= agroLoseDis)
         {
             agro = false;
+            
         }
-        */
+    }
+
+    void Atention()
+    {
+        if (!agro)
+        { poi = wanderPoint; }
+        else if (agro)
+        { poi = _target.transform.position; }
     }
 
     /// <summary>
     /// This will be called when the enemy is goes agro
     /// </summary>
-    void OnAgro()
+    void onAgro()
     {
-        agro = true;
+
+    }
+    
+    float x;
+    float z;
+    bool statechange = false;
+    bool start = false;
+    void WanderingPoint()
+    {
+        
+        
+        if (start == false)
+        {
+            x = Random.Range(-1f, 1f);
+            z = Random.Range(-1f, 1f);
+            print(x);
+            print(z);
+            start = true;
+        }
+        if (Vector3.Distance(wanderPoint, _spawnPoint) < wanderRadius && statechange == true)
+        {
+            //do things
+
+           
+        }
+        if (Vector3.Distance(wanderPoint, _spawnPoint) >= wanderRadius)
+        {
+            ChangeDirW();
+        }
+        wanderPoint += new Vector3(x, 0, z) * 1.4f * Time.deltaTime;
+    }
+    void ChangeDirW()
+    {
+        x = -x;
+        z = -z;
     }
 
-
-
-
+    void OnDeath()
+    {
+        if (isObjectiveEnemy)
+        {
+            Objectives.Instance.SendCompletedMessage(Condition.KillEnemy);
+        }
+        Destroy(this.gameObject);
+    }
 
 
     private void OnDrawGizmos()
@@ -186,31 +270,29 @@ public class BaseEnemy : MonoBehaviour
             Gizmos.DrawRay(this.transform.position, dir);
         }
 
-        /*
-        if (!agro)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, detectionRadius);
 
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(_spawnPoint, wonderRadius);
 
-            Gizmos.color = Color.blue;
-            Gizmos.DrawLine(transform.position, _spawnPoint);
-        }
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, detectionRadius);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(_spawnPoint, wanderRadius);
+
+        //Gizmos.color = Color.blue;
+       // Gizmos.DrawLine(transform.position, _spawnPoint);
+
 
         if (agro)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawLine(transform.position, _target.transform.position);
-
-            Gizmos.color = Color.black;
-            Gizmos.DrawWireSphere(_target.transform.position, combatRadi);
         }
-        */
 
-        //Gizmos.color = Color.magenta;
-        //Gizmos.DrawSphere(pointToFollow, .5f);
+        Gizmos.color = Color.black;
+        Gizmos.DrawSphere(poi, .1f);
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawSphere(wanderPoint, .2f);
 
 
 
