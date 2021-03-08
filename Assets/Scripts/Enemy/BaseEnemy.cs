@@ -91,8 +91,7 @@ public class BaseEnemy : MonoBehaviour
 
     float attackCD = 0;
 
-    //how far the attack will go
-    public float attackRange;
+    
 
     public float combatSpeed;
 
@@ -110,7 +109,11 @@ public class BaseEnemy : MonoBehaviour
     //how far the enemy needs to get away from its target to lose agro
     public float agroLoseDis;
 
-    [Header("if reanged enemy")]
+    [Header("if melee enemy")]
+    //how far the attack will go
+    public float attackRange;
+
+    [Header("if ranged enemy")]
     public GameObject projectile;
 
 
@@ -280,7 +283,7 @@ public class BaseEnemy : MonoBehaviour
                 attacking = false;
                 readyToAttack = false;
                 StartCoroutine(CoolDown());
-                Debug.Log("Bang Bang");
+                //Debug.Log("Bang Bang");
                 GameObject bullet = Instantiate(projectile, transform.position, transform.rotation);
                 bullet.GetComponent<Bullet>().damageToDeal = baseAttack;
 
