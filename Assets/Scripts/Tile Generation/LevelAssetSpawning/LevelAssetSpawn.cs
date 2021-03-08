@@ -634,8 +634,10 @@ public class LevelAssetSpawn : MonoBehaviour
                     break;
             }
         }
+        Debug.Log("Removing unused drops");
         for(int lastItems = _possibleItems.Count - dontSpawnCount; lastItems < _possibleItems.Count; lastItems++)
         {
+            Debug.Log("Destroying " + _possibleItems[lastItems].name);
             Destroy(_possibleItems[lastItems]);
         }
         //resources can either spawn at random or based on distance from any other existing resource
