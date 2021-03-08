@@ -142,7 +142,6 @@ public class Player : MonoBehaviour
     Vector3 lookDir;
     Plane rayPlane = new Plane(Vector3.up, 0);
 
-    private bool doSetSpawn = true;
 
     private void Awake()
     {
@@ -183,18 +182,21 @@ public class Player : MonoBehaviour
             //if there is a grabbable item and the inventory is not full, then E picks up item
             if (Input.GetKeyDown(KeyCode.E) && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
             {
-                if (itemToGrab && !inventory.IsFull())
+                if (itemToGrab)
                 {
                     if (itemToGrab.worldItemData.itemType == ItemType.Gasoline)
                     {
                         Objectives.Instance.SendCompletedMessage(Condition.GetGasCan);
+                        Destroy(itemToGrab.gameObject);
+                        itemToGrab = null;
                     }
-                    else
+                    else if(!inventory.IsFull())
                     {
                         inventory.AddItem(new Item(itemToGrab.worldItemData));
+                        Destroy(itemToGrab.gameObject);
+                        itemToGrab = null;
                     }
-                    Destroy(itemToGrab.gameObject);
-                    itemToGrab = null;
+                    
                 }
                 else if (resourceToGrab)
                 {
