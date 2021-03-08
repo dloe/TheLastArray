@@ -45,10 +45,8 @@ public class LevelAssetSpawn : MonoBehaviour
     public List<GameObject> enemiesInLevel = new List<GameObject>();
     List<GameObject> _possibleEnemiesInLevel = new List<GameObject>();
 
-    //get these values from scriptable obj. Total amount we spawn in (will replace theses)
-    int _weaponsInLevel = 1;
-    int _itemsInLevel = 4;
-    int __resourcesInLevel = 10;
+    [Header("number of possible drop prefabs")]
+    public int dontSpawnCount = 3;
 
     GameObject endObjTile;
     [Header("Objectives In Level")]
@@ -195,7 +193,7 @@ public class LevelAssetSpawn : MonoBehaviour
             }
         }
         //update Objectives object with objetive info
-        Debug.Log("activated objs");
+        //Debug.Log("activated objs");
     }
     #endregion
 
@@ -491,10 +489,26 @@ public class LevelAssetSpawn : MonoBehaviour
 
     #endregion
 
-
+    //reshuffle list
+    List<GameObject> reshuffle(List<GameObject> ar)
+    {
+        // Knuth shuffle algorithm :: courtesy of Wikipedia :)
+        for (int t = 0; t < ar.Count; t++)
+        {
+            GameObject tmp = ar[t];
+            int r = Random.Range(t, ar.Count);
+            ar[t] = ar[r];
+            ar[r] = tmp;
+        }
+        return ar;
+    }
     #region Items
     void ActivateItems()
     {
+
+        //shuffle _possibleItems
+        _possibleItems = reshuffle(_possibleItems);
+        
 
         //check weight of possible item
         //highly favor that weight but could still spawn other 2 types
@@ -506,7 +520,7 @@ public class LevelAssetSpawn : MonoBehaviour
         //adds 30 to item
         //adds 30 to resoruce
 
-        for(int pItemC = 0; pItemC < _possibleItems.Count; pItemC++)
+        for(int pItemC = 0; pItemC < _possibleItems.Count - dontSpawnCount; pItemC++)
         {
             switch (_possibleItems[pItemC].GetComponent<PossibleItem>().objectWeight)
             {
@@ -620,7 +634,10 @@ public class LevelAssetSpawn : MonoBehaviour
                     break;
             }
         }
-
+        for(int lastItems = _possibleItems.Count - dontSpawnCount; lastItems < _possibleItems.Count; lastItems++)
+        {
+            Destroy(_possibleItems[lastItems]);
+        }
         //resources can either spawn at random or based on distance from any other existing resource
         //when activated that gameobject will be removed from the possibleResources and added to resourcesInLevel List
         //when item is activated can either be a weapon, resource or other item
@@ -631,6 +648,10 @@ public class LevelAssetSpawn : MonoBehaviour
     /// NOT IN USE
     /// - Randomly picked objs to be items, resources, weapon
     /// </summary>
+    /// //get these values from scriptable obj. Total amount we spawn in (will replace theses)
+    int _weaponsInLevel = 1;
+    int _itemsInLevel = 4;
+    int __resourcesInLevel = 10;
     void oldS()
     {
         //first spawn in X amount of weapons

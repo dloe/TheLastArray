@@ -100,6 +100,7 @@ public class LocalLevel : MonoBehaviour
             int rand = Random.Range(0, _posObjectives.Count);
             //Debug.Log(_posObjectives.Count);
             objective = _posObjectives[rand];
+            
         }
         else
         {
@@ -112,12 +113,12 @@ public class LocalLevel : MonoBehaviour
             objective = _posObjectives[Random.Range(0, _posObjectives.Count)];
         }
         //_myObjs = FindObjectOfType<Objectives>();
-         //PlayerUIHolder myUIVARs = FindObjectOfType<PlayerUIHolder>();
+        //PlayerUIHolder myUIVARs = FindObjectOfType<PlayerUIHolder>();
         //player = GameObject.Find("PlayerHolder");
         //objectiveText = myUIVARs.objectiveText;
         // objectiveText.text = objective.ToString();
         //  transBar = myUIVARs.panel;
-
+        myPlayerData.previouslyCompletedObj = objective;
 
         Debug.Log("Picked Objective: " + objective);
     }
