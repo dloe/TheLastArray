@@ -78,9 +78,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 'Generator
+  m_Text: 'Enter Train
 
-'
+    (press E)'
 --- !u!114 &7052229141956789362
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,9 +207,9 @@ GameObject:
   - component: {fileID: 5592362334672371224}
   - component: {fileID: 5592362334672371231}
   - component: {fileID: 5592362334672371230}
-  - component: {fileID: 8131244106881553796}
+  - component: {fileID: 1479741681789275532}
   m_Layer: 0
-  m_Name: Generator_PLACEHOLDER
+  m_Name: TrainEntry_PLACEHOLDER
   m_TagString: Activatable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -290,7 +290,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1.5, y: 1, z: 1.5}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8131244106881553796
+--- !u!114 &1479741681789275532
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -299,8 +299,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5592362334672371228}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff6f0612e62d1ef46a2d6378502b5296, type: 3}
+  m_Script: {fileID: 11500000, guid: 939d5d1b6d20ae1479f00da9ec784725, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isActivated: 0
-  generatorText: {fileID: 4002325447442104392}

@@ -123,7 +123,7 @@ public class InventoryUI : MonoBehaviour
         //for currently equiped item text
         if (inventory.selectedItem != null)
         {
-            equipedItemLabelText.text = inventory.selectedItem.itemData.itemType.ToString();
+            equipedItemLabelText.text = inventory.selectedItem.itemData.itemName.ToString();
             switch (inventory.selectedItem.itemData.itemType)
             {
                 case ItemType.MeleeWeapon:
@@ -164,8 +164,9 @@ public class InventoryUI : MonoBehaviour
 
     public void SpawnItem(Item item)
     {
-        Vector3 dropPos = new Vector3(player.transform.position.x, 1, player.transform.position.z);
-        WorldItem worldItem = Instantiate(emptyWorldItem, dropPos, emptyWorldItem.transform.rotation).GetComponent<WorldItem>();
+        Vector3 dropPos = new Vector3(player.transform.position.x, 0.5f, player.transform.position.z);
+
+        WorldItem worldItem = Instantiate(emptyWorldItem, dropPos, Player.Instance.playerHolderTransform.rotation).GetComponent<WorldItem>();
 
         
         worldItem.worldItemData = item.itemData;

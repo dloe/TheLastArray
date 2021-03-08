@@ -171,13 +171,18 @@ MonoBehaviour:
     type: 3}
   generatorObject: {fileID: 5592362334672371228, guid: 2db358ad401334b409babf91e6a5fc57,
     type: 3}
-  killMessage: Kill Enemy(not implemented)
+  killMessage: Kill Marked Enemy
   gasMessage: Grab Gas Can
   generatorMessage: Activate Generator
   gasolineData: {fileID: 11400000, guid: 201ed0363079ba348b3fbbcc999cf1f4, type: 2}
-  objectives: []
+  mainObjective:
+    condition: 0
+    objectiveMessage: blank
+    itemData: {fileID: 0}
+    complete: 0
+    numTimes: 0
+  objectiveCount: 0
   objectiveText: {fileID: 3210710992876087511}
-  enemyCount: 0
 --- !u!1 &8633458409397504385
 GameObject:
   m_ObjectHideFlags: 0

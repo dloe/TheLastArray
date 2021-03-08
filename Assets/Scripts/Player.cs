@@ -4,6 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -25,7 +26,7 @@ public class Player : MonoBehaviour
     public Resource resourceToGrab;
     [Header("Current Usable Crafting Table")]
     public CraftingTable craftingTableToUse;
-    public Generator generatorToActivate;
+    public Activatable thingToActivate;
 
     public int speedStat = 5;
     public int dmgResist;
@@ -44,8 +45,10 @@ public class Player : MonoBehaviour
     [Header("Melee Forward Detection Distance")]
     public float meleeDist = 1f;
 
+
     #region UI Variables
-    public GameObject loseScreen;
+    public GameObject endScreen;
+    public Text endScreenText;
     #endregion
 
     #region Health Variables
@@ -69,10 +72,10 @@ public class Player : MonoBehaviour
             {
                 health = value;
             }
-            healthText.text = health.ToString();
+            healthText.text = health + "/" + maxHealth;
             if(health == 0)
             {
-                loseScreen.SetActive(true);
+                endScreen.SetActive(true);
                 Time.timeScale = 0;
             }
         }
@@ -133,6 +136,7 @@ public class Player : MonoBehaviour
 
     //transform of the player
     Transform _mainTransform;
+    public Transform playerHolderTransform;
 
     Vector3 moveDir;
     Vector3 lookDir;
@@ -146,39 +150,53 @@ public class Player : MonoBehaviour
             Destroy(Instance.gameObject);
         }
         Instance = this;
+        Debug.Log("Player Awake");
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Player Start");
         _mainTransform = transform;
-        SetStatsToBase();
+        playerHolderTransform = transform.parent;
+        if(SceneManager.GetActiveScene().name == baseData.levelOneName )
+        {
+            SetStatsToBase();
+        }
+        else
+        {
+            LoadPlayer();
+        }
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!UI.Instance.PausedStatus && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
+        if (!UI.Instance.PausedStatus && (!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy))
         {
             doMovement();
             mouseLook();
             Debug.DrawRay(_mainTransform.position, lookDir, Color.green);
 
             //if there is a grabbable item and the inventory is not full, then E picks up item
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
             {
-                if (itemToGrab && !inventory.IsFull())
+                if (itemToGrab)
                 {
                     if (itemToGrab.worldItemData.itemType == ItemType.Gasoline)
                     {
                         Objectives.Instance.SendCompletedMessage(Condition.GetGasCan);
+                        Destroy(itemToGrab.gameObject);
+                        itemToGrab = null;
                     }
-                    else
+                    else if(!inventory.IsFull())
                     {
                         inventory.AddItem(new Item(itemToGrab.worldItemData));
+                        Destroy(itemToGrab.gameObject);
+                        itemToGrab = null;
                     }
-                    Destroy(itemToGrab.gameObject);
-                    itemToGrab = null;
+                    
                 }
                 else if (resourceToGrab)
                 {
@@ -200,9 +218,9 @@ public class Player : MonoBehaviour
                     Destroy(resourceToGrab.gameObject);
                     resourceToGrab = null;
                 }
-                else if(generatorToActivate)
+                else if(thingToActivate)
                 {
-                    generatorToActivate.Activate();
+                    thingToActivate.Activate();
                     
                 }
                 else if(craftingTableToUse)
@@ -212,7 +230,7 @@ public class Player : MonoBehaviour
             }
 
             //uses currently selected item
-            if (Input.GetMouseButtonDown(0) && inventory.selectedItem != null)
+            if (Input.GetMouseButtonDown(0) && inventory.selectedItem != null && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
             {
                 switch (inventory.selectedItem.itemData.itemType)
                 {
@@ -248,19 +266,19 @@ public class Player : MonoBehaviour
                 TakeDamage(1);
             }
 
-            if (Input.GetKey(KeyCode.RightShift))
-            {
-                if (Input.GetKeyDown(KeyCode.Equals))
-                {
-                    Debug.Log("Trying To Save...");
-                    SavePlayer();
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.Minus))
-            {
-                Debug.Log("Trying To Load...");
-                LoadPlayer();
-            }
+           //if (Input.GetKey(KeyCode.RightShift))
+           //{
+           //    if (Input.GetKeyDown(KeyCode.Equals))
+           //    {
+           //        Debug.Log("Trying To Save...");
+           //        SavePlayer();
+           //    }
+           //}
+           //else if (Input.GetKeyDown(KeyCode.Minus))
+           //{
+           //    Debug.Log("Trying To Load...");
+           //    LoadPlayer();
+           //}
             
             
 
@@ -268,6 +286,8 @@ public class Player : MonoBehaviour
         }
         
     }
+
+
 
     /// <summary>
     /// Moves Player Based On WASD
@@ -277,7 +297,10 @@ public class Player : MonoBehaviour
         moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         moveDir.Normalize();
         moveDir *= Time.deltaTime * speedStat;
-        _mainTransform.Translate(moveDir, Space.World);
+
+       // playerHolderTransform.TransformDirection(moveDir)
+
+        _mainTransform.Translate(playerHolderTransform.TransformDirection(moveDir), Space.World);
 
     }
 
@@ -372,9 +395,10 @@ public class Player : MonoBehaviour
         {
             craftingTableToUse = other.GetComponent<CraftingTable>();
         }
-        else if(other.tag == "Generator")
+        else if(other.tag == "Activatable")
         {
-            generatorToActivate = other.GetComponent<Generator>();
+            Debug.Log("cock");
+            thingToActivate = other.GetComponent<Activatable>();
         }
     }
 
@@ -388,9 +412,9 @@ public class Player : MonoBehaviour
         {
             resourceToGrab = null;
         }
-        else if (other.tag == "Generator" && generatorToActivate && other.gameObject == generatorToActivate.gameObject)
+        else if (other.tag == "Activatable" && thingToActivate && other.gameObject == thingToActivate.gameObject)
         {
-            generatorToActivate = null;
+            thingToActivate = null;
         }
         else if(other.tag == "Crafting")
         {
@@ -416,6 +440,7 @@ public class Player : MonoBehaviour
         MedsCount = baseData.meds;
         skillPoints = baseData.skillPoints;
         inventory.selectedItem = null;
+        inventory.AddItem(new Item(baseData.initialItem));
     }
 
     #region Saving / Loading
@@ -446,7 +471,7 @@ public class Player : MonoBehaviour
 
     public void LoadPlayer()
     {
-        if (File.Exists(Application.persistentDataPath + "/player_save.dat"))
+        if (SaveExists())
         {
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Application.persistentDataPath + "/player_save.dat", FileMode.Open);
@@ -467,6 +492,11 @@ public class Player : MonoBehaviour
 
             inventory.LoadFromJsonList(playerSave.invJsonList);
         }
+    }
+
+    public bool SaveExists()
+    {
+        return File.Exists(Application.persistentDataPath + "/player_save.dat");
     }
     #endregion
 

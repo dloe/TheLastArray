@@ -14,17 +14,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelLoaded: 0
   previouslyCompletedObj: -1
+  trainSceneName: Train
+  levelOneName: Level1
+  levelTwoName: Level2
+  levelThreeName: Level3
+  levelFourName: Level4
+  previousLevelName: Level1
   currentObjString: 
   objectiveCount: 0
   objectiveComplete: 0
-  currentLevelNumber: 1
   maxHealth: 15
   health: 15
   dmgResist: 1
-  speed: 5
-  inventory:
-    invUI: {fileID: 0}
+  speedStat: 5
   scrap: 0
   cloth: 0
   meds: 0
   skillPoints: 0
+  initialItem: {fileID: 11400000, guid: 0f8f868a30897e940a0471494fe4277c, type: 2}

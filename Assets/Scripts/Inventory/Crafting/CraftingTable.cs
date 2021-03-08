@@ -59,6 +59,14 @@ public class CraftingTable : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && !UI.Instance.PausedStatus && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
+        {
+            DeactivateMenu();
+        }
+    }
+
     public void ActivateMenu()
     {
         Menu.SetActive(true);

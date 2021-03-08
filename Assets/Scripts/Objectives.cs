@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
 public enum Condition
@@ -21,7 +22,6 @@ public class Objectives : MonoBehaviour
 
     public Text objectiveText;
 
-    public int enemyCount;
 
     [System.Serializable]
     public class Objective
@@ -45,22 +45,25 @@ public class Objectives : MonoBehaviour
 
     private void Start()
     {
-        enemyCount = FindObjectsOfType<BaseEnemy>().Length;
+        if (SceneManager.GetActiveScene().name == Player.Instance.baseData.trainSceneName)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
 
     public void UpdateObjectiveText()
     {
-        if(mainObjective.objectiveMessage == gasMessage || mainObjective.objectiveMessage == generatorMessage)
+        if (mainObjective.objectiveMessage == gasMessage || mainObjective.objectiveMessage == generatorMessage)
         {
-            objectiveText.text = mainObjective.objectiveMessage + " " + (objectiveCount- mainObjective.numTimes) + "/" + objectiveCount;
+            objectiveText.text = mainObjective.objectiveMessage + " " + (objectiveCount - mainObjective.numTimes) + "/" + objectiveCount;
         }
         else
         {
             objectiveText.text = mainObjective.objectiveMessage;
         }
     }
-    
+
 
     public GameObject SetObjectiveRef(int objectiveInt, GameObject spot)
     {
@@ -81,7 +84,7 @@ public class Objectives : MonoBehaviour
                 objItem.worldItemData = objective.itemData;
                 returnObj = objItem.gameObject;
                 objective.objectiveMessage = gasMessage;
-                
+
                 break;
             case 3:
                 objective.condition = Condition.FindGenerator;
@@ -92,8 +95,8 @@ public class Objectives : MonoBehaviour
             default:
                 break;
         }
-        
-        if(objective.objectiveMessage == mainObjective.objectiveMessage)
+
+        if (objective.objectiveMessage == mainObjective.objectiveMessage)
         {
             mainObjective.numTimes++;
             objectiveCount++;
@@ -110,41 +113,9 @@ public class Objectives : MonoBehaviour
         return returnObj;
     }
 
-    public bool CheckWinCondition()
-    {
-        
-        
-        bool objectivesComplete = true;
-        
-        if (!mainObjective.complete)
-        {
-            switch (mainObjective.condition)
-            {
-                case Condition.KillEnemy:
-                    mainObjective.complete = enemyCount == 0;
-                    break;
-                case Condition.GetGasCan:
-                    if(Player.Instance.inventory.Contains(mainObjective.itemData))
-                    {
-                        mainObjective.numTimes--;
-                    }
-                    mainObjective.complete = mainObjective.numTimes == 0;
-                    break;
-                case Condition.FindGenerator:
-                    break;
-                default:
-                    break;
-            }
-        }
-        if (!mainObjective.complete)
-        {
-            objectivesComplete = false;
-            
-        }
-        
-        return objectivesComplete;
-    }
 
+    
+    
 
 
     public void SendCompletedMessage(Condition condition)
@@ -153,8 +124,8 @@ public class Objectives : MonoBehaviour
         {
             case Condition.KillEnemy:
                 Debug.Log("Enemy Killed");
-                enemyCount--;
-                mainObjective.complete = enemyCount <= 0;
+                
+                mainObjective.complete = true;
                 break;
             case Condition.GetGasCan:
                 mainObjective.numTimes--;
@@ -171,7 +142,18 @@ public class Objectives : MonoBehaviour
 
         if (mainObjective.complete)
         {
-            objectiveText.text = "COMPLETE, Return to Train";
+            if(SceneManager.GetActiveScene().name == Player.Instance.baseData.levelFourName)
+            {
+                objectiveText.text = "YOU WIN!";
+                Player.Instance.endScreenText.text = "You Win!";
+                Time.timeScale = 0;
+                Player.Instance.endScreen.SetActive(true);
+            }
+            else
+            {
+                objectiveText.text = "COMPLETE, Return to Train";
+            }
+            
         }
         
     }

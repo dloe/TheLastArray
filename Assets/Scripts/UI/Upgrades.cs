@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Upgrades : MonoBehaviour
 {
@@ -97,9 +98,14 @@ public class Upgrades : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Tab))
+        if(Input.GetKeyDown(KeyCode.Tab) && !UI.Instance.PausedStatus && (!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy) && !Player.Instance.endScreen.activeInHierarchy)
         {
             ToggleUpgrades();
+        }
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            upgradeMenu.SetActive(false);
         }
     }
 
@@ -116,8 +122,9 @@ public class Upgrades : MonoBehaviour
             DmgResistance = DmgResistance;
             Speed = Speed;
             UpdateDropDowns(player.ScrapCount, player.ClothCount, player.MedsCount);
-            UpdateExchangeButton();
+            
             upgradeMenu.SetActive(true);
+            UpdateExchangeButton();
         }
     }
 
@@ -207,27 +214,41 @@ public class Upgrades : MonoBehaviour
 
     public void UpdateExchangeButton()
     {
-        if ((scrapDropDown.value + clothDropDown.value + medsDropDown.value) == 10)
+        if (SceneManager.GetActiveScene().name == player.baseData.trainSceneName)
         {
-            resourceExchangeButton.interactable = true;
+            if ((scrapDropDown.value + clothDropDown.value + medsDropDown.value) == 10)
+            {
+                resourceExchangeButton.interactable = true;
+            }
+            else
+            {
+                resourceExchangeButton.interactable = false;
+            }
+
+            if (SkillPoints >= 1)
+            {
+                maxHealthExchangeButton.interactable = true;
+                speedExchangeButton.interactable = true;
+                dmgResistExchangeButton.interactable = true;
+            }
+            else
+            {
+                maxHealthExchangeButton.interactable = false;
+                speedExchangeButton.interactable = false;
+                dmgResistExchangeButton.interactable = false;
+            }
         }
         else
         {
             resourceExchangeButton.interactable = false;
-        }
-
-        if(SkillPoints >= 1)
-        {
-            maxHealthExchangeButton.interactable = true;
-            speedExchangeButton.interactable = true;
-            dmgResistExchangeButton.interactable = true;
-        }
-        else
-        {
             maxHealthExchangeButton.interactable = false;
             speedExchangeButton.interactable = false;
             dmgResistExchangeButton.interactable = false;
+            scrapDropDown.interactable = false;
+            medsDropDown.interactable = false;
+            clothDropDown.interactable = false;
         }
+        
     }
 
     public void ExhangeForSkillPoint()
