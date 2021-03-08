@@ -33,7 +33,7 @@ public class Bullet : MonoBehaviour
             if(LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy" && !isEnemyBullet)
             {
 
-                
+                hit.transform.GetComponent<BaseEnemy>().TakeDamage(damageToDeal);
                 Destroy(gameObject);
             }
             if(LayerMask.LayerToName(hit.transform.gameObject.layer) == "Player" && isEnemyBullet)
