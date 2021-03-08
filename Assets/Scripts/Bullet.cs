@@ -41,7 +41,7 @@ public class Bullet : MonoBehaviour
                 hit.transform.GetComponent<Player>().TakeDamage(damageToDeal);
                 Destroy(gameObject);
             }
-            if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enviromnt")
+            if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enviroment")
             {
                 Destroy(gameObject);
             }
