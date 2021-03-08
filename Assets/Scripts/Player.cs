@@ -272,7 +272,7 @@ public class Player : MonoBehaviour
             }
 
             //for testing damage and healing
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKeyDown(KeyCode.Delete))
             {
                 TakeDamage(1);
             }
@@ -481,6 +481,7 @@ public class Player : MonoBehaviour
     public void TakeDamage(int damage)
     {
         Health -= damage;
+        StartCoroutine(Damaged());
     }
 
     private void OnTriggerEnter(Collider other)
