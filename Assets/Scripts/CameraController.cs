@@ -113,7 +113,7 @@ public class CameraController : MonoBehaviour
 
         return result;
     }
-
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Rect rect = new Rect(getScrnFrac(true, 2f) - getScrnFrac(true,horizontalNeutralZone), getScrnFrac(false,2f) - getScrnFrac(false, verticalNeutralZone), 
@@ -123,4 +123,5 @@ public class CameraController : MonoBehaviour
         UnityEditor.Handles.DrawSolidRectangleWithOutline(rect, Color.clear, Color.red);
         UnityEditor.Handles.EndGUI();
     }
+#endif
 }
