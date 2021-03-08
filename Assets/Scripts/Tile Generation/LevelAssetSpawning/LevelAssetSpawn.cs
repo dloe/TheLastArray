@@ -56,9 +56,10 @@ public class LevelAssetSpawn : MonoBehaviour
     //first number represents the number of times tiles in that list were spawned
     //second number represents the tile numbers that were spawned that amount of times
     List<List<int>> _magAssetCount;
+    [Header("Amount of enemies spawned in level")]
     public int enemyCount;
     
-
+    [Header("Ref to player data obj")]
     public GameObject playerPref;
     [HideInInspector]
     public GameObject playerSpawn;
