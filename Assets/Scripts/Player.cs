@@ -45,6 +45,15 @@ public class Player : MonoBehaviour
     [Header("Melee Forward Detection Distance")]
     public float meleeDist = 1f;
 
+    #region Ammo
+    public int currentLightAmmo = 0;
+    public int currentHeavyAmmo = 0;
+    public int maxLightAmmo = 26;
+    public int maxHeavyAmmo = 14;
+
+    #endregion
+
+
 
     #region UI Variables
     public GameObject endScreen;
@@ -132,6 +141,8 @@ public class Player : MonoBehaviour
 
     public Text scrapText, medsText, clothText;
     #endregion
+
+    public Material damaged, norm;
 
 
     //transform of the player
@@ -239,7 +250,7 @@ public class Player : MonoBehaviour
                         break;
                     case ItemType.Pistol:
                     case ItemType.Rifle:
-                        rangedAttack(inventory.selectedItem.itemData.itemType);
+                        rangedAttack();
                         break;
                     case ItemType.Heal:
                         if (Health < maxHealth)
@@ -266,25 +277,40 @@ public class Player : MonoBehaviour
                 TakeDamage(1);
             }
 
-           //if (Input.GetKey(KeyCode.RightShift))
-           //{
-           //    if (Input.GetKeyDown(KeyCode.Equals))
-           //    {
-           //        Debug.Log("Trying To Save...");
-           //        SavePlayer();
-           //    }
-           //}
-           //else if (Input.GetKeyDown(KeyCode.Minus))
-           //{
-           //    Debug.Log("Trying To Load...");
-           //    LoadPlayer();
-           //}
-            
-            
+            if(Input.GetKeyDown(KeyCode.R) && !inventory.selectedItem.itemData.reloading && inventory.selectedItem.itemData.loadedAmmo < inventory.selectedItem.itemData.magSize)
+            {
+
+                reload();
+            }
+
+            //if (Input.GetKey(KeyCode.RightShift))
+            //{
+            //    if (Input.GetKeyDown(KeyCode.Equals))
+            //    {
+            //        Debug.Log("Trying To Save...");
+            //        SavePlayer();
+            //    }
+            //}
+            //else if (Input.GetKeyDown(KeyCode.Minus))
+            //{
+            //    Debug.Log("Trying To Load...");
+            //    LoadPlayer();
+            //}
+
+            if (Input.GetKey(KeyCode.RightShift))
+            {
+                if (Input.GetKeyDown(KeyCode.Equals))
+                {
+                    Debug.Log("Reseting Player Save...");
+                    inventory.Clear();
+                    SetStatsToBase();
+                    SavePlayer();
+                }
+            }
 
 
         }
-        
+
     }
 
 
@@ -326,18 +352,94 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void rangedAttack(ItemType itemType)
+    private void rangedAttack()
     {
+        if(inventory.selectedItem.itemData.canAttack && !inventory.selectedItem.itemData.reloading)
+        {
+            
+            if (inventory.selectedItem.itemData.ammoType == AmmoType.LightAmmo )
+            {
+                if(inventory.selectedItem.itemData.loadedAmmo > 0)
+                {
+                    Bullet bullet;
+                    bullet = Instantiate(pistolBulletPrefab, transform.position, transform.rotation).GetComponent<Bullet>();
+                    bullet.damageToDeal = inventory.selectedItem.itemData.damage;
+                    StartCoroutine(inventory.selectedItem.itemData.CoolDown());
+                    inventory.selectedItem.itemData.loadedAmmo--;
+                    Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
+                }
+                else
+                {
+                    reload();
+                }
+                
+            }
+            else if (inventory.selectedItem.itemData.ammoType == AmmoType.HeavyAmmo )
+            {
+                if (inventory.selectedItem.itemData.loadedAmmo > 0)
+                {
+                    Bullet bullet;
+                    bullet = Instantiate(rifleBulletPrefab, transform.position, transform.rotation).GetComponent<Bullet>();
+                    bullet.damageToDeal = inventory.selectedItem.itemData.damage;
+                    StartCoroutine(inventory.selectedItem.itemData.CoolDown());
+                    inventory.selectedItem.itemData.loadedAmmo--;
+                    Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
+                }
+                else
+                {
+                    reload();
+                }
+            }
+            InventoryUI.Instance.RefreshUI();
+        }
         
-        if (itemType == ItemType.Pistol)
+    }
+
+    private void reload()
+    {
+        if(inventory.selectedItem.itemData.itemType == ItemType.Pistol || inventory.selectedItem.itemData.itemType == ItemType.Rifle)
         {
-            Instantiate(pistolBulletPrefab, transform.position, transform.rotation);
+            switch (inventory.selectedItem.itemData.ammoType)
+            {
+                case AmmoType.LightAmmo:
+                    if(currentLightAmmo != 0)
+                    {
+                        if (currentLightAmmo < (inventory.selectedItem.itemData.magSize - inventory.selectedItem.itemData.loadedAmmo))
+                        {
+                            StartCoroutine(inventory.selectedItem.itemData.Reload(currentLightAmmo));
+                        }
+                        else
+                        {
+                            StartCoroutine(inventory.selectedItem.itemData.Reload(inventory.selectedItem.itemData.magSize - inventory.selectedItem.itemData.loadedAmmo));
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Can't reload, no light ammo");
+                    }
+                    
+                    break;
+                case AmmoType.HeavyAmmo:
+                    if (currentHeavyAmmo != 0)
+                    {
+                        if (currentHeavyAmmo < (inventory.selectedItem.itemData.magSize - inventory.selectedItem.itemData.loadedAmmo))
+                        {
+                            StartCoroutine(inventory.selectedItem.itemData.Reload(currentHeavyAmmo));
+                        }
+                        else
+                        {
+                            StartCoroutine(inventory.selectedItem.itemData.Reload(inventory.selectedItem.itemData.magSize - inventory.selectedItem.itemData.loadedAmmo));
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Can't reload, no heavy ammo");
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
-        else
-        {
-            Instantiate(rifleBulletPrefab, transform.position, transform.rotation);
-        }
-        Debug.Log("Fire Weapon: " + itemType);
     }
 
     private void meleeAttack()
@@ -364,7 +466,7 @@ public class Player : MonoBehaviour
                         
                     }
                 }
-
+                hit.transform.GetComponent<BaseEnemy>().TakeDamage(inventory.selectedItem.itemData.damage);
                 Debug.Log("yep enemy hit");
             }
         }
@@ -423,9 +525,30 @@ public class Player : MonoBehaviour
         }
     }
 
-    
 
-    
+    IEnumerator Damaged()
+    {
+        this.GetComponent<MeshRenderer>().material = damaged;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = norm;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = damaged;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = norm;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = damaged;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = norm;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = damaged;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = norm;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = damaged;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = norm;
+    }
+
 
     public void SetStatsToBase()
     {
@@ -439,6 +562,9 @@ public class Player : MonoBehaviour
         ClothCount = baseData.cloth;
         MedsCount = baseData.meds;
         skillPoints = baseData.skillPoints;
+        currentLightAmmo = 0;
+        currentHeavyAmmo = 0;
+
         inventory.selectedItem = null;
         inventory.AddItem(new Item(baseData.initialItem));
     }
@@ -459,9 +585,9 @@ public class Player : MonoBehaviour
         playerSave.cloth = ClothCount;
         playerSave.meds = MedsCount;
         playerSave.skillPoints = skillPoints;
-        //playerSave.healthUpgradesLeft = healthUpgradesLeft;
-        //playerSave.dmgResistUpgradesLeft = dmgResistUpgradesLeft;
-        //playerSave.speedUpgradesLeft = speedUpgradesLeft;
+        playerSave.lightAmmo = currentLightAmmo;
+        playerSave.heavyAmmo = currentHeavyAmmo;
+        
 
         playerSave.invJsonList = inventory.SaveToJsonList();
 
@@ -486,9 +612,10 @@ public class Player : MonoBehaviour
             ClothCount = playerSave.cloth;
             MedsCount = playerSave.meds;
             skillPoints = playerSave.skillPoints;
-            //healthUpgradesLeft = playerSave.healthUpgradesLeft;
-            //dmgResistUpgradesLeft = playerSave.dmgResistUpgradesLeft;
-            //speedUpgradesLeft = playerSave.speedUpgradesLeft;
+
+            currentLightAmmo = playerSave.lightAmmo;
+            currentHeavyAmmo = playerSave.heavyAmmo;
+            
 
             inventory.LoadFromJsonList(playerSave.invJsonList);
         }
@@ -522,6 +649,9 @@ public class PlayerSave
     public int speedStat;
     public int scrap, cloth, meds;
     public int skillPoints;
+
+    public int lightAmmo;
+    public int heavyAmmo;
 
    // public int healthUpgradesLeft;
    // public int dmgResistUpgradesLeft;

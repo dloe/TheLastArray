@@ -46,7 +46,7 @@ public class InventoryUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!UI.Instance.PausedStatus)
+        if(!UI.Instance.PausedStatus && (inventory.selectedItem == null || !inventory.selectedItem.itemData.reloading))
         {
             if (Input.GetAxis(_zoomAxis) < 0)
             {
@@ -135,14 +135,14 @@ public class InventoryUI : MonoBehaviour
                 case ItemType.Pistol:
                     //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
                     equipedWeaponDashText.gameObject.SetActive(true);
-                    equipedWeaponAmmoText.text = inventory.selectedItem.itemData.magSize.ToString();
-                    //equipedWeaponReservesText.text = inventory.selectedItem.weaponReserves.ToString();
+                    equipedWeaponAmmoText.text = inventory.selectedItem.itemData.loadedAmmo.ToString();
+                    equipedWeaponReservesText.text = Player.Instance.currentLightAmmo.ToString();
                     break;
                 case ItemType.Rifle:
                     //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
                     equipedWeaponDashText.gameObject.SetActive(true);
-                    equipedWeaponAmmoText.text = inventory.selectedItem.itemData.magSize.ToString();
-                    //equipedWeaponReservesText.text = inventory.selectedItem.weaponReserves.ToString();
+                    equipedWeaponAmmoText.text = inventory.selectedItem.itemData.loadedAmmo.ToString();
+                    equipedWeaponReservesText.text = Player.Instance.currentHeavyAmmo.ToString();
                     break;
                 case ItemType.Heal:
                     equipedWeaponAmmoText.text = "";
