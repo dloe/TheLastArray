@@ -29,6 +29,7 @@ public class BaseEnemy : MonoBehaviour
 {
     public Material norm;
     public Material damaged;
+    public Material key;
 
     [Header("Base_Stats")]
 
@@ -125,7 +126,10 @@ public class BaseEnemy : MonoBehaviour
         poi = wanderPoint;
         _target = Player.Instance.gameObject;
         StartCoroutine(Tick());
-
+        if(isObjectiveEnemy)
+        {
+            this.GetComponent<MeshRenderer>().material = key;
+        }
 
     }
 
@@ -369,25 +373,52 @@ public class BaseEnemy : MonoBehaviour
     }
     IEnumerator Damaged()
     {
-        this.GetComponent<MeshRenderer>().material = damaged;
-        yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = norm;
-        yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = damaged;
-        yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = norm;
-        yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = damaged;
-        yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = norm;
-        yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = damaged;
-        yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = norm;
-        yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = damaged;
-        yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = norm;
+        if (!isObjectiveEnemy)
+        {
+            this.GetComponent<MeshRenderer>().material = damaged;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = norm;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = damaged;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = norm;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = damaged;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = norm;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = damaged;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = norm;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = damaged;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = norm;
+        }
+        if (isObjectiveEnemy)
+        {
+            this.GetComponent<MeshRenderer>().material = damaged;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = key;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = damaged;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = key;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = damaged;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = key;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = damaged;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = key;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = damaged;
+            yield return new WaitForSeconds(.1f);
+            this.GetComponent<MeshRenderer>().material = key;
+            yield return new WaitForSeconds(.1f);
+
+        }
     }
 
     void OnDeath()
