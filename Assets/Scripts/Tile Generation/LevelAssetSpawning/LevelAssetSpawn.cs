@@ -251,7 +251,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
                                     if(tile3.tileStatus == Tile.TileStatus.boss)
                                     {
-                                        Debug.Log("big tile has objectvie");
+                                        //Debug.Log("big tile has objectvie");
                                         obj = true;
                                     }
 
@@ -272,8 +272,8 @@ public class LevelAssetSpawn : MonoBehaviour
                                         }
                                     }
 
-
-                                    Destroy(tile3.presetTile.gameObject);
+                                    if(tile3.presetTile != null)
+                                        Destroy(tile3.presetTile.gameObject);
 
 
                                     tile3.checkFor4Some = true;

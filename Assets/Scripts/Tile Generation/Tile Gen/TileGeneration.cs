@@ -90,7 +90,7 @@ public class TileGeneration : MonoBehaviour
     [Header("List of Level Path Tiles")]
     public List<Tile> levelPath = new List<Tile>();
     //public List<Tile> inactiveRooms = new List<Tile>();
-    [HideInInspector]
+   // [HideInInspector]
     public List<Tile> _allActiveTiles = new List<Tile>();
 
     List<Tile> backtrackTempHistory = new List<Tile>();
