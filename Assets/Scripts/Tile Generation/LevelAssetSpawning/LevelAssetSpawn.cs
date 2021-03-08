@@ -171,27 +171,20 @@ public class LevelAssetSpawn : MonoBehaviour
                     }
                 }
             }
-            else if(myLocalLevel.objective == 2)
-            {
-                //make sure we can spawn 2 more objectives!
-                for (int objCount = 0; objCount < 2; objCount++)
-                {
-                    if (_possibleTileObjectivesInLevel.Count > 0)
-                    {
-                        //randomly pick an objective (or item?)
-                        int indexO = Random.Range(0, _possibleObjectives.Count);
-                        //  Debug.Log(indexO);
-                        GameObject objMulti = Objectives.Instance.SetObjectiveRef(2, _possibleObjectives[indexO]).gameObject;
-                        objMulti.transform.rotation = playerSpawn.transform.rotation;
-                        objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
-                        objectivesInLevel.Add(objMulti);
-                        _possibleItems.Remove(_possibleObjectives[indexO]);
-                        _possibleObjectives.Remove(_possibleObjectives[indexO]);
-
-                        //Debug.Log("Added Objective");
-                    }
-                }
-            }
+            
+        }
+        else if (myLocalLevel.objective == 1)
+        {
+            //spawn in enemy
+            Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, null);
+           // eObj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
+           // objectivesInLevel.Add(eObj);
+            _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
+            GameObject enemy = Instantiate(myLevelAsset.enemyPrefab.dozerEnemy, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform);
+            enemy.GetComponent<BaseEnemy>().isObjectiveEnemy = true;
+            enemy.name = "OBJECTIVE_ENEMY";
+            enemy.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
+            enemiesInLevel.Add(enemy);
         }
         //update Objectives object with objetive info
         //Debug.Log("activated objs");
@@ -651,10 +644,10 @@ public class LevelAssetSpawn : MonoBehaviour
                     break;
             }
         }
-        Debug.Log("Removing unused drops");
+        //Debug.Log("Removing unused drops");
         for(int lastItems = _possibleItems.Count - dontSpawnCount; lastItems < _possibleItems.Count; lastItems++)
         {
-            Debug.Log("Destroying " + _possibleItems[lastItems].name);
+            //Debug.Log("Destroying " + _possibleItems[lastItems].name);
             Destroy(_possibleItems[lastItems]);
         }
         //resources can either spawn at random or based on distance from any other existing resource

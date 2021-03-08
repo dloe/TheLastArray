@@ -8,7 +8,7 @@ using UnityEngine;
 public class TileGenerationInspector : Editor
 {
     TileGeneration myTileGeneration;
-    string showDebugPathActive = "Debug Path Active";
+    string showDebugPathActive = "Debug Path Inactive";
 
     private void Awake()
     {
@@ -21,12 +21,12 @@ public class TileGenerationInspector : Editor
         EditorGUILayout.LabelField("Show Level Path");
         
 
-        if(myTileGeneration.debugPathOn)
+        if(!myTileGeneration.debugPathOn)
         {
-            showDebugPathActive = "Debug Path Active";
+            showDebugPathActive = "Debug Path Inactive";
         }
         else
-            showDebugPathActive = "Debug Path Inactive";
+            showDebugPathActive = "Debug Path Active";
 
         if (GUILayout.Button(showDebugPathActive))
         {
@@ -122,10 +122,13 @@ public class TileGeneration : MonoBehaviour
 
     private void Awake()
     {
-        _lr = gameObject.AddComponent<LineRenderer>();
-        _lr.widthMultiplier = 0.5f;
-        // lineRenderer.positionCount = 20;
-        _lr = GetComponent<LineRenderer>();
+        if (debugPathOn)
+        {
+            _lr = gameObject.AddComponent<LineRenderer>();
+            _lr.widthMultiplier = 0.5f;
+            // lineRenderer.positionCount = 20;
+            _lr = GetComponent<LineRenderer>();
+        }
     }
 
 
@@ -143,10 +146,12 @@ public class TileGeneration : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(_startLine && debugPathOn)
+        if (_startLine && debugPathOn)
+        {
             SetLineRenderer();
 
-        _lr.enabled = debugPathOn;
+            _lr.enabled = debugPathOn;
+        }
     }
 
     void SetLineRenderer()
@@ -385,7 +390,8 @@ public class TileGeneration : MonoBehaviour
 
         //label path in scene from list
         //Debug.Log("Path Finished");
-        this.GetComponent<LineRenderer>().positionCount = levelPath.Count;
+        if(debugPathOn)
+            this.GetComponent<LineRenderer>().positionCount = levelPath.Count;
 
         //add random rooms to dungeon
         AddRandomRooms();
@@ -475,7 +481,8 @@ public class TileGeneration : MonoBehaviour
         _allActiveTiles[0].ShadePath();
         _allActiveTiles.Insert(0, tile.GetComponent<Tile>());
         levelPath.Insert(0, tile.GetComponent<Tile>());
-        _lr.positionCount = levelPath.Count;
+        if(debugPathOn)
+            _lr.positionCount = levelPath.Count;
         //myLevelAssetSpawn.playerSpawn = tile.GetComponent<Tile>().
     }
 
