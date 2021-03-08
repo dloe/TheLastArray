@@ -27,6 +27,9 @@ public enum enemyState
 
 public class BaseEnemy : MonoBehaviour
 {
+    public Material norm;
+    public Material damaged;
+
     [Header("Base_Stats")]
 
     public bool isObjectiveEnemy;
@@ -86,14 +89,23 @@ public class BaseEnemy : MonoBehaviour
     //rate at which the attack will come out
     public float attackSpeed;
 
+    float attackCD = 0;
+
+    //how far the attack will go
+    public float attackRange;
+
+    public float combatSpeed;
+
     //how close the enemy needs to be to attack the player
     public float attackDistance;
 
     // what is the enemy targting
     public GameObject _target;
 
+    public bool attacking;
+
     //is this enemy attacking
-    public bool attacking = false;
+    public bool readyToAttack = true;
 
     //how far the enemy needs to get away from its target to lose agro
     public float agroLoseDis;
@@ -105,8 +117,9 @@ public class BaseEnemy : MonoBehaviour
         _spawnPoint = transform.position;
         wanderPoint = _spawnPoint;
         poi = wanderPoint;
-        StartCoroutine(Tick());
         _target = Player.Instance.gameObject;
+        StartCoroutine(Tick());
+
 
     }
 
@@ -130,6 +143,7 @@ public class BaseEnemy : MonoBehaviour
     {
         BaseAttack();
         SetTarget();
+        StateChanger();
         yield return new WaitForSeconds(tickRate);
         StartCoroutine(Tick());
     }
@@ -147,11 +161,13 @@ public class BaseEnemy : MonoBehaviour
                 speed = baseSpeed;
                 break;
             case enemyState.attacking:
-                speed = baseSpeed;
+                speed = combatSpeed;
                 break;
-            
+
         }
         Vector3 delta = Vector3.zero;
+
+
 
         for (int i = 0; i < rays; i++)
         {
@@ -162,24 +178,98 @@ public class BaseEnemy : MonoBehaviour
             Ray ray = new Ray(this.transform.position, dir);
             RaycastHit hitInfo;
 
-            if (Physics.Raycast(ray, out hitInfo, avodinceRange))
+
+
+            if (Physics.Raycast(ray, out hitInfo, avodinceRange) && !attacking )
             { delta -= (1f / rays) * speed * dir; }
             else
             { delta += (1f / rays) * speed * dir; }
 
+
         }
 
-        this.transform.position += delta * Time.deltaTime;
+
+        switch (attackType)
+        {
+            case AttackType.none:
+                break;
+            case AttackType.melee:
+                if (myState != enemyState.attacking && readyToAttack == true)
+                {
+                    this.transform.position += delta * Time.deltaTime;
+                }
+                
+                else if (myState == enemyState.attacking && readyToAttack == true)
+                {
+                    this.transform.position += delta * Time.deltaTime;
+                    attacking = true;
+                }
+                else if (myState == enemyState.attacking && readyToAttack == false)
+                {
+                    this.transform.position -= delta * Time.deltaTime;
+                }
+                break;
+            case AttackType.ranged:
+                
+                break;
+                
+
+        }
+
+
         this.transform.LookAt(poi);
+    }
+
+    void StateChanger()
+    {
+        if (Vector3.Distance(this.transform.position, _spawnPoint) < wanderRadius && agro == false)
+        {
+            myState = enemyState.wandering;
+        }
+        if (Vector3.Distance(this.transform.position, _target.transform.position) <= attackDistance)
+        {
+            myState = enemyState.attacking;
+        }
+        if (Vector3.Distance(this.transform.position, _target.transform.position) >= attackDistance  && agro == true)
+        {
+            myState = enemyState.following;
+            attacking = false;
+        }
     }
 
     void BaseAttack()
     {
-        
+        RaycastHit attackRay;
         if (attackType == AttackType.melee)
-        { }
+        {
+            if (Physics.BoxCast(this.transform.position, Vector3.zero, transform.forward, out attackRay, transform.rotation, attackRange))
+            {
+                if (LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Player" && attackCD <= 0 && myState == enemyState.attacking)
+                {
+                    attacking = false;
+                    readyToAttack = false;
+                    attackCD = attackSpeed;
+                    StartCoroutine(CoolDown());
+                    attackRay.transform.GetComponent<Player>().TakeDamage(baseAttack);
+                    
+                    //Debug.LogError("HitPlayer");
+                }
+            }
+
+        }
         else if (attackType == AttackType.ranged)
-        { }
+        {
+
+        }
+    }
+    IEnumerator CoolDown()
+    {
+        Debug.Log("cooling down");
+        yield return new WaitForSeconds(attackSpeed);
+        Debug.Log("ready to attack");
+        attackCD = 0;
+        readyToAttack = true;
+
     }
 
     /// <summary>
@@ -196,7 +286,7 @@ public class BaseEnemy : MonoBehaviour
         else if (Vector3.Distance(transform.position, _target.gameObject.transform.position) >= agroLoseDis)
         {
             agro = false;
-            
+
         }
     }
 
@@ -215,27 +305,23 @@ public class BaseEnemy : MonoBehaviour
     {
 
     }
-    
+
     float x;
     float z;
-    
+
     bool start = false;
     void WanderingPoint()
     {
-        
-        
+
+
         if (start == false)
         {
             x = Random.Range(-1f, 1f);
             z = Random.Range(-1f, 1f);
-            print(x);
-            print(z);
+
             start = true;
         }
-        if (Vector3.Distance(this.transform.position, _spawnPoint) < wanderRadius && agro == false)
-        {
-            myState = enemyState.wandering;  
-        }
+
         if (Vector3.Distance(wanderPoint, _spawnPoint) >= wanderRadius)
         {
             ChangeDirW();
@@ -246,6 +332,34 @@ public class BaseEnemy : MonoBehaviour
     {
         x = -x;
         z = -z;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        baseHealth -= damage;
+        StartCoroutine(Damaged());
+    }
+    IEnumerator Damaged()
+    {
+        this.GetComponent<MeshRenderer>().material = damaged;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = norm;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = damaged;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = norm;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = damaged;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = norm;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = damaged;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = norm;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = damaged;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = norm;
     }
 
     void OnDeath()
@@ -277,13 +391,16 @@ public class BaseEnemy : MonoBehaviour
         Gizmos.DrawWireSphere(_spawnPoint, wanderRadius);
 
         //Gizmos.color = Color.blue;
-       // Gizmos.DrawLine(transform.position, _spawnPoint);
+        // Gizmos.DrawLine(transform.position, _spawnPoint);
 
 
         if (agro)
         {
             Gizmos.color = Color.red;
             Gizmos.DrawLine(transform.position, _target.transform.position);
+
+            Gizmos.color = Color.black;
+            Gizmos.DrawWireSphere(_target.transform.position, attackDistance);
         }
 
         Gizmos.color = Color.black;
@@ -299,6 +416,7 @@ public class BaseEnemy : MonoBehaviour
 
 
     //Old functions ignore
+    /*
     void MakePath()// old
     {
         /*
@@ -308,7 +426,7 @@ public class BaseEnemy : MonoBehaviour
         {
             avoidence += g.transform.position;
         }
-        */
+        
     }
 
     void CheckSurondings()
@@ -328,7 +446,7 @@ public class BaseEnemy : MonoBehaviour
 
         }
 
-        */
+        
 
     }
 
@@ -340,7 +458,7 @@ public class BaseEnemy : MonoBehaviour
         pointToFollow = poi + offSet;
         transform.Translate(Vector3.right * Time.deltaTime * Mathf.Sin(Time.time * Mathf.PI), Space.World);
         transform.position = Vector3.MoveTowards(transform.position, pointToFollow, speed * 4 * Time.deltaTime);
-        */
+        
     }
 
     void oldUpdate()
@@ -371,7 +489,7 @@ public class BaseEnemy : MonoBehaviour
             phase = false;
             Move(_spawnPoint, disToSpawn, wonderRadius, wanderSpeed, angleToSpawn, _timer);
         }
-        */
+        
     }
 
     private void Move(Vector3 poi, float disToPoi, float radi, float rotationSpeed, float angleBetweenObjects, float timer)
@@ -410,7 +528,9 @@ public class BaseEnemy : MonoBehaviour
 
             Wander(poi, rotationSpeed, radi, angleBetweenObjects, timeTemp);
         }
-        */
+        
     }
+    */
+
 
 }
