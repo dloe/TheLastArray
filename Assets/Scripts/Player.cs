@@ -147,7 +147,7 @@ public class Player : MonoBehaviour
 
     Vector3 moveDir;
     Vector3 lookDir;
-    Plane rayPlane = new Plane(Vector3.up, 0);
+    Plane rayPlane = new Plane(Vector3.up, 1);
 
 
     private void Awake()

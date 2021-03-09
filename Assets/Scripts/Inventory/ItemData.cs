@@ -67,7 +67,7 @@ public class ItemData : ScriptableObject
         {
             reloading = true;
             Debug.Log("Reloading...");
-            yield return new WaitForSeconds(reloadTime);
+            yield return new WaitForSeconds((reloadTime/magSize) * amountToReload);
             Debug.Log("Reloaded");
             loadedAmmo += amountToReload;
             switch (ammoType)
