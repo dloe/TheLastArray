@@ -13,28 +13,54 @@ public class AmmoPickup : Activatable
     {
         ammoType = (AmmoType)Random.Range(0, 2);
         amountToAdd = Random.Range(1, 6);
-        switch (ammoType)
-        {
-            case AmmoType.LightAmmo:
-                displayText.text = "Light Ammo (" + amountToAdd + ")" ;
-                break;
-            case AmmoType.HeavyAmmo:
-                displayText.text = "Heavy Ammo (" + amountToAdd + ")";
-                break;
-            default:
-                break;
-        }
+        RefreshText();
     }
 
     public override void Activate()
     {
+        
         switch (ammoType)
         {
             case AmmoType.LightAmmo:
-                Player.Instance.currentLightAmmo += amountToAdd;
+                if(Player.Instance.currentLightAmmo < Player.Instance.maxLightAmmo)
+                {
+                    if(Player.Instance.maxLightAmmo - Player.Instance.currentLightAmmo >= amountToAdd)
+                    {
+                        Player.Instance.currentLightAmmo += amountToAdd;
+                        Destroy(gameObject);
+                    }
+                    else
+                    {
+                        amountToAdd -= Player.Instance.maxLightAmmo - Player.Instance.currentLightAmmo;
+                        Player.Instance.currentLightAmmo += Player.Instance.maxLightAmmo - Player.Instance.currentLightAmmo; 
+                    }
+                    RefreshText();
+                }
+                else
+                {
+                    Debug.Log("Light Ammo is Full");
+                }
+                
                 break;
             case AmmoType.HeavyAmmo:
-                Player.Instance.currentHeavyAmmo += amountToAdd;
+                if (Player.Instance.currentHeavyAmmo < Player.Instance.maxHeavyAmmo)
+                {
+                    if (Player.Instance.maxHeavyAmmo - Player.Instance.currentHeavyAmmo >= amountToAdd)
+                    {
+                        Player.Instance.currentHeavyAmmo += amountToAdd;
+                        Destroy(gameObject);
+                    }
+                    else
+                    {
+                        amountToAdd -= Player.Instance.maxHeavyAmmo - Player.Instance.currentHeavyAmmo;
+                        Player.Instance.currentHeavyAmmo += Player.Instance.maxHeavyAmmo - Player.Instance.currentHeavyAmmo;
+                    }
+                    RefreshText();
+                }
+                else
+                {
+                    Debug.Log("Heavy Ammo is Full");
+                }
                 break;
             default:
                 break;
@@ -42,6 +68,21 @@ public class AmmoPickup : Activatable
 
         InventoryUI.Instance.RefreshUI();
 
-        Destroy(gameObject);
+        
+    }
+
+    public void RefreshText()
+    {
+        switch (ammoType)
+        {
+            case AmmoType.LightAmmo:
+                displayText.text = "Light Ammo (" + amountToAdd + ")";
+                break;
+            case AmmoType.HeavyAmmo:
+                displayText.text = "Heavy Ammo (" + amountToAdd + ")";
+                break;
+            default:
+                break;
+        }
     }
 }

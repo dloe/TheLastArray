@@ -47,7 +47,7 @@ public class InventoryUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!UI.Instance.PausedStatus && (inventory.selectedItem == null || !inventory.selectedItem.itemData.reloading))
+        if(!UI.Instance.PausedStatus && (inventory.selectedItem == null || !inventory.selectedItem.itemData.reloading) && (!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy))
         {
             if (Input.GetAxis(_zoomAxis) < 0)
             {

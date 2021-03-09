@@ -21,11 +21,6 @@ public class Player : MonoBehaviour
     //inventory of the player
     public Inventory inventory = new Inventory();
     
-    //Item that Player is currently able to grab
-    [Header("Current Grabbable Item")]
-    public WorldItem itemToGrab;
-    [Header("Current Usable Crafting Table")]
-    public CraftingTable craftingTableToUse;
     [Header("Activatable / Interactable To Use")]
     public Activatable thingToActivate;
 
@@ -228,7 +223,7 @@ public class Player : MonoBehaviour
             }
 
             //drops currently selected item on the ground at the player's feet
-            if (Input.GetKeyDown(KeyCode.Q) && inventory.selectedItem != null && !itemToGrab)
+            if (Input.GetKeyDown(KeyCode.Q) && inventory.selectedItem != null && !thingToActivate)
             {
                 inventory.DropItem();
             }
