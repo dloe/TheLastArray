@@ -47,6 +47,7 @@ public class CraftingOption : MonoBehaviour
                     break;
             }
             amountDropDown.AddOptions(optionNums);
+            amountDropDown.value = 1;
             AmountChanged(amountDropDown.value);
             
         }
