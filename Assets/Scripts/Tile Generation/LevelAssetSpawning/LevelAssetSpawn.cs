@@ -108,6 +108,9 @@ public class LevelAssetSpawn : MonoBehaviour
                 myLocalLevel.myPlayer = play.transform.GetChild(0).gameObject.GetComponent<Player>();
             }
         }
+
+        
+
         myLocalLevel.ChooseObjective();
         //ACTIVATE OBJECTIVES
         ActivateObjectives();
@@ -207,23 +210,23 @@ public class LevelAssetSpawn : MonoBehaviour
         {
             Tile t;
             //Debug.Log("Starting at tile: " + tile.posOnGrid.x + " " + tile.posOnGrid.y);
-            if (tile.upNeighbor != null && tile.upNeighbor.tileStatus != Tile.TileStatus.nullRoom && !tile.upNeighbor.checkFor4Some)
+            if (tile.upNeighbor != null && tile.upNeighbor.tileStatus != Tile.TileStatus.nullRoom && !tile.upNeighbor.checkFor4Some && tile.upNeighbor.tileStatus != Tile.TileStatus.secretRoom)
             {
 
                 t = tile.upNeighbor;
                 _tArray[0] = t;
                 //Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
-                if (t.rightNeighbor != null && t.rightNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.rightNeighbor.checkFor4Some)
+                if (t.rightNeighbor != null && t.rightNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.rightNeighbor.checkFor4Some && t.rightNeighbor.tileStatus != Tile.TileStatus.secretRoom)
                 {
                     t = t.rightNeighbor;
                     _tArray[1] = t;
                     //Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
-                    if (t.downNeighbor != null && t.downNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.downNeighbor.checkFor4Some)
+                    if (t.downNeighbor != null && t.downNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.downNeighbor.checkFor4Some && t.downNeighbor.tileStatus != Tile.TileStatus.secretRoom)
                     {
                         t = t.downNeighbor;
                         _tArray[2] = t;
                         // Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
-                        if (t.leftNeighbor != null && t.leftNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.leftNeighbor.checkFor4Some)
+                        if (t.leftNeighbor != null && t.leftNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.leftNeighbor.checkFor4Some && t.leftNeighbor.tileStatus != Tile.TileStatus.secretRoom)
                         {
                             //all of these tiles can be linked
                             t = t.leftNeighbor;

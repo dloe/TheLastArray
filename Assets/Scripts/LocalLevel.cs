@@ -4,6 +4,14 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
+public enum levelTier
+{
+    level1,
+    level2,
+    level3,
+    level4
+}
+
 public class LocalLevel : MonoBehaviour
 {
     /// <summary>
@@ -14,7 +22,7 @@ public class LocalLevel : MonoBehaviour
     //holds objective info and game loop info
     //consider putting ui here maybe
     TileGeneration _myTileGen;
-
+    [Header("Player Data Obj")]
     public PlayerData myPlayerData;
     [HideInInspector]
     public List<int> _posObjectives;
@@ -37,6 +45,9 @@ public class LocalLevel : MonoBehaviour
     [Header("Local Player Script")]
     public Player myPlayer;
 
+    //determines difficulty of level
+    [Header("Tier of Level")]
+    public levelTier thisLevelTier;
     //public Text objectiveText;
     //private int objectiveCountStart = 0;
     public static LocalLevel Instance;
