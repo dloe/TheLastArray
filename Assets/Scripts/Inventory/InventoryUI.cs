@@ -120,6 +120,9 @@ public class InventoryUI : MonoBehaviour
         SelectSlot(selectedItemIndex);
         inventory.Equip(selectedItemIndex);
 
+        
+
+
         //DYLAN WAS HERE
         //for currently equiped item text
         if (inventory.selectedItem != null)
@@ -130,35 +133,59 @@ public class InventoryUI : MonoBehaviour
                 case ItemType.MeleeWeapon:
                     //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
                     equipedWeaponAmmoText.text = "";
-                    //equipedWeaponReservesText.text = "";
                     equipedWeaponDashText.gameObject.SetActive(false);
-                    currentAmmoName.gameObject.SetActive(false);
-                    equipedWeaponReservesText.gameObject.SetActive(false);
+                    equipedWeaponReservesText.gameObject.SetActive(true);
+                    currentAmmoName.gameObject.SetActive(true);
+                    if(inventory.selectedItem.itemData.hasDurability)
+                    {
+                        equipedWeaponReservesText.text = inventory.selectedItem.itemData.durability.ToString();
+                    }
+                    else
+                    {
+                        equipedWeaponReservesText.text = "∞";
+                    }
+                    currentAmmoName.text = "Durability Left";
+                    
+                    Player.Instance.SetMeleeVisualActive(true);
+                    
                     break;
                 case ItemType.Pistol:
                     //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
                     equipedWeaponDashText.gameObject.SetActive(true);
+
                     currentAmmoName.gameObject.SetActive(true);
                     equipedWeaponReservesText.gameObject.SetActive(true);
                     equipedWeaponAmmoText.text = inventory.selectedItem.itemData.loadedAmmo.ToString();
                     equipedWeaponReservesText.text = Player.Instance.currentLightAmmo.ToString();
                     currentAmmoName.text = inventory.selectedItem.itemData.ammoType.ToString();
+
+                    Player.Instance.SetMeleeVisualActive(false);
                     break;
                 case ItemType.Rifle:
                     //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
                     equipedWeaponDashText.gameObject.SetActive(true);
                     currentAmmoName.gameObject.SetActive(true);
                     equipedWeaponReservesText.gameObject.SetActive(true);
+
                     equipedWeaponAmmoText.text = inventory.selectedItem.itemData.loadedAmmo.ToString();
                     equipedWeaponReservesText.text = Player.Instance.currentHeavyAmmo.ToString();
                     currentAmmoName.text = inventory.selectedItem.itemData.ammoType.ToString();
+
+                    Player.Instance.SetMeleeVisualActive(false);
+
                     break;
                 case ItemType.Heal:
                     equipedWeaponAmmoText.text = "";
                    // equipedWeaponReservesText.text = "";
                     equipedWeaponDashText.gameObject.SetActive(false);
-                    currentAmmoName.gameObject.SetActive(false);
-                    equipedWeaponReservesText.gameObject.SetActive(false);
+                    Player.Instance.SetMeleeVisualActive(false);
+
+                    equipedWeaponReservesText.gameObject.SetActive(true);
+                    currentAmmoName.gameObject.SetActive(true);
+
+                    currentAmmoName.text = "Heals";
+                    equipedWeaponReservesText.text = inventory.selectedItem.itemData.amountToHeal.ToString();
+
                     break;
                 default:
                     break;
@@ -168,9 +195,10 @@ public class InventoryUI : MonoBehaviour
         {
             equipedItemLabelText.text = "None";
             equipedWeaponAmmoText.text = "";
-           //equipedWeaponReservesText.text = "";
+            equipedWeaponReservesText.text = "";
             equipedWeaponDashText.gameObject.SetActive(false);
             currentAmmoName.gameObject.SetActive(false);
+            Player.Instance.SetMeleeVisualActive(false);
         }
     }
 

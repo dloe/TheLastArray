@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CraftingTable : MonoBehaviour
+public class CraftingTable : Activatable
 {
     public GameObject Menu;
     public GameObject optionParent;
@@ -64,6 +64,18 @@ public class CraftingTable : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape) && !UI.Instance.PausedStatus && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
         {
             DeactivateMenu();
+        }
+    }
+
+    public override void Activate()
+    {
+        if (Menu.activeInHierarchy)
+        {
+            DeactivateMenu();
+        }
+        else
+        {
+            ActivateMenu();
         }
     }
 

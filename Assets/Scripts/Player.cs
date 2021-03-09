@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     public static Player Instance;
 
     public PlayerData baseData;
+
+    public GameObject meleeVisual;
     
     [Header("Prefabs for Bullet")]
     public GameObject pistolBulletPrefab;
@@ -22,10 +24,9 @@ public class Player : MonoBehaviour
     //Item that Player is currently able to grab
     [Header("Current Grabbable Item")]
     public WorldItem itemToGrab;
-    [Header("Current Grabbable Resource")]
-    public Resource resourceToGrab;
     [Header("Current Usable Crafting Table")]
     public CraftingTable craftingTableToUse;
+    [Header("Activatable / Interactable To Use")]
     public Activatable thingToActivate;
 
     public int speedStat = 5;
@@ -193,51 +194,12 @@ public class Player : MonoBehaviour
             //if there is a grabbable item and the inventory is not full, then E picks up item
             if (Input.GetKeyDown(KeyCode.E) && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
             {
-                if (itemToGrab)
-                {
-                    if (itemToGrab.worldItemData.itemType == ItemType.Gasoline)
-                    {
-                        Objectives.Instance.SendCompletedMessage(Condition.GetGasCan);
-                        Destroy(itemToGrab.gameObject);
-                        itemToGrab = null;
-                    }
-                    else if(!inventory.IsFull())
-                    {
-                        inventory.AddItem(new Item(itemToGrab.worldItemData));
-                        Destroy(itemToGrab.gameObject);
-                        itemToGrab = null;
-                    }
-                    
-                }
-                else if (resourceToGrab)
-                {
-                    switch (resourceToGrab.resourceType)
-                    {
-                        case Resource.ResourceType.scrap:
-                            ScrapCount += resourceToGrab.amountToAdd;
-                            break;
-                        case Resource.ResourceType.meds:
-                            MedsCount += resourceToGrab.amountToAdd;
-                            break;
-                        case Resource.ResourceType.cloth:
-                            ClothCount += resourceToGrab.amountToAdd;
-                            break;
-                        default:
-                            break;
-                    }
-                    Debug.Log("Resource Picked Up: " + resourceToGrab.amountToAdd + " " + resourceToGrab.resourceType);
-                    Destroy(resourceToGrab.gameObject);
-                    resourceToGrab = null;
-                }
-                else if(thingToActivate)
+                if(thingToActivate)
                 {
                     thingToActivate.Activate();
                     
                 }
-                else if(craftingTableToUse)
-                {
-                    craftingTableToUse.ActivateMenu();
-                }
+                
             }
 
             //uses currently selected item
@@ -311,9 +273,21 @@ public class Player : MonoBehaviour
 
         }
 
+        //if(meleeVisual.activeInHierarchy)
+        //{
+        //    meleeVisual.transform.position = _mainTransform.position + (_mainTransform.forward * inventory.selectedItem.itemData.meleeRange);
+        //}
+
     }
 
-
+    public void SetMeleeVisualActive(bool active)
+    {
+        if(active)
+        {
+            meleeVisual.transform.position = _mainTransform.position + (_mainTransform.forward * inventory.selectedItem.itemData.meleeRange);
+        }
+        meleeVisual.SetActive(active);
+    }
 
     /// <summary>
     /// Moves Player Based On WASD
@@ -471,6 +445,7 @@ public class Player : MonoBehaviour
                             }
 
                         }
+                        InventoryUI.Instance.RefreshUI();
                     }
                     hit.transform.GetComponent<BaseEnemy>().TakeDamage(inventory.selectedItem.itemData.damage);
                     Debug.Log("yep enemy hit");
@@ -494,19 +469,7 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Item" )
-        {
-            itemToGrab = other.GetComponent<WorldItem>();
-        }
-        else if(other.tag == "Resource")
-        {
-            resourceToGrab = other.GetComponent<Resource>();
-        }
-        else if(other.tag == "Crafting")
-        {
-            craftingTableToUse = other.GetComponent<CraftingTable>();
-        }
-        else if(other.tag == "Activatable")
+        if(other.TryGetComponent(out thingToActivate))
         {
             Debug.Log("cock");
             thingToActivate = other.GetComponent<Activatable>();
@@ -515,23 +478,11 @@ public class Player : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.tag == "Item" && itemToGrab && other.gameObject == itemToGrab.gameObject)
-        {
-            itemToGrab = null;
-        }
-        else if(other.tag == "Resource" && resourceToGrab && other.gameObject == resourceToGrab.gameObject)
-        {
-            resourceToGrab = null;
-        }
-        else if (other.tag == "Activatable" && thingToActivate && other.gameObject == thingToActivate.gameObject)
+        if (thingToActivate && other.gameObject == thingToActivate.gameObject)
         {
             thingToActivate = null;
         }
-        else if(other.tag == "Crafting")
-        {
-            craftingTableToUse.DeactivateMenu();
-            craftingTableToUse = null;
-        }
+
     }
 
 
