@@ -150,8 +150,8 @@ public class LevelAssetSpawn : MonoBehaviour
             //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
             //if objective is certain types (ie type 3), choose more objectives and add to list
 
-            if (myLocalLevel.objective == 3 )
-            {
+          //  if (myLocalLevel.objective == 3 )
+            //{
                 //make sure we can spawn 2 more objectives!
                 for (int objCount = 0; objCount < 2; objCount++)
                 {
@@ -160,7 +160,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         //randomly pick an objective (or item?)
                         int indexO = Random.Range(0, _possibleObjectives.Count);
                       //  Debug.Log(indexO);
-                        GameObject objMulti = Objectives.Instance.SetObjectiveRef(3, _possibleObjectives[indexO]).gameObject;
+                        GameObject objMulti = Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, _possibleObjectives[indexO]).gameObject;
                         objMulti.transform.rotation = playerSpawn.transform.rotation;
                         objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
                         objectivesInLevel.Add(objMulti);
@@ -170,28 +170,21 @@ public class LevelAssetSpawn : MonoBehaviour
                         //Debug.Log("Added Objective");
                     }
                 }
-            }
-            else if(myLocalLevel.objective == 2)
-            {
-                //make sure we can spawn 2 more objectives!
-                for (int objCount = 0; objCount < 2; objCount++)
-                {
-                    if (_possibleTileObjectivesInLevel.Count > 0)
-                    {
-                        //randomly pick an objective (or item?)
-                        int indexO = Random.Range(0, _possibleObjectives.Count);
-                        //  Debug.Log(indexO);
-                        GameObject objMulti = Objectives.Instance.SetObjectiveRef(2, _possibleObjectives[indexO]).gameObject;
-                        objMulti.transform.rotation = playerSpawn.transform.rotation;
-                        objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
-                        objectivesInLevel.Add(objMulti);
-                        _possibleItems.Remove(_possibleObjectives[indexO]);
-                        _possibleObjectives.Remove(_possibleObjectives[indexO]);
-
-                        //Debug.Log("Added Objective");
-                    }
-                }
-            }
+           // }
+            
+        }
+        else if (myLocalLevel.objective == 1)
+        {
+            //spawn in enemy
+            Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, null);
+           // eObj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
+           // objectivesInLevel.Add(eObj);
+            _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
+            GameObject enemy = Instantiate(myLevelAsset.enemyPrefab.dozerEnemy, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform);
+            enemy.GetComponent<BaseEnemy>().isObjectiveEnemy = true;
+            enemy.name = "OBJECTIVE_ENEMY";
+            enemy.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
+            enemiesInLevel.Add(enemy);
         }
         //update Objectives object with objetive info
         //Debug.Log("activated objs");
@@ -258,7 +251,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
                                     if(tile3.tileStatus == Tile.TileStatus.boss)
                                     {
-                                        Debug.Log("big tile has objectvie");
+                                        //Debug.Log("big tile has objectvie");
                                         obj = true;
                                     }
 
@@ -279,8 +272,8 @@ public class LevelAssetSpawn : MonoBehaviour
                                         }
                                     }
 
-
-                                    Destroy(tile3.presetTile.gameObject);
+                                    if(tile3.presetTile != null)
+                                        Destroy(tile3.presetTile.gameObject);
 
 
                                     tile3.checkFor4Some = true;
@@ -591,8 +584,8 @@ public class LevelAssetSpawn : MonoBehaviour
                     break;
                 case ObjectWeightType.Item:
                     //item = 55
-                    //resource = 45
-                    //weapon = 0
+                    //resource = 35
+                    //weapon = 10
                     if (Random.value > 0.45)
                     {
                         int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
@@ -601,7 +594,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         Destroy(_possibleItems[pItemC]);
                         itemsInLevelList.Add(item);
                     }
-                    else //if (Random.value > 0.65)
+                    else if (Random.value > 0.65)
                     {
                         int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
                         GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
@@ -609,11 +602,19 @@ public class LevelAssetSpawn : MonoBehaviour
                         Destroy(_possibleItems[pItemC]);
                         resourcesInLevelList.Add(resource);
                     }
+                    else
+                    {
+                        int wIndex = Random.Range(0, myLevelAsset.weaponList.Count);
+                        GameObject weapon = Instantiate(myLevelAsset.weaponList[wIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation); //_possibleItems[pItemC].transform.rotation);
+                        weapon.transform.parent = _possibleItems[pItemC].transform.parent;
+                        Destroy(_possibleItems[pItemC]);
+                        weaponsInLevelList.Add(weapon);
+                    }
                     break;
                 case ObjectWeightType.Resource:
                     //resource = 80
-                    //item = 20
-                    //weapon = 0
+                    //item = 30
+                    //weapon = 10
                     if (Random.value > 0.20)
                     {
                         int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
@@ -622,7 +623,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         Destroy(_possibleItems[pItemC]);
                         resourcesInLevelList.Add(resource);
                     }
-                    else //if (Random.value > 0.80)
+                    else if (Random.value > 0.60)
                     {
                         int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
                         GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
@@ -630,15 +631,23 @@ public class LevelAssetSpawn : MonoBehaviour
                         Destroy(_possibleItems[pItemC]);
                         itemsInLevelList.Add(item);
                     }
+                    else
+                    {
+                        int wIndex = Random.Range(0, myLevelAsset.weaponList.Count);
+                        GameObject weapon = Instantiate(myLevelAsset.weaponList[wIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation); //_possibleItems[pItemC].transform.rotation);
+                        weapon.transform.parent = _possibleItems[pItemC].transform.parent;
+                        Destroy(_possibleItems[pItemC]);
+                        weaponsInLevelList.Add(weapon);
+                    }
                     break;
                 default:
                     break;
             }
         }
-        Debug.Log("Removing unused drops");
+        //Debug.Log("Removing unused drops");
         for(int lastItems = _possibleItems.Count - dontSpawnCount; lastItems < _possibleItems.Count; lastItems++)
         {
-            Debug.Log("Destroying " + _possibleItems[lastItems].name);
+            //Debug.Log("Destroying " + _possibleItems[lastItems].name);
             Destroy(_possibleItems[lastItems]);
         }
         //resources can either spawn at random or based on distance from any other existing resource

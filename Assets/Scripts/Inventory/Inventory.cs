@@ -4,12 +4,13 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using UnityEngine;
 
-[System.Serializable]
+
 public class Inventory
 {
     [SerializeField]
     private List<Item> itemList;
 
+    [HideInInspector]
     public Item selectedItem;
 
     public int Count
@@ -68,25 +69,62 @@ public class Inventory
     public void AddItem(Item item)
     {
         itemList.Add(item);
-        InventoryUI.Instance.RefreshUI();
+
+        if(InventoryUI.Instance)
+        {
+            InventoryUI.Instance.RefreshUI();
+        }
+        else
+        {
+            Debug.LogWarning("Warning, Inventory UI was not found");
+        }
     }
 
     public void AddItem(ItemData itemData)
     {
         itemList.Add(new Item(itemData));
-        InventoryUI.Instance.RefreshUI();
+        if (InventoryUI.Instance)
+        {
+            InventoryUI.Instance.RefreshUI();
+        }
+        else
+        {
+            Debug.LogWarning("Warning, Inventory UI was not found");
+        }
     }
+
+    public void AddItemNoUI(ItemData itemData)
+    {
+        itemList.Add(new Item(itemData));
+
+    }
+
+
 
     public void RemoveItem(Item item)
     {
         itemList.Remove(item);
-        InventoryUI.Instance.RefreshUI();
+        if (InventoryUI.Instance)
+        {
+            InventoryUI.Instance.RefreshUI();
+        }
+        else
+        {
+            Debug.LogWarning("Warning, Inventory UI was not found");
+        }
     }
 
     public void RemoveItem(ItemData itemData)
     {
         itemList.Remove(new Item(itemData));
-        InventoryUI.Instance.RefreshUI();
+        if (InventoryUI.Instance)
+        {
+            InventoryUI.Instance.RefreshUI();
+        }
+        else
+        {
+            Debug.LogWarning("Warning, Inventory UI was not found");
+        }
     }
 
     public void Clear()
@@ -176,7 +214,7 @@ public class Inventory
             itemData = ScriptableObject.CreateInstance<ItemData>();
             itemSave.LoadToItemData(itemData);
 
-            AddItem(new Item(itemData));
+            AddItemNoUI(itemData);
         }
     }
 }

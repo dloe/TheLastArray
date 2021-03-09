@@ -53,7 +53,7 @@ public class LocalLevel : MonoBehaviour
 
         //assign tileGen obj
         _myTileGen = FindObjectOfType<TileGeneration>();
-        //number of objectives
+        //number of objectives - REMOVED NUMBER 2 WILL READD LATER
         _posObjectives = new List<int> { 1, 2, 3 };
         //LevelFadeIn();
         StartFadeIn();

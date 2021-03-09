@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     public static Player Instance;
 
     public PlayerData baseData;
+
+    public GameObject meleeVisual;
     
     [Header("Prefabs for Bullet")]
     public GameObject pistolBulletPrefab;
@@ -19,13 +21,7 @@ public class Player : MonoBehaviour
     //inventory of the player
     public Inventory inventory = new Inventory();
     
-    //Item that Player is currently able to grab
-    [Header("Current Grabbable Item")]
-    public WorldItem itemToGrab;
-    [Header("Current Grabbable Resource")]
-    public Resource resourceToGrab;
-    [Header("Current Usable Crafting Table")]
-    public CraftingTable craftingTableToUse;
+    [Header("Activatable / Interactable To Use")]
     public Activatable thingToActivate;
 
     public int speedStat = 5;
@@ -44,6 +40,15 @@ public class Player : MonoBehaviour
     public Vector3 meleeExtents = new Vector3();
     [Header("Melee Forward Detection Distance")]
     public float meleeDist = 1f;
+
+    #region Ammo
+    public int currentLightAmmo = 0;
+    public int currentHeavyAmmo = 0;
+    public int maxLightAmmo = 26;
+    public int maxHeavyAmmo = 14;
+
+    #endregion
+
 
 
     #region UI Variables
@@ -133,6 +138,8 @@ public class Player : MonoBehaviour
     public Text scrapText, medsText, clothText;
     #endregion
 
+    public Material damaged, norm;
+
 
     //transform of the player
     Transform _mainTransform;
@@ -140,7 +147,7 @@ public class Player : MonoBehaviour
 
     Vector3 moveDir;
     Vector3 lookDir;
-    Plane rayPlane = new Plane(Vector3.up, 0);
+    Plane rayPlane = new Plane(Vector3.up, 1);
 
 
     private void Awake()
@@ -182,51 +189,12 @@ public class Player : MonoBehaviour
             //if there is a grabbable item and the inventory is not full, then E picks up item
             if (Input.GetKeyDown(KeyCode.E) && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
             {
-                if (itemToGrab)
-                {
-                    if (itemToGrab.worldItemData.itemType == ItemType.Gasoline)
-                    {
-                        Objectives.Instance.SendCompletedMessage(Condition.GetGasCan);
-                        Destroy(itemToGrab.gameObject);
-                        itemToGrab = null;
-                    }
-                    else if(!inventory.IsFull())
-                    {
-                        inventory.AddItem(new Item(itemToGrab.worldItemData));
-                        Destroy(itemToGrab.gameObject);
-                        itemToGrab = null;
-                    }
-                    
-                }
-                else if (resourceToGrab)
-                {
-                    switch (resourceToGrab.resourceType)
-                    {
-                        case Resource.ResourceType.scrap:
-                            ScrapCount += resourceToGrab.amountToAdd;
-                            break;
-                        case Resource.ResourceType.meds:
-                            MedsCount += resourceToGrab.amountToAdd;
-                            break;
-                        case Resource.ResourceType.cloth:
-                            ClothCount += resourceToGrab.amountToAdd;
-                            break;
-                        default:
-                            break;
-                    }
-                    Debug.Log("Resource Picked Up: " + resourceToGrab.amountToAdd + " " + resourceToGrab.resourceType);
-                    Destroy(resourceToGrab.gameObject);
-                    resourceToGrab = null;
-                }
-                else if(thingToActivate)
+                if(thingToActivate)
                 {
                     thingToActivate.Activate();
                     
                 }
-                else if(craftingTableToUse)
-                {
-                    craftingTableToUse.ActivateMenu();
-                }
+                
             }
 
             //uses currently selected item
@@ -239,7 +207,7 @@ public class Player : MonoBehaviour
                         break;
                     case ItemType.Pistol:
                     case ItemType.Rifle:
-                        rangedAttack(inventory.selectedItem.itemData.itemType);
+                        rangedAttack();
                         break;
                     case ItemType.Heal:
                         if (Health < maxHealth)
@@ -255,39 +223,66 @@ public class Player : MonoBehaviour
             }
 
             //drops currently selected item on the ground at the player's feet
-            if (Input.GetKeyDown(KeyCode.Q) && inventory.selectedItem != null && !itemToGrab)
+            if (Input.GetKeyDown(KeyCode.Q) && inventory.selectedItem != null && !thingToActivate)
             {
                 inventory.DropItem();
             }
 
             //for testing damage and healing
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Input.GetKeyDown(KeyCode.Delete))
             {
                 TakeDamage(1);
             }
 
-           //if (Input.GetKey(KeyCode.RightShift))
-           //{
-           //    if (Input.GetKeyDown(KeyCode.Equals))
-           //    {
-           //        Debug.Log("Trying To Save...");
-           //        SavePlayer();
-           //    }
-           //}
-           //else if (Input.GetKeyDown(KeyCode.Minus))
-           //{
-           //    Debug.Log("Trying To Load...");
-           //    LoadPlayer();
-           //}
-            
-            
+            if(Input.GetKeyDown(KeyCode.R) && !inventory.selectedItem.itemData.reloading && inventory.selectedItem.itemData.loadedAmmo < inventory.selectedItem.itemData.magSize)
+            {
+
+                reload();
+            }
+
+            //if (Input.GetKey(KeyCode.RightShift))
+            //{
+            //    if (Input.GetKeyDown(KeyCode.Equals))
+            //    {
+            //        Debug.Log("Trying To Save...");
+            //        SavePlayer();
+            //    }
+            //}
+            //else if (Input.GetKeyDown(KeyCode.Minus))
+            //{
+            //    Debug.Log("Trying To Load...");
+            //    LoadPlayer();
+            //}
+
+            if (Input.GetKey(KeyCode.RightShift))
+            {
+                if (Input.GetKeyDown(KeyCode.Equals))
+                {
+                    Debug.Log("Reseting Player Save...");
+                    inventory.Clear();
+                    SetStatsToBase();
+                    SavePlayer();
+                }
+            }
 
 
         }
-        
+
+        //if(meleeVisual.activeInHierarchy)
+        //{
+        //    meleeVisual.transform.position = _mainTransform.position + (_mainTransform.forward * inventory.selectedItem.itemData.meleeRange);
+        //}
+
     }
 
-
+    public void SetMeleeVisualActive(bool active)
+    {
+        if(active)
+        {
+            meleeVisual.transform.position = _mainTransform.position + (_mainTransform.forward * inventory.selectedItem.itemData.meleeRange);
+        }
+        meleeVisual.SetActive(active);
+    }
 
     /// <summary>
     /// Moves Player Based On WASD
@@ -326,48 +321,133 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void rangedAttack(ItemType itemType)
+    private void rangedAttack()
     {
+        if(inventory.selectedItem.itemData.canAttack && !inventory.selectedItem.itemData.reloading)
+        {
+            
+            if (inventory.selectedItem.itemData.ammoType == AmmoType.LightAmmo )
+            {
+                if(inventory.selectedItem.itemData.loadedAmmo > 0)
+                {
+                    Bullet bullet;
+                    bullet = Instantiate(pistolBulletPrefab, transform.position, transform.rotation).GetComponent<Bullet>();
+                    bullet.damageToDeal = inventory.selectedItem.itemData.damage;
+                    StartCoroutine(inventory.selectedItem.itemData.CoolDown());
+                    inventory.selectedItem.itemData.loadedAmmo--;
+                    Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
+                }
+                else
+                {
+                    reload();
+                }
+                
+            }
+            else if (inventory.selectedItem.itemData.ammoType == AmmoType.HeavyAmmo )
+            {
+                if (inventory.selectedItem.itemData.loadedAmmo > 0)
+                {
+                    Bullet bullet;
+                    bullet = Instantiate(rifleBulletPrefab, transform.position, transform.rotation).GetComponent<Bullet>();
+                    bullet.damageToDeal = inventory.selectedItem.itemData.damage;
+                    StartCoroutine(inventory.selectedItem.itemData.CoolDown());
+                    inventory.selectedItem.itemData.loadedAmmo--;
+                    Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
+                }
+                else
+                {
+                    reload();
+                }
+            }
+            InventoryUI.Instance.RefreshUI();
+        }
         
-        if (itemType == ItemType.Pistol)
+    }
+
+    private void reload()
+    {
+        if(inventory.selectedItem.itemData.itemType == ItemType.Pistol || inventory.selectedItem.itemData.itemType == ItemType.Rifle)
         {
-            Instantiate(pistolBulletPrefab, transform.position, transform.rotation);
+            switch (inventory.selectedItem.itemData.ammoType)
+            {
+                case AmmoType.LightAmmo:
+                    if(currentLightAmmo != 0)
+                    {
+                        if (currentLightAmmo < (inventory.selectedItem.itemData.magSize - inventory.selectedItem.itemData.loadedAmmo))
+                        {
+                            StartCoroutine(inventory.selectedItem.itemData.Reload(currentLightAmmo));
+                        }
+                        else
+                        {
+                            StartCoroutine(inventory.selectedItem.itemData.Reload(inventory.selectedItem.itemData.magSize - inventory.selectedItem.itemData.loadedAmmo));
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Can't reload, no light ammo");
+                    }
+                    
+                    break;
+                case AmmoType.HeavyAmmo:
+                    if (currentHeavyAmmo != 0)
+                    {
+                        if (currentHeavyAmmo < (inventory.selectedItem.itemData.magSize - inventory.selectedItem.itemData.loadedAmmo))
+                        {
+                            StartCoroutine(inventory.selectedItem.itemData.Reload(currentHeavyAmmo));
+                        }
+                        else
+                        {
+                            StartCoroutine(inventory.selectedItem.itemData.Reload(inventory.selectedItem.itemData.magSize - inventory.selectedItem.itemData.loadedAmmo));
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Can't reload, no heavy ammo");
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
-        else
-        {
-            Instantiate(rifleBulletPrefab, transform.position, transform.rotation);
-        }
-        Debug.Log("Fire Weapon: " + itemType);
     }
 
     private void meleeAttack()
     {
-        Debug.Log("Melee Attack");
+        
         RaycastHit hit;
-        if(Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward,out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange))
+        if(inventory.selectedItem.itemData.canAttack)
         {
-            if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
+            Debug.Log("Melee Attack");
+            if (Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward, out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange))
             {
-                Debug.Log("Durability Before: " + inventory.selectedItem.itemData.durability);
-                if(inventory.selectedItem.itemData.hasDurability)
-                {
-                    inventory.selectedItem.itemData.durability--;
-                    Debug.Log("Durability After: " + inventory.selectedItem.itemData.durability);
-                    if (inventory.selectedItem.itemData.durability <= 0)
-                    {
-                        if(inventory.selectedItem.itemData.name.Contains("Instance"))
-                        {
-                            Destroy(inventory.selectedItem.itemData);
-                            inventory.RemoveItem(inventory.selectedItem);
-                            
-                        }
-                        
-                    }
-                }
 
-                Debug.Log("yep enemy hit");
+                
+                StartCoroutine(inventory.selectedItem.itemData.CoolDown());
+                if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
+                {
+                    Debug.Log("Durability Before: " + inventory.selectedItem.itemData.durability);
+                    if (inventory.selectedItem.itemData.hasDurability)
+                    {
+                        inventory.selectedItem.itemData.durability--;
+                        Debug.Log("Durability After: " + inventory.selectedItem.itemData.durability);
+                        if (inventory.selectedItem.itemData.durability <= 0)
+                        {
+                            if (inventory.selectedItem.itemData.name.Contains("Instance"))
+                            {
+                                Destroy(inventory.selectedItem.itemData);
+                                inventory.RemoveItem(inventory.selectedItem);
+
+                            }
+
+                        }
+                        InventoryUI.Instance.RefreshUI();
+                    }
+                    hit.transform.GetComponent<BaseEnemy>().TakeDamage(inventory.selectedItem.itemData.damage);
+                    Debug.Log("yep enemy hit");
+                }
             }
         }
+        
         
     }
 
@@ -379,23 +459,12 @@ public class Player : MonoBehaviour
     public void TakeDamage(int damage)
     {
         Health -= damage;
+        StartCoroutine(Damaged());
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Item" )
-        {
-            itemToGrab = other.GetComponent<WorldItem>();
-        }
-        else if(other.tag == "Resource")
-        {
-            resourceToGrab = other.GetComponent<Resource>();
-        }
-        else if(other.tag == "Crafting")
-        {
-            craftingTableToUse = other.GetComponent<CraftingTable>();
-        }
-        else if(other.tag == "Activatable")
+        if(other.TryGetComponent(out thingToActivate))
         {
             Debug.Log("cock");
             thingToActivate = other.GetComponent<Activatable>();
@@ -404,28 +473,37 @@ public class Player : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if(other.tag == "Item" && itemToGrab && other.gameObject == itemToGrab.gameObject)
-        {
-            itemToGrab = null;
-        }
-        else if(other.tag == "Resource" && resourceToGrab && other.gameObject == resourceToGrab.gameObject)
-        {
-            resourceToGrab = null;
-        }
-        else if (other.tag == "Activatable" && thingToActivate && other.gameObject == thingToActivate.gameObject)
+        if (thingToActivate && other.gameObject == thingToActivate.gameObject)
         {
             thingToActivate = null;
         }
-        else if(other.tag == "Crafting")
-        {
-            craftingTableToUse.DeactivateMenu();
-            craftingTableToUse = null;
-        }
+
     }
 
-    
 
-    
+    IEnumerator Damaged()
+    {
+        this.GetComponent<MeshRenderer>().material = damaged;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = norm;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = damaged;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = norm;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = damaged;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = norm;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = damaged;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = norm;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = damaged;
+        yield return new WaitForSeconds(.1f);
+        this.GetComponent<MeshRenderer>().material = norm;
+    }
+
 
     public void SetStatsToBase()
     {
@@ -439,6 +517,9 @@ public class Player : MonoBehaviour
         ClothCount = baseData.cloth;
         MedsCount = baseData.meds;
         skillPoints = baseData.skillPoints;
+        currentLightAmmo = 0;
+        currentHeavyAmmo = 0;
+
         inventory.selectedItem = null;
         inventory.AddItem(new Item(baseData.initialItem));
     }
@@ -459,9 +540,9 @@ public class Player : MonoBehaviour
         playerSave.cloth = ClothCount;
         playerSave.meds = MedsCount;
         playerSave.skillPoints = skillPoints;
-        //playerSave.healthUpgradesLeft = healthUpgradesLeft;
-        //playerSave.dmgResistUpgradesLeft = dmgResistUpgradesLeft;
-        //playerSave.speedUpgradesLeft = speedUpgradesLeft;
+        playerSave.lightAmmo = currentLightAmmo;
+        playerSave.heavyAmmo = currentHeavyAmmo;
+        
 
         playerSave.invJsonList = inventory.SaveToJsonList();
 
@@ -486,9 +567,10 @@ public class Player : MonoBehaviour
             ClothCount = playerSave.cloth;
             MedsCount = playerSave.meds;
             skillPoints = playerSave.skillPoints;
-            //healthUpgradesLeft = playerSave.healthUpgradesLeft;
-            //dmgResistUpgradesLeft = playerSave.dmgResistUpgradesLeft;
-            //speedUpgradesLeft = playerSave.speedUpgradesLeft;
+
+            currentLightAmmo = playerSave.lightAmmo;
+            currentHeavyAmmo = playerSave.heavyAmmo;
+            
 
             inventory.LoadFromJsonList(playerSave.invJsonList);
         }
@@ -522,6 +604,9 @@ public class PlayerSave
     public int speedStat;
     public int scrap, cloth, meds;
     public int skillPoints;
+
+    public int lightAmmo;
+    public int heavyAmmo;
 
    // public int healthUpgradesLeft;
    // public int dmgResistUpgradesLeft;

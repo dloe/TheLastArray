@@ -8,16 +8,15 @@ using UnityEngine.UI;
 
 public enum AmmoType
 {
-    pistolAmmo,
-    rifleAmmo
+    LightAmmo,
+    HeavyAmmo
 }
 public enum ItemType
 {
     MeleeWeapon,
     Pistol,
     Rifle,
-    Heal,
-    Gasoline
+    Heal
 }
 [Serializable][CreateAssetMenu]
 public class ItemData : ScriptableObject
@@ -41,10 +40,52 @@ public class ItemData : ScriptableObject
 
     public AmmoType ammoType;
     public int magSize = 5;
+    public int loadedAmmo = 0;
     
 
     public int amountToHeal = 1;
 
+    public bool canAttack = true;
+    public bool reloading = false;
+    
+
+    public IEnumerator CoolDown()
+    {
+        canAttack = false;
+        yield return new WaitForSeconds(coolDownPeriod);
+        canAttack = true;
+    }
+
+    public IEnumerator Reload(int amountToReload)
+    {
+        if(itemType != ItemType.Pistol && itemType != ItemType.Rifle)
+        {
+            yield return new WaitForEndOfFrame();
+            Debug.LogError("This Function cannot be called unless the item is a ranged weapon, refrain from doing so");
+        }
+        else
+        {
+            reloading = true;
+            Debug.Log("Reloading...");
+            yield return new WaitForSeconds(reloadTime);
+            Debug.Log("Reloaded");
+            loadedAmmo += amountToReload;
+            switch (ammoType)
+            {
+                case AmmoType.LightAmmo:
+                    Player.Instance.currentLightAmmo -= amountToReload;
+                    break;
+                case AmmoType.HeavyAmmo:
+                    Player.Instance.currentHeavyAmmo -= amountToReload;
+                    break;
+                default:
+                    break;
+            }
+
+            InventoryUI.Instance.RefreshUI();
+            reloading = false;
+        }
+    }
     
 }
 
@@ -52,7 +93,6 @@ public class ItemData : ScriptableObject
 public class ItemDataSave
 {
    
-    public string objectName;
     public Sprite itemSprite;
     public ItemType itemType;
     public string itemName ;
@@ -67,13 +107,12 @@ public class ItemDataSave
 
     public AmmoType ammoType;
     public int magSize;
-
+    public int loadedAmmo;
 
     public int amountToHeal;
 
     public void SaveFromItemData(ItemData itemData)
     {
-        objectName = itemData.name;
         itemSprite = itemData.itemSprite;
         itemType = itemData.itemType;
         itemName = itemData.itemName;
@@ -85,14 +124,13 @@ public class ItemDataSave
         meleeRange = itemData.meleeRange;
         ammoType = itemData.ammoType;
         magSize = itemData.magSize;
+        loadedAmmo = itemData.loadedAmmo;
         amountToHeal = itemData.amountToHeal;
     }
 
     public void LoadToItemData(ItemData itemData)
     {
 
-
-        itemData.name = objectName;
         itemData.itemSprite = itemSprite;
         itemData.itemType = itemType;
         itemData.itemName = itemName;
@@ -104,6 +142,7 @@ public class ItemDataSave
         itemData.meleeRange = meleeRange;
         itemData.ammoType = ammoType;
         itemData.magSize = magSize;
+        itemData.loadedAmmo = loadedAmmo;
         itemData.amountToHeal = amountToHeal;
     }
 }

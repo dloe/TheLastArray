@@ -13,14 +13,17 @@ MonoBehaviour:
   m_Name: Knife
   m_EditorClassIdentifier: 
   itemSprite: {fileID: 0}
+  itemType: 0
   itemName: Knife
-  isMeleeWeapon: 1
-  isRangedWeapon: 0
+  hasDurability: 0
   damage: 3
+  durability: -1
   coolDownPeriod: 0.5
   reloadTime: 1
-  meleeRange: 0.5
+  meleeRange: 0.7
   ammoType: 0
-  clipSize: 14
-  isHealingItem: 0
+  magSize: 5
+  loadedAmmo: 0
   amountToHeal: 1
+  canAttack: 1
+  reloading: 0
