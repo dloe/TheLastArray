@@ -510,12 +510,12 @@ public class TileGeneration : MonoBehaviour
                 }
             }
         }
-        Debug.Log(_posSRNeighbors.Count);
+        //Debug.Log(_posSRNeighbors.Count);
         //now randomly picks a tile that has a neighbor we can use for secret room
         int tileNum = Random.Range(0, _posSRNeighbors.Count);
        // Debug.Log(tileNum);
         TileInfo t = _posSRNeighbors[tileNum];
-        Debug.Log(t.tile.posOnGrid.x + " " + t.tile.posOnGrid.y);
+       // Debug.Log(t.tile.posOnGrid.x + " " + t.tile.posOnGrid.y);
         //add null neighbors to array then randomly pick neighbor and this is where the secret room goes ;)
         //shuffle array of possible locs
         t.n = reshuffle(t.n);
@@ -523,13 +523,15 @@ public class TileGeneration : MonoBehaviour
         //Debug.Log("check " + loc);
        // Debug.Log(t.n[loc]);
         Vector3 spawnPos;
+        Quaternion spawnRot;
         switch (t.n[loc])
         {
             case 1:
                 //up 
+                Debug.Log("Up");
                 spawnPos = new Vector3(t.tile.transform.position.x - (myLevelAssetsData.tileSize / 2), t.tile.transform.position.y, t.tile.transform.position.z);
-
-                secretRoom = Instantiate(tilePlaceholder, spawnPos, t.tile.transform.rotation);
+                spawnRot = new Quaternion(t.tile.transform.rotation.x, t.tile.transform.rotation.y, t.tile.transform.rotation.z, t.tile.transform.rotation.w);
+                secretRoom = Instantiate(tilePlaceholder, spawnPos, spawnRot);
 
                 secretRoom.GetComponent<Tile>().downNeighbor = t.tile;
                 t.tile.upNeighbor = secretRoom.GetComponent<Tile>();
@@ -537,28 +539,30 @@ public class TileGeneration : MonoBehaviour
                 break;
             case 2:
                 //down
-                
+                Debug.Log("Down");
                 spawnPos = new Vector3(t.tile.transform.position.x + (myLevelAssetsData.tileSize / 2), t.tile.transform.position.y, t.tile.transform.position.z);
-
-                secretRoom = Instantiate(tilePlaceholder, spawnPos, t.tile.transform.rotation);
+                spawnRot = new Quaternion(t.tile.transform.rotation.x, t.tile.transform.rotation.y, t.tile.transform.rotation.z, t.tile.transform.rotation.w);
+                secretRoom = Instantiate(tilePlaceholder, spawnPos, spawnRot);
 
                 secretRoom.GetComponent<Tile>().upNeighbor = t.tile;
                 t.tile.downNeighbor = secretRoom.GetComponent<Tile>();
                 break;
             case 3:
                 //left
+                Debug.Log("Left");
                 spawnPos = new Vector3(t.tile.transform.position.x, t.tile.transform.position.y, t.tile.transform.position.z - (myLevelAssetsData.tileSize / 2));
-
-                secretRoom = Instantiate(tilePlaceholder, spawnPos, t.tile.transform.rotation);
+                spawnRot = new Quaternion(t.tile.transform.rotation.x, t.tile.transform.rotation.y, t.tile.transform.rotation.z, t.tile.transform.rotation.w);
+                secretRoom = Instantiate(tilePlaceholder, spawnPos, spawnRot);
 
                 secretRoom.GetComponent<Tile>().rightNeighbor = t.tile;
                 t.tile.leftNeighbor = secretRoom.GetComponent<Tile>();
                 break;
             case 4:
                 //right
+                Debug.Log("Right");
                 spawnPos = new Vector3(t.tile.transform.position.x, t.tile.transform.position.y, t.tile.transform.position.z + (myLevelAssetsData.tileSize / 2));
-
-                secretRoom = Instantiate(tilePlaceholder, spawnPos, t.tile.transform.rotation);
+                spawnRot = new Quaternion(t.tile.transform.rotation.x, t.tile.transform.rotation.y, t.tile.transform.rotation.z, t.tile.transform.rotation.w);
+                secretRoom = Instantiate(tilePlaceholder, spawnPos, spawnRot);
 
                 secretRoom.GetComponent<Tile>().leftNeighbor = t.tile;
                 t.tile.rightNeighbor = secretRoom.GetComponent<Tile>();
@@ -569,7 +573,7 @@ public class TileGeneration : MonoBehaviour
         }
         secretRoom.name = "SecretRoom";
         secretRoom.GetComponent<Tile>().ShadeSecret();
-
+        secretRoom.GetComponent<Tile>().ActivateWalls();
         Debug.Log("SecretRoom added");
     }
 
