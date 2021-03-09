@@ -521,7 +521,7 @@ public class Player : MonoBehaviour
         currentHeavyAmmo = 0;
 
         inventory.selectedItem = null;
-        inventory.AddItem(new Item(baseData.initialItem));
+        inventory.AddItemNoUI(baseData.initialItem);
     }
 
     #region Saving / Loading
