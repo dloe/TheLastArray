@@ -43,6 +43,8 @@ public class LevelAssetsData : ScriptableObject
     public List<GameObject> presetTileAssets;
     [Header("The Big 4 Tile Preset Variations")]
     public List<GameObject> presetBigTileAssets;
+    [Header("Secret Room Varations")]
+    public List<GameObject> secretRoomAssets;
     [Space(10)]
     public EnemyPrefab enemyPrefab;
     [Space(10)]

@@ -109,7 +109,7 @@ public class LevelAssetSpawn : MonoBehaviour
             }
         }
 
-        
+        //ActivateSecretRoom();
 
         myLocalLevel.ChooseObjective();
         //ACTIVATE OBJECTIVES
@@ -128,6 +128,28 @@ public class LevelAssetSpawn : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         Player.Instance.transform.position = spawnPos;
+    }
+
+    void ActivateSecretRoom()
+    {
+        //picks secret room
+        //spawn it in AT THE SAME ROTATION OF THE SECRETROOM GAMEOBJECT
+        GameObject preset = null;
+        preset = Instantiate(myLevelAsset.secretRoomAssets[Random.Range(0, myLevelAsset.secretRoomAssets.Count)], myTileGeneration.secretRoom.transform.position, myTileGeneration.secretRoom.transform.rotation);
+
+        if (preset.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
+        {
+
+            // Debug.Log(preset.name);
+            for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetItems.Length; posResourceCount++)
+            {
+                _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
+            }
+            for (int posEnemyCount = 0; posEnemyCount < mPresetTileInfo.enemiesOnPreset.Length; posEnemyCount++)
+            {
+                _possibleEnemiesInLevel.Add(mPresetTileInfo.enemiesOnPreset[posEnemyCount]);
+            }
+        }
     }
 
     #region Objective Spawn

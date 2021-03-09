@@ -122,7 +122,17 @@ public class TileGeneration : MonoBehaviour
     private LocalLevel myLocalLevel;
 
     public GameObject secretRoom;
-
+    public class TileInfo
+    {
+        public TileInfo()
+        {
+            tile = null;
+            n = new List<int>();
+        }
+        public Tile tile;
+        public List<int> n;
+    }
+    List<TileInfo> _posSRNeighbors;
     private void Awake()
     {
         if (debugPathOn)
@@ -431,24 +441,9 @@ public class TileGeneration : MonoBehaviour
         
     }
 
-    [SerializeField]
-    public class TileInfo
-    {
-        public TileInfo()
-        {
-            tile = null;
-            n = new List<int>();
-        }
-        public Tile tile;
-        public List<int> n;
-    }
-    [SerializeField]
-    public List<TileInfo> _posSRNeighbors;
-    public List<Tile> test;
 
     public void SetUpSecretRoom()
     {
-        test = new List<Tile>();
         //first finds where we can possible put this
         //outskirts of game map (any tile next to an edge)
         //compose list of all null neighbors of all active tiles (excluding start and end room)
@@ -463,7 +458,6 @@ public class TileGeneration : MonoBehaviour
                 if (current.upNeighbor == null)
                 {
                     cInfo.n.Add(1);
-                    test.Add(current);
                 }
                 else if(current.upNeighbor != null && current.upNeighbor.tileStatus == Tile.TileStatus.nullRoom 
                     && current.upNeighbor.tileStatus != Tile.TileStatus.boss && current.upNeighbor.tileStatus != Tile.TileStatus.startingRoom)
@@ -474,7 +468,6 @@ public class TileGeneration : MonoBehaviour
                 if (current.downNeighbor == null)
                 {
                     cInfo.n.Add(2);
-                    test.Add(current);
                 }
                 else if(current.downNeighbor != null && current.downNeighbor.tileStatus == Tile.TileStatus.nullRoom 
                     && current.downNeighbor.tileStatus != Tile.TileStatus.boss && current.downNeighbor.tileStatus != Tile.TileStatus.startingRoom)
@@ -485,7 +478,6 @@ public class TileGeneration : MonoBehaviour
                 if (current.leftNeighbor == null)
                 {
                     cInfo.n.Add(3);
-                    test.Add(current);
                 }
                 else if(current.leftNeighbor != null && current.leftNeighbor.tileStatus == Tile.TileStatus.nullRoom 
                     && current.leftNeighbor.tileStatus != Tile.TileStatus.boss && current.leftNeighbor.tileStatus != Tile.TileStatus.startingRoom)
@@ -496,7 +488,6 @@ public class TileGeneration : MonoBehaviour
                 if (current.rightNeighbor == null)
                 {
                     cInfo.n.Add(4);
-                    test.Add(current);
                 }
                 else if(current.rightNeighbor != null && current.rightNeighbor.tileStatus == Tile.TileStatus.nullRoom 
                     && current.rightNeighbor.tileStatus != Tile.TileStatus.boss && current.rightNeighbor.tileStatus != Tile.TileStatus.startingRoom)
@@ -572,6 +563,7 @@ public class TileGeneration : MonoBehaviour
                 break;
         }
         secretRoom.name = "SecretRoom";
+        secretRoom.transform.parent = this.transform;
         secretRoom.GetComponent<Tile>().ShadeSecret();
         secretRoom.GetComponent<Tile>().ActivateWalls();
         Debug.Log("SecretRoom added");
