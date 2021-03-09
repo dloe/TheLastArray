@@ -54,6 +54,7 @@ public class Player : MonoBehaviour
     #region UI Variables
     public GameObject endScreen;
     public Text endScreenText;
+    public Text levelText;
     #endregion
 
     #region Health Variables
@@ -174,7 +175,9 @@ public class Player : MonoBehaviour
         {
             LoadPlayer();
         }
-        
+
+        //Updates the level text string to show which level is active
+        levelText.text = SceneManager.GetActiveScene().name;
     }
 
     // Update is called once per frame
