@@ -8,10 +8,15 @@ public class WorldItem : Activatable
 {
     public ItemData worldItemData;
 
+
     private void Start()
     {
         
         gameObject.GetComponentInChildren<Text>().text = worldItemData.itemName;
+        if(worldItemData.itemSprite != null)
+        {
+            gameObject.GetComponentInChildren<Image>().sprite = worldItemData.itemSprite;
+        }
         
     }
 

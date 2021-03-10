@@ -84,6 +84,7 @@ public class Player : MonoBehaviour
                 endScreen.SetActive(true);
                 Time.timeScale = 0;
             }
+            healthBar.fillAmount = health *1f / maxHealth;
         }
     }
     private int health;
@@ -91,6 +92,7 @@ public class Player : MonoBehaviour
     public int maxHealth = 10;
     public int medKitHealAmount = 6;
     public Text healthText;
+    public Image healthBar;
     #endregion
 
     #region Resource Variables
@@ -278,6 +280,10 @@ public class Player : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Sets the Melee Visual to the Current Selected Item's meleeRange if true, hides it if false
+    /// </summary>
+    /// <param name="active"></param>
     public void SetMeleeVisualActive(bool active)
     {
         if(active)
@@ -324,6 +330,9 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Performs Ranged Attack based on currently selected item
+    /// </summary>
     private void rangedAttack()
     {
         if(inventory.selectedItem.itemData.canAttack && !inventory.selectedItem.itemData.reloading)
@@ -367,6 +376,9 @@ public class Player : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Reloads the currently selected ranged weapon
+    /// </summary>
     private void reload()
     {
         if(inventory.selectedItem.itemData.itemType == ItemType.Pistol || inventory.selectedItem.itemData.itemType == ItemType.Rifle)
@@ -414,6 +426,9 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Performs Melee Attack based on currently selected item
+    /// </summary>
     private void meleeAttack()
     {
         
@@ -454,11 +469,17 @@ public class Player : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Heals Player Based On Amount to Heal from Selected Item
+    /// </summary>
     private void heal()
     {
         Health += inventory.selectedItem.itemData.amountToHeal;
     }
 
+    /// <summary>
+    /// Damages Player Based On Amount to Heal from Selected Item
+    /// </summary>
     public void TakeDamage(int damage)
     {
         Health -= damage;
@@ -524,6 +545,7 @@ public class Player : MonoBehaviour
         currentHeavyAmmo = 0;
 
         inventory.selectedItem = null;
+        inventory.numInvSlots = 4;
         inventory.AddItemNoUI(baseData.initialItem);
     }
 
@@ -548,6 +570,7 @@ public class Player : MonoBehaviour
         
 
         playerSave.invJsonList = inventory.SaveToJsonList();
+        playerSave.numInvSlots = InventoryUI.Instance.slotList.Count;
 
         bf.Serialize(file, playerSave);
         file.Close();
@@ -576,6 +599,7 @@ public class Player : MonoBehaviour
             
 
             inventory.LoadFromJsonList(playerSave.invJsonList);
+            inventory.numInvSlots = playerSave.numInvSlots;
         }
     }
 
@@ -616,6 +640,7 @@ public class PlayerSave
    // public int speedUpgradesLeft;
 
     public List<string> invJsonList;
+    public int numInvSlots;
 }
 
 

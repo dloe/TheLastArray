@@ -13,6 +13,8 @@ public class Inventory
     [HideInInspector]
     public Item selectedItem;
 
+    public int numInvSlots;
+
     public int Count
     {
         get

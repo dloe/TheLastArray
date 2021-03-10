@@ -13,7 +13,8 @@ public class CameraController : MonoBehaviour
     public float panSpeed = 5f;
     private Vector3 baseOffset;
 
-    
+    public float originalOffsetLimitX;
+    public float originalOffsetLimitZ;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +27,8 @@ public class CameraController : MonoBehaviour
         offset = transform.localPosition - Player.Instance.playerHolderTransform.TransformPoint(playerObject.transform.position);
         baseOffset = offset;
 
-        
+        originalOffsetLimitX = offsetLimitX;
+        originalOffsetLimitZ = offsetLimitZ;
     }
 
     // Update is called once per frame
@@ -91,6 +93,20 @@ public class CameraController : MonoBehaviour
     {
         offset.x = Mathf.Clamp(offset.x, baseOffset.x - offsetLimitX, baseOffset.x + offsetLimitX);
         offset.z = Mathf.Clamp(offset.z, baseOffset.z - offsetLimitZ, baseOffset.z + offsetLimitZ);
+    }
+
+    public void ToggleBinocularMode(bool state)
+    {
+        if(state)
+        {
+            offsetLimitX += 1;
+            offsetLimitZ += 1;
+        }
+        else
+        {
+            offsetLimitX = originalOffsetLimitX;
+            offsetLimitZ = originalOffsetLimitZ;
+        }
     }
 
     /// <summary>

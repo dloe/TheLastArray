@@ -14,6 +14,7 @@ public class InventoryUI : MonoBehaviour
     public List<Transform> slotList = new List<Transform>();
 
     public GameObject emptyWorldItem;
+    public GameObject slotPrefab;
     public Text equipedItemLabelText;
     public Text equipedWeaponAmmoText;
     public Text equipedWeaponReservesText;
@@ -39,6 +40,10 @@ public class InventoryUI : MonoBehaviour
         foreach(Transform slot in slotParent)
         {
             slotList.Add(slot);
+        }
+        while(inventory.numInvSlots> slotList.Count)
+        {
+            AddSlot();
         }
         //selector.parent = slotParent;
         RefreshUI();
@@ -76,7 +81,10 @@ public class InventoryUI : MonoBehaviour
             }
         }
        
-
+        if(Input.GetKeyDown(KeyCode.P))
+        {
+            AddSlot();
+        }
         
     }
 
@@ -110,11 +118,22 @@ public class InventoryUI : MonoBehaviour
             if(inventory.ItemAtIndex(index) != null)
             {
                 slotList[index].GetComponentInChildren<Text>().text = inventory.ItemAtIndex(index).itemData.itemName;
+                if(inventory.ItemAtIndex(index).itemData.itemSprite != null)
+                {
+                    slotList[index].GetChild(0).gameObject.SetActive(true);
+                    slotList[index].GetChild(0).GetComponent<Image>().sprite = inventory.ItemAtIndex(index).itemData.itemSprite;
+                }
+                else
+                { 
+                    slotList[index].GetChild(0).gameObject.SetActive(false); 
+                }
                 
             }
             else
             {
                 slotList[index].GetComponentInChildren<Text>().text = "none";
+                slotList[index].GetChild(0).GetComponent<Image>().sprite = null;
+                slotList[index].GetChild(0).gameObject.SetActive(false);
             }
         }
         SelectSlot(selectedItemIndex);
@@ -213,17 +232,23 @@ public class InventoryUI : MonoBehaviour
         
     }
 
+    public void AddSlot()
+    {
+        Transform slot = Instantiate(slotPrefab, slotParent).transform;
+        slotList.Add(slot);
+    }
+
     private void SelectSlot(int slotIndex)
     {
         for(int index = 0; index < slotList.Count; index ++)
         {
             if(slotIndex == index)
             {
-                slotList[index].GetComponent<Image>().color = Color.blue;
+                slotList[index].GetComponentInChildren<Text>().color = Color.blue;
             }
             else
             {
-                slotList[index].GetComponent<Image>().color = Color.white;
+                slotList[index].GetComponentInChildren<Text>().color = Color.white;
             }
         }
 

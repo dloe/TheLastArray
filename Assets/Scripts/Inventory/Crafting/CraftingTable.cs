@@ -52,7 +52,7 @@ public class CraftingTable : Activatable
             }
             else
             {
-                Debug.Log(recipe.name);
+                //Debug.Log(recipe.name);
                 tempOption.itemName.text = recipe.craftingResult.itemResult.itemName;
             }
 
