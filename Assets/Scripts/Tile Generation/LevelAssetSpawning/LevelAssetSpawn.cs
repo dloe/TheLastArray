@@ -23,7 +23,6 @@ public class LevelAssetSpawn : MonoBehaviour
     [Header("How many of which assets are spawned in")]
     public int[] assetCountArray;
     public int[] bigAssetCountArray;
-   // public int[][] normAssetCountMagJaged;
 
     Tile[] _tArray;
     [Header("How many big tiles have been spawned")]
@@ -56,6 +55,9 @@ public class LevelAssetSpawn : MonoBehaviour
     int tier1EnemyCap = 15;
     int tier2EnemyCap = 22;
     int tier3EnemyCap = 30;
+    int tier1CollectableCap = 25;
+    int tier2CollectableCap = 20;
+    int tier3CollectableCap = 50;
 
     //first number represents the number of times tiles in that list were spawned
     //second number represents the tile numbers that were spawned that amount of times
@@ -522,12 +524,29 @@ public class LevelAssetSpawn : MonoBehaviour
         return ar;
     }
     #region Items
+    public int collectables;
     void ActivateItems()
     {
 
         //shuffle _possibleItems
         _possibleItems = reshuffle(_possibleItems);
-        
+
+        switch (myLocalLevel.thisLevelTier)
+        {
+            case levelTier.level1:
+                collectables = tier1CollectableCap;
+                break;
+            case levelTier.level2:
+                collectables = tier2CollectableCap;
+                break;
+            case levelTier.level3:
+                collectables = tier3CollectableCap;
+                break;
+            case levelTier.level4:
+                break;
+            default:
+                break;
+        }
 
         //check weight of possible item
         //highly favor that weight but could still spawn other 2 types
@@ -538,8 +557,8 @@ public class LevelAssetSpawn : MonoBehaviour
         //weight adds 30 to weapon
         //adds 30 to item
         //adds 30 to resoruce
-
-        for(int pItemC = 0; pItemC < _possibleItems.Count - dontSpawnCount; pItemC++)
+        int pItemC;
+        for(pItemC = 0; pItemC < _possibleItems.Count && pItemC < collectables; pItemC++)
         {
             switch (_possibleItems[pItemC].GetComponent<PossibleItem>().objectWeight)
             {
@@ -670,7 +689,7 @@ public class LevelAssetSpawn : MonoBehaviour
             }
         }
         //Debug.Log("Removing unused drops");
-        for(int lastItems = _possibleItems.Count - dontSpawnCount; lastItems < _possibleItems.Count; lastItems++)
+        for(int lastItems = pItemC; lastItems < _possibleItems.Count; lastItems++)
         {
             //Debug.Log("Destroying " + _possibleItems[lastItems].name);
             Destroy(_possibleItems[lastItems]);
@@ -678,7 +697,7 @@ public class LevelAssetSpawn : MonoBehaviour
         //resources can either spawn at random or based on distance from any other existing resource
         //when activated that gameobject will be removed from the possibleResources and added to resourcesInLevel List
         //when item is activated can either be a weapon, resource or other item
-
+        Debug.Log(pItemC);
     }
 
     /// <summary>
@@ -749,7 +768,7 @@ public class LevelAssetSpawn : MonoBehaviour
     void ActivateEnemies()
     {
         _possibleEnemiesInLevel = reshuffle(_possibleEnemiesInLevel);
-        Debug.Log(myLevelAsset.levelTier);
+        //Debug.Log(myLevelAsset.levelTier);
         switch (myLocalLevel.thisLevelTier)
         {
             case levelTier.level1:
@@ -764,7 +783,7 @@ public class LevelAssetSpawn : MonoBehaviour
             default:
                 break;
         }
-        Debug.Log(enemyCount);
+        //Debug.Log(enemyCount);
     }
     /// <summary>
     /// enemy spawning depends on tier
