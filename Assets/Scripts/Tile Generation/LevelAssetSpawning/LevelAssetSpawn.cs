@@ -57,7 +57,7 @@ public class LevelAssetSpawn : MonoBehaviour
     int tier3EnemyCap = 30;
     int tier1CollectableCap = 25;
     int tier2CollectableCap = 20;
-    int tier3CollectableCap = 50;
+    int tier3CollectableCap = 17;
 
     //first number represents the number of times tiles in that list were spawned
     //second number represents the tile numbers that were spawned that amount of times
