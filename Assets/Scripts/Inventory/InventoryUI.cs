@@ -41,10 +41,9 @@ public class InventoryUI : MonoBehaviour
         {
             slotList.Add(slot);
         }
-        while(inventory.numInvSlots> slotList.Count)
-        {
-            AddSlot();
-        }
+
+        ResetSlots();
+
         //selector.parent = slotParent;
         RefreshUI();
     }
@@ -84,6 +83,11 @@ public class InventoryUI : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.P))
         {
             AddSlot();
+        }
+        else if(Input.GetKeyDown(KeyCode.O))
+        {
+            Debug.Log("yesir");
+            ResetSlots();
         }
         
     }
@@ -236,6 +240,23 @@ public class InventoryUI : MonoBehaviour
     {
         Transform slot = Instantiate(slotPrefab, slotParent).transform;
         slotList.Add(slot);
+    }
+
+    public void ResetSlots()
+    {
+        while (inventory.numInvSlots > slotList.Count)
+        {
+            AddSlot();
+        }
+
+        while (slotList.Count > inventory.numInvSlots)
+        {
+            Debug.Log(slotList.Count);
+            Destroy(slotList[slotList.Count - 1].gameObject);
+            slotList[slotList.Count - 1] = null;
+            slotList.RemoveAt(slotList.Count - 1);
+            Debug.Log(slotList.Count);
+        }
     }
 
     private void SelectSlot(int slotIndex)

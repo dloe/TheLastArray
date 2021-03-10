@@ -266,7 +266,9 @@ public class Player : MonoBehaviour
                     Debug.Log("Reseting Player Save...");
                     inventory.Clear();
                     SetStatsToBase();
+                    InventoryUI.Instance.ResetSlots();
                     SavePlayer();
+                    InventoryUI.Instance.RefreshUI();
                 }
             }
 
