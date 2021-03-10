@@ -52,6 +52,10 @@ public class LevelAssetSpawn : MonoBehaviour
     public List<GameObject> objectivesInLevel = new List<GameObject>();
     List<GameObject> _possibleTileObjectivesInLevel = new List<GameObject>();
 
+    [Header("Total Collectables Spawned")]
+    public int collectables;
+    [Header("Amount of enemies spawned in level")]
+    public int enemyCount;
     int tier1EnemyCap = 15;
     int tier2EnemyCap = 22;
     int tier3EnemyCap = 30;
@@ -62,8 +66,7 @@ public class LevelAssetSpawn : MonoBehaviour
     //first number represents the number of times tiles in that list were spawned
     //second number represents the tile numbers that were spawned that amount of times
     List<List<int>> _magAssetCount;
-    [Header("Amount of enemies spawned in level")]
-    public int enemyCount;
+    
     
     [Header("Ref to player data obj")]
     public GameObject playerPref;
@@ -524,7 +527,7 @@ public class LevelAssetSpawn : MonoBehaviour
         return ar;
     }
     #region Items
-    public int collectables;
+    
     void ActivateItems()
     {
 
@@ -697,7 +700,7 @@ public class LevelAssetSpawn : MonoBehaviour
         //resources can either spawn at random or based on distance from any other existing resource
         //when activated that gameobject will be removed from the possibleResources and added to resourcesInLevel List
         //when item is activated can either be a weapon, resource or other item
-        Debug.Log(pItemC);
+        //Debug.Log(pItemC);
     }
 
     /// <summary>
