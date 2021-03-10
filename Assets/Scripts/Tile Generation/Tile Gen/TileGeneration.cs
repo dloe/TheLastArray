@@ -7,12 +7,15 @@ using UnityEngine;
 [CustomEditor(typeof(TileGeneration))]
 public class TileGenerationInspector : Editor
 {
+
+    //Temporary turned to false
     TileGeneration myTileGeneration;
     string showDebugPathActive = "Debug Path Inactive";
 
     private void Awake()
     {
         myTileGeneration = (TileGeneration)target;
+        myTileGeneration.debugPathOn = false;
     }
 
     public override void OnInspectorGUI()
@@ -417,7 +420,7 @@ public class TileGeneration : MonoBehaviour
         //set up secret room
         if (myLocalLevel.thisLevelTier > levelTier.level2)
         {
-            SetUpSecretRoom();
+            //SetUpSecretRoom();
         }
 
         //this will be removed eventaully

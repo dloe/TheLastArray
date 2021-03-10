@@ -53,6 +53,10 @@ public class LevelAssetSpawn : MonoBehaviour
     public List<GameObject> objectivesInLevel = new List<GameObject>();
     List<GameObject> _possibleTileObjectivesInLevel = new List<GameObject>();
 
+    int tier1EnemyCap = 15;
+    int tier2EnemyCap = 22;
+    int tier3EnemyCap = 30;
+
     //first number represents the number of times tiles in that list were spawned
     //second number represents the tile numbers that were spawned that amount of times
     List<List<int>> _magAssetCount;
@@ -175,8 +179,6 @@ public class LevelAssetSpawn : MonoBehaviour
             //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
             //if objective is certain types (ie type 3), choose more objectives and add to list
 
-          //  if (myLocalLevel.objective == 3 )
-            //{
                 //make sure we can spawn 2 more objectives!
                 for (int objCount = 0; objCount < 2; objCount++)
                 {
@@ -194,9 +196,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         
                         //Debug.Log("Added Objective");
                     }
-                }
-           // }
-            
+                }      
         }
         else if (myLocalLevel.objective == 1)
         {
@@ -746,31 +746,34 @@ public class LevelAssetSpawn : MonoBehaviour
 
     #region Enemies
 
-
     void ActivateEnemies()
     {
-        switch (myLevelAsset.levelTier)
+        _possibleEnemiesInLevel = reshuffle(_possibleEnemiesInLevel);
+        Debug.Log(myLevelAsset.levelTier);
+        switch (myLocalLevel.thisLevelTier)
         {
-            case 1:
+            case levelTier.level1:
                 ActivateEnemiesTier1();
                 break;
-            case 2:
+            case levelTier.level2:
                 ActivateEnemiesTier2();
                 break;
-            case 3:
+            case levelTier.level3:
                 ActivateEnemiesTier3();
                 break;
             default:
                 break;
         }
+        Debug.Log(enemyCount);
     }
     /// <summary>
     /// enemy spawning depends on tier
     /// </summary>
     void ActivateEnemiesTier1()
     {
+
         //each level has a range of enemies it spawns
-        for(enemyCount = 0; enemyCount < _possibleEnemiesInLevel.Count; enemyCount++)
+        for(enemyCount = 0; enemyCount < _possibleEnemiesInLevel.Count && tier1EnemyCap > enemyCount; enemyCount++)
         {
             if(_possibleEnemiesInLevel[enemyCount].TryGetComponent<PossibleEnemy>(out PossibleEnemy mPossibleEnemy))
             {
@@ -947,11 +950,17 @@ public class LevelAssetSpawn : MonoBehaviour
                 //Debug.Log(enemyCount);
             }
         }
+        for(int deleteCount = enemyCount; deleteCount < _possibleEnemiesInLevel.Count; deleteCount++)
+        {
+            Destroy(_possibleEnemiesInLevel[deleteCount]);
+        }
+
+        //remove extra spots
     }
     void ActivateEnemiesTier2()
     {
         //includes tier 1 plus splitters, wardens and stalkers
-        for (enemyCount = 0; enemyCount < _possibleEnemiesInLevel.Count; enemyCount++)
+        for (enemyCount = 0; enemyCount < _possibleEnemiesInLevel.Count && tier2EnemyCap > enemyCount; enemyCount++)
         {
             if (_possibleEnemiesInLevel[enemyCount].TryGetComponent<PossibleEnemy>(out PossibleEnemy mPossibleEnemy))
             {
@@ -1112,11 +1121,15 @@ public class LevelAssetSpawn : MonoBehaviour
 
             }
         }
+        for (int deleteCount = enemyCount; deleteCount < _possibleEnemiesInLevel.Count; deleteCount++)
+        {
+            Destroy(_possibleEnemiesInLevel[deleteCount]);
+        }
     }
     void ActivateEnemiesTier3()
     {
         //all of them
-        for (enemyCount = 0; enemyCount < _possibleEnemiesInLevel.Count; enemyCount++)
+        for (enemyCount = 0; enemyCount < _possibleEnemiesInLevel.Count && tier3EnemyCap > enemyCount; enemyCount++)
         {
             if (_possibleEnemiesInLevel[enemyCount].TryGetComponent<PossibleEnemy>(out PossibleEnemy mPossibleEnemy))
             {
@@ -1203,6 +1216,10 @@ public class LevelAssetSpawn : MonoBehaviour
                 //Destroy(mPossibleEnemy.gameObject);
 
             }
+        }
+        for (int deleteCount = enemyCount; deleteCount < _possibleEnemiesInLevel.Count; deleteCount++)
+        {
+            Destroy(_possibleEnemiesInLevel[deleteCount]);
         }
     }
     #endregion
