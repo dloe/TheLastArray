@@ -198,7 +198,7 @@ public class LevelAssetSpawn : MonoBehaviour
             //if objective is certain types (ie type 3), choose more objectives and add to list
 
                 //make sure we can spawn 2 more objectives!
-                for (int objCount = 0; objCount < 5; objCount++)
+                for (int objCount = 0; objCount < 2; objCount++)
                 {
 
                 //randomly pick an objective (or item?)
