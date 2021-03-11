@@ -581,6 +581,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 collectables = tier3CollectableCap;
                 break;
             case levelTier.level4:
+                collectables = tier3CollectableCap;
                 break;
             default:
                 break;
@@ -817,6 +818,9 @@ public class LevelAssetSpawn : MonoBehaviour
                 ActivateEnemiesTier2();
                 break;
             case levelTier.level3:
+                ActivateEnemiesTier3();
+                break;
+            case levelTier.level4:
                 ActivateEnemiesTier3();
                 break;
             default:
