@@ -606,6 +606,11 @@ public class Player : MonoBehaviour
             inventory.LoadFromJsonList(playerSave.invJsonList);
             inventory.numInvSlots = playerSave.numInvSlots;
         }
+        else
+        {
+            SetStatsToBase();
+            Debug.LogWarning("The Save Data Could not be Found, so base Stats were loaded instead");
+        }
     }
 
     public bool SaveExists()
