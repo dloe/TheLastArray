@@ -180,7 +180,7 @@ public class LevelAssetSpawn : MonoBehaviour
             obj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
 
             objectivesInLevel.Add(obj);
-            //Debug.Log(_possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn));
+            Debug.Log(_possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn));
 
             //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
             //if objective is certain types (ie type 3), choose more objectives and add to list
@@ -202,9 +202,9 @@ public class LevelAssetSpawn : MonoBehaviour
 
                 //if(_possibleItems.Contains(_possibleObjectives[indexO]))
                         //_possibleItems.Remove(_possibleObjectives[indexO]);
-                    //Debug.Log(_possibleItems.Remove(_possibleObjectives[indexO]));
+                    Debug.Log(_possibleItems.Remove(_possibleObjectives[indexO]));
 
-                    //Debug.Log(_possibleObjectives.Remove(_possibleObjectives[indexO]));
+                    Debug.Log(_possibleObjectives.Remove(_possibleObjectives[indexO]));
                 
                // _possibleObjectives.Remove(_possibleObjectives[indexO]);
                     //Debug.Log(objMulti.name);
