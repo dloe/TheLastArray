@@ -233,11 +233,7 @@ public class Player : MonoBehaviour
                 inventory.DropItem();
             }
 
-            //for testing damage and healing
-            if (Input.GetKeyDown(KeyCode.Delete))
-            {
-                TakeDamage(1);
-            }
+            
 
             if(Input.GetKeyDown(KeyCode.R) && !inventory.selectedItem.itemData.reloading && inventory.selectedItem.itemData.loadedAmmo < inventory.selectedItem.itemData.magSize)
             {
@@ -259,6 +255,13 @@ public class Player : MonoBehaviour
             //    LoadPlayer();
             //}
 
+#if UNITY_EDITOR
+            //for testing damage and healing
+            if (Input.GetKeyDown(KeyCode.Delete))
+            {
+                TakeDamage(1);
+            }
+
             if (Input.GetKey(KeyCode.RightShift))
             {
                 if (Input.GetKeyDown(KeyCode.Equals))
@@ -271,7 +274,7 @@ public class Player : MonoBehaviour
                     InventoryUI.Instance.RefreshUI();
                 }
             }
-
+#endif
 
         }
 

@@ -6504,6 +6504,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slotParent: {fileID: 4971893228402485944}
+  inventory:
+    itemList: []
+    selectedItem:
+      itemData: {fileID: 0}
+    numInvSlots: 0
   selectedItemIndex: 0
   slotList: []
   emptyWorldItem: {fileID: 5592362334672371228, guid: 0ef66e6ab61fe734aa5bfeeaa92c2ba5,
@@ -6515,6 +6520,8 @@ MonoBehaviour:
   equipedWeaponReservesText: {fileID: 5642086154535296034}
   equipedWeaponDashText: {fileID: 4820299937395552690}
   currentAmmoName: {fileID: 8758451391537623513}
+  normalSlotSprite: {fileID: 21300000, guid: d26e3dfa5e1f2a744beab4f910cfb4d3, type: 3}
+  selectedSlotSprite: {fileID: 21300000, guid: 68ab33d9efc09474fae63ea22ee5a0ae, type: 3}
 --- !u!114 &8605595853068230469
 MonoBehaviour:
   m_ObjectHideFlags: 0

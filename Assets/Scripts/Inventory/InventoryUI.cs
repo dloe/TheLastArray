@@ -21,6 +21,8 @@ public class InventoryUI : MonoBehaviour
     public Text equipedWeaponDashText;
     public Text currentAmmoName;
 
+    public Sprite normalSlotSprite, selectedSlotSprite;
+
     private readonly string _zoomAxis = "Mouse ScrollWheel";
 
     private void Awake()
@@ -37,7 +39,7 @@ public class InventoryUI : MonoBehaviour
     {
         player = Player.Instance;
         inventory = player.inventory;
-        foreach(Transform slot in slotParent)
+        foreach (Transform slot in slotParent)
         {
             slotList.Add(slot);
         }
@@ -51,7 +53,7 @@ public class InventoryUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!UI.Instance.PausedStatus && (inventory.selectedItem == null || !inventory.selectedItem.itemData.reloading) && (!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy))
+        if (!UI.Instance.PausedStatus && (inventory.selectedItem == null || !inventory.selectedItem.itemData.reloading) && (!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy))
         {
             if (Input.GetAxis(_zoomAxis) < 0)
             {
@@ -79,28 +81,30 @@ public class InventoryUI : MonoBehaviour
                 SetIndex(3);
             }
         }
-       
-        //if(Input.GetKeyDown(KeyCode.P))
-        //{
-        //    AddSlot();
-        //}
+
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            AddSlot();
+        }
+#endif
         //else if(Input.GetKeyDown(KeyCode.O))
         //{
         //    Debug.Log("yesir");
         //    ResetSlots();
         //}
-        
+
     }
 
     void SetIndex(int index)
     {
-        
 
-        if(index > slotList.Count-1)
+
+        if (index > slotList.Count - 1)
         {
             selectedItemIndex = 0;
         }
-        else if(index < 0)
+        else if (index < 0)
         {
             selectedItemIndex = slotList.Count - 1;
         }
@@ -109,29 +113,29 @@ public class InventoryUI : MonoBehaviour
             selectedItemIndex = index;
         }
 
-        
+
         RefreshUI();
 
-        
+
     }
 
     public void RefreshUI()
     {
         for (int index = 0; index < slotList.Count; index++)
         {
-            if(inventory.ItemAtIndex(index) != null)
+            if (inventory.ItemAtIndex(index) != null)
             {
                 slotList[index].GetComponentInChildren<Text>().text = inventory.ItemAtIndex(index).itemData.itemName;
-                if(inventory.ItemAtIndex(index).itemData.itemSprite != null)
+                if (inventory.ItemAtIndex(index).itemData.itemSprite != null)
                 {
                     slotList[index].GetChild(0).gameObject.SetActive(true);
                     slotList[index].GetChild(0).GetComponent<Image>().sprite = inventory.ItemAtIndex(index).itemData.itemSprite;
                 }
                 else
-                { 
-                    slotList[index].GetChild(0).gameObject.SetActive(false); 
+                {
+                    slotList[index].GetChild(0).gameObject.SetActive(false);
                 }
-                
+
             }
             else
             {
@@ -143,7 +147,7 @@ public class InventoryUI : MonoBehaviour
         SelectSlot(selectedItemIndex);
         inventory.Equip(selectedItemIndex);
 
-        
+
 
 
         //DYLAN WAS HERE
@@ -159,7 +163,7 @@ public class InventoryUI : MonoBehaviour
                     equipedWeaponDashText.gameObject.SetActive(false);
                     equipedWeaponReservesText.gameObject.SetActive(true);
                     currentAmmoName.gameObject.SetActive(true);
-                    if(inventory.selectedItem.itemData.hasDurability)
+                    if (inventory.selectedItem.itemData.hasDurability)
                     {
                         equipedWeaponReservesText.text = inventory.selectedItem.itemData.durability.ToString();
                     }
@@ -168,9 +172,9 @@ public class InventoryUI : MonoBehaviour
                         equipedWeaponReservesText.text = "∞";
                     }
                     currentAmmoName.text = "Durability Left";
-                    
+
                     Player.Instance.SetMeleeVisualActive(true);
-                    
+
                     break;
                 case ItemType.Pistol:
                     //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
@@ -199,7 +203,7 @@ public class InventoryUI : MonoBehaviour
                     break;
                 case ItemType.Heal:
                     equipedWeaponAmmoText.text = "";
-                   // equipedWeaponReservesText.text = "";
+                    // equipedWeaponReservesText.text = "";
                     equipedWeaponDashText.gameObject.SetActive(false);
                     Player.Instance.SetMeleeVisualActive(false);
 
@@ -231,9 +235,9 @@ public class InventoryUI : MonoBehaviour
 
         WorldItem worldItem = Instantiate(emptyWorldItem, dropPos, Player.Instance.playerHolderTransform.rotation).GetComponent<WorldItem>();
 
-        
+
         worldItem.worldItemData = item.itemData;
-        
+
     }
 
     public void AddSlot()
@@ -261,15 +265,17 @@ public class InventoryUI : MonoBehaviour
 
     private void SelectSlot(int slotIndex)
     {
-        for(int index = 0; index < slotList.Count; index ++)
+        for (int index = 0; index < slotList.Count; index++)
         {
-            if(slotIndex == index)
+            if (slotIndex == index)
             {
-                slotList[index].GetComponentInChildren<Text>().color = Color.blue;
+                slotList[index].GetComponent<Image>().sprite = selectedSlotSprite;
+                slotList[index].GetComponent<Image>().color = Color.blue;
             }
             else
             {
-                slotList[index].GetComponentInChildren<Text>().color = Color.white;
+                slotList[index].GetComponent<Image>().sprite = normalSlotSprite;
+                slotList[index].GetComponent<Image>().color = Color.white;
             }
         }
 
