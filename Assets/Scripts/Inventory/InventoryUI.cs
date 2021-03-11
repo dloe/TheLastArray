@@ -251,11 +251,11 @@ public class InventoryUI : MonoBehaviour
 
         while (slotList.Count > inventory.numInvSlots)
         {
-            Debug.Log(slotList.Count);
+            //Debug.Log(slotList.Count);
             Destroy(slotList[slotList.Count - 1].gameObject);
             slotList[slotList.Count - 1] = null;
             slotList.RemoveAt(slotList.Count - 1);
-            Debug.Log(slotList.Count);
+            //Debug.Log(slotList.Count);
         }
     }
 
