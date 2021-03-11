@@ -140,6 +140,8 @@ public class LevelAssetSpawn : MonoBehaviour
         Player.Instance.transform.position = spawnPos;
     }
 
+    public List<GameObject> parents;
+
     void ActivateSecretRoom()
     {
         //picks secret room
@@ -172,6 +174,7 @@ public class LevelAssetSpawn : MonoBehaviour
     /// </summary>
     public void ActivateObjectives()
     {
+        parents = new List<GameObject>();
         //picks random objective in awake in LocalLevel script
         if (myLocalLevel.objective != 1)
         {
@@ -196,7 +199,8 @@ public class LevelAssetSpawn : MonoBehaviour
                       //  Debug.Log(indexO);
                         GameObject objMulti = Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, _possibleObjectives[indexO]).gameObject;
                         objMulti.transform.rotation = playerSpawn.transform.rotation;
-                        //objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
+                        objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
+                parents.Add(objMulti.transform.parent.gameObject);
                     //Debug.Log(objMulti.transform.parent);
                         objectivesInLevel.Add(objMulti);
 
@@ -207,7 +211,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     Debug.Log(_possibleObjectives.Remove(_possibleObjectives[indexO]));
                 
                // _possibleObjectives.Remove(_possibleObjectives[indexO]);
-                    //Debug.Log(objMulti.name);
+                    Debug.Log(objMulti.name);
                         //Debug.Log("Added Objective");
                 //Destroy(_possibleObjectives[indexO]);
                   //  }

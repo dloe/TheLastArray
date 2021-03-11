@@ -138,13 +138,7 @@ public class TileGeneration : MonoBehaviour
     List<TileInfo> _posSRNeighbors;
     private void Awake()
     {
-        if (debugPathOn)
-        {
-            _lr = gameObject.AddComponent<LineRenderer>();
-            _lr.widthMultiplier = 0.5f;
-            // lineRenderer.positionCount = 20;
-            _lr = GetComponent<LineRenderer>();
-        }
+        
         myLocalLevel = FindObjectOfType<LocalLevel>();
     }
 
@@ -152,6 +146,13 @@ public class TileGeneration : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (debugPathOn)
+        {
+            _lr = gameObject.AddComponent<LineRenderer>();
+            _lr.widthMultiplier = 0.5f;
+            // lineRenderer.positionCount = 20;
+            _lr = GetComponent<LineRenderer>();
+        }
         _distanceBetweenNodes = myLevelAssetsData.tileSize/2;
 
         //test = reshuffle(test);
