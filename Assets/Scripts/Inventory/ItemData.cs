@@ -220,7 +220,7 @@ public class ItemDataEditor : Editor
             
         }
 
-        itemData.loadedAmmo = EditorGUILayout.IntField("Amount of Loaded Ammo", itemData.loadedAmmo);
+        
 
         bool somethingChanged = EditorGUI.EndChangeCheck();
 
