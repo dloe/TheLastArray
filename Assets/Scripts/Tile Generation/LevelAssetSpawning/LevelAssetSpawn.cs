@@ -93,32 +93,12 @@ public class LevelAssetSpawn : MonoBehaviour
     {
         //Debug.Log("Populating Level with Assets...");
 
-        //activate walls
-        foreach (Tile t in myTileGeneration._allActiveTiles)
-        {
-            t.ActivateWalls();
-            AnalyzeTile(t);
-
-            //add starting tile resources
-            if(t.tileStatus == Tile.TileStatus.startingRoom)
-            {
-                for (int posResourceCount = 0; posResourceCount < t.presetTile.GetComponent<PresetTileInfo>().possiblePresetItems.Length; posResourceCount++)
-                {
-                    //co++;
-                    // Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
-                    _possibleItems.Add(t.presetTile.GetComponent<PresetTileInfo>().possiblePresetItems[posResourceCount]);
-                }
-                playerSpawn = t.presetTile.GetComponent<PresetTileInfo>().playerSpawn;
-                //SPAWN PLAYER
-                GameObject play = Instantiate(playerPref, Vector3.zero, playerSpawn.transform.rotation);
-                Debug.Log("Player Spawn set");
-                StartCoroutine(setPlayerPosition(play, playerSpawn.transform.position));
-                
-                myLocalLevel.myPlayer = play.transform.GetChild(0).gameObject.GetComponent<Player>();
-            }
-        }
+        GridAnalysis();
 
         //ActivateSecretRoom();
+
+
+        //SOMEONE 2 x 2 TILES ARE STILL LINKING WHILE ACTIVATE OBJS AND ACTIVATE ENEMIES STILL RUN
 
         myLocalLevel.ChooseObjective();
         //ACTIVATE OBJECTIVES
@@ -132,6 +112,34 @@ public class LevelAssetSpawn : MonoBehaviour
         ActivateEnemies();
 
         
+    }
+
+    void GridAnalysis()
+    {
+        //activate walls
+        foreach (Tile t in myTileGeneration._allActiveTiles)
+        {
+            t.ActivateWalls();
+            AnalyzeTile(t);
+
+            //add starting tile resources
+            if (t.tileStatus == Tile.TileStatus.startingRoom)
+            {
+                for (int posResourceCount = 0; posResourceCount < t.presetTile.GetComponent<PresetTileInfo>().possiblePresetItems.Length; posResourceCount++)
+                {
+                    //co++;
+                    // Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
+                    _possibleItems.Add(t.presetTile.GetComponent<PresetTileInfo>().possiblePresetItems[posResourceCount]);
+                }
+                playerSpawn = t.presetTile.GetComponent<PresetTileInfo>().playerSpawn;
+                //SPAWN PLAYER
+                GameObject play = Instantiate(playerPref, Vector3.zero, playerSpawn.transform.rotation);
+                Debug.Log("Player Spawn set");
+                StartCoroutine(setPlayerPosition(play, playerSpawn.transform.position));
+
+                myLocalLevel.myPlayer = play.transform.GetChild(0).gameObject.GetComponent<Player>();
+            }
+        }
     }
 
     IEnumerator setPlayerPosition(GameObject playerObj, Vector3 spawnPos)
@@ -174,6 +182,7 @@ public class LevelAssetSpawn : MonoBehaviour
     /// </summary>
     public void ActivateObjectives()
     {
+        Debug.Log("start obj");
         parents = new List<GameObject>();
         //picks random objective in awake in LocalLevel script
         if (myLocalLevel.objective != 1)
@@ -189,18 +198,20 @@ public class LevelAssetSpawn : MonoBehaviour
             //if objective is certain types (ie type 3), choose more objectives and add to list
 
                 //make sure we can spawn 2 more objectives!
-                for (int objCount = 0; objCount < 2; objCount++)
+                for (int objCount = 0; objCount < 5; objCount++)
                 {
-                //   if (_possibleTileObjectivesInLevel.Count > 0)
-                //   {
+
                 //randomly pick an objective (or item?)
                     int indexO = Random.Range(0, _possibleObjectives.Count);
-                    //Debug.Log(indexO);
+                    Debug.Log(objCount);
                       //  Debug.Log(indexO);
                         GameObject objMulti = Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, _possibleObjectives[indexO]).gameObject;
                         objMulti.transform.rotation = playerSpawn.transform.rotation;
                         objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
-                parents.Add(objMulti.transform.parent.gameObject);
+                    parents.Add(objMulti.transform.parent.parent.gameObject);
+                //Debug.Log(objMulti.transform.);
+                    Debug.Log(objMulti.transform.parent.parent.gameObject);
+                    Debug.Log(objMulti.transform.parent.parent.parent.name);
                     //Debug.Log(objMulti.transform.parent);
                         objectivesInLevel.Add(objMulti);
 
@@ -212,9 +223,6 @@ public class LevelAssetSpawn : MonoBehaviour
                 
                // _possibleObjectives.Remove(_possibleObjectives[indexO]);
                     Debug.Log(objMulti.name);
-                        //Debug.Log("Added Objective");
-                //Destroy(_possibleObjectives[indexO]);
-                  //  }
                 }      
         }
         else if (myLocalLevel.objective == 1)
@@ -301,6 +309,7 @@ public class LevelAssetSpawn : MonoBehaviour
                                         obj = true;
                                     }
 
+                                    //Debug.Log(tile3.presetNum);
                                     if (tile3.presetNum != -1)
                                     {
                                        // Debug.Log(tile3.presetNum);
@@ -308,26 +317,43 @@ public class LevelAssetSpawn : MonoBehaviour
                                         assetCountArray[tile3.presetNum] -= 1;
                                         if (tile3.presetTile.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
                                         {
+                                            Debug.Log(tile3.name);
                                             foreach (GameObject item in mPresetTileInfo.GetComponent<PresetTileInfo>().possiblePresetItems)
                                             {
                                                 _possibleItems.Remove(item);
                                                 _possibleObjectives.Remove(item);
                                                 
                                             }
+
+                                            //Note to self maybe consider running for loop to remove possible enemies as wells - Added last night 3/10
+                                            foreach (GameObject enemy in mPresetTileInfo.GetComponent<PresetTileInfo>().enemiesOnPreset)
+                                            {
+                                                _possibleEnemiesInLevel.Remove(enemy);
+
+                                            }
+
+                                            if (mPresetTileInfo.objectiveSpawn != null)
+                                            {
+                                                _possibleObjectives.Remove(mPresetTileInfo.objectiveSpawn);
+                                                Debug.Log("removed bad obj spot");
+                                            }
+
+
                                             _possibleTileObjectivesInLevel.Remove(tile3.presetTile);
                                         }
                                     }
 
-                                    if(tile3.presetTile != null)
+                                    if (tile3.presetTile != null)
+                                    {
+                                        Debug.Log("(Due to 2 x 2 Linkage - Deleting: " + tile3.presetTile.gameObject + tile3.name);
                                         Destroy(tile3.presetTile.gameObject);
+                                    }
                                     tile3.checkFor4Some = true;
                                     tile3.transform.parent = fourSomeTile.transform;
                                 }
                                 SpawnLevelBigAsset(fourSomeTile, obj);
                                 return;
                             }
-                            //else
-                                //Debug.Log("jebait");
                         }
                         else
                         {

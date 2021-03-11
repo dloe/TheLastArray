@@ -12,15 +12,17 @@ public class TileGenerationInspector : Editor
     TileGeneration myTileGeneration;
     string showDebugPathActive = "Debug Path Inactive";
 
-    private void Awake()
+    private void OnEnable()
     {
         myTileGeneration = (TileGeneration)target;
-        myTileGeneration.debugPathOn = false;
+        //myTileGeneration.debugPathOn = false;
     }
 
     public override void OnInspectorGUI()
     {
-        
+        serializedObject.Update();
+        EditorGUI.BeginChangeCheck();
+
         EditorGUILayout.LabelField("Show Level Path");
         
 
@@ -48,6 +50,15 @@ public class TileGenerationInspector : Editor
 
         EditorGUILayout.Space(20);
         base.OnInspectorGUI();
+
+        bool somethingChanged = EditorGUI.EndChangeCheck();
+
+        if (somethingChanged)
+        {
+            EditorUtility.SetDirty(myTileGeneration);
+        }
+
+        serializedObject.ApplyModifiedProperties();
     }
 }
 #endif
@@ -152,7 +163,7 @@ public class TileGeneration : MonoBehaviour
             _lr.widthMultiplier = 0.5f;
             // lineRenderer.positionCount = 20;
             _lr = GetComponent<LineRenderer>();
-            _lr.enabled = false;
+            //_lr.enabled = false;
         }
       //  else
             
