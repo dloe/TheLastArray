@@ -262,9 +262,9 @@ public class Player : MonoBehaviour
                 TakeDamage(1);
             }
 
-            if (Input.GetKey(KeyCode.RightShift))
-            {
-                if (Input.GetKeyDown(KeyCode.Equals))
+           
+            
+                if (Input.GetKeyDown(KeyCode.T))
                 {
                     Debug.Log("Reseting Player Save...");
                     inventory.Clear();
@@ -273,7 +273,7 @@ public class Player : MonoBehaviour
                     SavePlayer();
                     InventoryUI.Instance.RefreshUI();
                 }
-            }
+            
 #endif
 
         }
