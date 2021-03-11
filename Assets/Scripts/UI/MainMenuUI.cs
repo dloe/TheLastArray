@@ -61,7 +61,14 @@ public class MainMenuUI : MonoBehaviour
         Application.Quit();
     }
 
-
+    /// <summary>
+    /// Opens Link Specified by input string "url"
+    /// </summary>
+    /// <param name="url">URL to be opened</param>
+    public void OpenLink(string url)
+    {
+        Application.OpenURL(url);
+    }
 
     #region Options
     public AudioMixer mixer;

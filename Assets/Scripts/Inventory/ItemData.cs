@@ -40,7 +40,7 @@ public class ItemData : ScriptableObject
 
     public AmmoType ammoType;
     public int magSize = 5;
-    public int loadedAmmo = 0;
+    public int loadedAmmo;
     
 
     public int amountToHeal = 1;
@@ -130,7 +130,6 @@ public class ItemDataSave
 
     public void LoadToItemData(ItemData itemData)
     {
-
         itemData.itemSprite = itemSprite;
         itemData.itemType = itemType;
         itemData.itemName = itemName;
@@ -144,6 +143,8 @@ public class ItemDataSave
         itemData.magSize = magSize;
         itemData.loadedAmmo = loadedAmmo;
         itemData.amountToHeal = amountToHeal;
+
+
     }
 }
 
@@ -210,6 +211,7 @@ public class ItemDataEditor : Editor
             itemData.ammoType = (AmmoType)EditorGUILayout.EnumPopup("Ammo Type", itemData.ammoType);
             itemData.reloadTime = EditorGUILayout.FloatField("Reload Time(seconds)", itemData.reloadTime);
             itemData.magSize = EditorGUILayout.IntField("Magazine Size", itemData.magSize);
+            
         }
 
         if(itemData.itemType == ItemType.Heal)
@@ -217,6 +219,8 @@ public class ItemDataEditor : Editor
             itemData.amountToHeal = EditorGUILayout.IntField("Amount to Heal", itemData.amountToHeal);
             
         }
+
+        itemData.loadedAmmo = EditorGUILayout.IntField("Amount of Loaded Ammo", itemData.loadedAmmo);
 
         bool somethingChanged = EditorGUI.EndChangeCheck();
 

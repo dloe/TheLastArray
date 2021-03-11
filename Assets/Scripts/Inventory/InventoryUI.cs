@@ -80,15 +80,15 @@ public class InventoryUI : MonoBehaviour
             }
         }
        
-        if(Input.GetKeyDown(KeyCode.P))
-        {
-            AddSlot();
-        }
-        else if(Input.GetKeyDown(KeyCode.O))
-        {
-            Debug.Log("yesir");
-            ResetSlots();
-        }
+        //if(Input.GetKeyDown(KeyCode.P))
+        //{
+        //    AddSlot();
+        //}
+        //else if(Input.GetKeyDown(KeyCode.O))
+        //{
+        //    Debug.Log("yesir");
+        //    ResetSlots();
+        //}
         
     }
 
