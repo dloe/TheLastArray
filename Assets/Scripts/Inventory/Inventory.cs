@@ -4,7 +4,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using UnityEngine;
 
-[System.Serializable]
+
 public class Inventory
 {
     [SerializeField]
