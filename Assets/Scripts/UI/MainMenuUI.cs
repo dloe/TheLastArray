@@ -10,6 +10,7 @@ public class MainMenuUI : MonoBehaviour
     public GameObject mainMenu;
     public GameObject options;
     public GameObject credits;
+    public GameObject howToPlay; 
 
 
 
