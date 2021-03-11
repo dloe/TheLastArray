@@ -23,7 +23,6 @@ public class LevelAssetSpawn : MonoBehaviour
     [Header("How many of which assets are spawned in")]
     public int[] assetCountArray;
     public int[] bigAssetCountArray;
-   // public int[][] normAssetCountMagJaged;
 
     Tile[] _tArray;
     [Header("How many big tiles have been spawned")]
@@ -31,7 +30,7 @@ public class LevelAssetSpawn : MonoBehaviour
     Vector3 _av;
 
     //each tile preset has possible locations for resources, those go here
-    List<GameObject> _possibleItems = new List<GameObject>();
+    public List<GameObject> _possibleItems = new List<GameObject>();
     [Header("Resources In Level")]
     public List<GameObject> resourcesInLevelList = new List<GameObject>();
     [Header("Items In Level")]
@@ -39,7 +38,7 @@ public class LevelAssetSpawn : MonoBehaviour
     [Header("Weapons In Level")]
     public List<GameObject> weaponsInLevelList = new List<GameObject>();
 
-    List<GameObject> _possibleObjectives = new List<GameObject>();
+    public List<GameObject> _possibleObjectives = new List<GameObject>();
 
     [Header("Enemies In Level")]
     public List<GameObject> enemiesInLevel = new List<GameObject>();
@@ -51,13 +50,23 @@ public class LevelAssetSpawn : MonoBehaviour
     GameObject endObjTile;
     [Header("Objectives In Level")]
     public List<GameObject> objectivesInLevel = new List<GameObject>();
-    List<GameObject> _possibleTileObjectivesInLevel = new List<GameObject>();
+    public List<GameObject> _possibleTileObjectivesInLevel = new List<GameObject>();
+
+    [Header("Total Collectables Spawned")]
+    public int collectables;
+    [Header("Amount of enemies spawned in level")]
+    public int enemyCount;
+    int tier1EnemyCap = 15;
+    int tier2EnemyCap = 22;
+    int tier3EnemyCap = 30;
+    int tier1CollectableCap = 25;
+    int tier2CollectableCap = 20;
+    int tier3CollectableCap = 17;
 
     //first number represents the number of times tiles in that list were spawned
     //second number represents the tile numbers that were spawned that amount of times
     List<List<int>> _magAssetCount;
-    [Header("Amount of enemies spawned in level")]
-    public int enemyCount;
+    
     
     [Header("Ref to player data obj")]
     public GameObject playerPref;
@@ -108,10 +117,14 @@ public class LevelAssetSpawn : MonoBehaviour
                 myLocalLevel.myPlayer = play.transform.GetChild(0).gameObject.GetComponent<Player>();
             }
         }
+
+        //ActivateSecretRoom();
+
         myLocalLevel.ChooseObjective();
         //ACTIVATE OBJECTIVES
         ActivateObjectives();
         
+
         //SPAWN IN RESOURCES
         ActivateItems();
 
@@ -125,6 +138,28 @@ public class LevelAssetSpawn : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         Player.Instance.transform.position = spawnPos;
+    }
+
+    void ActivateSecretRoom()
+    {
+        //picks secret room
+        //spawn it in AT THE SAME ROTATION OF THE SECRETROOM GAMEOBJECT
+        GameObject preset = null;
+        preset = Instantiate(myLevelAsset.secretRoomAssets[Random.Range(0, myLevelAsset.secretRoomAssets.Count)], myTileGeneration.secretRoom.transform.position, myTileGeneration.secretRoom.transform.rotation);
+
+        if (preset.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
+        {
+
+            // Debug.Log(preset.name);
+            for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetItems.Length; posResourceCount++)
+            {
+                _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
+            }
+            for (int posEnemyCount = 0; posEnemyCount < mPresetTileInfo.enemiesOnPreset.Length; posEnemyCount++)
+            {
+                _possibleEnemiesInLevel.Add(mPresetTileInfo.enemiesOnPreset[posEnemyCount]);
+            }
+        }
     }
 
     #region Objective Spawn
@@ -145,33 +180,38 @@ public class LevelAssetSpawn : MonoBehaviour
             obj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
 
             objectivesInLevel.Add(obj);
-            _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
+            //Debug.Log(_possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn));
 
             //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
             //if objective is certain types (ie type 3), choose more objectives and add to list
 
-          //  if (myLocalLevel.objective == 3 )
-            //{
                 //make sure we can spawn 2 more objectives!
                 for (int objCount = 0; objCount < 2; objCount++)
                 {
-                    if (_possibleTileObjectivesInLevel.Count > 0)
-                    {
-                        //randomly pick an objective (or item?)
-                        int indexO = Random.Range(0, _possibleObjectives.Count);
+                //   if (_possibleTileObjectivesInLevel.Count > 0)
+                //   {
+                //randomly pick an objective (or item?)
+                    int indexO = Random.Range(0, _possibleObjectives.Count);
+                    //Debug.Log(indexO);
                       //  Debug.Log(indexO);
                         GameObject objMulti = Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, _possibleObjectives[indexO]).gameObject;
                         objMulti.transform.rotation = playerSpawn.transform.rotation;
-                        objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
+                        //objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
+                    //Debug.Log(objMulti.transform.parent);
                         objectivesInLevel.Add(objMulti);
-                        _possibleItems.Remove(_possibleObjectives[indexO]);
-                        _possibleObjectives.Remove(_possibleObjectives[indexO]);
-                        
+
+                //if(_possibleItems.Contains(_possibleObjectives[indexO]))
+                        //_possibleItems.Remove(_possibleObjectives[indexO]);
+                    //Debug.Log(_possibleItems.Remove(_possibleObjectives[indexO]));
+
+                    //Debug.Log(_possibleObjectives.Remove(_possibleObjectives[indexO]));
+                
+               // _possibleObjectives.Remove(_possibleObjectives[indexO]);
+                    //Debug.Log(objMulti.name);
                         //Debug.Log("Added Objective");
-                    }
-                }
-           // }
-            
+                //Destroy(_possibleObjectives[indexO]);
+                  //  }
+                }      
         }
         else if (myLocalLevel.objective == 1)
         {
@@ -187,7 +227,9 @@ public class LevelAssetSpawn : MonoBehaviour
             enemiesInLevel.Add(enemy);
         }
         //update Objectives object with objetive info
-        //Debug.Log("activated objs");
+        Debug.Log("activated objs");
+
+        //THERE IS A CHANCE THAT AN UNUSED OBJECTIVE LOCATION DOES NOT GET DELETED...
     }
     #endregion
 
@@ -207,23 +249,23 @@ public class LevelAssetSpawn : MonoBehaviour
         {
             Tile t;
             //Debug.Log("Starting at tile: " + tile.posOnGrid.x + " " + tile.posOnGrid.y);
-            if (tile.upNeighbor != null && tile.upNeighbor.tileStatus != Tile.TileStatus.nullRoom && !tile.upNeighbor.checkFor4Some)
+            if (tile.upNeighbor != null && tile.upNeighbor.tileStatus != Tile.TileStatus.nullRoom && !tile.upNeighbor.checkFor4Some && tile.upNeighbor.tileStatus != Tile.TileStatus.secretRoom)
             {
 
                 t = tile.upNeighbor;
                 _tArray[0] = t;
                 //Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
-                if (t.rightNeighbor != null && t.rightNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.rightNeighbor.checkFor4Some)
+                if (t.rightNeighbor != null && t.rightNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.rightNeighbor.checkFor4Some && t.rightNeighbor.tileStatus != Tile.TileStatus.secretRoom)
                 {
                     t = t.rightNeighbor;
                     _tArray[1] = t;
                     //Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
-                    if (t.downNeighbor != null && t.downNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.downNeighbor.checkFor4Some)
+                    if (t.downNeighbor != null && t.downNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.downNeighbor.checkFor4Some && t.downNeighbor.tileStatus != Tile.TileStatus.secretRoom)
                     {
                         t = t.downNeighbor;
                         _tArray[2] = t;
                         // Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
-                        if (t.leftNeighbor != null && t.leftNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.leftNeighbor.checkFor4Some)
+                        if (t.leftNeighbor != null && t.leftNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.leftNeighbor.checkFor4Some && t.leftNeighbor.tileStatus != Tile.TileStatus.secretRoom)
                         {
                             //all of these tiles can be linked
                             t = t.leftNeighbor;
@@ -266,24 +308,18 @@ public class LevelAssetSpawn : MonoBehaviour
                                             {
                                                 _possibleItems.Remove(item);
                                                 _possibleObjectives.Remove(item);
+                                                
                                             }
                                             _possibleTileObjectivesInLevel.Remove(tile3.presetTile);
-                                            
                                         }
                                     }
 
                                     if(tile3.presetTile != null)
                                         Destroy(tile3.presetTile.gameObject);
-
-
                                     tile3.checkFor4Some = true;
                                     tile3.transform.parent = fourSomeTile.transform;
                                 }
-
                                 SpawnLevelBigAsset(fourSomeTile, obj);
-
-
-
                                 return;
                             }
                             //else
@@ -307,7 +343,6 @@ public class LevelAssetSpawn : MonoBehaviour
                     _tArray[0] = null;
                 }
             }
-
         }
             if (!tile.levelAssetPlaced )
             {
@@ -409,7 +444,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
             bigAssetCountArray[1] += 1;
             endObjTile = preset;
-            //Debug.Log("BIG ASSET WITH OBJ");
+            Debug.Log("BIG ASSET WITH OBJ");
         }
 
 
@@ -497,12 +532,29 @@ public class LevelAssetSpawn : MonoBehaviour
         return ar;
     }
     #region Items
+    
     void ActivateItems()
     {
 
         //shuffle _possibleItems
         _possibleItems = reshuffle(_possibleItems);
-        
+
+        switch (myLocalLevel.thisLevelTier)
+        {
+            case levelTier.level1:
+                collectables = tier1CollectableCap;
+                break;
+            case levelTier.level2:
+                collectables = tier2CollectableCap;
+                break;
+            case levelTier.level3:
+                collectables = tier3CollectableCap;
+                break;
+            case levelTier.level4:
+                break;
+            default:
+                break;
+        }
 
         //check weight of possible item
         //highly favor that weight but could still spawn other 2 types
@@ -513,8 +565,8 @@ public class LevelAssetSpawn : MonoBehaviour
         //weight adds 30 to weapon
         //adds 30 to item
         //adds 30 to resoruce
-
-        for(int pItemC = 0; pItemC < _possibleItems.Count - dontSpawnCount; pItemC++)
+        int pItemC;
+        for(pItemC = 0; pItemC < _possibleItems.Count && pItemC < collectables; pItemC++)
         {
             switch (_possibleItems[pItemC].GetComponent<PossibleItem>().objectWeight)
             {
@@ -645,15 +697,16 @@ public class LevelAssetSpawn : MonoBehaviour
             }
         }
         //Debug.Log("Removing unused drops");
-        for(int lastItems = _possibleItems.Count - dontSpawnCount; lastItems < _possibleItems.Count; lastItems++)
+        for(int lastItems = pItemC; lastItems < _possibleItems.Count; lastItems++)
         {
             //Debug.Log("Destroying " + _possibleItems[lastItems].name);
+            _possibleObjectives.Remove(_possibleItems[lastItems]);
             Destroy(_possibleItems[lastItems]);
         }
         //resources can either spawn at random or based on distance from any other existing resource
         //when activated that gameobject will be removed from the possibleResources and added to resourcesInLevel List
         //when item is activated can either be a weapon, resource or other item
-
+        //Debug.Log(pItemC);
     }
 
     /// <summary>
@@ -721,31 +774,34 @@ public class LevelAssetSpawn : MonoBehaviour
 
     #region Enemies
 
-
     void ActivateEnemies()
     {
-        switch (myLevelAsset.levelTier)
+        _possibleEnemiesInLevel = reshuffle(_possibleEnemiesInLevel);
+        //Debug.Log(myLevelAsset.levelTier);
+        switch (myLocalLevel.thisLevelTier)
         {
-            case 1:
+            case levelTier.level1:
                 ActivateEnemiesTier1();
                 break;
-            case 2:
+            case levelTier.level2:
                 ActivateEnemiesTier2();
                 break;
-            case 3:
+            case levelTier.level3:
                 ActivateEnemiesTier3();
                 break;
             default:
                 break;
         }
+        //Debug.Log(enemyCount);
     }
     /// <summary>
     /// enemy spawning depends on tier
     /// </summary>
     void ActivateEnemiesTier1()
     {
+
         //each level has a range of enemies it spawns
-        for(enemyCount = 0; enemyCount < _possibleEnemiesInLevel.Count; enemyCount++)
+        for(enemyCount = 0; enemyCount < _possibleEnemiesInLevel.Count && tier1EnemyCap > enemyCount; enemyCount++)
         {
             if(_possibleEnemiesInLevel[enemyCount].TryGetComponent<PossibleEnemy>(out PossibleEnemy mPossibleEnemy))
             {
@@ -922,11 +978,17 @@ public class LevelAssetSpawn : MonoBehaviour
                 //Debug.Log(enemyCount);
             }
         }
+        for(int deleteCount = enemyCount; deleteCount < _possibleEnemiesInLevel.Count; deleteCount++)
+        {
+            Destroy(_possibleEnemiesInLevel[deleteCount]);
+        }
+
+        //remove extra spots
     }
     void ActivateEnemiesTier2()
     {
         //includes tier 1 plus splitters, wardens and stalkers
-        for (enemyCount = 0; enemyCount < _possibleEnemiesInLevel.Count; enemyCount++)
+        for (enemyCount = 0; enemyCount < _possibleEnemiesInLevel.Count && tier2EnemyCap > enemyCount; enemyCount++)
         {
             if (_possibleEnemiesInLevel[enemyCount].TryGetComponent<PossibleEnemy>(out PossibleEnemy mPossibleEnemy))
             {
@@ -1087,11 +1149,15 @@ public class LevelAssetSpawn : MonoBehaviour
 
             }
         }
+        for (int deleteCount = enemyCount; deleteCount < _possibleEnemiesInLevel.Count; deleteCount++)
+        {
+            Destroy(_possibleEnemiesInLevel[deleteCount]);
+        }
     }
     void ActivateEnemiesTier3()
     {
         //all of them
-        for (enemyCount = 0; enemyCount < _possibleEnemiesInLevel.Count; enemyCount++)
+        for (enemyCount = 0; enemyCount < _possibleEnemiesInLevel.Count && tier3EnemyCap > enemyCount; enemyCount++)
         {
             if (_possibleEnemiesInLevel[enemyCount].TryGetComponent<PossibleEnemy>(out PossibleEnemy mPossibleEnemy))
             {
@@ -1178,6 +1244,10 @@ public class LevelAssetSpawn : MonoBehaviour
                 //Destroy(mPossibleEnemy.gameObject);
 
             }
+        }
+        for (int deleteCount = enemyCount; deleteCount < _possibleEnemiesInLevel.Count; deleteCount++)
+        {
+            Destroy(_possibleEnemiesInLevel[deleteCount]);
         }
     }
     #endregion

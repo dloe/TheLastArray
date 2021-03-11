@@ -7,12 +7,15 @@ using UnityEngine;
 [CustomEditor(typeof(TileGeneration))]
 public class TileGenerationInspector : Editor
 {
+
+    //Temporary turned to false
     TileGeneration myTileGeneration;
     string showDebugPathActive = "Debug Path Inactive";
 
     private void Awake()
     {
         myTileGeneration = (TileGeneration)target;
+        myTileGeneration.debugPathOn = false;
     }
 
     public override void OnInspectorGUI()
@@ -102,7 +105,7 @@ public class TileGeneration : MonoBehaviour
     [Header("Amount of extra single rooms added")]
     public int fillerRooms;
     
-    List<Tile> _avalibleTileSpots = new List<Tile>();
+    public List<Tile> _avalibleTileSpots = new List<Tile>();
     List<Tile> _branch = new List<Tile>();
 
     bool _startLine = false;
@@ -119,7 +122,20 @@ public class TileGeneration : MonoBehaviour
     [Space(10)]
     [Header("Will level have doors generate?")]
     public bool hasDoors = false;
+    private LocalLevel myLocalLevel;
 
+    public GameObject secretRoom;
+    public class TileInfo
+    {
+        public TileInfo()
+        {
+            tile = null;
+            n = new List<int>();
+        }
+        public Tile tile;
+        public List<int> n;
+    }
+    List<TileInfo> _posSRNeighbors;
     private void Awake()
     {
         if (debugPathOn)
@@ -129,6 +145,7 @@ public class TileGeneration : MonoBehaviour
             // lineRenderer.positionCount = 20;
             _lr = GetComponent<LineRenderer>();
         }
+        myLocalLevel = FindObjectOfType<LocalLevel>();
     }
 
 
@@ -400,6 +417,11 @@ public class TileGeneration : MonoBehaviour
         //add Start Room (outside of grid)
         CreateSpawnRoom();
 
+        //set up secret room
+        if (myLocalLevel.thisLevelTier > levelTier.level2)
+        {
+            //SetUpSecretRoom();
+        }
 
         //this will be removed eventaully
         if (hasDoors)
@@ -408,7 +430,7 @@ public class TileGeneration : MonoBehaviour
         }
  
 
-
+        //temp turned off to see what is availble to use
         FinalTileSetup();
 
 
@@ -421,7 +443,135 @@ public class TileGeneration : MonoBehaviour
         
         
     }
-    
+
+
+    public void SetUpSecretRoom()
+    {
+        //first finds where we can possible put this
+        //outskirts of game map (any tile next to an edge)
+        //compose list of all null neighbors of all active tiles (excluding start and end room)
+        _posSRNeighbors = new List<TileInfo>();
+        for (int tileC = 0; tileC < _allActiveTiles.Count - 1; tileC++)
+        {
+            Tile current = _allActiveTiles[tileC];
+            TileInfo cInfo = new TileInfo();
+            cInfo.tile = current;
+            if (current.tileStatus != Tile.TileStatus.boss && current.tileStatus != Tile.TileStatus.startingRoom)
+            {
+                if (current.upNeighbor == null)
+                {
+                    cInfo.n.Add(1);
+                }
+                else if(current.upNeighbor != null && current.upNeighbor.tileStatus == Tile.TileStatus.nullRoom 
+                    && current.upNeighbor.tileStatus != Tile.TileStatus.boss && current.upNeighbor.tileStatus != Tile.TileStatus.startingRoom)
+                {
+                    cInfo.n.Add(1);
+                }
+
+                if (current.downNeighbor == null)
+                {
+                    cInfo.n.Add(2);
+                }
+                else if(current.downNeighbor != null && current.downNeighbor.tileStatus == Tile.TileStatus.nullRoom 
+                    && current.downNeighbor.tileStatus != Tile.TileStatus.boss && current.downNeighbor.tileStatus != Tile.TileStatus.startingRoom)
+                {
+                    cInfo.n.Add(2);
+                }
+
+                if (current.leftNeighbor == null)
+                {
+                    cInfo.n.Add(3);
+                }
+                else if(current.leftNeighbor != null && current.leftNeighbor.tileStatus == Tile.TileStatus.nullRoom 
+                    && current.leftNeighbor.tileStatus != Tile.TileStatus.boss && current.leftNeighbor.tileStatus != Tile.TileStatus.startingRoom)
+                {
+                    cInfo.n.Add(3);
+                }
+
+                if (current.rightNeighbor == null)
+                {
+                    cInfo.n.Add(4);
+                }
+                else if(current.rightNeighbor != null && current.rightNeighbor.tileStatus == Tile.TileStatus.nullRoom 
+                    && current.rightNeighbor.tileStatus != Tile.TileStatus.boss && current.rightNeighbor.tileStatus != Tile.TileStatus.startingRoom)
+                {
+                    cInfo.n.Add(4);
+                }
+
+                if(cInfo.n.Count != 0 && !_posSRNeighbors.Contains(cInfo))
+                {
+                    _posSRNeighbors.Add(cInfo);
+                }
+            }
+        }
+        //Debug.Log(_posSRNeighbors.Count);
+        //now randomly picks a tile that has a neighbor we can use for secret room
+        int tileNum = Random.Range(0, _posSRNeighbors.Count);
+       // Debug.Log(tileNum);
+        TileInfo t = _posSRNeighbors[tileNum];
+       // Debug.Log(t.tile.posOnGrid.x + " " + t.tile.posOnGrid.y);
+        //add null neighbors to array then randomly pick neighbor and this is where the secret room goes ;)
+        //shuffle array of possible locs
+        t.n = reshuffle(t.n);
+        int loc = Random.Range(0, t.n.Count);
+        //Debug.Log("check " + loc);
+       // Debug.Log(t.n[loc]);
+        Vector3 spawnPos;
+        Quaternion spawnRot;
+        switch (t.n[loc])
+        {
+            case 1:
+                //up 
+                Debug.Log("Up");
+                spawnPos = new Vector3(t.tile.transform.position.x - (myLevelAssetsData.tileSize / 2), t.tile.transform.position.y, t.tile.transform.position.z);
+                spawnRot = new Quaternion(t.tile.transform.rotation.x, t.tile.transform.rotation.y, t.tile.transform.rotation.z, t.tile.transform.rotation.w);
+                secretRoom = Instantiate(tilePlaceholder, spawnPos, spawnRot);
+
+                secretRoom.GetComponent<Tile>().downNeighbor = t.tile;
+                t.tile.upNeighbor = secretRoom.GetComponent<Tile>();
+
+                break;
+            case 2:
+                //down
+                Debug.Log("Down");
+                spawnPos = new Vector3(t.tile.transform.position.x + (myLevelAssetsData.tileSize / 2), t.tile.transform.position.y, t.tile.transform.position.z);
+                spawnRot = new Quaternion(t.tile.transform.rotation.x, t.tile.transform.rotation.y, t.tile.transform.rotation.z, t.tile.transform.rotation.w);
+                secretRoom = Instantiate(tilePlaceholder, spawnPos, spawnRot);
+
+                secretRoom.GetComponent<Tile>().upNeighbor = t.tile;
+                t.tile.downNeighbor = secretRoom.GetComponent<Tile>();
+                break;
+            case 3:
+                //left
+                Debug.Log("Left");
+                spawnPos = new Vector3(t.tile.transform.position.x, t.tile.transform.position.y, t.tile.transform.position.z - (myLevelAssetsData.tileSize / 2));
+                spawnRot = new Quaternion(t.tile.transform.rotation.x, t.tile.transform.rotation.y, t.tile.transform.rotation.z, t.tile.transform.rotation.w);
+                secretRoom = Instantiate(tilePlaceholder, spawnPos, spawnRot);
+
+                secretRoom.GetComponent<Tile>().rightNeighbor = t.tile;
+                t.tile.leftNeighbor = secretRoom.GetComponent<Tile>();
+                break;
+            case 4:
+                //right
+                Debug.Log("Right");
+                spawnPos = new Vector3(t.tile.transform.position.x, t.tile.transform.position.y, t.tile.transform.position.z + (myLevelAssetsData.tileSize / 2));
+                spawnRot = new Quaternion(t.tile.transform.rotation.x, t.tile.transform.rotation.y, t.tile.transform.rotation.z, t.tile.transform.rotation.w);
+                secretRoom = Instantiate(tilePlaceholder, spawnPos, spawnRot);
+
+                secretRoom.GetComponent<Tile>().leftNeighbor = t.tile;
+                t.tile.rightNeighbor = secretRoom.GetComponent<Tile>();
+                break;
+            default:
+                Debug.Log("ERROR: the array on n is null");
+                break;
+        }
+        secretRoom.name = "SecretRoom";
+        secretRoom.transform.parent = this.transform;
+        secretRoom.GetComponent<Tile>().ShadeSecret();
+        secretRoom.GetComponent<Tile>().ActivateWalls();
+        Debug.Log("SecretRoom added");
+    }
+
     void CreateSpawnRoom()
     {
         GameObject startingNode = new GameObject();
@@ -652,6 +802,8 @@ public class TileGeneration : MonoBehaviour
         }
         //Debug.Log("Tile Generation Finished, you can now order panda express.");
         //Debug.Log("added single rooms");
+
+
     }
 
     void RemakeAvalibleSpots()
@@ -793,6 +945,18 @@ public class TileGeneration : MonoBehaviour
         {
             int tmp = ar[t];
             int r = Random.Range(t, ar.Length);
+            ar[t] = ar[r];
+            ar[r] = tmp;
+        }
+        return ar;
+    }
+    List<int> reshuffle(List<int> ar)
+    {
+        // Knuth shuffle algorithm :: courtesy of Wikipedia :)
+        for (int t = 0; t < ar.Count; t++)
+        {
+            int tmp = ar[t];
+            int r = Random.Range(t, ar.Count);
             ar[t] = ar[r];
             ar[r] = tmp;
         }
