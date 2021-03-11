@@ -102,7 +102,7 @@ public class LocalLevel : MonoBehaviour
 
 
         //objective = 2;
-        //return;
+       // return;
 
         //picks objective - cant be the previous objective
         if(myPlayerData.previouslyCompletedObj == -1)

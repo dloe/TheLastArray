@@ -152,7 +152,10 @@ public class TileGeneration : MonoBehaviour
             _lr.widthMultiplier = 0.5f;
             // lineRenderer.positionCount = 20;
             _lr = GetComponent<LineRenderer>();
+            _lr.enabled = false;
         }
+      //  else
+            
         _distanceBetweenNodes = myLevelAssetsData.tileSize/2;
 
         //test = reshuffle(test);
