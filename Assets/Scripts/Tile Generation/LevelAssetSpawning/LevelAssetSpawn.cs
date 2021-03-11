@@ -30,7 +30,7 @@ public class LevelAssetSpawn : MonoBehaviour
     Vector3 _av;
 
     //each tile preset has possible locations for resources, those go here
-    List<GameObject> _possibleItems = new List<GameObject>();
+    public List<GameObject> _possibleItems = new List<GameObject>();
     [Header("Resources In Level")]
     public List<GameObject> resourcesInLevelList = new List<GameObject>();
     [Header("Items In Level")]
@@ -38,7 +38,7 @@ public class LevelAssetSpawn : MonoBehaviour
     [Header("Weapons In Level")]
     public List<GameObject> weaponsInLevelList = new List<GameObject>();
 
-    List<GameObject> _possibleObjectives = new List<GameObject>();
+    public List<GameObject> _possibleObjectives = new List<GameObject>();
 
     [Header("Enemies In Level")]
     public List<GameObject> enemiesInLevel = new List<GameObject>();
@@ -50,7 +50,7 @@ public class LevelAssetSpawn : MonoBehaviour
     GameObject endObjTile;
     [Header("Objectives In Level")]
     public List<GameObject> objectivesInLevel = new List<GameObject>();
-    List<GameObject> _possibleTileObjectivesInLevel = new List<GameObject>();
+    public List<GameObject> _possibleTileObjectivesInLevel = new List<GameObject>();
 
     [Header("Total Collectables Spawned")]
     public int collectables;
@@ -124,6 +124,7 @@ public class LevelAssetSpawn : MonoBehaviour
         //ACTIVATE OBJECTIVES
         ActivateObjectives();
         
+
         //SPAWN IN RESOURCES
         ActivateItems();
 
@@ -179,7 +180,7 @@ public class LevelAssetSpawn : MonoBehaviour
             obj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
 
             objectivesInLevel.Add(obj);
-            _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
+            //Debug.Log(_possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn));
 
             //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
             //if objective is certain types (ie type 3), choose more objectives and add to list
@@ -187,20 +188,29 @@ public class LevelAssetSpawn : MonoBehaviour
                 //make sure we can spawn 2 more objectives!
                 for (int objCount = 0; objCount < 2; objCount++)
                 {
-                    if (_possibleTileObjectivesInLevel.Count > 0)
-                    {
-                        //randomly pick an objective (or item?)
-                        int indexO = Random.Range(0, _possibleObjectives.Count);
+                //   if (_possibleTileObjectivesInLevel.Count > 0)
+                //   {
+                //randomly pick an objective (or item?)
+                    int indexO = Random.Range(0, _possibleObjectives.Count);
+                    //Debug.Log(indexO);
                       //  Debug.Log(indexO);
                         GameObject objMulti = Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, _possibleObjectives[indexO]).gameObject;
                         objMulti.transform.rotation = playerSpawn.transform.rotation;
-                        objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
+                        //objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
+                    //Debug.Log(objMulti.transform.parent);
                         objectivesInLevel.Add(objMulti);
-                        _possibleItems.Remove(_possibleObjectives[indexO]);
-                        _possibleObjectives.Remove(_possibleObjectives[indexO]);
-                        
+
+                //if(_possibleItems.Contains(_possibleObjectives[indexO]))
+                        //_possibleItems.Remove(_possibleObjectives[indexO]);
+                    //Debug.Log(_possibleItems.Remove(_possibleObjectives[indexO]));
+
+                    //Debug.Log(_possibleObjectives.Remove(_possibleObjectives[indexO]));
+                
+               // _possibleObjectives.Remove(_possibleObjectives[indexO]);
+                    //Debug.Log(objMulti.name);
                         //Debug.Log("Added Objective");
-                    }
+                //Destroy(_possibleObjectives[indexO]);
+                  //  }
                 }      
         }
         else if (myLocalLevel.objective == 1)
@@ -217,7 +227,9 @@ public class LevelAssetSpawn : MonoBehaviour
             enemiesInLevel.Add(enemy);
         }
         //update Objectives object with objetive info
-        //Debug.Log("activated objs");
+        Debug.Log("activated objs");
+
+        //THERE IS A CHANCE THAT AN UNUSED OBJECTIVE LOCATION DOES NOT GET DELETED...
     }
     #endregion
 
@@ -296,24 +308,18 @@ public class LevelAssetSpawn : MonoBehaviour
                                             {
                                                 _possibleItems.Remove(item);
                                                 _possibleObjectives.Remove(item);
+                                                
                                             }
                                             _possibleTileObjectivesInLevel.Remove(tile3.presetTile);
-                                            
                                         }
                                     }
 
                                     if(tile3.presetTile != null)
                                         Destroy(tile3.presetTile.gameObject);
-
-
                                     tile3.checkFor4Some = true;
                                     tile3.transform.parent = fourSomeTile.transform;
                                 }
-
                                 SpawnLevelBigAsset(fourSomeTile, obj);
-
-
-
                                 return;
                             }
                             //else
@@ -337,7 +343,6 @@ public class LevelAssetSpawn : MonoBehaviour
                     _tArray[0] = null;
                 }
             }
-
         }
             if (!tile.levelAssetPlaced )
             {
@@ -439,7 +444,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
             bigAssetCountArray[1] += 1;
             endObjTile = preset;
-            //Debug.Log("BIG ASSET WITH OBJ");
+            Debug.Log("BIG ASSET WITH OBJ");
         }
 
 
@@ -695,6 +700,7 @@ public class LevelAssetSpawn : MonoBehaviour
         for(int lastItems = pItemC; lastItems < _possibleItems.Count; lastItems++)
         {
             //Debug.Log("Destroying " + _possibleItems[lastItems].name);
+            _possibleObjectives.Remove(_possibleItems[lastItems]);
             Destroy(_possibleItems[lastItems]);
         }
         //resources can either spawn at random or based on distance from any other existing resource

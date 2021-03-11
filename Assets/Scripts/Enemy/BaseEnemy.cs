@@ -296,9 +296,9 @@ public class BaseEnemy : MonoBehaviour
     }
     IEnumerator CoolDown()
     {
-        Debug.Log("cooling down");
+        //Debug.Log("cooling down");
         yield return new WaitForSeconds(attackSpeed);
-        Debug.Log("ready to attack");
+        //Debug.Log("ready to attack");
         attackCD = 0;
         readyToAttack = true;
 

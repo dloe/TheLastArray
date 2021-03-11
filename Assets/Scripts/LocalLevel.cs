@@ -101,8 +101,8 @@ public class LocalLevel : MonoBehaviour
        // Debug.Log("picking obj");
 
 
-       // objective = 3;
-      //  return;
+        //objective = 2;
+        //return;
 
         //picks objective - cant be the previous objective
         if(myPlayerData.previouslyCompletedObj == -1)
