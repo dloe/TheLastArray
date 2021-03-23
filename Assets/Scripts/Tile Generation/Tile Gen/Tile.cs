@@ -148,6 +148,14 @@ public class Tile : MonoBehaviour
     //if a neighbor is null, add a wall - specifically for tiles next to null spaces
     public void ActivateWalls()
     {
+        if(hasDoors)
+        {
+            for(int doorC = 0; doorC < 4; doorC++)
+            {
+                if(doors[doorC].TryGetComponent<DoorBehavior>(out DoorBehavior mDoor))
+                    mDoor.GetComponent<DoorBehavior>().CheckForReplacementDoor();
+            }
+        }
         //Debug.Log(posOnGrid.x + " " + posOnGrid.y);
         if(upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom)
         {

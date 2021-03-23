@@ -14,7 +14,7 @@ public class DoorBehavior : MonoBehaviour
         
         //Debug.Log("activated door");
         isDoor = isActive;
-
+        
         if (isActive)
         {
             //if another door is hitting this door and active, this door deletes itself
@@ -30,7 +30,7 @@ public class DoorBehavior : MonoBehaviour
     }
 
     //if an active door already exists in this spot, destroy this door
-    void CheckForReplacementDoor()
+    public void CheckForReplacementDoor()
     {
         //Debug.Log("Checking for replacements");
         Transform[] _possibleDoors = collidersToTransforms(Physics.OverlapSphere(transform.position, 5));
