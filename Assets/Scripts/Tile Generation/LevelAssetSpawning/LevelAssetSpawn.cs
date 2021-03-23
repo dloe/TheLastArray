@@ -161,45 +161,45 @@ public class LevelAssetSpawn : MonoBehaviour
         {
             if (t.tileStatus != Tile.TileStatus.startingRoom)
             {
-                    Debug.Log(t.name);
+                    //Debug.Log(t.name);
 
                     GameObject wall;
                     
                     if (t.doors[0] != null && t.upNeighbor != null && t.upNeighbor.doors[1] != null && t.doors[0] != t.upNeighbor.doors[1])
                     {
-                        Debug.Log(t.doors[0].name + " vs " + t.upNeighbor.doors[1].name);
+                        //Debug.Log(t.doors[0].name + " vs " + t.upNeighbor.doors[1].name);
                         wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
                         wall.transform.parent = t.transform;
                         wall.transform.localPosition = new Vector3(-12.5f, 5, 0);
                         wall.transform.eulerAngles = new Vector3(-90, 0, -90);
-                        //t.doors[0] = wall;
+                        t.doors[0] = wall;
                     }
                     if (t.doors[1] != null && t.downNeighbor != null && t.downNeighbor.doors[0] != null && t.doors[1] != t.downNeighbor.doors[0])
                     {
-                    Debug.Log(t.doors[1].name + " vs " + t.downNeighbor.doors[0].name);
+                    //Debug.Log(t.doors[1].name + " vs " + t.downNeighbor.doors[0].name);
                     wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
                         wall.transform.parent = t.transform;
                         wall.transform.localPosition = new Vector3(12.5f, 5, 0);
                         wall.transform.eulerAngles = new Vector3(-90, 0, 90);
-                       // t.doors[1] = wall;
+                        t.doors[1] = wall;
                     }
                     if (t.doors[2] != null && t.leftNeighbor != null && t.leftNeighbor.doors[3] != null && t.doors[2] != t.leftNeighbor.doors[3])
                     {
-                    Debug.Log(t.doors[2].name + " vs " + t.leftNeighbor.doors[3].name);
+                    //Debug.Log(t.doors[2].name + " vs " + t.leftNeighbor.doors[3].name);
                     wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
                         wall.transform.parent = t.transform;
                         wall.transform.localPosition = new Vector3(0, 5, -12.5f);
                         wall.transform.eulerAngles = new Vector3(-90, 0, -180);
-                        //t.doors[2] = wall;
+                        t.doors[2] = wall;
                     }
                     if (t.doors[3] != null && t.rightNeighbor != null && t.rightNeighbor.doors[2] != null && t.doors[3] != t.rightNeighbor.doors[2]) 
                     {
-                    Debug.Log(t.doors[3].name + " vs " + t.rightNeighbor.doors[2].name);
+                   // Debug.Log(t.doors[3].name + " vs " + t.rightNeighbor.doors[2].name);
                     wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
                         wall.transform.parent = t.transform;
                         wall.transform.localPosition = new Vector3(0, 5, 12.5f);
                         wall.transform.eulerAngles = new Vector3(-90, 0, 0);
-                        //t.doors[3] = wall;
+                        t.doors[3] = wall;
                     }
             }
         }
@@ -207,7 +207,34 @@ public class LevelAssetSpawn : MonoBehaviour
         //remove access walls on big tiles
         foreach(GameObject tile in _bigTilesList)
         {
-            
+            //child 0 should not have wall on right side or down side
+            //child 1 should not have wall on left side or down side
+            //child 2 should not have wall on left side or up side
+            //child 3 should not have wall on right side or up side
+            Tile tileSub;
+            tileSub = tile.transform.GetChild(0).GetComponent<Tile>();
+            if (tileSub.doors[1] == myLevelAsset.levelWall)
+                Destroy(tileSub.doors[1]);
+            if (tileSub.doors[3] == myLevelAsset.levelWall)
+                Destroy(tileSub.doors[3]);
+            tileSub = tile.transform.GetChild(1).GetComponent<Tile>();
+            if (tileSub.doors[1] == myLevelAsset.levelWall)
+                Destroy(tileSub.doors[1]);
+            if (tileSub.doors[2] == myLevelAsset.levelWall)
+                Destroy(tileSub.doors[2]);
+            tileSub = tile.transform.GetChild(2).GetComponent<Tile>();
+            if (tileSub.doors[0] == myLevelAsset.levelWall)
+                Destroy(tileSub.doors[0]);
+            if (tileSub.doors[2] == myLevelAsset.levelWall)
+                Destroy(tileSub.doors[2]);
+            tileSub = tile.transform.GetChild(3).GetComponent<Tile>();
+            if (tileSub.doors[0] == myLevelAsset.levelWall)
+                Destroy(tileSub.doors[0]);
+            if (tileSub.doors[3] == myLevelAsset.levelWall)
+                Destroy(tileSub.doors[3]);
+
+
+           
         }
 
     }

@@ -41,7 +41,7 @@ public class DoorBehavior : MonoBehaviour
                 //replace this door in the tile with the door that already exists
                 //WIP
 
-               // Debug.Log("Destroyed door");
+                //Debug.Log("Destroyed door");
                 Destroy(this.gameObject);
             }
         }
