@@ -7,9 +7,12 @@ public class DoorBehavior : MonoBehaviour
     //when activated, it will not spawn any blockage possibly pick different variants of doors or entryways
     //otherwise player cannot go through this way so it will spawn walls or something to stop them from progressing
     public bool isDoor = true;
+    public int num;
+    public bool replaceme = false;
     public void ActivateDoor(bool isActive)
     {
-      //  Debug.Log("activated door");
+        
+        //Debug.Log("activated door");
         isDoor = isActive;
 
         if (isActive)
@@ -20,12 +23,16 @@ public class DoorBehavior : MonoBehaviour
             //activate other stuff after door is for sure staying
         }
         else
+        {
+           // Debug.Log("Destroyed door " + this.name);
             Destroy(this.gameObject);
+        }
     }
 
     //if an active door already exists in this spot, destroy this door
     void CheckForReplacementDoor()
     {
+        //Debug.Log("Checking for replacements");
         Transform[] _possibleDoors = collidersToTransforms(Physics.OverlapSphere(transform.position, 5));
         foreach (Transform potentialTarget in _possibleDoors)
         {
@@ -34,7 +41,7 @@ public class DoorBehavior : MonoBehaviour
                 //replace this door in the tile with the door that already exists
                 //WIP
 
-
+               // Debug.Log("Destroyed door");
                 Destroy(this.gameObject);
             }
         }

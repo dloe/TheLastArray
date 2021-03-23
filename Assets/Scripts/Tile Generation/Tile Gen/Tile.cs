@@ -422,6 +422,7 @@ public class Tile : MonoBehaviour
                     {
                         //Debug.Log("off");
                         doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
+                      //  doors[0] = null;
                     }
                     else
                     {
@@ -447,7 +448,10 @@ public class Tile : MonoBehaviour
                                 doorsActivated++;
                             }
                             else
+                            {
                                 doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
+                               // doors[0] = null;
+                            }
 
                         }
                     }
@@ -459,6 +463,7 @@ public class Tile : MonoBehaviour
                     {
                         //Debug.Log("off");
                         doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
+                       // doors[1] = null;
                     }
                     else
                     {
@@ -484,7 +489,10 @@ public class Tile : MonoBehaviour
                                 doorsActivated++;
                             }
                             else
+                            {
                                 doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
+                               // doors[1] = null;
+                            }
 
                         }
                     }
@@ -496,6 +504,7 @@ public class Tile : MonoBehaviour
                     {
                         //Debug.Log("off");
                         doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
+                       // doors[2] = null;
                     }
                     else
                     {
@@ -521,7 +530,10 @@ public class Tile : MonoBehaviour
                                 doorsActivated++;
                             }
                             else
+                            {
                                 doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
+                               // doors[2] = null;
+                            }
 
                         }
                     }
@@ -533,6 +545,7 @@ public class Tile : MonoBehaviour
                     {
                         //Debug.Log("off");
                         doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
+                       // doors[3] = null;
                     }
                     else
                     {
@@ -558,8 +571,10 @@ public class Tile : MonoBehaviour
                                 doorsActivated++;
                             }
                             else
+                            {
                                 doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
-
+                               // doors[3] = null;
+                            }
                         }
                     }
                     break;
@@ -568,7 +583,7 @@ public class Tile : MonoBehaviour
             }
         }
 
-
+        Debug.Log("doors activated branch");
 
     }
 
@@ -596,6 +611,7 @@ public class Tile : MonoBehaviour
                     {
                         //Debug.Log("off");
                         doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
+                      //  doors[0] = null;
                     }
                     else
                     {
@@ -621,6 +637,7 @@ public class Tile : MonoBehaviour
                             {
                                 //Debug.Log("off");
                                 doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
+                              //  doors[0] = null;
                             }
                         }
                     }
@@ -632,6 +649,7 @@ public class Tile : MonoBehaviour
                     {
                         //Debug.Log("off");
                         doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
+                       // doors[1] = null;
                     }
                     else
                     {
@@ -657,6 +675,7 @@ public class Tile : MonoBehaviour
                             {
                                 //Debug.Log("off");
                                 doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
+                               // doors[1] = null;
                             }
                         }
                     }
@@ -666,6 +685,7 @@ public class Tile : MonoBehaviour
                     {
                         //Debug.Log("off");
                         doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
+                      //  doors[2] = null;
                     }
                     else
                     {
@@ -691,6 +711,7 @@ public class Tile : MonoBehaviour
                             {
                                 //Debug.Log("off");
                                 doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
+                               // doors[2] = null;
                             }
                         }
                     }
@@ -700,6 +721,7 @@ public class Tile : MonoBehaviour
                     {
                         //Debug.Log("off");
                         doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
+                      //  doors[3] = null;
                     }
                     else
                     {
@@ -725,6 +747,7 @@ public class Tile : MonoBehaviour
                             {
                                 //Debug.Log("off");
                                 doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
+                               // doors[3] = null;
                             }
                         }
                     }
@@ -735,6 +758,7 @@ public class Tile : MonoBehaviour
         }
 
         doorsActivated = doorsOn;
+        Debug.Log("doors activated random");
     }
 
     public void ActivateDoorToPath()
@@ -759,6 +783,7 @@ public class Tile : MonoBehaviour
                     {
                         //  Debug.Log("off");
                         doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
+                       // doors[0] = null;
                     }
                     else if (upNeighbor.tileStatus == TileStatus.path || upNeighbor.tileStatus == TileStatus.startingRoom)
                     {
@@ -775,6 +800,7 @@ public class Tile : MonoBehaviour
                     {
                         // Debug.Log("off");
                         doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
+                       // doors[1] = null;
                     }
                     else if ((downNeighbor.tileStatus == TileStatus.path || downNeighbor.tileStatus == TileStatus.startingRoom))
                     {
@@ -790,6 +816,7 @@ public class Tile : MonoBehaviour
                     {
                         // Debug.Log("off");
                         doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
+                       // doors[2] = null;
                     }
                     else if (leftNeighbor.tileStatus == TileStatus.path || leftNeighbor.tileStatus == TileStatus.startingRoom)
                     {
@@ -805,6 +832,7 @@ public class Tile : MonoBehaviour
                     {
                         // Debug.Log("off");
                         doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
+                        //doors[3] = null;
                     }
                     else if (rightNeighbor.tileStatus == TileStatus.path || rightNeighbor.tileStatus == TileStatus.startingRoom)
                     {
@@ -821,6 +849,7 @@ public class Tile : MonoBehaviour
                     break;
             }
         }
+        Debug.Log("doors activated path");
     }
 
     public void ActivateDoors()
@@ -831,6 +860,7 @@ public class Tile : MonoBehaviour
         {
             //Debug.Log("off");
             doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
+           // doors[0] = null;
         }
         else if ((upNeighbor.tileStatus == TileStatus.path || upNeighbor.tileStatus == TileStatus.room || upNeighbor.tileStatus == TileStatus.boss))
         {
@@ -845,12 +875,14 @@ public class Tile : MonoBehaviour
             {
                 // Debug.Log("This number: " + pathNumber + " vs up n number: " + upNeighbor.pathNumber);
                 doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
+               // doors[0] = null;
             }
         }
         else if (upNeighbor.tileStatus == TileStatus.startingRoom && (pathNumber - 1 != upNeighbor.pathNumber || pathNumber + 1 != upNeighbor.pathNumber))
         {
             //if this tile is next to starting room and not the next tile in path
             doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
+           // doors[0] = null;
         }
 
 
@@ -859,6 +891,7 @@ public class Tile : MonoBehaviour
         {
             // Debug.Log("off");
             doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
+           // doors[1] = null;
         }
         else if ((downNeighbor.tileStatus == TileStatus.path || downNeighbor.tileStatus == TileStatus.room || downNeighbor.tileStatus == TileStatus.boss))
         {
@@ -873,12 +906,14 @@ public class Tile : MonoBehaviour
             {
                 // Debug.Log("This number: " + pathNumber + " vs down n number: " + downNeighbor.pathNumber);
                 doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
+               // doors[1] = null;
             }
         }
         else if (downNeighbor.tileStatus == TileStatus.startingRoom && (pathNumber - 1 != downNeighbor.pathNumber || pathNumber + 1 != downNeighbor.pathNumber))
         {
             //if this tile is next to starting room and not the next tile in path
             doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
+           // doors[1] = null;
         }
 
 
@@ -886,6 +921,7 @@ public class Tile : MonoBehaviour
         {
             // Debug.Log("off");
             doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
+           // doors[2] = null;
         }
         else if ((leftNeighbor.tileStatus == TileStatus.path || leftNeighbor.tileStatus == TileStatus.room || leftNeighbor.tileStatus == TileStatus.boss))
         {
@@ -900,12 +936,14 @@ public class Tile : MonoBehaviour
             {
                 // Debug.Log("This number: " + pathNumber + " vs left n number: " + leftNeighbor.pathNumber);
                 doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
+               // doors[2] = null;
             }
         }
         else if (leftNeighbor.tileStatus == TileStatus.startingRoom && (pathNumber - 1 != leftNeighbor.pathNumber || pathNumber + 1 != leftNeighbor.pathNumber))
         {
             //if this tile is next to starting room and not the next tile in path
             doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
+            //doors[2] = null;
         }
 
 
@@ -913,6 +951,7 @@ public class Tile : MonoBehaviour
         {
             // Debug.Log("off");
             doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
+            //doors[3] = null;
         }
         else if ((rightNeighbor.tileStatus == TileStatus.path || rightNeighbor.tileStatus == TileStatus.room || rightNeighbor.tileStatus == TileStatus.boss))
         {
@@ -927,15 +966,17 @@ public class Tile : MonoBehaviour
             {
                 // Debug.Log("This number: " + pathNumber + " vs right n number: " + rightNeighbor.pathNumber);
                 doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
+                //doors[3] = null;
             }
         }
         else if (rightNeighbor.tileStatus == TileStatus.startingRoom && (pathNumber - 1 != rightNeighbor.pathNumber || pathNumber + 1 != rightNeighbor.pathNumber))
         {
             //if this tile is next to starting room and not the next tile in path
             doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
+            //doors[3] = null;
         }
 
-        //  Debug.Log("Done " + this.name);
+        Debug.Log("Done " + this.name);
     }
 
     public void DeactivateDoors()
@@ -943,6 +984,7 @@ public class Tile : MonoBehaviour
         foreach (GameObject door in doors)
         {
             door.GetComponent<DoorBehavior>().ActivateDoor(false);
+
         }
     }
     #endregion

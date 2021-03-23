@@ -438,18 +438,12 @@ public class TileGeneration : MonoBehaviour
             //SetUpSecretRoom();
         }
 
-        //this will be removed eventaully
         if (hasDoors)
         {
             ActivateAllDoors();
         }
  
-
-        //temp turned off to see what is availble to use
         FinalTileSetup();
-
-
-        
 
         _startLine = true;
 
@@ -984,20 +978,17 @@ public class TileGeneration : MonoBehaviour
             t.ActivateDoors();
         }
         DeactivateInActiveRooms();
-        //Debug.Log("Activated doors");
+        Debug.Log("Activated doors");
 
         //sync doors to have doors actually connect between tiles
         foreach (Tile t in _allActiveTiles)
         {
             t.SyncDoors();
         }
-        //Debug.Log("Synced doors");
+        Debug.Log("Synced doors");
 
         
     }
-
-    
-
 
     int failsafeCount = 0;
     /// <summary>
@@ -1204,15 +1195,12 @@ public class TileGeneration : MonoBehaviour
         //flipped values
         endX = _levelWidth - startX - 1;
         endY = _levelHeight - startY - 1;
-        //Debug.Log("Potential end: " + endX + " " +endY);
 
         //add a little variation so boss room can anywhere in that quarter
         int xBuffer = _levelWidth / 2;
         endXF = endX + Random.Range(-xBuffer + 1, xBuffer - 1);
-        //Debug.Log(endXF);
         int yBuffer = _levelHeight / 2;
         endYF = endY + Random.Range(-yBuffer + 1, yBuffer - 1);
-        // Debug.Log(endYF);
 
         //should always try to keep a minimum distance from start (the xBuffer), cant be on same x as buffer
 
@@ -1224,9 +1212,6 @@ public class TileGeneration : MonoBehaviour
         {
             endYF = endY + Random.Range(-yBuffer + 1, yBuffer);
         }
-        //Debug.Log("check");
-        //Debug.Log(endXF);
-        //Debug.Log(endYF);
         //yield return new WaitForSeconds(0.1f);
         //in case the start point is towards the middle and the end point is also in the middle, really close to each other
         //check if Mathf.Abs(endXF - startX) < xbuffer && Mathf.Abs(endYF - startY)
