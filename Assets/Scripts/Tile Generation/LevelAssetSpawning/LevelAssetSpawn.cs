@@ -122,6 +122,8 @@ public class LevelAssetSpawn : MonoBehaviour
             t.ActivateWalls();
             AnalyzeTile(t);
 
+            //condisider first linking 2 x 2s then goingthrough to activate walls
+
             //add starting tile resources
             if (t.tileStatus == Tile.TileStatus.startingRoom)
             {
@@ -138,6 +140,66 @@ public class LevelAssetSpawn : MonoBehaviour
                 StartCoroutine(setPlayerPosition(play, playerSpawn.transform.position));
 
                 myLocalLevel.myPlayer = play.transform.GetChild(0).gameObject.GetComponent<Player>();
+            }
+        }
+
+        if(myTileGeneration.hasDoors)
+        {
+            ActivateLvl4Walls();
+        }
+        
+    }
+
+    //doors would be active linking tiles, just add doors on sides that dont have doors yeet im so tired please help i feel myself slowly drifitng away into oblivion oh god
+    void ActivateLvl4Walls()
+    {
+        foreach (Tile t in myTileGeneration._allActiveTiles)
+        {
+            if (t.tileStatus != Tile.TileStatus.startingRoom)
+            {
+                Debug.Log(t.name);
+                for(int doorCount = 0; doorCount < t.doors.Length; doorCount++)
+                {
+                    Debug.Log(t.doors[doorCount].name);
+
+                    if (t.doors[doorCount] == null) //myLevelAsset.levelWall || t.doors[doorCount] != )
+                    {
+                        GameObject wall;
+                        switch (doorCount)
+                        {
+                            case 0:
+                                wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
+                                wall.transform.parent = t.transform;
+                                wall.transform.localPosition = new Vector3(-12.5f, 5, 0);
+                                wall.transform.eulerAngles = new Vector3(-90, 0, -90);
+                                t.doors[0] = wall;
+                                break;
+                            case 1:
+                                wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
+                                wall.transform.parent = t.transform;
+                                wall.transform.localPosition = new Vector3(12.5f, 5, 0);
+                                wall.transform.eulerAngles = new Vector3(-90, 0, 90);
+                                t.doors[1] = wall;
+                                break;
+                            case 2:
+                                wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
+                                wall.transform.parent = t.transform;
+                                wall.transform.localPosition = new Vector3(0, 5, -12.5f);
+                                wall.transform.eulerAngles = new Vector3(-90, 0, -180);
+                                t.doors[2] = wall;
+                                break;
+                            case 3:
+                                wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
+                                wall.transform.parent = t.transform;
+                                wall.transform.localPosition = new Vector3(0, 5, 12.5f);
+                                wall.transform.eulerAngles = new Vector3(-90, 0, 0);
+                                t.doors[3] = wall;
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
             }
         }
     }
@@ -182,7 +244,7 @@ public class LevelAssetSpawn : MonoBehaviour
     /// </summary>
     public void ActivateObjectives()
     {
-        Debug.Log("start obj");
+        //Debug.Log("start obj");
         parents = new List<GameObject>();
         //picks random objective in awake in LocalLevel script
         if (myLocalLevel.objective != 1)
@@ -192,7 +254,7 @@ public class LevelAssetSpawn : MonoBehaviour
             obj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
 
             objectivesInLevel.Add(obj);
-            Debug.Log(_possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn));
+            //Debug.Log(_possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn));
 
             //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
             //if objective is certain types (ie type 3), choose more objectives and add to list
@@ -203,26 +265,26 @@ public class LevelAssetSpawn : MonoBehaviour
 
                 //randomly pick an objective (or item?)
                     int indexO = Random.Range(0, _possibleObjectives.Count);
-                    Debug.Log(objCount);
+                   // Debug.Log(objCount);
                       //  Debug.Log(indexO);
                         GameObject objMulti = Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, _possibleObjectives[indexO]).gameObject;
                         objMulti.transform.rotation = playerSpawn.transform.rotation;
                         objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
                     parents.Add(objMulti.transform.parent.parent.gameObject);
                 //Debug.Log(objMulti.transform.);
-                    Debug.Log(objMulti.transform.parent.parent.gameObject);
-                    Debug.Log(objMulti.transform.parent.parent.parent.name);
+                    //Debug.Log(objMulti.transform.parent.parent.gameObject);
+                    //Debug.Log(objMulti.transform.parent.parent.parent.name);
                     //Debug.Log(objMulti.transform.parent);
                         objectivesInLevel.Add(objMulti);
 
                 //if(_possibleItems.Contains(_possibleObjectives[indexO]))
                         //_possibleItems.Remove(_possibleObjectives[indexO]);
-                    Debug.Log(_possibleItems.Remove(_possibleObjectives[indexO]));
+                   // Debug.Log(_possibleItems.Remove(_possibleObjectives[indexO]));
 
-                    Debug.Log(_possibleObjectives.Remove(_possibleObjectives[indexO]));
+                   // Debug.Log(_possibleObjectives.Remove(_possibleObjectives[indexO]));
                 
                // _possibleObjectives.Remove(_possibleObjectives[indexO]);
-                    Debug.Log(objMulti.name);
+                    //Debug.Log(objMulti.name);
                 }      
         }
         else if (myLocalLevel.objective == 1)
@@ -239,7 +301,7 @@ public class LevelAssetSpawn : MonoBehaviour
             enemiesInLevel.Add(enemy);
         }
         //update Objectives object with objetive info
-        Debug.Log("activated objs");
+       // Debug.Log("activated objs");
 
         //THERE IS A CHANCE THAT AN UNUSED OBJECTIVE LOCATION DOES NOT GET DELETED...
     }
@@ -255,6 +317,7 @@ public class LevelAssetSpawn : MonoBehaviour
     {
         //will first see if we can link tiles
         _tArray = new Tile[4];
+        List<GameObject> bigTileDoors = new List<GameObject>();
         bool obj = false;
         //check neighbors, first up, then left, then right then down
         if (!tile.checkFor4Some)
@@ -264,21 +327,26 @@ public class LevelAssetSpawn : MonoBehaviour
             if (tile.upNeighbor != null && tile.upNeighbor.tileStatus != Tile.TileStatus.nullRoom && !tile.upNeighbor.checkFor4Some && tile.upNeighbor.tileStatus != Tile.TileStatus.secretRoom)
             {
 
+                bigTileDoors.Add(tile.doors[0]);
                 t = tile.upNeighbor;
+                
                 _tArray[0] = t;
                 //Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
                 if (t.rightNeighbor != null && t.rightNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.rightNeighbor.checkFor4Some && t.rightNeighbor.tileStatus != Tile.TileStatus.secretRoom)
                 {
+                    bigTileDoors.Add(t.doors[3]);
                     t = t.rightNeighbor;
                     _tArray[1] = t;
                     //Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
                     if (t.downNeighbor != null && t.downNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.downNeighbor.checkFor4Some && t.downNeighbor.tileStatus != Tile.TileStatus.secretRoom)
                     {
+                        bigTileDoors.Add(t.doors[1]);
                         t = t.downNeighbor;
                         _tArray[2] = t;
                         // Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
                         if (t.leftNeighbor != null && t.leftNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.leftNeighbor.checkFor4Some && t.leftNeighbor.tileStatus != Tile.TileStatus.secretRoom)
                         {
+                            bigTileDoors.Add(t.doors[2]);
                             //all of these tiles can be linked
                             t = t.leftNeighbor;
                             // Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
@@ -296,10 +364,19 @@ public class LevelAssetSpawn : MonoBehaviour
                                     _av += tile2.transform.position;
                                 }
                                 _av = _av / 4;
+                                foreach(GameObject door in bigTileDoors)
+                                {
+                                    Destroy(door);
+                                }
+
                                 //Debug.Log(av);
                                 fourSomeTile.transform.position = _av;
                                 foreach (Tile tile3 in _tArray)
                                 {
+
+                                    //could remove doors/walls here as well
+
+
                                     //Debug.Log("ap");
                                     tile3.levelAssetPlaced = true;
 
@@ -317,7 +394,7 @@ public class LevelAssetSpawn : MonoBehaviour
                                         assetCountArray[tile3.presetNum] -= 1;
                                         if (tile3.presetTile.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
                                         {
-                                            Debug.Log(tile3.name);
+                                            //Debug.Log(tile3.name);
                                             foreach (GameObject item in mPresetTileInfo.GetComponent<PresetTileInfo>().possiblePresetItems)
                                             {
                                                 _possibleItems.Remove(item);
@@ -335,7 +412,7 @@ public class LevelAssetSpawn : MonoBehaviour
                                             if (mPresetTileInfo.objectiveSpawn != null)
                                             {
                                                 _possibleObjectives.Remove(mPresetTileInfo.objectiveSpawn);
-                                                Debug.Log("removed bad obj spot");
+                                                //Debug.Log("removed bad obj spot");
                                             }
 
 
@@ -345,7 +422,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
                                     if (tile3.presetTile != null)
                                     {
-                                        Debug.Log("(Due to 2 x 2 Linkage - Deleting: " + tile3.presetTile.gameObject + tile3.name);
+                                       // Debug.Log("(Due to 2 x 2 Linkage - Deleting: " + tile3.presetTile.gameObject + tile3.name);
                                         Destroy(tile3.presetTile.gameObject);
                                     }
                                     tile3.checkFor4Some = true;

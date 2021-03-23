@@ -131,7 +131,7 @@ public class LocalLevel : MonoBehaviour
         //  transBar = myUIVARs.panel;
         myPlayerData.previouslyCompletedObj = objective;
 
-        Debug.Log("Picked Objective: " + objective);
+        //Debug.Log("Picked Objective: " + objective);
     }
 
     public void LevelBeat()

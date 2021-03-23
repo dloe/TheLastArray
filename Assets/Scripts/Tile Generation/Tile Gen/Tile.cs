@@ -145,7 +145,7 @@ public class Tile : MonoBehaviour
         
     }
 
-    //if a neighbor is null, add a wall
+    //if a neighbor is null, add a wall - specifically for tiles next to null spaces
     public void ActivateWalls()
     {
         //Debug.Log(posOnGrid.x + " " + posOnGrid.y);
@@ -158,7 +158,7 @@ public class Tile : MonoBehaviour
             wall.transform.parent = this.transform;
             wall.transform.localPosition = new Vector3(-12.5f, 5, 0);
             wall.transform.eulerAngles = new Vector3(-90, 0, -90);
-            
+            doors[0] = wall;
         }
         if(downNeighbor == null || downNeighbor.tileStatus == TileStatus.nullRoom)
         {
@@ -168,7 +168,7 @@ public class Tile : MonoBehaviour
             wall.transform.parent = this.transform;
             wall.transform.localPosition = new Vector3(12.5f, 5, 0);
             wall.transform.eulerAngles = new Vector3(-90, 0, 90);
-            
+            doors[1] = wall;
         }
         if(leftNeighbor == null || leftNeighbor.tileStatus == TileStatus.nullRoom)
         {
@@ -178,7 +178,7 @@ public class Tile : MonoBehaviour
             wall.transform.parent = this.transform;
             wall.transform.localPosition = new Vector3(0, 5, -12.5f);
             wall.transform.eulerAngles = new Vector3(-90, 0, -180);
-            
+            doors[2] = wall;
         }
         if(rightNeighbor == null || rightNeighbor.tileStatus == TileStatus.nullRoom)
         {
@@ -188,8 +188,10 @@ public class Tile : MonoBehaviour
             wall.transform.parent = this.transform;
             wall.transform.localPosition = new Vector3(0, 5, 12.5f);
             wall.transform.eulerAngles = new Vector3(-90, 0, 0);
-            
+            doors[3] = wall;
         }
+
+
     }
 
     private void OnDrawGizmos()
@@ -215,7 +217,7 @@ public class Tile : MonoBehaviour
 
 
     /*-------------------------------------------------------------------------------------
-     *                      DOOR SYSTEM - NOT IN USE CURRENTLY
+     *                      DOOR SYSTEM - ONLY IN LEVEL 4
      *-------------------------------------------------------------------------------------
      * 
      * - Planed to be used in last level
@@ -227,17 +229,10 @@ public class Tile : MonoBehaviour
     #region Doors
     /// <summary>
     /// ---------------------------------------------------------------------------------
-    /// NOT IN USE
+    /// IN LVL 4
     /// --------------------------------------------------------------------------------
-    /// - When the doors are set, there are certain patterns that the tile can choose from
-    /// - Door setups can have multiple shapes
-    ///     - T shape (t shape if there are 3 total doors on - doesnt matter where)
-    ///     - 1 door rooms (one one door on, doesnt matter where)
-    ///     - every door is active (all 4 on)
-    ///     (NOTE: 2 variants of 2s)
-    ///     - straight line rooms (2 doors opposite of each other)
-    ///     - L shaped rooms, 2 doors sharing a corner, making a L in the path or a turn
-    /// - 
+    /// 
+    /// 
     /// </summary>
     public void ChooseTileMap()
     {
