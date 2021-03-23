@@ -158,7 +158,7 @@ public class Tile : MonoBehaviour
             wall.transform.parent = this.transform;
             wall.transform.localPosition = new Vector3(-12.5f, 5, 0);
             wall.transform.eulerAngles = new Vector3(-90, 0, -90);
-            doors[0] = wall;
+           // doors[0] = wall;
         }
         if(downNeighbor == null || downNeighbor.tileStatus == TileStatus.nullRoom)
         {
@@ -168,7 +168,7 @@ public class Tile : MonoBehaviour
             wall.transform.parent = this.transform;
             wall.transform.localPosition = new Vector3(12.5f, 5, 0);
             wall.transform.eulerAngles = new Vector3(-90, 0, 90);
-            doors[1] = wall;
+           // doors[1] = wall;
         }
         if(leftNeighbor == null || leftNeighbor.tileStatus == TileStatus.nullRoom)
         {
@@ -178,7 +178,7 @@ public class Tile : MonoBehaviour
             wall.transform.parent = this.transform;
             wall.transform.localPosition = new Vector3(0, 5, -12.5f);
             wall.transform.eulerAngles = new Vector3(-90, 0, -180);
-            doors[2] = wall;
+           // doors[2] = wall;
         }
         if(rightNeighbor == null || rightNeighbor.tileStatus == TileStatus.nullRoom)
         {
@@ -188,7 +188,7 @@ public class Tile : MonoBehaviour
             wall.transform.parent = this.transform;
             wall.transform.localPosition = new Vector3(0, 5, 12.5f);
             wall.transform.eulerAngles = new Vector3(-90, 0, 0);
-            doors[3] = wall;
+            //doors[3] = wall;
         }
 
 
@@ -373,14 +373,14 @@ public class Tile : MonoBehaviour
 
         //each door is resting on two tiles, this tile and its neighbor
         //if element 0 on doors in not null then there is a door between this tile and up neighbor. set element 1 of up neighbor to equal this tiles element 0
-            if (doors[0] != null && upNeighbor != null && doors[0].GetComponent<DoorBehavior>().isDoor && !upNeighbor.doors[1].GetComponent<DoorBehavior>().isDoor)
+            if (doors[0] != null && upNeighbor != null && doors[0].GetComponent<DoorBehavior>().isDoor && !upNeighbor.doors[1].GetComponent<DoorBehavior>().isDoor && doors[0] != myLevelAssetData.levelWall)
             {
                // Debug.Log("Checking up neighbor");
                 upNeighbor.doors[1] = doors[0];
             }
 
         //if element 1 on doors in not null then there is a door between this tile and down neighbor. set element 0 of down neighbor to equal this tiles element 1
-            if (doors[1] != null && downNeighbor != null && doors[1].GetComponent<DoorBehavior>().isDoor && !downNeighbor.doors[0].GetComponent<DoorBehavior>().isDoor)
+            if (doors[1] != null && downNeighbor != null && doors[1].GetComponent<DoorBehavior>().isDoor && !downNeighbor.doors[0].GetComponent<DoorBehavior>().isDoor && doors[1] != myLevelAssetData.levelWall)
             {
                // Debug.Log("Checking down neighbor");
                 //Debug.Log(doors[1].name);
@@ -388,14 +388,14 @@ public class Tile : MonoBehaviour
             }
 
         //if element 2 on doors in not null then there is a door between this tile and left neighbor. set element 3 of left neighbor to equal this tiles element 2
-            if (doors[2] != null && leftNeighbor != null && doors[2].GetComponent<DoorBehavior>().isDoor && !leftNeighbor.doors[3].GetComponent<DoorBehavior>().isDoor)
+            if (doors[2] != null && leftNeighbor != null && doors[2].GetComponent<DoorBehavior>().isDoor && !leftNeighbor.doors[3].GetComponent<DoorBehavior>().isDoor && doors[2] != myLevelAssetData.levelWall)
             {
                 //Debug.Log("Checking left neighbor");
                 leftNeighbor.doors[3] = doors[2];
             }
 
         //if element 3 on doors in not null then there is a door between this tile and right neighbor. set element 2 of up neighbor to equal this tiles element 3
-            if (doors[3] != null && rightNeighbor != null && doors[3].GetComponent<DoorBehavior>().isDoor && !rightNeighbor.doors[2].GetComponent<DoorBehavior>().isDoor)
+            if (doors[3] != null && rightNeighbor != null && doors[3].GetComponent<DoorBehavior>().isDoor && !rightNeighbor.doors[2].GetComponent<DoorBehavior>().isDoor && doors[3] != myLevelAssetData.levelWall)
             {
                // Debug.Log("Checking right neighbor");
                 rightNeighbor.doors[2] = doors[3];
