@@ -213,24 +213,28 @@ public class LevelAssetSpawn : MonoBehaviour
             //child 3 should not have wall on right side or up side
             Tile tileSub;
             tileSub = tile.transform.GetChild(0).GetComponent<Tile>();
-            if (tileSub.doors[1] == myLevelAsset.levelWall)
+            Debug.Log(tileSub.name);
+            if (tileSub.doors[1] != null)//== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[1]);
-            if (tileSub.doors[3] == myLevelAsset.levelWall)
+            if (tileSub.doors[3] != null)// == myLevelAsset.levelWall)
                 Destroy(tileSub.doors[3]);
             tileSub = tile.transform.GetChild(1).GetComponent<Tile>();
-            if (tileSub.doors[1] == myLevelAsset.levelWall)
+            Debug.Log(tileSub.name);
+            if (tileSub.doors[1] != null)//== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[1]);
-            if (tileSub.doors[2] == myLevelAsset.levelWall)
+            if (tileSub.doors[2] != null)//== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[2]);
             tileSub = tile.transform.GetChild(2).GetComponent<Tile>();
-            if (tileSub.doors[0] == myLevelAsset.levelWall)
+            Debug.Log(tileSub.name);
+           if (tileSub.doors[0] != null)//== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[0]);
-            if (tileSub.doors[2] == myLevelAsset.levelWall)
+            if (tileSub.doors[2] != null)//== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[2]);
             tileSub = tile.transform.GetChild(3).GetComponent<Tile>();
-            if (tileSub.doors[0] == myLevelAsset.levelWall)
+            Debug.Log(tileSub.name);
+            if (tileSub.doors[0] != null) //== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[0]);
-            if (tileSub.doors[3] == myLevelAsset.levelWall)
+            if (tileSub.doors[3] != null) //== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[3]);
 
 

@@ -984,7 +984,7 @@ public class Tile : MonoBehaviour
             //doors[3] = null;
         }
 
-        Debug.Log("Done " + this.name);
+       // Debug.Log("Done " + this.name);
     }
 
     public void DeactivateDoors()

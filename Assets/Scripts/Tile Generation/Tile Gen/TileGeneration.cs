@@ -978,14 +978,14 @@ public class TileGeneration : MonoBehaviour
             t.ActivateDoors();
         }
         DeactivateInActiveRooms();
-        Debug.Log("Activated doors");
+        //Debug.Log("Activated doors");
 
         //sync doors to have doors actually connect between tiles
         foreach (Tile t in _allActiveTiles)
         {
             t.SyncDoors();
         }
-        Debug.Log("Synced doors");
+       // Debug.Log("Synced doors");
 
         
     }
