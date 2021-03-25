@@ -9,6 +9,8 @@ public class DoorBehavior : MonoBehaviour
     public bool isDoor = true;
     public int num;
     public bool replaceme = false;
+
+    public bool notInUse = false;
     public void ActivateDoor(bool isActive)
     {
         
@@ -24,6 +26,7 @@ public class DoorBehavior : MonoBehaviour
         }
         else
         {
+            notInUse = true;
            // Debug.Log("Destroyed door " + this.name);
             Destroy(this.gameObject);
         }
@@ -32,19 +35,26 @@ public class DoorBehavior : MonoBehaviour
     //if an active door already exists in this spot, destroy this door
     public void CheckForReplacementDoor()
     {
-        //Debug.Log("Checking for replacements");
-        Transform[] _possibleDoors = collidersToTransforms(Physics.OverlapSphere(transform.position, 5));
+        Debug.Log(this.name + " Checking for replacements");
+        Transform[] _possibleDoors = collidersToTransforms(Physics.OverlapSphere(transform.position, 2.5f));
         foreach (Transform potentialTarget in _possibleDoors)
         {
+            //Debug.Log(this.name + "---pt: " + potentialTarget.name);
             if (potentialTarget.gameObject.tag == "Door")
             {
                 //replace this door in the tile with the door that already exists
                 //WIP
-
-                //Debug.Log("Destroyed door");
+                notInUse = true;
+                Debug.Log(this.name + " Destroyed door because of preexisting door " + potentialTarget.gameObject.name);
                 Destroy(this.gameObject);
             }
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+     //   Gizmos.color = Color.red;
+       // Gizmos.DrawSphere(transform.position, 5);
     }
 
     //locate transforms from colliders found in sphere

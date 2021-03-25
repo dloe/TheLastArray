@@ -715,6 +715,7 @@ public class TileGeneration : MonoBehaviour
             if (hasDoors)
             {
                 _branch[0].ActivateDoorToPath();
+                _branch[0].name += "_StartOfBranch";
             }
             //activate these rooms
             //Debug.Log(_branch.Count);
@@ -735,6 +736,10 @@ public class TileGeneration : MonoBehaviour
                     //if this tile is on the active tile list, remove it so we dont see it again later
 
                 }
+               // if(t != 0)
+                //{
+                   // _branch[t].SyncDoors();
+                //}
             }
 
             //---------------------
@@ -983,6 +988,9 @@ public class TileGeneration : MonoBehaviour
         //sync doors to have doors actually connect between tiles
         foreach (Tile t in _allActiveTiles)
         {
+            Debug.Log(t.name);
+
+
             t.SyncDoors();
         }
        // Debug.Log("Synced doors");

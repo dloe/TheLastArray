@@ -43,7 +43,7 @@ public class Tile : MonoBehaviour
     public Tile leftNeighbor;
     public Tile rightNeighbor;
 
-    [HideInInspector]
+   // [HideInInspector]
     //last tile in path or branch
     public Tile previousTile;
     [HideInInspector]
@@ -58,7 +58,7 @@ public class Tile : MonoBehaviour
     public int pathNumber = -1;
 
     
-    [HideInInspector]
+    //[HideInInspector]
     //is this tile connected to path (like branch or other)
     public bool connectedToPath = false;
 
@@ -148,14 +148,7 @@ public class Tile : MonoBehaviour
     //if a neighbor is null, add a wall - specifically for tiles next to null spaces
     public void ActivateWalls()
     {
-        if(hasDoors)
-        {
-            for(int doorC = 0; doorC < 4; doorC++)
-            {
-                if(doors[doorC].TryGetComponent<DoorBehavior>(out DoorBehavior mDoor))
-                    mDoor.GetComponent<DoorBehavior>().CheckForReplacementDoor();
-            }
-        }
+        
         //Debug.Log(posOnGrid.x + " " + posOnGrid.y);
         if(upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom)
         {
@@ -378,10 +371,19 @@ public class Tile : MonoBehaviour
 
     public void SyncDoors()
     {
+        //    if (hasDoors)
+        //    {
+        Debug.Log(this.name);
+            for (int doorC = 0; doorC < 4; doorC++)
+            {
+                if (doors[doorC].TryGetComponent<DoorBehavior>(out DoorBehavior mDoor))
+                    mDoor.GetComponent<DoorBehavior>().CheckForReplacementDoor();
+            }
+    //    }
 
         //each door is resting on two tiles, this tile and its neighbor
         //if element 0 on doors in not null then there is a door between this tile and up neighbor. set element 1 of up neighbor to equal this tiles element 0
-            if (doors[0] != null && upNeighbor != null && doors[0].GetComponent<DoorBehavior>().isDoor && !upNeighbor.doors[1].GetComponent<DoorBehavior>().isDoor)
+        if (doors[0] != null && upNeighbor != null && doors[0].GetComponent<DoorBehavior>().isDoor && !upNeighbor.doors[1].GetComponent<DoorBehavior>().isDoor)
             {
                // Debug.Log("Checking up neighbor");
                 upNeighbor.doors[1] = doors[0];
@@ -799,6 +801,7 @@ public class Tile : MonoBehaviour
                         doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
                         doorsActivated++;
                         connectedToPath = true;
+                        Debug.Log(doors[0].name);
                     }
                     break;
                 case 2:
@@ -816,6 +819,7 @@ public class Tile : MonoBehaviour
                         doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
                         doorsActivated++;
                         connectedToPath = true;
+                        Debug.Log(doors[1].name);
                     }
                     break;
                 case 3:
@@ -832,6 +836,7 @@ public class Tile : MonoBehaviour
                         doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
                         doorsActivated++;
                         connectedToPath = true;
+                        Debug.Log(doors[2].name);
                     }
                     break;
                 case 4:
@@ -850,7 +855,7 @@ public class Tile : MonoBehaviour
                         doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
                         doorsActivated++;
                         connectedToPath = true;
-
+                        Debug.Log(doors[3].name);
                     }
                     break;
                 default:
