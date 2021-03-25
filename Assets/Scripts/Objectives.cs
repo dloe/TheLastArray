@@ -14,7 +14,7 @@ public enum Condition
 public class Objectives : MonoBehaviour
 {
     public static Objectives Instance;
-    public GameObject emptyWorldItem, generatorObject;
+    public GameObject gasolineObject, generatorObject;
     public string killMessage, gasMessage, generatorMessage;
     public ItemData gasolineData;
     public Objective mainObjective;
@@ -68,7 +68,7 @@ public class Objectives : MonoBehaviour
     public GameObject SetObjectiveRef(int objectiveInt, GameObject spot)
     {
         GameObject returnObj = null;
-        WorldItem objItem = null;
+        Gasoline objGasoline = null;
         Generator objGenerator = null;
         Objective objective = new Objective();
         switch (objectiveInt)
@@ -79,10 +79,8 @@ public class Objectives : MonoBehaviour
                 break;
             case 2:
                 objective.condition = Condition.GetGasCan;
-                objective.itemData = gasolineData;
-                objItem = Instantiate(emptyWorldItem, spot.transform.position, emptyWorldItem.transform.rotation).GetComponent<WorldItem>();
-                objItem.worldItemData = objective.itemData;
-                returnObj = objItem.gameObject;
+                objGasoline = Instantiate(gasolineObject, spot.transform.position, gasolineObject.transform.rotation).GetComponent<Gasoline>();
+                returnObj = objGasoline.gameObject;
                 objective.objectiveMessage = gasMessage;
 
                 break;

@@ -13,7 +13,8 @@ public class CameraController : MonoBehaviour
     public float panSpeed = 5f;
     private Vector3 baseOffset;
 
-    
+    public float originalOffsetLimitX;
+    public float originalOffsetLimitZ;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +27,8 @@ public class CameraController : MonoBehaviour
         offset = transform.localPosition - Player.Instance.playerHolderTransform.TransformPoint(playerObject.transform.position);
         baseOffset = offset;
 
-        
+        originalOffsetLimitX = offsetLimitX;
+        originalOffsetLimitZ = offsetLimitZ;
     }
 
     // Update is called once per frame
@@ -93,6 +95,20 @@ public class CameraController : MonoBehaviour
         offset.z = Mathf.Clamp(offset.z, baseOffset.z - offsetLimitZ, baseOffset.z + offsetLimitZ);
     }
 
+    public void ToggleBinocularMode(bool state)
+    {
+        if(state)
+        {
+            offsetLimitX += 1;
+            offsetLimitZ += 1;
+        }
+        else
+        {
+            offsetLimitX = originalOffsetLimitX;
+            offsetLimitZ = originalOffsetLimitZ;
+        }
+    }
+
     /// <summary>
     /// Returns either width or height divided by amountToDivide
     /// </summary>
@@ -113,7 +129,7 @@ public class CameraController : MonoBehaviour
 
         return result;
     }
-
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         Rect rect = new Rect(getScrnFrac(true, 2f) - getScrnFrac(true,horizontalNeutralZone), getScrnFrac(false,2f) - getScrnFrac(false, verticalNeutralZone), 
@@ -123,4 +139,5 @@ public class CameraController : MonoBehaviour
         UnityEditor.Handles.DrawSolidRectangleWithOutline(rect, Color.clear, Color.red);
         UnityEditor.Handles.EndGUI();
     }
+#endif
 }

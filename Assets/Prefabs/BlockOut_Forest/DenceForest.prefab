@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4271971830672735557}
   - component: {fileID: 4271971830672735556}
   - component: {fileID: 4271971830672735559}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Blockers (11)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 4271971831319948887}
   - component: {fileID: 4271971831319948886}
   - component: {fileID: 4271971831319948881}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Blockers (7)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -301,7 +301,7 @@ GameObject:
   - component: {fileID: 4271971831552790414}
   - component: {fileID: 4271971831552790409}
   - component: {fileID: 4271971831552790408}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Blockers (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -394,7 +394,7 @@ GameObject:
   - component: {fileID: 4271971831613915159}
   - component: {fileID: 4271971831613915158}
   - component: {fileID: 4271971831613915153}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Blockers (8)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -487,7 +487,7 @@ GameObject:
   - component: {fileID: 4271971831626037436}
   - component: {fileID: 4271971831626037439}
   - component: {fileID: 4271971831626037438}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Blockers (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -640,7 +640,7 @@ GameObject:
   - component: {fileID: 4271971831778237668}
   - component: {fileID: 4271971831778237671}
   - component: {fileID: 4271971831778237670}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Blockers (10)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -733,7 +733,7 @@ GameObject:
   - component: {fileID: 4271971831791231864}
   - component: {fileID: 4271971831791231867}
   - component: {fileID: 4271971831791231866}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Blockers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -826,7 +826,7 @@ GameObject:
   - component: {fileID: 4271971831840881032}
   - component: {fileID: 4271971831840881035}
   - component: {fileID: 4271971831840881034}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Blockers (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -919,7 +919,7 @@ GameObject:
   - component: {fileID: 4271971831863083980}
   - component: {fileID: 4271971831863083983}
   - component: {fileID: 4271971831863083982}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Blockers (9)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1078,6 +1078,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dde518324ef83804f89fb12f0fc34bfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectiveSpawn: {fileID: 0}
+  playerSpawn: {fileID: 0}
   possiblePresetItems:
   - {fileID: 4952063050193459568}
   - {fileID: 5622714818571940378}
@@ -1130,7 +1132,7 @@ GameObject:
   - component: {fileID: 4271971832386758379}
   - component: {fileID: 4271971832386758378}
   - component: {fileID: 4271971832386758373}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Blockers (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1253,7 +1255,7 @@ GameObject:
   - component: {fileID: 4271971832475027941}
   - component: {fileID: 4271971832475027940}
   - component: {fileID: 4271971832475027943}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Blockers (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1346,7 +1348,7 @@ GameObject:
   - component: {fileID: 4271971832545251850}
   - component: {fileID: 4271971832545251845}
   - component: {fileID: 4271971832545251844}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Blockers (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1439,7 +1441,7 @@ GameObject:
   - component: {fileID: 4271971832579582217}
   - component: {fileID: 4271971832579582216}
   - component: {fileID: 4271971832579582219}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: Blockers (12)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2042,7 +2044,7 @@ PrefabInstance:
     - target: {fileID: 7285062030292683042, guid: 530153e6e7c8e2949b56521beffa0a50,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7285062030292683042, guid: 530153e6e7c8e2949b56521beffa0a50,
         type: 3}

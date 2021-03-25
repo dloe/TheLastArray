@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d3b4527728302af4885a95fe26cba0ed, type: 3}
-  m_Name: Gasoline
+  m_Name: Pistol
   m_EditorClassIdentifier: 
   itemSprite: {fileID: 0}
-  itemType: 4
-  itemName: Gasoline
-  isMeleeWeapon: 0
+  itemType: 1
+  itemName: Pistol
   hasDurability: 0
-  isRangedWeapon: 0
-  damage: 1
+  damage: 4
   durability: -1
-  coolDownPeriod: 0.5
-  reloadTime: 1
+  coolDownPeriod: 0.2
+  reloadTime: 3
   meleeRange: 1
   ammoType: 0
-  magSize: 5
-  isHealingItem: 0
+  magSize: 8
+  loadedAmmo: 0
   amountToHeal: 1
+  canAttack: 1
+  reloading: 0

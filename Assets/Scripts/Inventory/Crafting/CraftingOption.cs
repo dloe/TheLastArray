@@ -13,6 +13,44 @@ public class CraftingOption : MonoBehaviour
     public Text itemName, scrapText, medsText, clothText;
     public Button craftButton;
     public CraftingRecipe recipe;
+    public Dropdown amountDropDown;
 
+    public void AmountChanged(int amount)
+    {
 
+        recipe.amountToCraft = amount;
+        CraftingTable.Instance.UpdateCraftingTable();
+    }
+
+    public void SetDropDown()
+    {
+        if(recipe.craftingResult.isAmmoResult)
+        {
+            amountDropDown.gameObject.SetActive(true);
+            amountDropDown.ClearOptions();
+            List<string> optionNums = new List<string>();
+            switch (recipe.craftingResult.ammoType)
+            {
+                case AmmoType.LightAmmo:
+                    for (int index = 0; index < Player.Instance.maxLightAmmo - Player.Instance.currentLightAmmo + 1 ; index++)
+                    {
+                        optionNums.Add(index.ToString());
+                    }
+                    break;
+                case AmmoType.HeavyAmmo:
+                    for (int index = 0; index < Player.Instance.maxHeavyAmmo - Player.Instance.currentHeavyAmmo + 1; index++)
+                    {
+                        optionNums.Add(index.ToString());
+                    }
+                    break;
+                default:
+                    break;
+            }
+            amountDropDown.AddOptions(optionNums);
+            amountDropDown.value = 1;
+            AmountChanged(amountDropDown.value);
+            
+        }
+        
+    }
 }

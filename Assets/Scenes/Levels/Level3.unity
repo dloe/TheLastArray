@@ -159,7 +159,7 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.233
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -605,6 +605,11 @@ PrefabInstance:
       propertyPath: tempEndLevel
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3983875074760811870, guid: 63be4a9600f926d4f90b7b462addae70,
+        type: 3}
+      propertyPath: thisLevelTier
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3983875074760811871, guid: 63be4a9600f926d4f90b7b462addae70,
         type: 3}
       propertyPath: m_Name
@@ -619,6 +624,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4003264855528296060, guid: 9b9cea3461719ad4fb4fd11d2c2b63fb,
+        type: 3}
+      propertyPath: debugPathOn
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4003264855528296061, guid: 9b9cea3461719ad4fb4fd11d2c2b63fb,
         type: 3}
       propertyPath: m_Name

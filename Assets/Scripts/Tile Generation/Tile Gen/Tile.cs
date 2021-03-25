@@ -12,6 +12,7 @@ public class Tile : MonoBehaviour
         path,
         room,
         startingRoom,
+        secretRoom,
         boss
     };
 
@@ -125,6 +126,12 @@ public class Tile : MonoBehaviour
         //Debug.Log(posOnGrid.x + " " + posOnGrid.y);
         _nodeColor = Color.blue;
         tileStatus = Tile.TileStatus.startingRoom;
+    }
+
+    public void ShadeSecret()
+    {
+        _nodeColor = Color.black;
+        tileStatus = Tile.TileStatus.secretRoom;
     }
 
     public void LabelDoors()

@@ -10,8 +10,8 @@ public class Item
 
     public Item(ItemData data)
     {
-        
-        if(!data.name.Contains("Instance"))
+
+        if (!data.name.Contains("Instance"))
         {
             itemData = ScriptableObject.CreateInstance<ItemData>();
 
@@ -33,13 +33,15 @@ public class Item
                 itemData.ammoType = data.ammoType;
                 itemData.reloadTime = data.reloadTime;
                 itemData.magSize = data.magSize;
+                itemData.loadedAmmo = data.loadedAmmo;
             }
             else if (data.itemType == ItemType.Heal)
             {
                 itemData.amountToHeal = data.amountToHeal;
             }
 
-            itemData.name = data.name + "(Instance)";
+
+            itemData.name = data.itemName + "(Instance)";
 
         }
         else

@@ -4,6 +4,14 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using UnityEngine;
 
+public enum levelTier
+{
+    level1,
+    level2,
+    level3,
+    level4
+}
+
 public class LocalLevel : MonoBehaviour
 {
     /// <summary>
@@ -14,7 +22,7 @@ public class LocalLevel : MonoBehaviour
     //holds objective info and game loop info
     //consider putting ui here maybe
     TileGeneration _myTileGen;
-
+    [Header("Player Data Obj")]
     public PlayerData myPlayerData;
     [HideInInspector]
     public List<int> _posObjectives;
@@ -37,6 +45,9 @@ public class LocalLevel : MonoBehaviour
     [Header("Local Player Script")]
     public Player myPlayer;
 
+    //determines difficulty of level
+    [Header("Tier of Level")]
+    public levelTier thisLevelTier;
     //public Text objectiveText;
     //private int objectiveCountStart = 0;
     public static LocalLevel Instance;
@@ -53,7 +64,7 @@ public class LocalLevel : MonoBehaviour
 
         //assign tileGen obj
         _myTileGen = FindObjectOfType<TileGeneration>();
-        //number of objectives
+        //number of objectives - REMOVED NUMBER 2 WILL READD LATER
         _posObjectives = new List<int> { 1, 2, 3 };
         //LevelFadeIn();
         StartFadeIn();
@@ -90,8 +101,8 @@ public class LocalLevel : MonoBehaviour
        // Debug.Log("picking obj");
 
 
-       // objective = 3;
-      //  return;
+       // objective = 2;
+       // return;
 
         //picks objective - cant be the previous objective
         if(myPlayerData.previouslyCompletedObj == -1)
@@ -100,6 +111,7 @@ public class LocalLevel : MonoBehaviour
             int rand = Random.Range(0, _posObjectives.Count);
             //Debug.Log(_posObjectives.Count);
             objective = _posObjectives[rand];
+            
         }
         else
         {
@@ -112,12 +124,12 @@ public class LocalLevel : MonoBehaviour
             objective = _posObjectives[Random.Range(0, _posObjectives.Count)];
         }
         //_myObjs = FindObjectOfType<Objectives>();
-         //PlayerUIHolder myUIVARs = FindObjectOfType<PlayerUIHolder>();
+        //PlayerUIHolder myUIVARs = FindObjectOfType<PlayerUIHolder>();
         //player = GameObject.Find("PlayerHolder");
         //objectiveText = myUIVARs.objectiveText;
         // objectiveText.text = objective.ToString();
         //  transBar = myUIVARs.panel;
-
+        myPlayerData.previouslyCompletedObj = objective;
 
         Debug.Log("Picked Objective: " + objective);
     }

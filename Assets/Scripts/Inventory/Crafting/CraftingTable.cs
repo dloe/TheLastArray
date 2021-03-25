@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class CraftingTable : MonoBehaviour
+public class CraftingTable : Activatable
 {
     public GameObject Menu;
     public GameObject optionParent;
@@ -24,14 +25,38 @@ public class CraftingTable : MonoBehaviour
     private void Start()
     {
         Menu = UI.Instance.transform.Find("Crafting Menu").gameObject;
-        Debug.Log(Menu.name);
         optionParent = Menu.transform.Find("Scroll View").Find("Viewport").Find("Content").gameObject;
         CraftingOption tempOption;
         foreach (CraftingRecipe recipe in recipes)
         {
             tempOption = Instantiate(craftingOptionPrefab, optionParent.transform).GetComponent<CraftingOption>();
             tempOption.recipe = recipe;
-            tempOption.itemName.text = recipe.Result.itemName;
+
+            if (recipe.craftingResult.isAmmoResult)
+            {
+                switch (recipe.craftingResult.ammoType)
+                {
+                    case AmmoType.LightAmmo:
+                        tempOption.itemName.text = "Light Ammo";
+                        break;
+                    case AmmoType.HeavyAmmo:
+                        tempOption.itemName.text = "Heavy Ammo";
+                        break;
+                    default:
+                        break;
+                }
+
+                InventoryUI.Instance.RefreshUI();
+                tempOption.SetDropDown();
+                
+            }
+            else
+            {
+                //Debug.Log(recipe.name);
+                tempOption.itemName.text = recipe.craftingResult.itemResult.itemName;
+            }
+
+            
             foreach (ResourceRequirement requirement in recipe.Requirements)
             {
                 switch (requirement.Resource)
@@ -52,10 +77,13 @@ public class CraftingTable : MonoBehaviour
 
            
             tempOption.craftButton.onClick.AddListener(() => recipe.Craft(Player.Instance));
+            tempOption.craftButton.onClick.AddListener(() => tempOption.SetDropDown());
             if (!recipe.IsCraftable(Player.Instance))
             {
                 tempOption.craftButton.interactable = false;
             }
+
+
         }
     }
 
@@ -67,9 +95,31 @@ public class CraftingTable : MonoBehaviour
         }
     }
 
+    public override void Activate()
+    {
+        if (Menu.activeInHierarchy)
+        {
+            DeactivateMenu();
+        }
+        else
+        {
+            ActivateMenu();
+        }
+    }
+
     public void ActivateMenu()
     {
         Menu.SetActive(true);
+        foreach (Transform option in optionParent.transform)
+        {
+            CraftingOption craftOption = option.GetComponent<CraftingOption>();
+
+            if (craftOption.recipe.craftingResult.isAmmoResult)
+            {
+                craftOption.SetDropDown();
+            }
+
+        }
         UpdateCraftingTable();
     }
 
@@ -80,9 +130,39 @@ public class CraftingTable : MonoBehaviour
 
     public void UpdateCraftingTable()
     {
+
         foreach (Transform option in optionParent.transform)
         {
-            option.GetComponent<CraftingOption>().craftButton.interactable = option.GetComponent<CraftingOption>().recipe.IsCraftable(Player.Instance);
+            CraftingOption craftOption = option.GetComponent<CraftingOption>();
+            craftOption.craftButton.interactable = craftOption.recipe.IsCraftable(Player.Instance) ;
+
+            if(craftOption.recipe.craftingResult.isAmmoResult)
+            {
+                foreach (ResourceRequirement requirement in craftOption.recipe.Requirements)
+                {
+                    switch (requirement.Resource)
+                    {
+                        case Resource.ResourceType.scrap:
+                            craftOption.scrapText.text = (requirement.Amount * craftOption.recipe.amountToCraft).ToString();
+                            break;
+                        case Resource.ResourceType.meds:
+                            craftOption.medsText.text = (requirement.Amount * craftOption.recipe.amountToCraft).ToString();
+                            break;
+                        case Resource.ResourceType.cloth:
+                            craftOption.clothText.text = (requirement.Amount * craftOption.recipe.amountToCraft).ToString();
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            
         }
     }
+
+
+
+    
+
+
 }
