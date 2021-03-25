@@ -179,7 +179,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         wall.transform.localPosition = new Vector3(-12.5f, 5, 0);
                         wall.transform.eulerAngles = new Vector3(-90, 0, -90);
                         wall.name = "WallPlaceholder_LVL4WALLFUNCTION_0";
-                        //t.doors[0] = wall;
+                        t.doors[0] = wall;
                     }
                     else
                         Debug.Log("dont spawn wall between " + t.name + " and " + t.upNeighbor.name);
@@ -205,7 +205,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         wall.transform.localPosition = new Vector3(12.5f, 5, 0);
                         wall.transform.eulerAngles = new Vector3(-90, 0, 90);
                         wall.name = "WallPlaceholder_LVL4WALLFUNCTION_1";
-                        //t.doors[1] = wall;
+                        t.doors[1] = wall;
                     }
                     else
                         Debug.Log("dont spawn wall between " + t.name + " and " + t.downNeighbor.name);
@@ -231,7 +231,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         wall.transform.localPosition = new Vector3(0, 5, -12.5f);
                         wall.transform.eulerAngles = new Vector3(-90, 0, -180);
                         wall.name = "WallPlaceholder_LVL4WALLFUNCTION_2";
-                        //t.doors[2] = wall;
+                        t.doors[2] = wall;
                     }
                     else
                         Debug.Log("dont spawn wall between " + t.name + " and " + t.leftNeighbor.name);
@@ -257,7 +257,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         wall.transform.localPosition = new Vector3(0, 5, 12.5f);
                         wall.transform.eulerAngles = new Vector3(-90, 0, 0);
                         wall.name = "WallPlaceholder_LVL4WALLFUNCTION_3";
-                        //t.doors[3] = wall;
+                        t.doors[3] = wall;
                     }
                     else
                         Debug.Log("dont spawn wall between " + t.name + " and " + t.rightNeighbor.name);

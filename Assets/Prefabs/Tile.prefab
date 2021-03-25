@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1649181614180335959}
   - component: {fileID: 4353323729704006283}
   - component: {fileID: 5519814321970776157}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: DoorDown
   m_TagString: Door
   m_Icon: {fileID: 0}
@@ -49,7 +49,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2768348017971070912}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -89,7 +89,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2768348017971070912}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -109,6 +109,7 @@ MonoBehaviour:
   isDoor: 1
   num: 0
   replaceme: 0
+  notInUse: 0
 --- !u!1 &5985681384618470616
 GameObject:
   m_ObjectHideFlags: 0
@@ -122,7 +123,7 @@ GameObject:
   - component: {fileID: 6610107713694089325}
   - component: {fileID: 3036205091610375757}
   - component: {fileID: 1775657750205306872}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: DoorLeft
   m_TagString: Door
   m_Icon: {fileID: 0}
@@ -158,7 +159,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5985681384618470616}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -198,7 +199,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5985681384618470616}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -218,6 +219,7 @@ MonoBehaviour:
   isDoor: 1
   num: 0
   replaceme: 0
+  notInUse: 0
 --- !u!1 &7905213247294608223
 GameObject:
   m_ObjectHideFlags: 0
@@ -396,7 +398,7 @@ GameObject:
   - component: {fileID: 8380644997199309712}
   - component: {fileID: 2305111567015523458}
   - component: {fileID: 5565696518415850849}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: DoorRight
   m_TagString: Door
   m_Icon: {fileID: 0}
@@ -432,7 +434,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8332564351730876658}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -472,7 +474,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8332564351730876658}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -492,6 +494,7 @@ MonoBehaviour:
   isDoor: 1
   num: 0
   replaceme: 0
+  notInUse: 0
 --- !u!1 &8453652135793040491
 GameObject:
   m_ObjectHideFlags: 0
@@ -505,7 +508,7 @@ GameObject:
   - component: {fileID: 5506233815371951123}
   - component: {fileID: 4559257807631030648}
   - component: {fileID: 4911472607393425057}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: DoorUp
   m_TagString: Door
   m_Icon: {fileID: 0}
@@ -541,7 +544,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8453652135793040491}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -581,7 +584,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8453652135793040491}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
@@ -601,6 +604,7 @@ MonoBehaviour:
   isDoor: 1
   num: 0
   replaceme: 0
+  notInUse: 0
 --- !u!1 &8852843698857881759
 GameObject:
   m_ObjectHideFlags: 0

@@ -35,7 +35,7 @@ public class DoorBehavior : MonoBehaviour
     //if an active door already exists in this spot, destroy this door
     public void CheckForReplacementDoor()
     {
-        Debug.Log(this.name + " Checking for replacements");
+        //Debug.Log(this.name + " Checking for replacements");
         Transform[] _possibleDoors = collidersToTransforms(Physics.OverlapSphere(transform.position, 2.5f));
         foreach (Transform potentialTarget in _possibleDoors)
         {
@@ -45,7 +45,7 @@ public class DoorBehavior : MonoBehaviour
                 //replace this door in the tile with the door that already exists
                 //WIP
                 notInUse = true;
-                Debug.Log(this.name + " Destroyed door because of preexisting door " + potentialTarget.gameObject.name);
+                //Debug.Log(this.name + " Destroyed door because of preexisting door " + potentialTarget.gameObject.name);
                 Destroy(this.gameObject);
             }
         }

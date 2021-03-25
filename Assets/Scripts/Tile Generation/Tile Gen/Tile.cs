@@ -801,7 +801,7 @@ public class Tile : MonoBehaviour
                         doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
                         doorsActivated++;
                         connectedToPath = true;
-                        Debug.Log(doors[0].name);
+                        //Debug.Log(doors[0].name);
                     }
                     break;
                 case 2:
@@ -819,7 +819,7 @@ public class Tile : MonoBehaviour
                         doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
                         doorsActivated++;
                         connectedToPath = true;
-                        Debug.Log(doors[1].name);
+                        //Debug.Log(doors[1].name);
                     }
                     break;
                 case 3:
@@ -836,7 +836,7 @@ public class Tile : MonoBehaviour
                         doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
                         doorsActivated++;
                         connectedToPath = true;
-                        Debug.Log(doors[2].name);
+                        //Debug.Log(doors[2].name);
                     }
                     break;
                 case 4:
@@ -855,7 +855,7 @@ public class Tile : MonoBehaviour
                         doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
                         doorsActivated++;
                         connectedToPath = true;
-                        Debug.Log(doors[3].name);
+                        //Debug.Log(doors[3].name);
                     }
                     break;
                 default:
