@@ -326,21 +326,27 @@ public class LevelAssetSpawn : MonoBehaviour
         //rotate asset properly
         Quaternion assetRot = myTileGeneration.secretRoom.transform.rotation;
         Tile secret = myTileGeneration.secretRoom.GetComponent<Tile>();
-        if(secret.upNeighbor != null)
+        //replace wall on neighbor
+        if (secret.upNeighbor != null)
         {
             assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y + 90, secret.transform.rotation.z, secret.transform.rotation.w);
+            Destroy(secret.upNeighbor.doors[1]);
         }
         else if(secret.downNeighbor != null)
         {
             assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y - 90, secret.transform.rotation.z, secret.transform.rotation.w);
+            Destroy(secret.downNeighbor.doors[0]);
         }
         else if(secret.leftNeighbor != null)
         {
             assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y, secret.transform.rotation.z, secret.transform.rotation.w);
+            Destroy(secret.leftNeighbor.doors[3]);
+
         }
         else if (secret.rightNeighbor != null)
         {
             assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y + 180, secret.transform.rotation.z, secret.transform.rotation.w);
+            Destroy(secret.rightNeighbor.doors[2]);
         }
         preset.transform.rotation = assetRot;
 
@@ -359,6 +365,10 @@ public class LevelAssetSpawn : MonoBehaviour
                 _possibleEnemiesInLevel.Add(mPresetTileInfo.enemiesOnPreset[posEnemyCount]);
             }
         }
+
+        
+
+
     }
 
     #region Objective Spawn
