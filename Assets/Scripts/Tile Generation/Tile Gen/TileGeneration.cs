@@ -232,6 +232,10 @@ public class TileGeneration : MonoBehaviour
                 tilePlaceholderRef.transform.parent = nodeTile.transform;
                 tilePlaceholderRef.GetComponent<Tile>().posOnGrid = new Vector2(rows, col);
                 tilePlaceholderRef.GetComponent<Tile>().hasDoors = hasDoors;
+                //small issue were tile no longer automatically deltes doros on start
+                //if(!hasDoors)
+                    //tilePlaceholderRef.GetComponent<Tile>().RemoveDoors();
+
 
                 //DOORS
                 if (hasDoors)
@@ -988,8 +992,6 @@ public class TileGeneration : MonoBehaviour
         //sync doors to have doors actually connect between tiles
         foreach (Tile t in _allActiveTiles)
         {
-            Debug.Log(t.name);
-
 
             t.SyncDoors();
         }

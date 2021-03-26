@@ -43,7 +43,7 @@ public class Tile : MonoBehaviour
     public Tile leftNeighbor;
     public Tile rightNeighbor;
 
-   // [HideInInspector]
+    [HideInInspector]
     //last tile in path or branch
     public Tile previousTile;
     [HideInInspector]
@@ -58,7 +58,7 @@ public class Tile : MonoBehaviour
     public int pathNumber = -1;
 
     
-    //[HideInInspector]
+    [HideInInspector]
     //is this tile connected to path (like branch or other)
     public bool connectedToPath = false;
 
@@ -94,6 +94,7 @@ public class Tile : MonoBehaviour
         myTileGen = GameObject.Find("TileGen").GetComponent<TileGeneration>();
         if(!hasDoors)
         {
+            
             foreach (GameObject door in doors)
             {
                 Destroy(door);
@@ -148,7 +149,7 @@ public class Tile : MonoBehaviour
     //if a neighbor is null, add a wall - specifically for tiles next to null spaces
     public void ActivateWalls()
     {
-        
+        //Debug.Log("Turning on side walls");
         //Debug.Log(posOnGrid.x + " " + posOnGrid.y);
         if(upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom)
         {
@@ -159,7 +160,8 @@ public class Tile : MonoBehaviour
             wall.transform.parent = this.transform;
             wall.transform.localPosition = new Vector3(-12.5f, 5, 0);
             wall.transform.eulerAngles = new Vector3(-90, 0, -90);
-            doors[0] = wall;
+            if(hasDoors)
+                doors[0] = wall;
         }
         if(downNeighbor == null || downNeighbor.tileStatus == TileStatus.nullRoom)
         {
@@ -169,17 +171,19 @@ public class Tile : MonoBehaviour
             wall.transform.parent = this.transform;
             wall.transform.localPosition = new Vector3(12.5f, 5, 0);
             wall.transform.eulerAngles = new Vector3(-90, 0, 90);
-            doors[1] = wall;
+            if(hasDoors)
+                doors[1] = wall;
         }
         if(leftNeighbor == null || leftNeighbor.tileStatus == TileStatus.nullRoom)
         {
-           // Debug.Log("left");
+            //Debug.Log("left");
             //spawn at local pos 0, 10, 25 with rotation of -90, 0, -180
             GameObject wall = Instantiate(myLevelAssetData.levelWall, transform.position, transform.rotation);
             wall.transform.parent = this.transform;
             wall.transform.localPosition = new Vector3(0, 5, -12.5f);
             wall.transform.eulerAngles = new Vector3(-90, 0, -180);
-            doors[2] = wall;
+            if(hasDoors)
+                doors[2] = wall;
         }
         if(rightNeighbor == null || rightNeighbor.tileStatus == TileStatus.nullRoom)
         {
@@ -189,7 +193,8 @@ public class Tile : MonoBehaviour
             wall.transform.parent = this.transform;
             wall.transform.localPosition = new Vector3(0, 5, 12.5f);
             wall.transform.eulerAngles = new Vector3(-90, 0, 0);
-            doors[3] = wall;
+            if(hasDoors)
+                doors[3] = wall;
         }
 
 
@@ -373,7 +378,7 @@ public class Tile : MonoBehaviour
     {
         //    if (hasDoors)
         //    {
-        Debug.Log(this.name);
+        //Debug.Log(this.name);
             for (int doorC = 0; doorC < 4; doorC++)
             {
                 if (doors[doorC].TryGetComponent<DoorBehavior>(out DoorBehavior mDoor))
@@ -413,6 +418,50 @@ public class Tile : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Double check to fix small bug in which a duplicate door can rarly appear and not be removed and synced causing mass caos and walls to spawn in places they should not be spawning
+    /// </summary>
+    public void ReSyncDoors()
+    {
+        //Debug.Log(this.name);
+        for (int doorC = 0; doorC < 4; doorC++)
+        {
+            if (doors[doorC].TryGetComponent<DoorBehavior>(out DoorBehavior mDoor))
+                mDoor.GetComponent<DoorBehavior>().CheckForReplacementDoor();
+        }
+
+        //each door is resting on two tiles, this tile and its neighbor
+        //if element 0 on doors in not null then there and the second door been deleted
+        if (doors[0] != null && upNeighbor != null && upNeighbor.doors[1] == null)
+        {
+            // Debug.Log("Checking up neighbor");
+            upNeighbor.doors[1] = doors[0];
+        }
+
+        if (doors[1] != null && downNeighbor != null && downNeighbor.doors[0] == null)
+        {
+            // Debug.Log("Checking down neighbor");
+            //Debug.Log(doors[1].name);
+            downNeighbor.doors[0] = doors[1];
+        }
+
+        if (doors[2] != null && leftNeighbor != null && leftNeighbor.doors[3] == null)
+        {
+            //Debug.Log("Checking left neighbor");
+            leftNeighbor.doors[3] = doors[2];
+        }
+
+        if (doors[3] != null && rightNeighbor != null && rightNeighbor.doors[2] == null)
+        {
+            // Debug.Log("Checking right neighbor");
+            rightNeighbor.doors[2] = doors[3];
+        }
+    }
+
+    //50% chance of activating door if neighbor is starting room
+    static private float linkToStartingRoomDec_Branch = 0.4f;
+    //have a 20% chance of looking at another neighbor and turning on door if they are just a basic room
+    static private float linkToSecondNeighborDec_Branch = 0.2f;
     public void ActivateDoorsBranch()
     {
         bool firstBranchDoor = false;
@@ -437,7 +486,7 @@ public class Tile : MonoBehaviour
                     else
                     {
                         //50% chance of activating door if neighbor is starting room
-                        if (upNeighbor.tileStatus == TileStatus.startingRoom && Random.value < 0.5f)
+                        if (upNeighbor.tileStatus == TileStatus.startingRoom && Random.value < linkToStartingRoomDec_Branch)
                         {
                             doorsActivated++;
                             doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
@@ -452,7 +501,7 @@ public class Tile : MonoBehaviour
                                 doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
                                 doorsActivated++;
                             }
-                            else if (Random.value < 0.2f)
+                            else if (Random.value < linkToSecondNeighborDec_Branch)
                             {
                                 doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
                                 doorsActivated++;
@@ -478,7 +527,7 @@ public class Tile : MonoBehaviour
                     else
                     {
                         //50% chance of activating door if neighbor is starting room
-                        if (downNeighbor.tileStatus == TileStatus.startingRoom && Random.value < 0.5f)
+                        if (downNeighbor.tileStatus == TileStatus.startingRoom && Random.value < linkToStartingRoomDec_Branch)
                         {
                             doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
                             doorsActivated++;
@@ -493,7 +542,7 @@ public class Tile : MonoBehaviour
                                 doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
                                 doorsActivated++;
                             }
-                            else if (Random.value < 0.2f)
+                            else if (Random.value < linkToSecondNeighborDec_Branch)
                             {
                                 doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
                                 doorsActivated++;
@@ -519,7 +568,7 @@ public class Tile : MonoBehaviour
                     else
                     {
                         //50% chance of activating door if neighbor is starting room
-                        if (leftNeighbor.tileStatus == TileStatus.startingRoom && Random.value < 0.5f)
+                        if (leftNeighbor.tileStatus == TileStatus.startingRoom && Random.value < linkToStartingRoomDec_Branch)
                         {
                             doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
                             doorsActivated++;
@@ -534,7 +583,7 @@ public class Tile : MonoBehaviour
                                 doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
                                 doorsActivated++;
                             }
-                            else if (Random.value < 0.2f)
+                            else if (Random.value < linkToSecondNeighborDec_Branch)
                             {
                                 doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
                                 doorsActivated++;
@@ -560,7 +609,7 @@ public class Tile : MonoBehaviour
                     else
                     {
                         //50% chance of activating door if neighbor is starting room
-                        if (rightNeighbor.tileStatus == TileStatus.startingRoom && Random.value < 0.5f)
+                        if (rightNeighbor.tileStatus == TileStatus.startingRoom && Random.value < linkToStartingRoomDec_Branch)
                         {
                             doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
                             doorsActivated++;
@@ -575,7 +624,7 @@ public class Tile : MonoBehaviour
                                 doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
                                 doorsActivated++;
                             }
-                            else if (Random.value < 0.2f)
+                            else if (Random.value < linkToSecondNeighborDec_Branch)
                             {
                                 doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
                                 doorsActivated++;
@@ -597,6 +646,7 @@ public class Tile : MonoBehaviour
 
     }
 
+    static private float linkToRoomMutliple_RandomRoom = 0.25f;
     //for rooms not on branches or paths
     public void ActivateDoorsRandom()
     {
@@ -636,7 +686,7 @@ public class Tile : MonoBehaviour
                                 doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
                                 doorsActivated++;
                             }
-                            else if (Random.value < (float)0.3 / doorsOn)
+                            else if (Random.value < (float)linkToRoomMutliple_RandomRoom / doorsOn)
                             {
                                 //Debug.Log("on");
                                 doorsOn++;
@@ -674,7 +724,7 @@ public class Tile : MonoBehaviour
                                 doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
                                 doorsActivated++;
                             }
-                            else if (Random.value < (float)0.3 / doorsOn)
+                            else if (Random.value < (float)linkToRoomMutliple_RandomRoom / doorsOn)
                             {
                                 //Debug.Log("on");
                                 doorsOn++;
@@ -710,7 +760,7 @@ public class Tile : MonoBehaviour
                                 doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
                                 doorsActivated++;
                             }
-                            else if (Random.value < (float)0.3 / doorsOn)
+                            else if (Random.value < (float)linkToRoomMutliple_RandomRoom / doorsOn)
                             {
                                 //Debug.Log("on");
                                 doorsOn++;
@@ -746,7 +796,7 @@ public class Tile : MonoBehaviour
                                 doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
                                 doorsActivated++;
                             }
-                            else if (Random.value < (float)0.3 / doorsOn)
+                            else if (Random.value < (float)linkToRoomMutliple_RandomRoom / doorsOn)
                             {
                                 //Debug.Log("on");
                                 doorsOn++;
@@ -862,7 +912,7 @@ public class Tile : MonoBehaviour
                     break;
             }
         }
-        Debug.Log("doors activated path");
+        //Debug.Log("doors activated path");
     }
 
     public void ActivateDoors()

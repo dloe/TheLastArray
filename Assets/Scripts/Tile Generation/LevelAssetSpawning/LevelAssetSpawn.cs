@@ -113,6 +113,9 @@ public class LevelAssetSpawn : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// checks each tile for purpose of adding walls, linking 2 x 2, bringing in 2 x 2 tiles
+    /// </summary>
     void GridAnalysis()
     {
         //activate walls
@@ -157,19 +160,20 @@ public class LevelAssetSpawn : MonoBehaviour
         {
             if (t.tileStatus != Tile.TileStatus.startingRoom)
             {
-                Debug.Log(t.name);
+                //Debug.Log(t.name);
                 GameObject wall;
                     
                 if (t.doors[0] != null && t.upNeighbor != null && t.upNeighbor.doors[1] != null && t.doors[0] != t.upNeighbor.doors[1])
                 {
-                    Debug.Log(t.doors[0].name + " vs " + t.upNeighbor.doors[1].name);
-                    Debug.Log(t.doors[0].tag == "Door");
-                    Debug.Log(t.upNeighbor.doors[1].tag == "Door");
+                    //Debug.Log(t.doors[0].name + " vs " + t.upNeighbor.doors[1].name);
+                    //Debug.Log(t.doors[0].tag == "Door");
+                    //Debug.Log(t.upNeighbor.doors[1].tag == "Door");
                     if(t.doors[0].tag == "Door" && t.upNeighbor.doors[1].tag == "Door")
                     {
-                        Debug.Log(t.doors[0].GetComponent<DoorBehavior>().notInUse);
-                        Debug.Log(t.upNeighbor.doors[1].GetComponent<DoorBehavior>().notInUse);
-                       // Debug.Log("dont spawn wall between " + t.name + " and " + t.upNeighbor.name);
+                        //Debug.Log(t.doors[0].GetComponent<DoorBehavior>().notInUse);
+                        //Debug.Log(t.upNeighbor.doors[1].GetComponent<DoorBehavior>().notInUse);
+                        // Debug.Log("dont spawn wall between " + t.name + " and " + t.upNeighbor.name);
+                        t.ReSyncDoors();
                     }
 
                     if ((t.doors[0].tag == "Door" && t.doors[0].GetComponent<DoorBehavior>().notInUse) || (t.upNeighbor.doors[1].tag == "Door" && t.upNeighbor.doors[1].GetComponent<DoorBehavior>().notInUse))
@@ -181,21 +185,22 @@ public class LevelAssetSpawn : MonoBehaviour
                         wall.name = "WallPlaceholder_LVL4WALLFUNCTION_0";
                         t.doors[0] = wall;
                     }
-                    else
-                        Debug.Log("dont spawn wall between " + t.name + " and " + t.upNeighbor.name);
+                    //else
+                    //    Debug.Log("dont spawn wall between " + t.name + " and " + t.upNeighbor.name);
 
                 }
 
                 if (t.doors[1] != null && t.downNeighbor != null && t.downNeighbor.doors[0] != null && t.doors[1] != t.downNeighbor.doors[0])
                 {
-                    Debug.Log(t.doors[1].name + " vs " + t.downNeighbor.doors[0].name);
-                    Debug.Log(t.doors[1].tag == "Door");
-                    Debug.Log(t.downNeighbor.doors[0].tag == "Door");
+                   // Debug.Log(t.doors[1].name + " vs " + t.downNeighbor.doors[0].name);
+                    //Debug.Log(t.doors[1].tag == "Door");
+                   // Debug.Log(t.downNeighbor.doors[0].tag == "Door");
                     if (t.doors[1].tag == "Door" && t.downNeighbor.doors[0].tag == "Door")
                     {
-                        Debug.Log(t.doors[1].GetComponent<DoorBehavior>().notInUse);
-                        Debug.Log(t.downNeighbor.doors[0].GetComponent<DoorBehavior>().notInUse);
+                        // Debug.Log(t.doors[1].GetComponent<DoorBehavior>().notInUse);
+                        //Debug.Log(t.downNeighbor.doors[0].GetComponent<DoorBehavior>().notInUse);
                         //Debug.Log("dont spawn wall between " + t.name + " and " + t.downNeighbor.name);
+                        t.ReSyncDoors();
                     }
 
                     if ((t.doors[1].tag == "Door" && t.doors[1].GetComponent<DoorBehavior>().notInUse) || (t.downNeighbor.doors[0].tag == "Door" && t.downNeighbor.doors[0].GetComponent<DoorBehavior>().notInUse))
@@ -207,21 +212,22 @@ public class LevelAssetSpawn : MonoBehaviour
                         wall.name = "WallPlaceholder_LVL4WALLFUNCTION_1";
                         t.doors[1] = wall;
                     }
-                    else
-                        Debug.Log("dont spawn wall between " + t.name + " and " + t.downNeighbor.name);
+                    //else
+                    //    Debug.Log("dont spawn wall between " + t.name + " and " + t.downNeighbor.name);
 
                 }
 
                 if (t.doors[2] != null && t.leftNeighbor != null && t.leftNeighbor.doors[3] != null && t.doors[2] != t.leftNeighbor.doors[3])
                 {
-                    Debug.Log(t.doors[2].name + " vs " + t.leftNeighbor.doors[3].name);
-                    Debug.Log(t.doors[2].tag == "Door");
-                    Debug.Log(t.leftNeighbor.doors[3].tag == "Door");
+                    //Debug.Log(t.doors[2].name + " vs " + t.leftNeighbor.doors[3].name);
+                    //Debug.Log(t.doors[2].tag == "Door");
+                    //Debug.Log(t.leftNeighbor.doors[3].tag == "Door");
                     if (t.doors[2].tag == "Door" && t.leftNeighbor.doors[3].tag == "Door")
                     {
-                        Debug.Log(t.doors[2].GetComponent<DoorBehavior>().notInUse);
-                        Debug.Log(t.leftNeighbor.doors[3].GetComponent<DoorBehavior>().notInUse);
-                       // Debug.Log("dont spawn wall between " + t.name + " and " + t.leftNeighbor.name);
+                        //Debug.Log(t.doors[2].GetComponent<DoorBehavior>().notInUse);
+                        //Debug.Log(t.leftNeighbor.doors[3].GetComponent<DoorBehavior>().notInUse);
+                        // Debug.Log("dont spawn wall between " + t.name + " and " + t.leftNeighbor.name);
+                        t.ReSyncDoors();
                     }
 
                     if ((t.doors[2].tag == "Door" && t.doors[2].GetComponent<DoorBehavior>().notInUse) || (t.leftNeighbor.doors[3].tag == "Door" && t.leftNeighbor.doors[3].GetComponent<DoorBehavior>().notInUse))
@@ -233,21 +239,22 @@ public class LevelAssetSpawn : MonoBehaviour
                         wall.name = "WallPlaceholder_LVL4WALLFUNCTION_2";
                         t.doors[2] = wall;
                     }
-                    else
-                        Debug.Log("dont spawn wall between " + t.name + " and " + t.leftNeighbor.name);
+                    //else
+                    //    Debug.Log("dont spawn wall between " + t.name + " and " + t.leftNeighbor.name);
 
                 }
 
                 if (t.doors[3] != null && t.rightNeighbor != null && t.rightNeighbor.doors[2] != null && t.doors[3] != t.rightNeighbor.doors[2]) 
                 {
-                    Debug.Log(t.doors[3].name + " vs " + t.rightNeighbor.doors[2].name);
-                    Debug.Log(t.doors[3].tag == "Door");
-                    Debug.Log(t.rightNeighbor.doors[2].tag == "Door");
+                    //Debug.Log(t.doors[3].name + " vs " + t.rightNeighbor.doors[2].name);
+                    //Debug.Log(t.doors[3].tag == "Door");
+                    //Debug.Log(t.rightNeighbor.doors[2].tag == "Door");
                     if (t.doors[3].tag == "Door" && t.rightNeighbor.doors[2].tag == "Door")
                     {
-                        Debug.Log(t.doors[3].GetComponent<DoorBehavior>().notInUse);
-                        Debug.Log(t.rightNeighbor.doors[2].GetComponent<DoorBehavior>().notInUse);
+                        //Debug.Log(t.doors[3].GetComponent<DoorBehavior>().notInUse);
+                        //Debug.Log(t.rightNeighbor.doors[2].GetComponent<DoorBehavior>().notInUse);
                         //Debug.Log("dont spawn wall between " + t.name + " and " + t.rightNeighbor.name);
+                        t.ReSyncDoors();
                     }
 
                     if ((t.doors[3].tag == "Door" && t.doors[3].GetComponent<DoorBehavior>().notInUse) || (t.rightNeighbor.doors[2].tag == "Door" && t.rightNeighbor.doors[2].GetComponent<DoorBehavior>().notInUse))
@@ -259,8 +266,8 @@ public class LevelAssetSpawn : MonoBehaviour
                         wall.name = "WallPlaceholder_LVL4WALLFUNCTION_3";
                         t.doors[3] = wall;
                     }
-                    else
-                        Debug.Log("dont spawn wall between " + t.name + " and " + t.rightNeighbor.name);
+                    //else
+                    //    Debug.Log("dont spawn wall between " + t.name + " and " + t.rightNeighbor.name);
                 }
             }
         }
@@ -274,25 +281,25 @@ public class LevelAssetSpawn : MonoBehaviour
             //child 3 should not have wall on right side or up side
             Tile tileSub;
             tileSub = tile.transform.GetChild(0).GetComponent<Tile>();
-            Debug.Log(tileSub.name);
+            //Debug.Log(tileSub.name);
             if (tileSub.doors[1] != null)//== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[1]);
             if (tileSub.doors[3] != null)// == myLevelAsset.levelWall)
                 Destroy(tileSub.doors[3]);
             tileSub = tile.transform.GetChild(1).GetComponent<Tile>();
-            Debug.Log(tileSub.name);
+            //Debug.Log(tileSub.name);
             if (tileSub.doors[1] != null)//== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[1]);
             if (tileSub.doors[2] != null)//== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[2]);
             tileSub = tile.transform.GetChild(2).GetComponent<Tile>();
-            Debug.Log(tileSub.name);
+            //Debug.Log(tileSub.name);
            if (tileSub.doors[0] != null)//== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[0]);
             if (tileSub.doors[2] != null)//== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[2]);
             tileSub = tile.transform.GetChild(3).GetComponent<Tile>();
-            Debug.Log(tileSub.name);
+            //Debug.Log(tileSub.name);
             if (tileSub.doors[0] != null) //== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[0]);
             if (tileSub.doors[3] != null) //== myLevelAsset.levelWall)
