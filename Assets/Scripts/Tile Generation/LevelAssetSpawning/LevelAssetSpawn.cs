@@ -324,37 +324,45 @@ public class LevelAssetSpawn : MonoBehaviour
         preset.transform.parent = myTileGeneration.secretRoom.transform;
 
         //rotate asset properly
-        Quaternion assetRot = myTileGeneration.secretRoom.transform.rotation;
+        Quaternion assetRot = new Quaternion(0, 0, 0, 0);
         Tile secret = myTileGeneration.secretRoom.GetComponent<Tile>();
         //replace wall on neighbor
         if (secret.upNeighbor != null)
         {
-            assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y + 90, secret.transform.rotation.z, secret.transform.rotation.w);
+
+            //assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y + 90, secret.transform.rotation.z, secret.transform.rotation.w);
+            //Debug.Log(secret.transform.rotation.y + 90);
+            preset.transform.localEulerAngles = new Vector3(preset.transform.localEulerAngles.x, preset.transform.localEulerAngles.y + 90, preset.transform.localEulerAngles.z);
             Destroy(secret.upNeighbor.doors[1]);
         }
         else if(secret.downNeighbor != null)
         {
-            assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y - 90, secret.transform.rotation.z, secret.transform.rotation.w);
+
+            //assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y - 90, secret.transform.rotation.z, secret.transform.rotation.w);
+            preset.transform.localEulerAngles = new Vector3(preset.transform.localEulerAngles.x, preset.transform.localEulerAngles.y - 90, preset.transform.localEulerAngles.z);
+            //Debug.Log(secret.transform.rotation.y - 90);
             Destroy(secret.downNeighbor.doors[0]);
         }
         else if(secret.leftNeighbor != null)
         {
-            assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y, secret.transform.rotation.z, secret.transform.rotation.w);
+            //assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y, secret.transform.rotation.z, secret.transform.rotation.w);
+           // preset.transform.localEulerAngles = new Vector3(preset.transform.localEulerAngles.x, preset.transform.localEulerAngles.y + 90, preset.transform.localEulerAngles.z);
+            //Debug.Log(secret.transform.rotation.y);
             Destroy(secret.leftNeighbor.doors[3]);
 
         }
         else if (secret.rightNeighbor != null)
         {
-            assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y + 180, secret.transform.rotation.z, secret.transform.rotation.w);
+            //assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y + 180, secret.transform.rotation.z, secret.transform.rotation.w);
+            preset.transform.localEulerAngles = new Vector3(preset.transform.localEulerAngles.x, preset.transform.localEulerAngles.y + 180, preset.transform.localEulerAngles.z);
+            // Debug.Log(secret.transform.rotation.y + 180);
             Destroy(secret.rightNeighbor.doors[2]);
         }
-        preset.transform.rotation = assetRot;
+        //preset.transform.rotation = assetRot;
+        //Debug.Log(preset.transform.rotation.y);
 
         if (preset.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
         {
-
-
-
             // Debug.Log(preset.name);
             for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetItems.Length; posResourceCount++)
             {
