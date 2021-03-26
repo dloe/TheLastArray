@@ -158,7 +158,8 @@ public class LocalLevel : MonoBehaviour
         //myPlayerData.currentLevelNumber++;
         myPlayerData.previousLevelName = SceneManager.GetActiveScene().name;
         //transition scene
-        SceneManager.LoadScene("Train");
+
+        LevelLoader.Instance.LoadLevel("Train");
         
         Debug.Log("Loading next scene");
     }

@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     [Header("Activatable / Interactable To Use")]
     public Activatable thingToActivate;
 
+    [Header("Player Stats")]
     public int speedStat = 5;
     public int dmgResist;
     public int skillPoints = 0;
@@ -210,8 +211,7 @@ public class Player : MonoBehaviour
                     case ItemType.MeleeWeapon:
                         meleeAttack();
                         break;
-                    case ItemType.Pistol:
-                    case ItemType.Rifle:
+                    case ItemType.RangedWeapon:
                         rangedAttack();
                         break;
                     case ItemType.Heal:
@@ -386,7 +386,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void reload()
     {
-        if(inventory.selectedItem.itemData.itemType == ItemType.Pistol || inventory.selectedItem.itemData.itemType == ItemType.Rifle)
+        if(inventory.selectedItem.itemData.itemType == ItemType.RangedWeapon)
         {
             switch (inventory.selectedItem.itemData.ammoType)
             {
