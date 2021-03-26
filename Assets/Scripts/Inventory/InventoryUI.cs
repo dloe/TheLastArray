@@ -215,6 +215,7 @@ public class InventoryUI : MonoBehaviour
 
                     break;
                 default:
+                    Player.Instance.SetMeleeVisualActive(false);
                     break;
             }
         }
