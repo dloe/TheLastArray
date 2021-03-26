@@ -94,10 +94,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
         GridAnalysis();
 
-        //ActivateSecretRoom();
-
-
-        //SOMEONE 2 x 2 TILES ARE STILL LINKING WHILE ACTIVATE OBJS AND ACTIVATE ENEMIES STILL RUN
+        ActivateSecretRoom();
 
         myLocalLevel.ChooseObjective();
         //ACTIVATE OBJECTIVES
@@ -110,7 +107,6 @@ public class LevelAssetSpawn : MonoBehaviour
         //ACTIVATE ENEMIES
         ActivateEnemies();
 
-        
     }
 
     /// <summary>
@@ -325,9 +321,33 @@ public class LevelAssetSpawn : MonoBehaviour
         //spawn it in AT THE SAME ROTATION OF THE SECRETROOM GAMEOBJECT
         GameObject preset = null;
         preset = Instantiate(myLevelAsset.secretRoomAssets[Random.Range(0, myLevelAsset.secretRoomAssets.Count)], myTileGeneration.secretRoom.transform.position, myTileGeneration.secretRoom.transform.rotation);
+        preset.transform.parent = myTileGeneration.secretRoom.transform;
+
+        //rotate asset properly
+        Quaternion assetRot = myTileGeneration.secretRoom.transform.rotation;
+        Tile secret = myTileGeneration.secretRoom.GetComponent<Tile>();
+        if(secret.upNeighbor != null)
+        {
+            assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y + 90, secret.transform.rotation.z, secret.transform.rotation.w);
+        }
+        else if(secret.downNeighbor != null)
+        {
+            assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y - 90, secret.transform.rotation.z, secret.transform.rotation.w);
+        }
+        else if(secret.leftNeighbor != null)
+        {
+            assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y, secret.transform.rotation.z, secret.transform.rotation.w);
+        }
+        else if (secret.rightNeighbor != null)
+        {
+            assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y + 180, secret.transform.rotation.z, secret.transform.rotation.w);
+        }
+        preset.transform.rotation = assetRot;
 
         if (preset.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
         {
+
+
 
             // Debug.Log(preset.name);
             for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetItems.Length; posResourceCount++)

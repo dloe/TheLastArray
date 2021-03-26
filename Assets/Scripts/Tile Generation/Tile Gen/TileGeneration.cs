@@ -439,7 +439,7 @@ public class TileGeneration : MonoBehaviour
         //set up secret room
         if (myLocalLevel.thisLevelTier > levelTier.level2)
         {
-            //SetUpSecretRoom();
+            SetUpSecretRoom();
         }
 
         if (hasDoors)
