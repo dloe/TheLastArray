@@ -63,7 +63,6 @@ public class CameraController : MonoBehaviour
 
     private void panCamera()
     {
-        Debug.Log((Input.mousePosition.x / Mathf.Abs(getScrnFrac(true, 2f) - getScrnFrac(true, horizontalNeutralZone))));
 
          //clampOffsetX =  Input.mousePosition.x / Mathf.Abs(getScrnFrac(true, 2f) - getScrnFrac(true, horizontalNeutralZone)) * offsetLimitX;
          //clampOffsetZ = Mathf.Abs(Input.mousePosition.y - getScrnFrac(false, 2f)) / getScrnFrac(false, 2f);
