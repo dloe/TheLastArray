@@ -22,6 +22,7 @@ public class LevelAssetsData : ScriptableObject
     
     [Header("Refs to Assets Spawned in Scene")]
     public List<GameObject> AssetsSpawned;
+    public GameObject emptyObj;
     [Header("Enterance Room Variations")]
     public GameObject[] EnterenceRooms;
     [Header("Level Wall Prefabs")]
@@ -32,8 +33,12 @@ public class LevelAssetsData : ScriptableObject
     public List<GameObject> resourcesList;
     [Header("Weapon Drop Prefabs")]
     public List<GameObject> weaponList;
+    public List<ItemData> weaponDataList;
     [Header("Item Drop Prefabs")]
     public List<GameObject> itemList;
+    public List<ItemData> itemDataList;
+    [Header("Key Prefab Drop")]
+    public ItemData keyData;
     [Header("Level Tier")]
     public int levelTier = 0;
     [Space(10)]
