@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class SecretPresetTileInfo : PresetTileInfo
 {
-    public GameObject door;
-    public GameObject objective;
+    public KeyHole keyHole;
+    public GameObject interior;
+
+    private void Update()
+    {
+        //if the door is opened, the inside is rendered
+        if(keyHole.isActivated)
+        {
+            interior.layer = 0;
+        }
+    }
 }
