@@ -16,7 +16,8 @@ public enum ItemType
     MeleeWeapon,
     RangedWeapon,
     Heal,
-    Key
+    Key,
+    Binoculars
 }
 [Serializable][CreateAssetMenu]
 public class ItemData : ScriptableObject

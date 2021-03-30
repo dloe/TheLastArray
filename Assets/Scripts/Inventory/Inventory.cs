@@ -70,6 +70,11 @@ public class Inventory
 
     public void AddItem(Item item)
     {
+        if (item.itemData.itemType == ItemType.Binoculars)
+        {
+            CameraController.Instance.ToggleBinocularMode(true);
+        }
+
         itemList.Add(item);
 
         if(InventoryUI.Instance)
@@ -84,6 +89,11 @@ public class Inventory
 
     public void AddItem(ItemData itemData)
     {
+        if (itemData.itemType == ItemType.Binoculars)
+        {
+            CameraController.Instance.ToggleBinocularMode(true);
+        }
+
         itemList.Add(new Item(itemData));
         if (InventoryUI.Instance)
         {
@@ -97,6 +107,10 @@ public class Inventory
 
     public void AddItemNoUI(ItemData itemData)
     {
+        if (itemData.itemType == ItemType.Binoculars)
+        {
+            CameraController.Instance.ToggleBinocularMode(true);
+        }
         itemList.Add(new Item(itemData));
 
     }
@@ -105,6 +119,11 @@ public class Inventory
 
     public void RemoveItem(Item item)
     {
+        if (selectedItem.itemData.itemType == ItemType.Binoculars)
+        {
+            CameraController.Instance.ToggleBinocularMode(false);
+        }
+
         itemList.Remove(item);
         if (InventoryUI.Instance)
         {

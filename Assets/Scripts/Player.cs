@@ -230,6 +230,7 @@ public class Player : MonoBehaviour
             //drops currently selected item on the ground at the player's feet
             if (Input.GetKeyDown(KeyCode.Q) && inventory.selectedItem != null && !thingToActivate)
             {
+                
                 inventory.DropItem();
             }
 

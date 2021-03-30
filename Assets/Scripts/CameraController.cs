@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public static CameraController Instance;
     private GameObject playerObject;
     public Vector3 offset;
     public float offsetLimitX = 1f;
@@ -15,6 +16,16 @@ public class CameraController : MonoBehaviour
 
     public float originalOffsetLimitX;
     public float originalOffsetLimitZ;
+
+    private float clampOffsetX, clampOffsetZ;
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(Instance.gameObject);
+        }
+        Instance = this;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -52,20 +63,20 @@ public class CameraController : MonoBehaviour
 
     private void panCamera()
     {
+        Debug.Log((Input.mousePosition.x / Mathf.Abs(getScrnFrac(true, 2f) - getScrnFrac(true, horizontalNeutralZone))));
 
-
-        float xModifier = Mathf.Abs(Input.mousePosition.x - getScrnFrac(true, 2f)) / getScrnFrac(true, 2f);
-        float zModifier = Mathf.Abs(Input.mousePosition.y - getScrnFrac(false, 2f)) / getScrnFrac(false, 2f);
+         //clampOffsetX =  Input.mousePosition.x / Mathf.Abs(getScrnFrac(true, 2f) - getScrnFrac(true, horizontalNeutralZone)) * offsetLimitX;
+         //clampOffsetZ = Mathf.Abs(Input.mousePosition.y - getScrnFrac(false, 2f)) / getScrnFrac(false, 2f);
 
 
         if (Input.mousePosition.x < getScrnFrac(true, 2f) - getScrnFrac(true, horizontalNeutralZone))
         {
-            offset.x -= xModifier * panSpeed * Time.deltaTime;
-
+            offset.x -=  panSpeed * Time.deltaTime;
+            //offset.x = -Mathf.MoveTowards(offset.x,offsetLimitX - xModifier*-offsetLimitX , 0.1f);
         }
         else if (Input.mousePosition.x > getScrnFrac(true, 2f) + getScrnFrac(true, horizontalNeutralZone))
         {
-            offset.x += xModifier * panSpeed * Time.deltaTime;
+            offset.x += panSpeed * Time.deltaTime;
 
         }
         else
@@ -76,11 +87,11 @@ public class CameraController : MonoBehaviour
 
         if (Input.mousePosition.y < getScrnFrac(false, 2f) - getScrnFrac(false, verticalNeutralZone))
         {
-            offset.z -= zModifier * panSpeed * Time.deltaTime;
+            offset.z -= panSpeed * Time.deltaTime;
         }
         else if (Input.mousePosition.y > getScrnFrac(false, 2f) + getScrnFrac(false, verticalNeutralZone))
         {
-            offset.z += zModifier * panSpeed * Time.deltaTime;
+            offset.z += panSpeed * Time.deltaTime;
         }
         else
         {
@@ -97,10 +108,10 @@ public class CameraController : MonoBehaviour
 
     public void ToggleBinocularMode(bool state)
     {
-        if(state)
+        if(state && offsetLimitX == originalOffsetLimitX && offsetLimitZ == originalOffsetLimitZ)
         {
-            offsetLimitX += 1;
-            offsetLimitZ += 1;
+            offsetLimitX += 6;
+            offsetLimitZ += 1.7f;
         }
         else
         {
