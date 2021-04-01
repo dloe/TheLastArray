@@ -21,7 +21,7 @@ public class BossSpawn : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        CheckForPlayer();
     }
 
 
@@ -32,6 +32,7 @@ public class BossSpawn : MonoBehaviour
         {
             if(potentialTarget.gameObject.tag == "Player")
             {
+                Debug.Log("begininng boss fight");
                 Bossdoor.SetActive(true);
                 Objectives.Instance.UpdateFinalObjective(0);
 
