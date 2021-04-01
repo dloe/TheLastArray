@@ -420,10 +420,14 @@ public class LevelAssetSpawn : MonoBehaviour
                     //randomly pick an objective (or item?)
                     int indexO = Random.Range(0, _possibleObjectives.Count);
                     GameObject objMulti = Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, _possibleObjectives[indexO]).gameObject;
+                    
                     objMulti.transform.rotation = playerSpawn.transform.rotation;
                     objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
                     parents.Add(objMulti.transform.parent.parent.gameObject);
                     objectivesInLevel.Add(objMulti);
+
+                    _possibleObjectives.Remove(_possibleObjectives[indexO]);
+                    _possibleItems.Remove(_possibleObjectives[indexO]);
                 }
             }
             else if (myLocalLevel.objective == 1)
@@ -638,10 +642,39 @@ public class LevelAssetSpawn : MonoBehaviour
         }
         else
         {
+            GameObject tileObj = myLevelAsset.presetObjectiveTiles[Random.Range(0, myLevelAsset.presetObjectiveTiles.Count)];
             //if  this tile is the final room, make sure it has an objective
-            preset = Instantiate(myLevelAsset.presetObjectiveTiles[Random.Range(0, myLevelAsset.presetObjectiveTiles.Count)], tile.transform.position, tile.transform.rotation);
+            if (myLocalLevel.thisLevelTier == levelTier.level4)
+            {
+                tileObj = myLevelAsset.bossTileLastArray;
+            }
+
+
+            Vector3 rotation = Vector3.zero;
+            //rotate tile based on if neighbor
+            if(tile.upNeighbor != null && tile.upNeighbor.pathNumber == tile.pathNumber - 1)
+            {
+                
+            }
+            else if(tile.downNeighbor != null && tile.downNeighbor.pathNumber == tile.pathNumber - 1)
+            {
+                rotation = new Vector3(tile.transform.localEulerAngles.x, 180, tile.transform.localEulerAngles.z);
+            }
+            else if(tile.leftNeighbor != null && tile.leftNeighbor.pathNumber == tile.pathNumber - 1)
+            {
+                rotation = new Vector3(tile.transform.localEulerAngles.x, -90, tile.transform.localEulerAngles.z);
+            }
+            else if(tile.rightNeighbor != null && tile.rightNeighbor.pathNumber == tile.pathNumber - 1)
+            {
+                rotation = new Vector3(tile.transform.localEulerAngles.x, 90, tile.transform.localEulerAngles.z);
+            }
+
+
+            preset = Instantiate(tileObj, tile.transform.position, tile.transform.rotation);
+            
 
             preset.transform.parent = tile.transform.parent;
+            preset.transform.localEulerAngles = rotation;
             tile.presetTile = preset;
             int tileIndex = myLevelAsset.presetTileAssets.IndexOf(myLevelAsset.presetObjectiveTiles[Random.Range(0, myLevelAsset.presetObjectiveTiles.Count)]);
             //Debug.Log(tileIndex);
@@ -649,7 +682,8 @@ public class LevelAssetSpawn : MonoBehaviour
             tile.presetNum = tileIndex;
             tile.levelAssetPlaced = true;
             endObjTile = preset;
-            //_tileObjectivesInLevel.Add(tile);
+            
+
             //Debug.Log("FINAL ROOM OBJECTIVE PLACED");
         }
 

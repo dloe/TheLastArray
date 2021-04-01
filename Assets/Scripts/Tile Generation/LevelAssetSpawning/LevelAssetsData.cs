@@ -57,5 +57,6 @@ public class LevelAssetsData : ScriptableObject
     public List<GameObject> presetObjectiveTiles;
     [Header("Boss Detection")]
     public GameObject bossDetection;
+    public GameObject bossTileLastArray;
 }
 
