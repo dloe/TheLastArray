@@ -77,12 +77,27 @@ public class CameraController : MonoBehaviour
 
         if (Input.mousePosition.x < getScrnFrac(true, 2f) - getScrnFrac(true, horizontalNeutralZone))
         {
-            offset.x -=  panSpeed * Time.deltaTime;
+            if(offset.x > baseOffset.x)
+            {
+                offset.x -= panSpeed * 1.4f * Time.deltaTime;
+            }
+            else
+            {
+                offset.x -= panSpeed * Time.deltaTime;
+            }
+            
             //offset.x = -Mathf.MoveTowards(offset.x,offsetLimitX - xModifier*-offsetLimitX , 0.1f);
         }
         else if (Input.mousePosition.x > getScrnFrac(true, 2f) + getScrnFrac(true, horizontalNeutralZone))
         {
-            offset.x += panSpeed * Time.deltaTime;
+            if (offset.x < baseOffset.x)
+            {
+                offset.x += panSpeed * 1.4f * Time.deltaTime;
+            }
+            else
+            {
+                offset.x += panSpeed * Time.deltaTime;
+            }
 
         }
         else
@@ -93,16 +108,31 @@ public class CameraController : MonoBehaviour
 
         if (Input.mousePosition.y < getScrnFrac(false, 2f) - getScrnFrac(false, verticalNeutralZone))
         {
-            offset.z -= panSpeed * Time.deltaTime;
+            if(offset.z > baseOffset.z)
+            {
+                offset.z -= panSpeed * 1.4f* Time.deltaTime;
+            }
+            else
+            {
+                offset.z -= panSpeed * Time.deltaTime;
+            }
+            
         }
         else if (Input.mousePosition.y > getScrnFrac(false, 2f) + getScrnFrac(false, verticalNeutralZone))
         {
-            offset.z += panSpeed * Time.deltaTime;
+            if (offset.z < baseOffset.z)
+            {
+                offset.z += panSpeed * 1.4f * Time.deltaTime;
+            }
+            else
+            {
+                offset.z += panSpeed * Time.deltaTime;
+            }
         }
         else
         {
             //offset.z = Mathf.SmoothStep(offset.z, baseOffset.z, panSpeed * 3f * Time.deltaTime);
-            offset.z = Mathf.Lerp(offset.z, baseOffset.z, panSpeed * 0.4f * Time.deltaTime);
+            offset.z = Mathf.Lerp(offset.z, baseOffset.z, panSpeed * 0.5f * Time.deltaTime);
         }
     }
 
