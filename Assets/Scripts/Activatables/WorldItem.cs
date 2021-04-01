@@ -17,7 +17,7 @@ public class WorldItem : Activatable
         {
             gameObject.GetComponentInChildren<Image>().sprite = worldItemData.itemSprite;
         }
-        
+        gameObject.name = worldItemData.itemName + "_Interatable";
     }
 
     public override void Activate()

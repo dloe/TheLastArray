@@ -59,6 +59,11 @@ public class CameraController : MonoBehaviour
         
         clampOffset();
 
+
+        //Dylan added this to exclude layer of secret room interior
+        Camera cam = GetComponent<Camera>();
+        cam.cullingMask = ~(1 << LayerMask.NameToLayer("HiddenSecretInterior"));
+
     }
 
     private void panCamera()

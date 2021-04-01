@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SecretPresetTileInfo : PresetTileInfo
 {
-    public GameObject door;
-    public GameObject objective;
+    public KeyHole keyHole;
+    public GameObject interior;
+
 }

@@ -535,7 +535,7 @@ public class TileGeneration : MonoBehaviour
         {
             case 1:
                 //up 
-                Debug.Log("Up");
+                //Debug.Log("Up");
                 spawnPos = new Vector3(t.tile.transform.position.x - (myLevelAssetsData.tileSize / 2), t.tile.transform.position.y, t.tile.transform.position.z);
                 spawnRot = new Quaternion(t.tile.transform.rotation.x, t.tile.transform.rotation.y, t.tile.transform.rotation.z, t.tile.transform.rotation.w);
                 secretRoom = Instantiate(tilePlaceholder, spawnPos, spawnRot);
@@ -546,7 +546,7 @@ public class TileGeneration : MonoBehaviour
                 break;
             case 2:
                 //down
-                Debug.Log("Down");
+                //Debug.Log("Down");
                 spawnPos = new Vector3(t.tile.transform.position.x + (myLevelAssetsData.tileSize / 2), t.tile.transform.position.y, t.tile.transform.position.z);
                 spawnRot = new Quaternion(t.tile.transform.rotation.x, t.tile.transform.rotation.y, t.tile.transform.rotation.z, t.tile.transform.rotation.w);
                 secretRoom = Instantiate(tilePlaceholder, spawnPos, spawnRot);
@@ -556,7 +556,7 @@ public class TileGeneration : MonoBehaviour
                 break;
             case 3:
                 //left
-                Debug.Log("Left");
+                //Debug.Log("Left");
                 spawnPos = new Vector3(t.tile.transform.position.x, t.tile.transform.position.y, t.tile.transform.position.z - (myLevelAssetsData.tileSize / 2));
                 spawnRot = new Quaternion(t.tile.transform.rotation.x, t.tile.transform.rotation.y, t.tile.transform.rotation.z, t.tile.transform.rotation.w);
                 secretRoom = Instantiate(tilePlaceholder, spawnPos, spawnRot);
@@ -566,7 +566,7 @@ public class TileGeneration : MonoBehaviour
                 break;
             case 4:
                 //right
-                Debug.Log("Right");
+                //Debug.Log("Right");
                 spawnPos = new Vector3(t.tile.transform.position.x, t.tile.transform.position.y, t.tile.transform.position.z + (myLevelAssetsData.tileSize / 2));
                 spawnRot = new Quaternion(t.tile.transform.rotation.x, t.tile.transform.rotation.y, t.tile.transform.rotation.z, t.tile.transform.rotation.w);
                 secretRoom = Instantiate(tilePlaceholder, spawnPos, spawnRot);
