@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -95,8 +96,7 @@ public class ItemData : ScriptableObject
 [Serializable]
 public class ItemDataSave
 {
-   
-    public Sprite itemSprite;
+    public string itemSpritePath;
     public ItemType itemType;
     public string itemName ;
 
@@ -116,7 +116,9 @@ public class ItemDataSave
 
     public void SaveFromItemData(ItemData itemData)
     {
-        itemSprite = itemData.itemSprite;
+        //Debug.Log(itemData.itemSprite.name);
+        itemSpritePath = "ItemSprites/" + itemData.itemSprite.name;
+        //Debug.Log(itemSpritePath) ;
         itemType = itemData.itemType;
         itemName = itemData.itemName;
         hasDurability = itemData.hasDurability;
@@ -133,7 +135,9 @@ public class ItemDataSave
 
     public void LoadToItemData(ItemData itemData)
     {
-        itemData.itemSprite = itemSprite;
+        itemData.itemSprite = Resources.Load<Sprite>(itemSpritePath);
+        //Debug.Log(itemSpritePath);
+        //Debug.Log(itemData.itemSprite, itemData.itemSprite);
         itemData.itemType = itemType;
         itemData.itemName = itemName;
         itemData.hasDurability = hasDurability;

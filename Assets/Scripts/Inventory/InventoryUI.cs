@@ -129,6 +129,8 @@ public class InventoryUI : MonoBehaviour
                 if (inventory.ItemAtIndex(index).itemData.itemSprite != null)
                 {
                     slotList[index].GetChild(0).gameObject.SetActive(true);
+                    //Debug.LogError("bruh", inventory.ItemAtIndex(index).itemData.itemSprite);
+                    //Debug.Log(slotList[index].GetChild(0).GetComponent<Image>().sprite);
                     slotList[index].GetChild(0).GetComponent<Image>().sprite = inventory.ItemAtIndex(index).itemData.itemSprite;
                 }
                 else

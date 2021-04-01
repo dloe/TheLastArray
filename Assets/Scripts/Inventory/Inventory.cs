@@ -250,7 +250,7 @@ public class Inventory
         {
             itemSave = new ItemDataSave();
             itemSave.SaveFromItemData(item.itemData);
-            jsonList.Add(JsonUtility.ToJson(item.itemData));
+            jsonList.Add(JsonUtility.ToJson(itemSave));
         }
 
         return jsonList;
