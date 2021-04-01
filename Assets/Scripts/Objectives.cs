@@ -178,7 +178,7 @@ public class Objectives : MonoBehaviour
             }
             else
             {
-                objectiveText.text = "COMPLETE, Return to Train";
+                objectiveText.text = "Return to Train";
             }
             
         }

@@ -10,7 +10,8 @@ public class CraftingOption : MonoBehaviour
    // public int requiredMeds;
    // public int requiredCloth;
 
-    public Text itemName, scrapText, medsText, clothText;
+    public Text itemName, scrapText, medsText, clothText, description;
+    public Image itemImage;
     public Button craftButton;
     public CraftingRecipe recipe;
     public Dropdown amountDropDown;
