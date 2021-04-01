@@ -17,7 +17,7 @@ public class CameraController : MonoBehaviour
     public float originalOffsetLimitX;
     public float originalOffsetLimitZ;
 
-    private float clampOffsetX, clampOffsetZ;
+    private float xModifier, zModifier;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -71,19 +71,18 @@ public class CameraController : MonoBehaviour
     private void panCamera()
     {
 
-         //clampOffsetX =  Input.mousePosition.x / Mathf.Abs(getScrnFrac(true, 2f) - getScrnFrac(true, horizontalNeutralZone)) * offsetLimitX;
-         //clampOffsetZ = Mathf.Abs(Input.mousePosition.y - getScrnFrac(false, 2f)) / getScrnFrac(false, 2f);
-
+        xModifier = Mathf.Abs(Input.mousePosition.x - getScrnFrac(true, 2f)) / getScrnFrac(true, 2f);
+        zModifier = Mathf.Abs(Input.mousePosition.y - getScrnFrac(false, 2f)) / getScrnFrac(false, 2f);
 
         if (Input.mousePosition.x < getScrnFrac(true, 2f) - getScrnFrac(true, horizontalNeutralZone))
         {
             if(offset.x > baseOffset.x)
             {
-                offset.x -= panSpeed * 1.4f * Time.deltaTime;
+                offset.x -= xModifier * panSpeed * 1.2f * Time.deltaTime;
             }
             else
             {
-                offset.x -= panSpeed * Time.deltaTime;
+                offset.x -= xModifier * panSpeed * Time.deltaTime;
             }
             
             //offset.x = -Mathf.MoveTowards(offset.x,offsetLimitX - xModifier*-offsetLimitX , 0.1f);
@@ -92,29 +91,29 @@ public class CameraController : MonoBehaviour
         {
             if (offset.x < baseOffset.x)
             {
-                offset.x += panSpeed * 1.4f * Time.deltaTime;
+                offset.x += xModifier * panSpeed * 1.2f * Time.deltaTime;
             }
             else
             {
-                offset.x += panSpeed * Time.deltaTime;
+                offset.x += xModifier * panSpeed * Time.deltaTime;
             }
 
         }
         else
         {
-            //offset.x = Mathf.SmoothStep(offset.x, baseOffset.x, panSpeed * 3f * Time.deltaTime);
-            offset.x = Mathf.Lerp(offset.x, baseOffset.x, panSpeed * 0.5f * Time.deltaTime);
+            //offset.x = Mathf.Lerp(offset.x, baseOffset.x, panSpeed * 0.5f * Time.deltaTime);
+            offset.x = Mathf.MoveTowards(offset.x, baseOffset.x, panSpeed * Time.deltaTime);
         }
 
         if (Input.mousePosition.y < getScrnFrac(false, 2f) - getScrnFrac(false, verticalNeutralZone))
         {
             if(offset.z > baseOffset.z)
             {
-                offset.z -= panSpeed * 1.4f* Time.deltaTime;
+                offset.z -= zModifier * panSpeed * 1.2f* Time.deltaTime;
             }
             else
             {
-                offset.z -= panSpeed * Time.deltaTime;
+                offset.z -= zModifier * panSpeed * Time.deltaTime;
             }
             
         }
@@ -122,17 +121,17 @@ public class CameraController : MonoBehaviour
         {
             if (offset.z < baseOffset.z)
             {
-                offset.z += panSpeed * 1.4f * Time.deltaTime;
+                offset.z += zModifier * panSpeed * 1.2f * Time.deltaTime;
             }
             else
             {
-                offset.z += panSpeed * Time.deltaTime;
+                offset.z += zModifier * panSpeed * Time.deltaTime;
             }
         }
         else
         {
-            //offset.z = Mathf.SmoothStep(offset.z, baseOffset.z, panSpeed * 3f * Time.deltaTime);
-            offset.z = Mathf.Lerp(offset.z, baseOffset.z, panSpeed * 0.5f * Time.deltaTime);
+            //offset.z = Mathf.Lerp(offset.z, baseOffset.z, panSpeed * 0.5f * Time.deltaTime);
+            offset.z = Mathf.MoveTowards(offset.z, baseOffset.z, panSpeed * Time.deltaTime);
         }
     }
 
