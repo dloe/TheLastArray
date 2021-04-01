@@ -202,6 +202,7 @@ public class BaseEnemy : MonoBehaviour
         switch (attackType)
         {
             case AttackType.none:
+                specialAttack(delta);
                 break;
             case AttackType.melee:
                 if (myState != enemyState.attacking && readyToAttack == true)
@@ -241,6 +242,10 @@ public class BaseEnemy : MonoBehaviour
 
 
         this.transform.LookAt(poi);
+    }
+    public virtual void specialAttack(Vector3 temp)
+    {
+
     }
 
     void StateChanger()
@@ -421,7 +426,7 @@ public class BaseEnemy : MonoBehaviour
         }
     }
 
-    void OnDeath()
+    public virtual void OnDeath()
     {
         if (isObjectiveEnemy)
         {
