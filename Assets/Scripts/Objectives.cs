@@ -15,7 +15,7 @@ public class Objectives : MonoBehaviour
 {
     public static Objectives Instance;
     public GameObject gasolineObject, generatorObject;
-    public string killMessage, gasMessage, generatorMessage;
+    public string killMessage, gasMessage, generatorMessage, finalMessage;
     public ItemData gasolineData;
     public Objective mainObjective;
     public int objectiveCount = 0;
@@ -89,6 +89,10 @@ public class Objectives : MonoBehaviour
                 objGenerator = Instantiate(generatorObject, spot.transform.position, generatorObject.transform.rotation).GetComponent<Generator>();
                 returnObj = objGenerator.gameObject;
                 objective.objectiveMessage = generatorMessage;
+                break;
+            case 4:
+                objective.condition = Condition.KillEnemy;
+                objective.objectiveMessage = finalMessage;
                 break;
             default:
                 break;

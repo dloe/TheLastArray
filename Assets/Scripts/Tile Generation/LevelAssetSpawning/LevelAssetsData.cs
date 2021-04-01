@@ -55,5 +55,7 @@ public class LevelAssetsData : ScriptableObject
     [Space(10)]
     [Header("Tile Prefabs with objectives")]
     public List<GameObject> presetObjectiveTiles;
+    [Header("Boss Detection")]
+    public GameObject bossDetection;
 }
 
