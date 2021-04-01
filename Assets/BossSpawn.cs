@@ -11,17 +11,19 @@ public class BossSpawn : MonoBehaviour
    // public Objectives obj;
     public float radius = 6.25f;
     public GameObject bossObj;
+    bool startCheck = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        StartCoroutine(DelayedStart());
     }
 
     // Update is called once per frame
     void Update()
     {
-        CheckForPlayer();
+        if(startCheck)
+            CheckForPlayer();
     }
 
 
@@ -43,6 +45,12 @@ public class BossSpawn : MonoBehaviour
                 Destroy(this.gameObject);
             }
         }
+    }
+
+    IEnumerator DelayedStart()
+    {
+        yield return new WaitForSeconds(1.0f);
+        startCheck = true;
     }
 
     private void OnDrawGizmos()

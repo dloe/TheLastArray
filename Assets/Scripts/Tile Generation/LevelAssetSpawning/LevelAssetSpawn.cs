@@ -159,7 +159,7 @@ public class LevelAssetSpawn : MonoBehaviour
     //doors would be active linking tiles, just add doors on sides that dont have doors yeet im so tired please help i feel myself slowly drifitng away into oblivion oh god
     void ActivateLvl4Walls()
     {
-        Debug.Log("start activate");
+        //Debug.Log("start activate");
         foreach (Tile t in myTileGeneration._allActiveTiles)
         {
             if (t.tileStatus != Tile.TileStatus.startingRoom)
