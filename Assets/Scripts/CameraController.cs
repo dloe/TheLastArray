@@ -25,6 +25,8 @@ public class CameraController : MonoBehaviour
             Destroy(Instance.gameObject);
         }
         Instance = this;
+        originalOffsetLimitX = offsetLimitX;
+        originalOffsetLimitZ = offsetLimitZ;
     }
 
     // Start is called before the first frame update
@@ -38,8 +40,8 @@ public class CameraController : MonoBehaviour
         offset = transform.localPosition - Player.Instance.playerHolderTransform.TransformPoint(playerObject.transform.position);
         baseOffset = offset;
 
-        originalOffsetLimitX = offsetLimitX;
-        originalOffsetLimitZ = offsetLimitZ;
+        //originalOffsetLimitX = offsetLimitX;
+        //originalOffsetLimitZ = offsetLimitZ;
     }
 
     // Update is called once per frame

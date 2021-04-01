@@ -243,19 +243,7 @@ public class Player : MonoBehaviour
                 reload();
             }
 
-            //if (Input.GetKey(KeyCode.RightShift))
-            //{
-            //    if (Input.GetKeyDown(KeyCode.Equals))
-            //    {
-            //        Debug.Log("Trying To Save...");
-            //        SavePlayer();
-            //    }
-            //}
-            //else if (Input.GetKeyDown(KeyCode.Minus))
-            //{
-            //    Debug.Log("Trying To Load...");
-            //    LoadPlayer();
-            //}
+            
 
 #if UNITY_EDITOR
             //for testing damage and healing
@@ -263,19 +251,29 @@ public class Player : MonoBehaviour
             {
                 TakeDamage(1);
             }
+            else if (Input.GetKeyDown(KeyCode.T))
+            {
+                Debug.Log("Reseting Player Save...");
+                inventory.Clear();
+                SetStatsToBase();
+                InventoryUI.Instance.ResetSlots();
+                SavePlayer();
+                InventoryUI.Instance.RefreshUI();
+            }
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                
+                
+                Debug.Log("Trying To Save...");
+                SavePlayer();
+                
+            }
+            else if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                Debug.Log("Trying To Load...");
+                LoadPlayer();
+            }
 
-           
-            
-                if (Input.GetKeyDown(KeyCode.T))
-                {
-                    Debug.Log("Reseting Player Save...");
-                    inventory.Clear();
-                    SetStatsToBase();
-                    InventoryUI.Instance.ResetSlots();
-                    SavePlayer();
-                    InventoryUI.Instance.RefreshUI();
-                }
-            
 #endif
 
         }
