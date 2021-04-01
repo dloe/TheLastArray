@@ -116,7 +116,22 @@ public class Objectives : MonoBehaviour
     }
 
 
-    
+    public void UpdateFinalObjective(int phase)
+    {
+        if(phase == 0)
+        {
+            finalMessage = "Survive";
+
+        }
+        else if(phase == 1)
+        {
+            finalMessage = "Activate Last Array";
+        }
+        else if(phase == 2)
+        {
+            finalMessage = "Return to Train for Extraction";
+        }
+    }
     
 
 
