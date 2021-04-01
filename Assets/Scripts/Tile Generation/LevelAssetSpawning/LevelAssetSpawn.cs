@@ -420,10 +420,14 @@ public class LevelAssetSpawn : MonoBehaviour
                     //randomly pick an objective (or item?)
                     int indexO = Random.Range(0, _possibleObjectives.Count);
                     GameObject objMulti = Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, _possibleObjectives[indexO]).gameObject;
+                    
                     objMulti.transform.rotation = playerSpawn.transform.rotation;
                     objMulti.transform.parent = _possibleObjectives[indexO].transform.parent;
                     parents.Add(objMulti.transform.parent.parent.gameObject);
                     objectivesInLevel.Add(objMulti);
+
+                    _possibleObjectives.Remove(_possibleObjectives[indexO]);
+                    _possibleItems.Remove(_possibleObjectives[indexO]);
                 }
             }
             else if (myLocalLevel.objective == 1)
