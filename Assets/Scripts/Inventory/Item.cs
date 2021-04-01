@@ -26,7 +26,7 @@ public class Item
                 itemData.hasDurability = data.hasDurability;
                 itemData.durability = data.durability;
             }
-            else if (data.itemType == ItemType.Pistol || data.itemType == ItemType.Rifle)
+            else if (data.itemType == ItemType.RangedWeapon)
             {
                 itemData.damage = data.damage;
                 itemData.coolDownPeriod = data.coolDownPeriod;

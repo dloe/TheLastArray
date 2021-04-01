@@ -131,7 +131,7 @@ public class LocalLevel : MonoBehaviour
         //  transBar = myUIVARs.panel;
         myPlayerData.previouslyCompletedObj = objective;
 
-        Debug.Log("Picked Objective: " + objective);
+        //Debug.Log("Picked Objective: " + objective);
     }
 
     public void LevelBeat()
@@ -158,7 +158,8 @@ public class LocalLevel : MonoBehaviour
         //myPlayerData.currentLevelNumber++;
         myPlayerData.previousLevelName = SceneManager.GetActiveScene().name;
         //transition scene
-        SceneManager.LoadScene("Train");
+
+        LevelLoader.Instance.LoadLevel("Train");
         
         Debug.Log("Loading next scene");
     }
