@@ -98,7 +98,8 @@ public class LevelAssetSpawn : MonoBehaviour
 
         ActivateLevelKey();
 
-        ActivateSecretRoom();
+        if(myLocalLevel.thisLevelTier > levelTier.level2)
+            ActivateSecretRoom();
 
         myLocalLevel.ChooseObjective();
         //ACTIVATE OBJECTIVES
