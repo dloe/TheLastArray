@@ -28,6 +28,7 @@ public class Player : MonoBehaviour
     public int speedStat = 5;
     public int dmgResist;
     public int skillPoints = 0;
+    public bool hasBackPack = false;
 
     //public int healthUpgradesLeft;
     //public int dmgResistUpgradesLeft;
@@ -571,6 +572,7 @@ public class Player : MonoBehaviour
         playerSave.cloth = ClothCount;
         playerSave.meds = MedsCount;
         playerSave.skillPoints = skillPoints;
+        playerSave.hasBackPack = hasBackPack;
         playerSave.lightAmmo = currentLightAmmo;
         playerSave.heavyAmmo = currentHeavyAmmo;
         
@@ -599,6 +601,7 @@ public class Player : MonoBehaviour
             ClothCount = playerSave.cloth;
             MedsCount = playerSave.meds;
             skillPoints = playerSave.skillPoints;
+            hasBackPack = playerSave.hasBackPack;
 
             currentLightAmmo = playerSave.lightAmmo;
             currentHeavyAmmo = playerSave.heavyAmmo;
@@ -642,6 +645,7 @@ public class PlayerSave
     public int speedStat;
     public int scrap, cloth, meds;
     public int skillPoints;
+    public bool hasBackPack;
 
     public int lightAmmo;
     public int heavyAmmo;

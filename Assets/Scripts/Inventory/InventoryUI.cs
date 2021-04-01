@@ -216,6 +216,11 @@ public class InventoryUI : MonoBehaviour
                     break;
                 default:
                     Player.Instance.SetMeleeVisualActive(false);
+                    currentAmmoName.text = "";
+                    equipedWeaponAmmoText.text = "";
+                    equipedWeaponDashText.gameObject.SetActive(false);
+                    currentAmmoName.text = "";
+                    equipedWeaponReservesText.text = "" ;
                     break;
             }
         }

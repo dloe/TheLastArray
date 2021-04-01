@@ -65,6 +65,12 @@ public class CraftingRecipe : ScriptableObject
                 default:
                     break;
             }
+
+            if(!craftingResult.isAmmoResult && craftingResult.itemResult.itemType == ItemType.BackPack && player.hasBackPack)
+            {
+                result = false;
+            }
+
             if(result == false)
             {
                 break;
@@ -100,7 +106,7 @@ public class CraftingRecipe : ScriptableObject
     /// <param name="player">The Player</param>
     public void Craft(Player player)
     {
-        if(player.inventory.IsFull() && !craftingResult.isAmmoResult)
+        if(player.inventory.IsFull() && !craftingResult.isAmmoResult && craftingResult.itemResult.itemType != ItemType.BackPack)
         {
             Debug.Log("can't craft, inventory is full chief");
         }
@@ -143,7 +149,16 @@ public class CraftingRecipe : ScriptableObject
             }
             else
             {
-                player.inventory.AddItem(new Item(craftingResult.itemResult));
+                if(craftingResult.itemResult.itemType == ItemType.BackPack)
+                {
+                    InventoryUI.Instance.AddSlot();
+                    InventoryUI.Instance.AddSlot();
+                }
+                else
+                {
+                    player.inventory.AddItem(new Item(craftingResult.itemResult));
+                }
+                
                 InventoryUI.Instance.RefreshUI();
             }
             
