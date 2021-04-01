@@ -232,6 +232,10 @@ public class TileGeneration : MonoBehaviour
                 tilePlaceholderRef.transform.parent = nodeTile.transform;
                 tilePlaceholderRef.GetComponent<Tile>().posOnGrid = new Vector2(rows, col);
                 tilePlaceholderRef.GetComponent<Tile>().hasDoors = hasDoors;
+                //small issue were tile no longer automatically deltes doros on start
+                //if(!hasDoors)
+                    //tilePlaceholderRef.GetComponent<Tile>().RemoveDoors();
+
 
                 //DOORS
                 if (hasDoors)
@@ -435,21 +439,15 @@ public class TileGeneration : MonoBehaviour
         //set up secret room
         if (myLocalLevel.thisLevelTier > levelTier.level2)
         {
-            //SetUpSecretRoom();
+            SetUpSecretRoom();
         }
 
-        //this will be removed eventaully
         if (hasDoors)
         {
             ActivateAllDoors();
         }
  
-
-        //temp turned off to see what is availble to use
         FinalTileSetup();
-
-
-        
 
         _startLine = true;
 
@@ -537,7 +535,7 @@ public class TileGeneration : MonoBehaviour
         {
             case 1:
                 //up 
-                Debug.Log("Up");
+                //Debug.Log("Up");
                 spawnPos = new Vector3(t.tile.transform.position.x - (myLevelAssetsData.tileSize / 2), t.tile.transform.position.y, t.tile.transform.position.z);
                 spawnRot = new Quaternion(t.tile.transform.rotation.x, t.tile.transform.rotation.y, t.tile.transform.rotation.z, t.tile.transform.rotation.w);
                 secretRoom = Instantiate(tilePlaceholder, spawnPos, spawnRot);
@@ -548,7 +546,7 @@ public class TileGeneration : MonoBehaviour
                 break;
             case 2:
                 //down
-                Debug.Log("Down");
+                //Debug.Log("Down");
                 spawnPos = new Vector3(t.tile.transform.position.x + (myLevelAssetsData.tileSize / 2), t.tile.transform.position.y, t.tile.transform.position.z);
                 spawnRot = new Quaternion(t.tile.transform.rotation.x, t.tile.transform.rotation.y, t.tile.transform.rotation.z, t.tile.transform.rotation.w);
                 secretRoom = Instantiate(tilePlaceholder, spawnPos, spawnRot);
@@ -558,7 +556,7 @@ public class TileGeneration : MonoBehaviour
                 break;
             case 3:
                 //left
-                Debug.Log("Left");
+                //Debug.Log("Left");
                 spawnPos = new Vector3(t.tile.transform.position.x, t.tile.transform.position.y, t.tile.transform.position.z - (myLevelAssetsData.tileSize / 2));
                 spawnRot = new Quaternion(t.tile.transform.rotation.x, t.tile.transform.rotation.y, t.tile.transform.rotation.z, t.tile.transform.rotation.w);
                 secretRoom = Instantiate(tilePlaceholder, spawnPos, spawnRot);
@@ -568,7 +566,7 @@ public class TileGeneration : MonoBehaviour
                 break;
             case 4:
                 //right
-                Debug.Log("Right");
+                //Debug.Log("Right");
                 spawnPos = new Vector3(t.tile.transform.position.x, t.tile.transform.position.y, t.tile.transform.position.z + (myLevelAssetsData.tileSize / 2));
                 spawnRot = new Quaternion(t.tile.transform.rotation.x, t.tile.transform.rotation.y, t.tile.transform.rotation.z, t.tile.transform.rotation.w);
                 secretRoom = Instantiate(tilePlaceholder, spawnPos, spawnRot);
@@ -721,6 +719,7 @@ public class TileGeneration : MonoBehaviour
             if (hasDoors)
             {
                 _branch[0].ActivateDoorToPath();
+                _branch[0].name += "_StartOfBranch";
             }
             //activate these rooms
             //Debug.Log(_branch.Count);
@@ -741,6 +740,10 @@ public class TileGeneration : MonoBehaviour
                     //if this tile is on the active tile list, remove it so we dont see it again later
 
                 }
+               // if(t != 0)
+                //{
+                   // _branch[t].SyncDoors();
+                //}
             }
 
             //---------------------
@@ -989,15 +992,13 @@ public class TileGeneration : MonoBehaviour
         //sync doors to have doors actually connect between tiles
         foreach (Tile t in _allActiveTiles)
         {
+
             t.SyncDoors();
         }
-        //Debug.Log("Synced doors");
+       // Debug.Log("Synced doors");
 
         
     }
-
-    
-
 
     int failsafeCount = 0;
     /// <summary>
@@ -1204,15 +1205,12 @@ public class TileGeneration : MonoBehaviour
         //flipped values
         endX = _levelWidth - startX - 1;
         endY = _levelHeight - startY - 1;
-        //Debug.Log("Potential end: " + endX + " " +endY);
 
         //add a little variation so boss room can anywhere in that quarter
         int xBuffer = _levelWidth / 2;
         endXF = endX + Random.Range(-xBuffer + 1, xBuffer - 1);
-        //Debug.Log(endXF);
         int yBuffer = _levelHeight / 2;
         endYF = endY + Random.Range(-yBuffer + 1, yBuffer - 1);
-        // Debug.Log(endYF);
 
         //should always try to keep a minimum distance from start (the xBuffer), cant be on same x as buffer
 
@@ -1224,9 +1222,6 @@ public class TileGeneration : MonoBehaviour
         {
             endYF = endY + Random.Range(-yBuffer + 1, yBuffer);
         }
-        //Debug.Log("check");
-        //Debug.Log(endXF);
-        //Debug.Log(endYF);
         //yield return new WaitForSeconds(0.1f);
         //in case the start point is towards the middle and the end point is also in the middle, really close to each other
         //check if Mathf.Abs(endXF - startX) < xbuffer && Mathf.Abs(endYF - startY)

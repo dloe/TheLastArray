@@ -98,30 +98,37 @@ public class LocalLevel : MonoBehaviour
     /// </summary>
     public void ChooseObjective()
     {
-       // Debug.Log("picking obj");
+        // Debug.Log("picking obj");
 
 
-       // objective = 2;
-       // return;
-
-        //picks objective - cant be the previous objective
-        if(myPlayerData.previouslyCompletedObj == -1)
+        // objective = 2;
+        // return;
+        if (thisLevelTier != levelTier.level4)
         {
-            //randomly pick any
-            int rand = Random.Range(0, _posObjectives.Count);
-            //Debug.Log(_posObjectives.Count);
-            objective = _posObjectives[rand];
-            
+            //picks objective - cant be the previous objective
+            if (myPlayerData.previouslyCompletedObj == -1)
+            {
+                //randomly pick any
+                int rand = Random.Range(0, _posObjectives.Count);
+                //Debug.Log(_posObjectives.Count);
+                objective = _posObjectives[rand];
+
+            }
+            else
+            {
+                //exclude previous obj index from choice
+                //Debug.Log(_posObjectives.Count);
+                //_posObjectives.RemoveAt(myPlayerData.previouslyCompletedObj);
+                _posObjectives.Remove(myPlayerData.previouslyCompletedObj);
+                _posObjectives = reshuffle(_posObjectives);
+                //Debug.Log(_posObjectives.Count);
+                objective = _posObjectives[Random.Range(0, _posObjectives.Count)];
+            }
         }
         else
         {
-            //exclude previous obj index from choice
-            //Debug.Log(_posObjectives.Count);
-            //_posObjectives.RemoveAt(myPlayerData.previouslyCompletedObj);
-            _posObjectives.Remove(myPlayerData.previouslyCompletedObj);
-            _posObjectives = reshuffle(_posObjectives);
-            //Debug.Log(_posObjectives.Count);
-            objective = _posObjectives[Random.Range(0, _posObjectives.Count)];
+            //final objective
+            objective = 4;
         }
         //_myObjs = FindObjectOfType<Objectives>();
         //PlayerUIHolder myUIVARs = FindObjectOfType<PlayerUIHolder>();
@@ -131,7 +138,7 @@ public class LocalLevel : MonoBehaviour
         //  transBar = myUIVARs.panel;
         myPlayerData.previouslyCompletedObj = objective;
 
-        Debug.Log("Picked Objective: " + objective);
+        //Debug.Log("Picked Objective: " + objective);
     }
 
     public void LevelBeat()
@@ -158,7 +165,8 @@ public class LocalLevel : MonoBehaviour
         //myPlayerData.currentLevelNumber++;
         myPlayerData.previousLevelName = SceneManager.GetActiveScene().name;
         //transition scene
-        SceneManager.LoadScene("Train");
+
+        LevelLoader.Instance.LoadLevel("Train");
         
         Debug.Log("Loading next scene");
     }

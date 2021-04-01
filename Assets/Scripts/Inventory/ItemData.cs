@@ -14,9 +14,9 @@ public enum AmmoType
 public enum ItemType
 {
     MeleeWeapon,
-    Pistol,
-    Rifle,
-    Heal
+    RangedWeapon,
+    Heal,
+    Key
 }
 [Serializable][CreateAssetMenu]
 public class ItemData : ScriptableObject
@@ -58,7 +58,7 @@ public class ItemData : ScriptableObject
 
     public IEnumerator Reload(int amountToReload)
     {
-        if(itemType != ItemType.Pistol && itemType != ItemType.Rifle)
+        if(itemType != ItemType.RangedWeapon)
         {
             yield return new WaitForEndOfFrame();
             Debug.LogError("This Function cannot be called unless the item is a ranged weapon, refrain from doing so");
@@ -162,7 +162,6 @@ public class ItemDataEditor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-        //_ = DrawDefaultInspector();
 
         EditorGUI.BeginChangeCheck();
 
@@ -172,21 +171,7 @@ public class ItemDataEditor : Editor
 
         itemData.itemName = EditorGUILayout.TextField("Item's Name",itemData.itemName);
 
-        //if(!itemData.isRangedWeapon && !itemData.isHealingItem)
-        //{
-        //    itemData.isMeleeWeapon = EditorGUILayout.Toggle("Melee Weapon?", itemData.isMeleeWeapon);
-        //    
-        //}
-        //
-        //if (!itemData.isMeleeWeapon && !itemData.isHealingItem)
-        //{
-        //    itemData.isRangedWeapon = EditorGUILayout.Toggle("Ranged Weapon?", itemData.isRangedWeapon);
-        //}
-        //
-        //if (!itemData.isRangedWeapon && !itemData.isMeleeWeapon)
-        //{
-        //    itemData.isHealingItem = EditorGUILayout.Toggle("Healing Item?", itemData.isHealingItem);
-        //}
+
 
         if(itemData.itemType == ItemType.MeleeWeapon)
         {
@@ -204,7 +189,7 @@ public class ItemDataEditor : Editor
             itemData.meleeRange = EditorGUILayout.FloatField("Melee Range", itemData.meleeRange);
         }
 
-        if (itemData.itemType == ItemType.Pistol || itemData.itemType == ItemType.Rifle)
+        if (itemData.itemType == ItemType.RangedWeapon)
         {
             itemData.damage = EditorGUILayout.IntField("Damage to Deal", itemData.damage);
             itemData.coolDownPeriod = EditorGUILayout.FloatField("Shot Cooldown", itemData.coolDownPeriod);

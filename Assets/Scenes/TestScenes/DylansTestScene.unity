@@ -157,7 +157,7 @@ MonoBehaviour:
   objective: 0
   _myObjs: {fileID: 966245025}
   myPlayer: {fileID: 0}
-  thisLevelTier: 2
+  thisLevelTier: 3
 --- !u!4 &276886928
 Transform:
   m_ObjectHideFlags: 0
@@ -181,8 +181,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4003264855528296060, guid: 9b9cea3461719ad4fb4fd11d2c2b63fb,
         type: 3}
+      propertyPath: hasDoors
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4003264855528296060, guid: 9b9cea3461719ad4fb4fd11d2c2b63fb,
+        type: 3}
+      propertyPath: _levelWidth
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4003264855528296060, guid: 9b9cea3461719ad4fb4fd11d2c2b63fb,
+        type: 3}
       propertyPath: debugPathOn
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4003264855528296060, guid: 9b9cea3461719ad4fb4fd11d2c2b63fb,
+        type: 3}
+      propertyPath: _levelHeight
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4003264855528296061, guid: 9b9cea3461719ad4fb4fd11d2c2b63fb,
         type: 3}

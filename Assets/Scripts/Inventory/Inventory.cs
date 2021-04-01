@@ -116,9 +116,41 @@ public class Inventory
         }
     }
 
+    /// <summary>
+    /// probably should not be used because this creates a new item in memory
+    /// </summary>
+    /// <param name="itemData"></param>
     public void RemoveItem(ItemData itemData)
     {
         itemList.Remove(new Item(itemData));
+        if (InventoryUI.Instance)
+        {
+            InventoryUI.Instance.RefreshUI();
+        }
+        else
+        {
+            Debug.LogWarning("Warning, Inventory UI was not found");
+        }
+    }
+
+    /// <summary>
+    /// Removes Item by Type, Recommended to only use for items that dont carry unique data
+    /// </summary>
+    /// <param name="itemType">type to remove</param>
+    public void RemoveItemByType(ItemType itemType)
+    {
+        Item itemToRemove = null;
+        foreach(Item item in itemList)
+        {
+            if(item.itemData.itemType == itemType)
+            {
+                itemToRemove = item;
+                break;
+            }
+        }
+
+        itemList.Remove(itemToRemove);
+
         if (InventoryUI.Instance)
         {
             InventoryUI.Instance.RefreshUI();
