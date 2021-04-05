@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Boss_PresetTileInfo : PresetTileInfo
 {
+    [Header("Boss Room Specifics")]
     public GameObject door;
     public GameObject lastArrayInteractable;
+    public GameObject craftingTableOutside;
 
 }
