@@ -103,7 +103,7 @@ public class BossEnemy : MonoBehaviour
     //how far the enemy needs to get away from its target to lose agro
     public float agroLoseDis;
 
-    [Header("if melee enemy")]
+    [Header("if melee")]
     //how far the attack will go
     public float attackRange;
 
@@ -285,7 +285,7 @@ public class BossEnemy : MonoBehaviour
             //first determine player distance from baddie
             //LocatePlayer();
 
-            if (playerDistanceFromBoss <= attackRange / 2)
+            if (playerDistanceFromBoss <= 4.5)
             {
                 //more weight to close range attacks
                 if (mbossPhase == bossPhases.phase1)
@@ -423,8 +423,15 @@ public class BossEnemy : MonoBehaviour
         _currentlyInAttackMovement = true;
         for(int distance = 0; distance <= 7; distance++)
         {
+            //causes it to skip forward (kinda cool)
             this.transform.Translate(Vector3.forward);
             
+            //or move forward really fast
+            /*
+             * transform.position(Vector3.forward  * Time.deltaTime * combatSpeed);
+             */
+             
+
             RaycastHit attackRay;
 
             if (Physics.BoxCast(this.transform.position, Vector3.zero, transform.forward, out attackRay, transform.rotation, attackRange))
