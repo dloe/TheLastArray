@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -16,7 +17,9 @@ public enum ItemType
     MeleeWeapon,
     RangedWeapon,
     Heal,
-    Key
+    Key,
+    Binoculars,
+    BackPack
 }
 [Serializable][CreateAssetMenu]
 public class ItemData : ScriptableObject
@@ -29,6 +32,7 @@ public class ItemData : ScriptableObject
     public Sprite itemSprite;
     public ItemType itemType;
     public string itemName = "write item name here";
+    public string itemDescription = "write desc here";
 
     public bool hasDurability = false;
     public int damage = 1;
@@ -92,8 +96,7 @@ public class ItemData : ScriptableObject
 [Serializable]
 public class ItemDataSave
 {
-   
-    public Sprite itemSprite;
+    public string itemSpritePath;
     public ItemType itemType;
     public string itemName ;
 
@@ -113,7 +116,9 @@ public class ItemDataSave
 
     public void SaveFromItemData(ItemData itemData)
     {
-        itemSprite = itemData.itemSprite;
+        //Debug.Log(itemData.itemSprite.name);
+        itemSpritePath = "ItemSprites/" + itemData.itemSprite.name;
+        //Debug.Log(itemSpritePath) ;
         itemType = itemData.itemType;
         itemName = itemData.itemName;
         hasDurability = itemData.hasDurability;
@@ -130,7 +135,9 @@ public class ItemDataSave
 
     public void LoadToItemData(ItemData itemData)
     {
-        itemData.itemSprite = itemSprite;
+        itemData.itemSprite = Resources.Load<Sprite>(itemSpritePath);
+        //Debug.Log(itemSpritePath);
+        //Debug.Log(itemData.itemSprite, itemData.itemSprite);
         itemData.itemType = itemType;
         itemData.itemName = itemName;
         itemData.hasDurability = hasDurability;
@@ -171,9 +178,10 @@ public class ItemDataEditor : Editor
 
         itemData.itemName = EditorGUILayout.TextField("Item's Name",itemData.itemName);
 
+        EditorGUILayout.PrefixLabel("Item Description");
+        itemData.itemDescription = EditorGUILayout.TextArea(itemData.itemDescription, GUILayout.MaxHeight(80));
 
-
-        if(itemData.itemType == ItemType.MeleeWeapon)
+        if (itemData.itemType == ItemType.MeleeWeapon)
         {
             itemData.hasDurability = EditorGUILayout.Toggle("Durability?", itemData.hasDurability);
             if(itemData.hasDurability)

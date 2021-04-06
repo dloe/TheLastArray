@@ -17,16 +17,34 @@ public class WorldItem : Activatable
         {
             gameObject.GetComponentInChildren<Image>().sprite = worldItemData.itemSprite;
         }
-        
+        gameObject.name = worldItemData.itemName + "_Interatable";
     }
 
     public override void Activate()
     {
         if (!Player.Instance.inventory.IsFull())
         {
-            Player.Instance.inventory.AddItem(new Item(worldItemData));
-            Destroy(gameObject);
-            Player.Instance.thingToActivate = null;
+            if (worldItemData.itemType == ItemType.Binoculars)
+            {
+                if(!Player.Instance.inventory.Contains(worldItemData))
+                {
+                    Player.Instance.inventory.AddItem(new Item(worldItemData));
+                    Destroy(gameObject);
+                    Player.Instance.thingToActivate = null;
+                }
+                else
+                {
+                    Debug.Log("Can't pick up more than one binoculars");
+                }
+                
+            }
+            else
+            {
+                Player.Instance.inventory.AddItem(new Item(worldItemData));
+                Destroy(gameObject);
+                Player.Instance.thingToActivate = null;
+            }
+            
         }
         else
         {

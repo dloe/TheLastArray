@@ -43,17 +43,17 @@ public class Tile : MonoBehaviour
     public Tile leftNeighbor;
     public Tile rightNeighbor;
 
-    [HideInInspector]
+    //[HideInInspector]
     //last tile in path or branch
     public Tile previousTile;
-    [HideInInspector]
+    //[HideInInspector]
     //has been checked in tile system 
     public bool checkedForPath = false;
-    [HideInInspector]
+    //[HideInInspector]
     //tile exists on path itself
     public bool partOfPath = false;
 
-    [HideInInspector]
+    //[HideInInspector]
     //what number does this tile have on path (-1 means not on path)
     public int pathNumber = -1;
 
