@@ -28,7 +28,7 @@ public class BossEnemy : MonoBehaviour
     [Header("Base_Stats")]
 
     //what enemy am I
-    public EnemyType myType;
+    //public EnemyType myType;
 
     public enemyState myState = enemyState.wandering;
 
@@ -42,7 +42,7 @@ public class BossEnemy : MonoBehaviour
     float baseSpeed = 5;
 
     // the radius around the enemy that it will ditect its target
-    float detectionRadius = 12;
+    float detectionRadius = 16;
 
     // the internal timer used for the enemy makes it so not everything is not in update
     float tickRate = 0.5f;
@@ -197,6 +197,7 @@ public class BossEnemy : MonoBehaviour
         switch (mAttackType)
         {
             case attackTypes.none:
+                this.transform.position += delta * Time.deltaTime;
                 break;
             case attackTypes.firstAttack:
                 if (myState != enemyState.attacking && readyToAttack == true)
@@ -472,6 +473,7 @@ public class BossEnemy : MonoBehaviour
         Transform[] _possiblePlaya = CollidersToTransforms(Physics.OverlapSphere(transform.position, attackRange));
         foreach (Transform potentialTarget in _possiblePlaya)
         {
+            Debug.Log(potentialTarget.name);
             if(potentialTarget.gameObject.tag == "Player")
             {
                 float distance = (transform.position - potentialTarget.transform.position).magnitude;
@@ -629,12 +631,11 @@ public class BossEnemy : MonoBehaviour
         }
 
 
-
-        Gizmos.color = Color.red;
+        //detection
+        Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
 
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(_spawnPoint, wanderRadius);
+        
 
         //Gizmos.color = Color.blue;
         // Gizmos.DrawLine(transform.position, _spawnPoint);
@@ -647,6 +648,12 @@ public class BossEnemy : MonoBehaviour
 
             Gizmos.color = Color.black;
             Gizmos.DrawWireSphere(_target.transform.position, attackDistance);
+        }
+        else
+        {
+            //wander
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(_spawnPoint, wanderRadius);
         }
 
         Gizmos.color = Color.black;
