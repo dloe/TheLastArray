@@ -111,7 +111,7 @@ public class LevelAssetSpawn : MonoBehaviour
         ActivateEnemies();
 
     }
-
+    GameObject play;
     /// <summary>
     /// checks each tile for purpose of adding walls, linking 2 x 2, bringing in 2 x 2 tiles
     /// </summary>
@@ -139,7 +139,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 }
                 playerSpawn = t.presetTile.GetComponent<PresetTileInfo>().playerSpawn;
                 //SPAWN PLAYER
-                GameObject play = Instantiate(playerPref, Vector3.zero, playerSpawn.transform.rotation);
+                play = Instantiate(playerPref, Vector3.zero, playerSpawn.transform.rotation);
                 Debug.Log("Player Spawn set");
                 StartCoroutine(setPlayerPosition(play, playerSpawn.transform.position));
 
@@ -317,6 +317,7 @@ public class LevelAssetSpawn : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         Player.Instance.transform.position = spawnPos;
+
     }
 
     
@@ -462,6 +463,8 @@ public class LevelAssetSpawn : MonoBehaviour
                 bossDetection.name = "BossPlaceholder";
                 bossDetection.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
 
+                ///TEMP WILL REMOVE LATER
+               // play.transform.position = endObjTile.GetComponent<Boss_PresetTileInfo>().craftingTableOutside.transform.position;
         }
     }
     #endregion
