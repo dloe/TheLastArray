@@ -448,8 +448,6 @@ public class LevelAssetSpawn : MonoBehaviour
         else
         {
             //FOR FINAL LEVEL, ONLY ONE OBJECTIVE, LOCATE LAST ARRAY
-          //  if(myLocalLevel.objective == 4)
-           // {
                 Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, null);
                 //spawns in a placeholder detection, when player gets within range of this obj, objective changes to survive and boss spawns. (after boss dies then objective changes to activate last array)
                 endObjTile.GetComponent<Boss_PresetTileInfo>().lastArrayInteractable.transform.rotation = playerSpawn.transform.rotation;
@@ -463,8 +461,6 @@ public class LevelAssetSpawn : MonoBehaviour
                 _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
                 bossDetection.name = "BossPlaceholder";
                 bossDetection.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
-
-           // }
 
         }
     }
