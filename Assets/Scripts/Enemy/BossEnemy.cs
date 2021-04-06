@@ -128,6 +128,7 @@ public class BossEnemy : MonoBehaviour
 
     }
 
+    public float playerDistanceFromBoss;
     private void Update()
     {
         //as of 3/7/21
@@ -140,6 +141,8 @@ public class BossEnemy : MonoBehaviour
 
         if (baseHealth <= 30)
             mbossPhase = bossPhases.phase2;
+
+        playerDistanceFromBoss = (transform.position - poi).magnitude;
     }
 
     /// <summary>
@@ -197,6 +200,7 @@ public class BossEnemy : MonoBehaviour
         switch (mAttackType)
         {
             case attackTypes.none:
+                //idea: if boss is to close to player, dont move towards it anymore
                 this.transform.position += delta * Time.deltaTime;
                 break;
             case attackTypes.firstAttack:
@@ -252,8 +256,8 @@ public class BossEnemy : MonoBehaviour
                 break;
         }
 
-
-        this.transform.LookAt(poi);
+        if(!_currentlyInAttackMovement)
+            this.transform.LookAt(poi);
     }
 
     void StateChanger()
@@ -279,7 +283,7 @@ public class BossEnemy : MonoBehaviour
         if (myState == enemyState.attacking && readyToAttack)
         {
             //first determine player distance from baddie
-            float playerDistanceFromBoss = LocatePlayer();
+            //LocatePlayer();
 
             if (playerDistanceFromBoss <= attackRange / 2)
             {
@@ -386,24 +390,6 @@ public class BossEnemy : MonoBehaviour
         }
 
         /*
-        RaycastHit attackRay;
-        if (attackType == AttackType.melee)
-        {
-            if (Physics.BoxCast(this.transform.position, Vector3.zero, transform.forward, out attackRay, transform.rotation, attackRange))
-            {
-                if (LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Player" && attackCD <= 0 && myState == enemyState.attacking)
-                {
-                    attacking = false;
-                    readyToAttack = false;
-                    attackCD = attackSpeed;
-                    StartCoroutine(CoolDown());
-                    attackRay.transform.GetComponent<Player>().TakeDamage(baseAttack);
-
-                    //Debug.LogError("HitPlayer");
-                }
-            }
-
-        }
         else if (attackType == AttackType.ranged)
         {
             if (myState == enemyState.attacking && attackCD <= 0 && readyToAttack == true)
@@ -424,12 +410,42 @@ public class BossEnemy : MonoBehaviour
     void ThrustHandAttack()
     {
         Debug.Log("Starting Thrust");
+        StartCoroutine(ThrustForward());
+       
+    }
 
+    public bool _currentlyInAttackMovement = false;
+    IEnumerator ThrustForward()
+    {
+        //show some indication of about to thrust (maybe color, sound or something)
 
-        attacking = false;
-        readyToAttack = false;
-        attackCD = attackSpeed;
-        StartCoroutine(CoolDown());
+        yield return new WaitForSeconds(1.5f);
+        _currentlyInAttackMovement = true;
+        for(int distance = 0; distance <= 7; distance++)
+        {
+            this.transform.Translate(Vector3.forward);
+            
+            RaycastHit attackRay;
+
+            if (Physics.BoxCast(this.transform.position, Vector3.zero, transform.forward, out attackRay, transform.rotation, attackRange))
+            {
+                if (LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Player" && attackCD <= 0 && myState == enemyState.attacking)
+                {
+                    attacking = false;
+                    readyToAttack = false;
+                    attackCD = attackSpeed;
+                    StartCoroutine(CoolDown());
+
+                    attackRay.transform.GetComponent<Player>().TakeDamage(baseAttack);
+                    StopCoroutine(ThrustForward());
+                    //Debug.LogError("HitPlayer");
+                }
+            }
+            yield return new WaitForSeconds(0.2f);
+        }
+        //delay after attack
+        yield return new WaitForSeconds(2.0f);
+        _currentlyInAttackMovement = false;
     }
 
     void SwipeAttack()
@@ -467,36 +483,6 @@ public class BossEnemy : MonoBehaviour
         StartCoroutine(CoolDown());
     }
 
-    //locate player
-    float LocatePlayer()
-    {
-        Transform[] _possiblePlaya = CollidersToTransforms(Physics.OverlapSphere(transform.position, attackRange));
-        foreach (Transform potentialTarget in _possiblePlaya)
-        {
-            Debug.Log(potentialTarget.name);
-            if(potentialTarget.gameObject.tag == "Player")
-            {
-                float distance = (transform.position - potentialTarget.transform.position).magnitude;
-                Debug.Log(distance);
-                return distance;
-            }
-        }
-
-
-        return -1;
-    }
-
-
-    //locate transforms from colliders found in sphere
-    private Transform[] CollidersToTransforms(Collider[] colliders)
-    {
-        Transform[] transforms = new Transform[colliders.Length];
-        for (int i = 0; i < colliders.Length; i++)
-        {
-            transforms[i] = colliders[i].transform;
-        }
-        return transforms;
-    }
 
     IEnumerator CoolDown()
     {
