@@ -156,11 +156,11 @@ public class BossEnemy : MonoBehaviour
         StartCoroutine(Tick());
     }
 
-    public Vector3 delta;
+    //public Vector3 delta;
     public float speed = 5;
-    public Quaternion rotMod;
-    public Vector3 dir;
-    public RaycastHit hitInfo;
+    //public Quaternion rotMod;
+    //public Vector3 dir;
+   // public RaycastHit hitInfo;
     void Stearing()
     {
         float speed = 0;
@@ -180,7 +180,7 @@ public class BossEnemy : MonoBehaviour
                 break;
 
         }
-        delta = Vector3.zero;
+        Vector3 delta = Vector3.zero;
 
         for (int i = 0; i < rays; i++)
         {
@@ -428,34 +428,34 @@ public class BossEnemy : MonoBehaviour
         }
 
             attackCD = attackSpeed;
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.0f);
         
-        for(int distance = 0; distance <= 7; distance++)
+        for(int distance = 0; distance <= 8; distance++)
         {
             //causes it to skip forward (kinda cool)
             this.transform.Translate(Vector3.forward);
             
             //or move forward really fast
-            /*
-             * transform.position(Vector3.forward  * Time.deltaTime * combatSpeed);
-             */
+            
+            //transform.position += (Vector3.forward  * Time.deltaTime * combatSpeed * 2);
+             
             RaycastHit attackRay;
 
             if (Physics.BoxCast(this.transform.position, Vector3.zero, transform.forward, out attackRay, transform.rotation, attackRange))
             {
-                if ((LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Player" || LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Wall") && attackCD <= 0 && myState == enemyState.attacking)
+                if ((LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Player" || LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Enviroment") && attackCD <= 0 && myState == enemyState.attacking)
                 {
                     StartCoroutine(CoolDown());
 
                     attackRay.transform.GetComponent<Player>().TakeDamage(baseAttack);
                     StopCoroutine(ThrustForward());
-                    //Debug.LogError("HitPlayer");
+                    Debug.LogError("HitPlayer");
                 }
             }
             yield return new WaitForSeconds(0.2f);
         }
         //delay after attack
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.5f);
         
         
         StartCoroutine(CoolDown());

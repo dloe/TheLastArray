@@ -424,10 +424,12 @@ public class TileGeneration : MonoBehaviour
         }
         _endTile.pathNumber = _pathNumber;
         //check each of this tiles sides, 
+        levelPath.Distinct().ToList();
+        _allActiveTiles.Distinct().ToList();
 
         //label path in scene from list
         //Debug.Log("Path Finished");
-        if(debugPathOn)
+        if (debugPathOn)
             this.GetComponent<LineRenderer>().positionCount = levelPath.Count;
 
         //add random rooms to dungeon
@@ -443,6 +445,8 @@ public class TileGeneration : MonoBehaviour
             SetUpSecretRoom();
         }
 
+
+        
         if (hasDoors)
         {
             ActivateAllDoors();
@@ -985,7 +989,7 @@ public class TileGeneration : MonoBehaviour
     {
         //int pathCount = 0;
         //Tile tempPrev = null;
-        levelPath.Distinct().ToList();
+        
       for(int pathCount = 0; pathCount < levelPath.Count; pathCount++)
       {
            // if(pathCount > 0 && levelPath[pathCount] != levelPath[pathCount - 1])
