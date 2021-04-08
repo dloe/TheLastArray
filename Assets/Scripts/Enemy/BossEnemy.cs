@@ -31,7 +31,7 @@ public class BossEnemy : MonoBehaviour
     //what enemy am I
     //public EnemyType myType;
 
-    public enemyState myState = enemyState.wandering;
+    public enemyState myState = enemyState.following;
 
     // the base health of the enemy
     public int baseHealth = 100;
@@ -60,10 +60,10 @@ public class BossEnemy : MonoBehaviour
 
     [Header("Wander_Stats")]
     // this is the speed at which the enemy will wonder around
-    public float wanderSpeed;
+   // public float wanderSpeed;
 
     //This is the distance around its spawn the enemy will explore
-    public float wanderRadius;
+    //public float wanderRadius;
 
     //the starting point of the enemy
     Vector3 _spawnPoint;
@@ -101,7 +101,7 @@ public class BossEnemy : MonoBehaviour
     public bool _currentlyInAttackMovement = false;
     public float playerDistanceFromBoss;
     //how far the enemy needs to get away from its target to lose agro
-    public float agroLoseDis;
+    float agroLoseDis = 25;
 
     [Header("if melee")]
     //how far the attack will go
@@ -110,11 +110,9 @@ public class BossEnemy : MonoBehaviour
     [Header("if ranged enemy")]
     public GameObject projectile;
 
-    [Header("Boss apendages")]
-    public GameObject attack1_hand;
-    public GameObject attack2_leftswipe;
-    public GameObject attack2_rightswipe;
-    public GameObject minion;
+   // [Header("Boss apendages")]
+    GameObject attack1_hand;
+    GameObject minion;
 
     public GameObject[] bulletRing;
     
@@ -135,7 +133,7 @@ public class BossEnemy : MonoBehaviour
         //as of 3/7/21
         Atention();
         Stearing();
-        WanderingPoint();
+        //WanderingPoint();
 
         if (baseHealth <= 0)
         { OnDeath(); }
@@ -158,24 +156,31 @@ public class BossEnemy : MonoBehaviour
         StartCoroutine(Tick());
     }
 
-
+    public Vector3 delta;
+    public float speed = 5;
+    public Quaternion rotMod;
+    public Vector3 dir;
+    public RaycastHit hitInfo;
     void Stearing()
     {
         float speed = 0;
         switch (myState)
         {
             case enemyState.wandering:
-                speed = wanderSpeed;
+                speed = baseSpeed;
                 break;
             case enemyState.following:
                 speed = baseSpeed;
                 break;
             case enemyState.attacking:
-                speed = combatSpeed;
+                if (mAttackType != attackTypes.thirdAttack)
+                    speed = combatSpeed;
+                else
+                    speed = combatSpeed / 2;
                 break;
 
         }
-        Vector3 delta = Vector3.zero;
+        delta = Vector3.zero;
 
         for (int i = 0; i < rays; i++)
         {
@@ -191,11 +196,13 @@ public class BossEnemy : MonoBehaviour
             else
             { delta += (1f / rays) * speed * dir; }
         }
+        //Debug.Log(delta);
 
         switch (mAttackType)
         {
             case attackTypes.none:
                 //idea: if boss is to close to player, dont move towards it anymore
+                //Debug.Log("moving");
                 this.transform.position += delta * Time.deltaTime;
                 break;
             case attackTypes.firstAttack:
@@ -213,10 +220,6 @@ public class BossEnemy : MonoBehaviour
                 }
                 break;
             case attackTypes.secondAttack:
-             //   if (myState != enemyState.attacking && readyToAttack == true)
-            //    {
-             //       this.transform.position += delta * Time.deltaTime;
-             //   }
                  if (myState == enemyState.attacking && readyToAttack == true)
                 {
                    // this.transform.position += delta * Time.deltaTime;
@@ -421,7 +424,7 @@ public class BossEnemy : MonoBehaviour
         readyToAttack = false;
         for (int distance2 = 0; distance2 <= 10; distance2++)
         {
-            this.transform.position -= Vector3.forward * Time.deltaTime * wanderSpeed;
+            this.transform.position -= Vector3.forward * Time.deltaTime * speed;
         }
 
             attackCD = attackSpeed;
@@ -477,7 +480,7 @@ public class BossEnemy : MonoBehaviour
 
     public int pelletCountMin = 10;
     public int pelletCountMax = 5;
-    public float spreadAngle;
+    public float spreadAngle = 10;
     List<Quaternion> pellets;
     IEnumerator ShotGunBlast()
     {
@@ -648,7 +651,7 @@ public class BossEnemy : MonoBehaviour
     float z;
 
     bool start = false;
-    void WanderingPoint()
+   /* void WanderingPoint()
     {
 
 
@@ -665,7 +668,7 @@ public class BossEnemy : MonoBehaviour
             ChangeDirW();
         }
         wanderPoint += new Vector3(x, 0, z) * 1.4f * Time.deltaTime;
-    }
+  */  
     void ChangeDirW()
     {
         x = -x;
@@ -745,8 +748,8 @@ public class BossEnemy : MonoBehaviour
         else
         {
             //wander
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(_spawnPoint, wanderRadius);
+          //  Gizmos.color = Color.blue;
+          //  Gizmos.DrawWireSphere(_spawnPoint, wanderRadius);
         }
 
         Gizmos.color = Color.black;
