@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -982,8 +983,18 @@ public class TileGeneration : MonoBehaviour
     }
     void ActivateAllDoors()
     {
+        //int pathCount = 0;
+        //Tile tempPrev = null;
+        levelPath.Distinct().ToList();
+      for(int pathCount = 0; pathCount < levelPath.Count; pathCount++)
+      {
+           // if(pathCount > 0 && levelPath[pathCount] != levelPath[pathCount - 1])
+                levelPath[pathCount].pathNumber = pathCount;
+      }
+
         foreach (Tile t in levelPath)
         {
+            
             t.ActivateDoors();
         }
         DeactivateInActiveRooms();

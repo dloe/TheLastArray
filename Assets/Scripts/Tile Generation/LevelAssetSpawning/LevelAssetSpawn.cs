@@ -178,14 +178,17 @@ public class LevelAssetSpawn : MonoBehaviour
                         t.ReSyncDoors();
                     }
 
-                    if ((t.doors[0].tag == "Door" && t.doors[0].GetComponent<DoorBehavior>().notInUse) || (t.upNeighbor.doors[1].tag == "Door" && t.upNeighbor.doors[1].GetComponent<DoorBehavior>().notInUse))
+                    if (t.upNeighbor.tileStatus != Tile.TileStatus.startingRoom)
                     {
-                        wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
-                        wall.transform.parent = t.transform;
-                        wall.transform.localPosition = new Vector3(-12.5f, 5, 0);
-                        wall.transform.eulerAngles = new Vector3(-90, 0, -90);
-                        wall.name = "WallPlaceholder_LVL4WALLFUNCTION_0";
-                        t.doors[0] = wall;
+                        if ((t.doors[0].tag == "Door" && t.doors[0].GetComponent<DoorBehavior>().notInUse) || (t.upNeighbor.doors[1].tag == "Door" && t.upNeighbor.doors[1].GetComponent<DoorBehavior>().notInUse))
+                        {
+                            wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
+                            wall.transform.parent = t.transform;
+                            wall.transform.localPosition = new Vector3(-12.5f, 5, 0);
+                            wall.transform.eulerAngles = new Vector3(-90, 0, -90);
+                            wall.name = "WallPlaceholder_LVL4WALLFUNCTION_0";
+                            t.doors[0] = wall;
+                        }
                     }
                     //else
                     //    Debug.Log("dont spawn wall between " + t.name + " and " + t.upNeighbor.name);
@@ -205,14 +208,17 @@ public class LevelAssetSpawn : MonoBehaviour
                         t.ReSyncDoors();
                     }
 
-                    if ((t.doors[1].tag == "Door" && t.doors[1].GetComponent<DoorBehavior>().notInUse) || (t.downNeighbor.doors[0].tag == "Door" && t.downNeighbor.doors[0].GetComponent<DoorBehavior>().notInUse))
+                    if (t.downNeighbor.tileStatus != Tile.TileStatus.startingRoom)
                     {
-                        wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
-                        wall.transform.parent = t.transform;
-                        wall.transform.localPosition = new Vector3(12.5f, 5, 0);
-                        wall.transform.eulerAngles = new Vector3(-90, 0, 90);
-                        wall.name = "WallPlaceholder_LVL4WALLFUNCTION_1";
-                        t.doors[1] = wall;
+                        if ((t.doors[1].tag == "Door" && t.doors[1].GetComponent<DoorBehavior>().notInUse) || (t.downNeighbor.doors[0].tag == "Door" && t.downNeighbor.doors[0].GetComponent<DoorBehavior>().notInUse))
+                        {
+                            wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
+                            wall.transform.parent = t.transform;
+                            wall.transform.localPosition = new Vector3(12.5f, 5, 0);
+                            wall.transform.eulerAngles = new Vector3(-90, 0, 90);
+                            wall.name = "WallPlaceholder_LVL4WALLFUNCTION_1";
+                            t.doors[1] = wall;
+                        }
                     }
                     //else
                     //    Debug.Log("dont spawn wall between " + t.name + " and " + t.downNeighbor.name);
@@ -232,14 +238,17 @@ public class LevelAssetSpawn : MonoBehaviour
                         t.ReSyncDoors();
                     }
 
-                    if ((t.doors[2].tag == "Door" && t.doors[2].GetComponent<DoorBehavior>().notInUse) || (t.leftNeighbor.doors[3].tag == "Door" && t.leftNeighbor.doors[3].GetComponent<DoorBehavior>().notInUse))
+                    if (t.leftNeighbor.tileStatus != Tile.TileStatus.startingRoom)
                     {
-                        wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
-                        wall.transform.parent = t.transform;
-                        wall.transform.localPosition = new Vector3(0, 5, -12.5f);
-                        wall.transform.eulerAngles = new Vector3(-90, 0, -180);
-                        wall.name = "WallPlaceholder_LVL4WALLFUNCTION_2";
-                        t.doors[2] = wall;
+                        if ((t.doors[2].tag == "Door" && t.doors[2].GetComponent<DoorBehavior>().notInUse) || (t.leftNeighbor.doors[3].tag == "Door" && t.leftNeighbor.doors[3].GetComponent<DoorBehavior>().notInUse))
+                        {
+                            wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
+                            wall.transform.parent = t.transform;
+                            wall.transform.localPosition = new Vector3(0, 5, -12.5f);
+                            wall.transform.eulerAngles = new Vector3(-90, 0, -180);
+                            wall.name = "WallPlaceholder_LVL4WALLFUNCTION_2";
+                            t.doors[2] = wall;
+                        }
                     }
                     //else
                     //    Debug.Log("dont spawn wall between " + t.name + " and " + t.leftNeighbor.name);
@@ -259,14 +268,17 @@ public class LevelAssetSpawn : MonoBehaviour
                         t.ReSyncDoors();
                     }
 
-                    if ((t.doors[3].tag == "Door" && t.doors[3].GetComponent<DoorBehavior>().notInUse) || (t.rightNeighbor.doors[2].tag == "Door" && t.rightNeighbor.doors[2].GetComponent<DoorBehavior>().notInUse))
+                    if (t.rightNeighbor.tileStatus != Tile.TileStatus.startingRoom)
                     {
-                        wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
-                        wall.transform.parent = t.transform;
-                        wall.transform.localPosition = new Vector3(0, 5, 12.5f);
-                        wall.transform.eulerAngles = new Vector3(-90, 0, 0);
-                        wall.name = "WallPlaceholder_LVL4WALLFUNCTION_3";
-                        t.doors[3] = wall;
+                        if ((t.doors[3].tag == "Door" && t.doors[3].GetComponent<DoorBehavior>().notInUse) || (t.rightNeighbor.doors[2].tag == "Door" && t.rightNeighbor.doors[2].GetComponent<DoorBehavior>().notInUse))
+                        {
+                            wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
+                            wall.transform.parent = t.transform;
+                            wall.transform.localPosition = new Vector3(0, 5, 12.5f);
+                            wall.transform.eulerAngles = new Vector3(-90, 0, 0);
+                            wall.name = "WallPlaceholder_LVL4WALLFUNCTION_3";
+                            t.doors[3] = wall;
+                        }
                     }
                     //else
                     //    Debug.Log("dont spawn wall between " + t.name + " and " + t.rightNeighbor.name);
