@@ -19,7 +19,8 @@ public class BossEnemy : MonoBehaviour
        none,
        firstAttack,
        secondAttack,
-       thirdAttack
+       thirdAttack,
+       forthAttack
     };
     
     public Material norm;
@@ -55,10 +56,7 @@ public class BossEnemy : MonoBehaviour
     public float avodinceRange = 2f;
 
     int rays = 25;
-
     float angle = 90;
-
-
 
     [Header("Wander_Stats")]
     // this is the speed at which the enemy will wonder around
@@ -85,7 +83,6 @@ public class BossEnemy : MonoBehaviour
 
     float attackCD = 0;
 
-
     public float combatSpeed;
 
     //how close the enemy needs to be to attack the player
@@ -98,8 +95,11 @@ public class BossEnemy : MonoBehaviour
     public bool attacking;
 
     //is this enemy attacking
+    [Header("boss ready to strike")]
     public bool readyToAttack = true;
 
+    public bool _currentlyInAttackMovement = false;
+    public float playerDistanceFromBoss;
     //how far the enemy needs to get away from its target to lose agro
     public float agroLoseDis;
 
@@ -115,6 +115,8 @@ public class BossEnemy : MonoBehaviour
     public GameObject attack2_leftswipe;
     public GameObject attack2_rightswipe;
     public GameObject minion;
+
+    public GameObject[] bulletRing;
     
 
     private void Start()
@@ -128,7 +130,6 @@ public class BossEnemy : MonoBehaviour
 
     }
 
-    public float playerDistanceFromBoss;
     private void Update()
     {
         //as of 3/7/21
@@ -176,8 +177,6 @@ public class BossEnemy : MonoBehaviour
         }
         Vector3 delta = Vector3.zero;
 
-
-
         for (int i = 0; i < rays; i++)
         {
             Quaternion rot = this.transform.rotation;
@@ -187,14 +186,10 @@ public class BossEnemy : MonoBehaviour
             Ray ray = new Ray(this.transform.position, dir);
             RaycastHit hitInfo;
 
-
-
             if (Physics.Raycast(ray, out hitInfo, avodinceRange) && !attacking)
             { delta -= (1f / rays) * speed * dir; }
             else
             { delta += (1f / rays) * speed * dir; }
-
-
         }
 
         switch (mAttackType)
@@ -204,33 +199,28 @@ public class BossEnemy : MonoBehaviour
                 this.transform.position += delta * Time.deltaTime;
                 break;
             case attackTypes.firstAttack:
-                if (myState != enemyState.attacking && readyToAttack == true)
+                if (!_currentlyInAttackMovement)
                 {
-                    this.transform.position += delta * Time.deltaTime;
-                }
-                else if (myState == enemyState.attacking && readyToAttack == true)
-                {
-                    this.transform.position += delta * Time.deltaTime;
-                    attacking = true;
-                }
-                else if (myState == enemyState.attacking && readyToAttack == false)
-                {
-                    this.transform.position -= delta * Time.deltaTime;
+                    if (myState != enemyState.attacking && readyToAttack == true)
+                    {
+                        this.transform.position += delta * Time.deltaTime;
+                    }
+                    else if (myState == enemyState.attacking && readyToAttack == true)
+                    {
+                        this.transform.position += delta * Time.deltaTime;
+                        attacking = true;
+                    }
                 }
                 break;
             case attackTypes.secondAttack:
-                if (myState != enemyState.attacking && readyToAttack == true)
+             //   if (myState != enemyState.attacking && readyToAttack == true)
+            //    {
+             //       this.transform.position += delta * Time.deltaTime;
+             //   }
+                 if (myState == enemyState.attacking && readyToAttack == true)
                 {
-                    this.transform.position += delta * Time.deltaTime;
-                }
-                else if (myState == enemyState.attacking && readyToAttack == true)
-                {
-                    this.transform.position += delta * Time.deltaTime;
+                   // this.transform.position += delta * Time.deltaTime;
                     attacking = true;
-                }
-                else if (myState == enemyState.attacking && readyToAttack == false)
-                {
-                    this.transform.position -= delta * Time.deltaTime;
                 }
                 break;
             case attackTypes.thirdAttack:
@@ -245,11 +235,21 @@ public class BossEnemy : MonoBehaviour
                         this.transform.position += delta * Time.deltaTime;
                         attacking = true;
                     }
-                    else if (myState == enemyState.attacking && readyToAttack == false)
+                }
+                else
+                {
+                    if (myState == enemyState.attacking && readyToAttack == true)
                     {
-                        this.transform.position -= delta * Time.deltaTime;
+                       // this.transform.position += delta * Time.deltaTime;
+                        attacking = true;
+                    }
+                    if (playerDistanceFromBoss < 6)
+                    {
+                        if(myState == enemyState.attacking)
+                            this.transform.position -= delta * Time.deltaTime;
                     }
                 }
+                    
                 //doesnt move if spawning shit
                 break;
             default:
@@ -301,7 +301,7 @@ public class BossEnemy : MonoBehaviour
                         else
                         {
                             mAttackType = attackTypes.secondAttack;
-                            SwipeAttack();
+                            BulletRingAttack();
                         }
                     }
                     else
@@ -326,7 +326,7 @@ public class BossEnemy : MonoBehaviour
                         else
                         {
                             mAttackType = attackTypes.secondAttack;
-                            SwipeAttack();
+                            BulletRingAttack();
                         }
                     }
                     else
@@ -353,7 +353,7 @@ public class BossEnemy : MonoBehaviour
                         if (Random.value > 0.5)
                         {
                             mAttackType = attackTypes.secondAttack;
-                            SwipeAttack();
+                            BulletRingAttack();
 
                         }
                         else
@@ -377,7 +377,7 @@ public class BossEnemy : MonoBehaviour
                         if (Random.value > 0.5)
                         {
                             mAttackType = attackTypes.secondAttack;
-                            SwipeAttack();
+                            BulletRingAttack();
                         }
                         else
                         {
@@ -411,16 +411,22 @@ public class BossEnemy : MonoBehaviour
     {
         Debug.Log("Starting Thrust");
         StartCoroutine(ThrustForward());
-       
     }
 
-    public bool _currentlyInAttackMovement = false;
+   // public bool _currentlyInAttackMovement = false;
     IEnumerator ThrustForward()
     {
-        //show some indication of about to thrust (maybe color, sound or something)
-
-        yield return new WaitForSeconds(1.5f);
         _currentlyInAttackMovement = true;
+        //show some indication of about to thrust (maybe color, sound or something)
+        readyToAttack = false;
+        for (int distance2 = 0; distance2 <= 10; distance2++)
+        {
+            this.transform.position -= Vector3.forward * Time.deltaTime * wanderSpeed;
+        }
+
+            attackCD = attackSpeed;
+        yield return new WaitForSeconds(1.5f);
+        
         for(int distance = 0; distance <= 7; distance++)
         {
             //causes it to skip forward (kinda cool)
@@ -430,17 +436,12 @@ public class BossEnemy : MonoBehaviour
             /*
              * transform.position(Vector3.forward  * Time.deltaTime * combatSpeed);
              */
-             
-
             RaycastHit attackRay;
 
             if (Physics.BoxCast(this.transform.position, Vector3.zero, transform.forward, out attackRay, transform.rotation, attackRange))
             {
-                if (LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Player" && attackCD <= 0 && myState == enemyState.attacking)
+                if ((LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Player" || LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Wall") && attackCD <= 0 && myState == enemyState.attacking)
                 {
-                    attacking = false;
-                    readyToAttack = false;
-                    attackCD = attackSpeed;
                     StartCoroutine(CoolDown());
 
                     attackRay.transform.GetComponent<Player>().TakeDamage(baseAttack);
@@ -452,62 +453,157 @@ public class BossEnemy : MonoBehaviour
         }
         //delay after attack
         yield return new WaitForSeconds(2.0f);
-        _currentlyInAttackMovement = false;
+        
+        
+        StartCoroutine(CoolDown());
     }
 
-    void SwipeAttack()
+    public bool shotGun = false;
+    void BulletRingAttack()
     {
-        if(Random.value > 0.5f)
+        readyToAttack = false;
+
+        if (!shotGun)
         {
-            Debug.Log("Starting swipe left");
-            
+            Debug.Log("Ring attack");
+
+            StartCoroutine(BulletRingAttackMovement());
         }
         else
         {
-            Debug.Log("Starting swipe right");
+            ShotGunBlast();
         }
-        attacking = false;
-        readyToAttack = false;
+    }
+
+    public int pelletCountMin = 10;
+    public int pelletCountMax = 5;
+    public float spreadAngle;
+    List<Quaternion> pellets;
+    void ShotGunBlast()
+    {
+        int repeat = 1;
+        float pauseBetweenShoots = 1.0f;
+        if (mbossPhase == bossPhases.phase1)
+        {
+            repeat = Random.Range(1, 2);
+            pauseBetweenShoots = Random.Range(1.0f, 2.0f);
+        }
+        else
+        {
+            repeat = Random.Range(2, 3);
+            pauseBetweenShoots = Random.Range(0.9f, 1.0f);
+        }
+
+        for (int shootsFired = 0; shootsFired < repeat; shootsFired++)
+        {
+            int pelletNum = Random.Range(pelletCountMin, pelletCountMax);
+            pellets = new List<Quaternion>(pelletNum);
+            for (int a = 0; a < pelletNum; a++)
+            {
+                pellets.Add(Quaternion.Euler(Vector3.zero));
+            }
+
+            //fire shot
+            Debug.Log("PEW");
+            //int i = 0;
+            for (int c = 0; c < pellets.Count; c++)
+            {
+                pellets[c] = Random.rotation;
+                GameObject bullet = Instantiate(projectile, transform.position, transform.rotation);
+                //set variables to bullet
+                bullet.transform.rotation = Quaternion.RotateTowards(bullet.transform.rotation, Random.rotation, spreadAngle);
+                // bullet.GetComponent<Bullet>().type = type;
+                //bullet.GetComponent<Bullet>().damage = damage;
+                //bullet.GetComponent<Rigidbody>().AddForce(bullet.transform.forward * bulletVelocity);
+                c++;
+            }
+        }
+        StartCoroutine(CoolDown());
+    }
+
+    IEnumerator BulletRingAttackMovement()
+    {
+        //selects random starting index, this is the one that doesnt shoot
+        int indexAvoid = Random.Range(0, bulletRing.Length - 1);
+        int ringsFired = 1;
+        float pauseBetweenRings = 1.0f;
+        //can repeat this multiple times
+        //shoots everything else
+        if (mbossPhase == bossPhases.phase1)
+        {
+            ringsFired = Random.Range(1, 4);
+            pauseBetweenRings = Random.Range(0.9f, 1.2f);
+        }
+        else
+        {
+            ringsFired = Random.Range(2, 5);
+            pauseBetweenRings = Random.Range(0.7f, 0.9f);
+        }
+        
+        for(int fired = 0; fired < ringsFired; fired++)
+        {
+            for(int index = 0; index < bulletRing.Length; index++)
+            {
+                if (index != indexAvoid)
+                {
+                    GameObject bullet = Instantiate(projectile, bulletRing[index].transform.position, bulletRing[index].transform.rotation);
+
+                    
+                    //bullet.GetComponent<Bullet>().speed = bullet.GetComponent<Bullet>().speed / 2;
+                }
+            }
+
+            if(fired != ringsFired - 1)
+                yield return new WaitForSeconds(pauseBetweenRings);
+        }
+        
+
         attackCD = attackSpeed;
         StartCoroutine(CoolDown());
     }
 
+    //bool spawningMinions = false;
     void SpawnMinions()
     {
-        Debug.Log("Starting spawn");
-        attacking = false;
+        //spawningMinions = true;
         readyToAttack = false;
+        Debug.Log("Starting spawn");
+        //attacking = false;
+        
         attackCD = attackSpeed;
+
         StartCoroutine(CoolDown());
     }
 
     void SlamAttack()
     {
-        Debug.Log("Starting slam");
-        attacking = false;
         readyToAttack = false;
+        Debug.Log("Starting slam");
+        
         attackCD = attackSpeed;
         StartCoroutine(CoolDown());
     }
 
-
     IEnumerator CoolDown()
     {
+        
         //reset attack cooldown
         if (mbossPhase == bossPhases.phase1)
         {
-            attackSpeed = Random.Range(3, 5);
+            attackSpeed = Random.Range(3, 4);
         }
         else
-            attackSpeed = Random.Range(2, 4);
+            attackSpeed = Random.Range(2, 3);
 
         //Debug.Log("cooling down");
         yield return new WaitForSeconds(attackSpeed);
-
+        //spawningMinions = false;
         //Debug.Log("ready to attack");
         attackCD = 0;
         readyToAttack = true;
-
+        attacking = false;
+        _currentlyInAttackMovement = false;
+        mAttackType = attackTypes.none;
     }
 
     /// <summary>
