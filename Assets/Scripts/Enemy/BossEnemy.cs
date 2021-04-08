@@ -471,7 +471,7 @@ public class BossEnemy : MonoBehaviour
         }
         else
         {
-            ShotGunBlast();
+            StartCoroutine(ShotGunBlast());
         }
     }
 
@@ -479,7 +479,7 @@ public class BossEnemy : MonoBehaviour
     public int pelletCountMax = 5;
     public float spreadAngle;
     List<Quaternion> pellets;
-    void ShotGunBlast()
+    IEnumerator ShotGunBlast()
     {
         int repeat = 1;
         float pauseBetweenShoots = 1.0f;
@@ -516,6 +516,10 @@ public class BossEnemy : MonoBehaviour
                 //bullet.GetComponent<Bullet>().damage = damage;
                 //bullet.GetComponent<Rigidbody>().AddForce(bullet.transform.forward * bulletVelocity);
                 c++;
+            }
+            if(shootsFired == repeat - 1)
+            {
+                yield return new WaitForSeconds(pauseBetweenShoots);
             }
         }
         StartCoroutine(CoolDown());
