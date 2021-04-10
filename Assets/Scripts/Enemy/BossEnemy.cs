@@ -16,13 +16,13 @@ public class BossEnemy : MonoBehaviour
     public bossPhases mbossPhase;
     public enum attackTypes
     {
-       none,
-       firstAttack,
-       secondAttack,
-       thirdAttack,
-       forthAttack
+        none,
+        firstAttack,
+        secondAttack,
+        thirdAttack,
+        forthAttack
     };
-    
+
     public Material norm;
     public Material damaged;
 
@@ -108,12 +108,12 @@ public class BossEnemy : MonoBehaviour
     [Header("if ranged enemy")]
     public GameObject projectile;
 
-   // [Header("Boss apendages")]
+    // [Header("Boss apendages")]
     GameObject attack1_hand;
     public GameObject minion;
 
     public GameObject[] bulletRing;
-    
+
 
     private void Start()
     {
@@ -158,7 +158,7 @@ public class BossEnemy : MonoBehaviour
     public float speed = 5;
     //public Quaternion rotMod;
     //public Vector3 dir;
-   // public RaycastHit hitInfo;
+    // public RaycastHit hitInfo;
     void Stearing()
     {
         float speed = 0;
@@ -218,9 +218,9 @@ public class BossEnemy : MonoBehaviour
                 }
                 break;
             case attackTypes.secondAttack:
-                 if (myState == enemyState.attacking && readyToAttack == true)
+                if (myState == enemyState.attacking && readyToAttack == true)
                 {
-                   // this.transform.position += delta * Time.deltaTime;
+                    // this.transform.position += delta * Time.deltaTime;
                     attacking = true;
                 }
                 break;
@@ -232,7 +232,7 @@ public class BossEnemy : MonoBehaviour
                 }
                 break;
             case attackTypes.thirdAttack:
-                if(mbossPhase == bossPhases.phase2)
+                if (mbossPhase == bossPhases.phase2)
                 {
                     if (myState != enemyState.attacking && readyToAttack == true)
                     {
@@ -240,7 +240,7 @@ public class BossEnemy : MonoBehaviour
                     }
                     else if (myState == enemyState.attacking && readyToAttack == true)
                     {
-                        this.transform.position += delta * Time.deltaTime;
+                        //this.transform.position += delta * Time.deltaTime;
                         attacking = true;
                     }
                 }
@@ -248,23 +248,23 @@ public class BossEnemy : MonoBehaviour
                 {
                     if (myState == enemyState.attacking && readyToAttack == true)
                     {
-                       // this.transform.position += delta * Time.deltaTime;
+                        // this.transform.position += delta * Time.deltaTime;
                         attacking = true;
                     }
                     if (playerDistanceFromBoss < 6)
                     {
-                        if(myState == enemyState.attacking)
-                            this.transform.position -= delta * Time.deltaTime;
+                        if (myState == enemyState.attacking)
+                            this.transform.position -= delta * Time.deltaTime * 1 / 2;
                     }
                 }
-                    
+
                 //doesnt move if spawning shit
                 break;
             default:
                 break;
         }
 
-        if(!_currentlyInAttackMovement)
+        if (!_currentlyInAttackMovement)
             this.transform.LookAt(poi);
     }
 
@@ -290,111 +290,101 @@ public class BossEnemy : MonoBehaviour
         //if player is in certain distance, have weight  be more for close range
         if (myState == enemyState.attacking && readyToAttack)
         {
-            if (playerDistanceFromBoss <= 7.5f)
+            if (mbossPhase == bossPhases.phase1)
             {
-                //more weight to close range attacks
-                if (mbossPhase == bossPhases.phase1)
+                //phase 1 
+                if (playerDistanceFromBoss <= 7.5f)
                 {
-                    //40 - 25 - 25 - 10
-                    if(Random.value <= 0.4f)
+                    //more weight to close range attacks
+                    if (mbossPhase == bossPhases.phase1)
                     {
-                        ThrustHandAttack();
-                    }
-                    if (Random.value <= 0.5f)
-                    {
-                        if (Random.value <= 0.5f)
-                        {
-                            BulletRingAttack();
-                        }
-                        else
-                        {
-                            ShootGunBlast();
-                        }
-                    }
-                    else
-                    {
-                        //spawn stuff
-                        SpawnMinions();
-                    }
-                }
-                else
-                {
-                    //besserk mode
-                    //30 - 30 - 30 - 10
-                    if (Random.value >= 0.6f)
-                    {
-                        if (Random.value < 0.33f)
+                        //40 - 25 - 25 - 10
+                        if (Random.value <= 0.4f)
                         {
                             ThrustHandAttack();
                         }
-                        else if(Random.value < 0.33f)
+                        if (Random.value <= 0.5f)
                         {
-                            BulletRingAttack();
+                            if (Random.value <= 0.5f)
+                            {
+                                BulletRingAttack();
+                            }
+                            else
+                            {
+                                ShootGunBlast();
+                            }
                         }
                         else
                         {
-                            ShootGunBlast();
+                            //spawn stuff
+                            SpawnMinions();
                         }
-                    }
-                    else
-                    {
-                        SlamAttack();
-                    }
-                }
-            }
-            else
-            {
-                //boss farther from player
-                if (mbossPhase == bossPhases.phase1)
-                {
-                    Debug.Log("far");
-                    //35 - 25 - 30 - 10
-                    if (Random.value <= 0.35f)
-                    {
-                        ThrustHandAttack();
-                    }
-                    else if(Random.value <= 0.3f)
-                    {
-                        ShootGunBlast();
-                    }
-                    else if(Random.value <= 0.25f)
-                    {
-                        BulletRingAttack();
-                    }
-                    else
-                    {
-                        SpawnMinions();
                     }
                 }
                 else
                 {
+                    Debug.Log("far");
+                    //25 - 15 - 20 - 30
+                    if (Random.value <= 0.30f)
+                        SpawnMinions();
+                    else if (Random.value <= 0.25f)
+                        ThrustHandAttack();
+                    else if (Random.value <= 0.2f)
+                        ShootGunBlast();
+                    else
+                        BulletRingAttack();
+                }
+            } 
+            else {
+                //phase 2
+                //super close
+                if (playerDistanceFromBoss <= 4f)
+                {
+                    //if really close then slam heavy
+                    //20 0 0 80
+                    if (Random.value <= 0.8)
+                        SlamAttack();
+                    else
+                        ThrustHandAttack();
+                }
+                else if (playerDistanceFromBoss <= 8)
+                {
+                    //medium distance
+                    //besserk mode
+                    //20 - 20 - 20 - 40
+                    if(Random.value <= 0.4)
+                        SlamAttack();
+                    else
+                    {
+                        if (Random.value < 0.33f)
+                            ThrustHandAttack();
+                        else if (Random.value < 0.33f)
+                            BulletRingAttack();
+                        else
+                            ShootGunBlast();
+                    }
+                }
+                else
+                {
+                    //far distance (greater than 8)
                     //besserk mode
                     //30 - 25 - 30 - 15
                     if (Random.value <= 0.3f)
                     {
                         if (Random.value >= 0.5)
-                        {
                             ShootGunBlast();
-                        }
                         else
-                        {
                             ThrustHandAttack();
-                        }
-                        
                     }
-                    else if(Random.value > 0.25)
-                    {
+                    else if (Random.value > 0.25)
                         BulletRingAttack();
-                        
-                    }
                     else
-                    {
                         SlamAttack();
-                    }
                 }
             }
         }
     }
+
 
     //attacks
     void ThrustHandAttack()
@@ -431,7 +421,7 @@ public class BossEnemy : MonoBehaviour
              
             RaycastHit attackRay;
 
-            if (Physics.BoxCast(this.transform.position, Vector3.zero, transform.forward, out attackRay, transform.rotation, attackRange))
+            if (Physics.BoxCast(this.transform.position, Vector3.zero, transform.forward, out attackRay, transform.rotation, attackRange * 2))
             {
                 
                 if (LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Player")
@@ -596,30 +586,55 @@ public class BossEnemy : MonoBehaviour
 
     void SlamAttack()
     {
+        mAttackType = attackTypes.thirdAttack;
         readyToAttack = false;
         Debug.Log("Starting slam");
 
         StartCoroutine(SlamAttackMovement());
     }
 
+    public int slamDistance = 7;
     IEnumerator SlamAttackMovement()
     {
         yield return new WaitForSeconds(1.0f);
 
-        int liftHeight = 20;
+        int liftHeight = 30;
         //raise up boss, then drop them causing area of effect
         for(int lift = 0; lift < liftHeight; lift++)
         {
-            this.transform.position += Vector3.up * Time.deltaTime * speed;
-            yield return new WaitForSeconds(0.1f);
+            this.transform.position += Vector3.up * Time.deltaTime * speed * 2;
+            yield return new WaitForSeconds(0.05f);
         }
-        yield return new WaitForSeconds(0.3f);
-        for(int drop = 0; drop < liftHeight; drop++)
+        yield return new WaitForSeconds(1f);
+        for(int drop = 0; drop < liftHeight/3; drop++)
         {
-            this.transform.position += -Vector3.up * Time.deltaTime * speed;
-            yield return new WaitForSeconds(0.1f);
+            this.transform.position += -Vector3.up * Time.deltaTime * speed * 6;
+            yield return new WaitForSeconds(0.05f);
         }
 
+        if(playerDistanceFromBoss < slamDistance)
+        {
+
+            //find multiplier based on how close player is
+            float multiplier = playerDistanceFromBoss / slamDistance;
+            Debug.Log(multiplier);
+
+            //if in range takes damage based on proximity and pushed away
+            Debug.Log("Player in range");
+            transform.LookAt(_target.transform.position);
+
+            //push target based on how close they are to boss
+            _target.GetComponent<Rigidbody>().AddForce(this.transform.forward * multiplier * 1000);
+            _target.GetComponent<Rigidbody>().AddForce(Vector3.up * multiplier * 1000);
+
+            //to prevent less than 1 damage being applied but not really applied weird zone
+            if (playerDistanceFromBoss <= slamDistance - 1.5f)
+            {
+                Debug.Log((int)((1 / multiplier) * slamDamage));
+                _target.GetComponent<Player>().TakeDamage((int)(1 / multiplier * slamDamage));
+            }
+        }
+        yield return new WaitForSeconds(2f);
         //attackCD = attackSpeed;
         StartCoroutine(CoolDown());
     }

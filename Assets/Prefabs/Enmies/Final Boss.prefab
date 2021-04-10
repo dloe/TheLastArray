@@ -355,9 +355,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3451182372090860985}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.383304, y: 0.56, z: 1.2785115}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children:
   - {fileID: 4639546860441405767}
   m_Father: {fileID: 0}
@@ -435,11 +435,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c80f6f6056679b45958903bcc370ee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mbossPhase: 0
+  mbossPhase: 1
   norm: {fileID: 2100000, guid: 42794c7cf62616344bd191fbbeb6fd38, type: 2}
   damaged: {fileID: 2100000, guid: a9021586276d2c0469733a3caaa23e02, type: 2}
   myState: 1
   baseHealth: 100
+  baseAttack: 5
+  thrustAttack: 5
+  shotgunPelletDamage: 3
+  bulletRingDamage: 3
+  slamDamage: 5
   avodinceRange: 2
   mAttackType: 0
   agro: 0
@@ -454,6 +459,7 @@ MonoBehaviour:
   attackRange: 1
   projectile: {fileID: 1117753128864750618, guid: 1788c6df2c85bcc46997603962117caf,
     type: 3}
+  minion: {fileID: 0}
   bulletRing:
   - {fileID: 1312572112326862582}
   - {fileID: 1837074752288191902}
@@ -484,6 +490,7 @@ MonoBehaviour:
   pelletCountMin: 5
   pelletCountMax: 7
   spreadAngle: 10
+  slamDistance: 5
 --- !u!54 &3451182372090860987
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -498,7 +505,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 4
+  m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!1 &4002476420925308934
 GameObject:
