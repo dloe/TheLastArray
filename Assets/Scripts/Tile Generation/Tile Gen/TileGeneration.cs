@@ -424,8 +424,10 @@ public class TileGeneration : MonoBehaviour
         }
         _endTile.pathNumber = _pathNumber;
         //check each of this tiles sides, 
-        levelPath.Distinct().ToList();
-        _allActiveTiles.Distinct().ToList();
+
+
+        levelPath = levelPath.Distinct().ToList();
+        _allActiveTiles = _allActiveTiles.Distinct().ToList();
 
         //label path in scene from list
         //Debug.Log("Path Finished");
@@ -1027,6 +1029,9 @@ public class TileGeneration : MonoBehaviour
     /// </summary>
     void CheckTile(Tile tile, List<Tile> current)
     {
+      //  if (current.Contains(tile))
+       //     return;
+
 
         //failsafe to stop possible infinate loop, causes being looked at
         if (failsafeCount == _levelHeight * _levelWidth * 2)

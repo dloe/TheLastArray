@@ -290,19 +290,19 @@ public class BossEnemy : MonoBehaviour
         //if player is in certain distance, have weight  be more for close range
         if (myState == enemyState.attacking && readyToAttack)
         {
-            if (playerDistanceFromBoss <= 4.5)
+            if (playerDistanceFromBoss <= 7.5f)
             {
                 //more weight to close range attacks
                 if (mbossPhase == bossPhases.phase1)
                 {
-                    //30 - 30 - 30 - 10
-                    if (Random.value <= 0.9f)
+                    //40 - 25 - 25 - 10
+                    if(Random.value <= 0.4f)
                     {
-                        if (Random.value <= 0.33f)
-                        {
-                            ThrustHandAttack();
-                        }
-                        else if (Random.value <= 0.33f)
+                        ThrustHandAttack();
+                    }
+                    if (Random.value <= 0.5f)
+                    {
+                        if (Random.value <= 0.5f)
                         {
                             BulletRingAttack();
                         }
@@ -323,11 +323,11 @@ public class BossEnemy : MonoBehaviour
                     //30 - 30 - 30 - 10
                     if (Random.value >= 0.6f)
                     {
-                        if (Random.value < 0.3f)
+                        if (Random.value < 0.33f)
                         {
                             ThrustHandAttack();
                         }
-                        else if(Random.value < 0.3f)
+                        else if(Random.value < 0.33f)
                         {
                             BulletRingAttack();
                         }
@@ -345,9 +345,9 @@ public class BossEnemy : MonoBehaviour
             else
             {
                 //boss farther from player
-
                 if (mbossPhase == bossPhases.phase1)
                 {
+                    Debug.Log("far");
                     //35 - 25 - 30 - 10
                     if (Random.value <= 0.35f)
                     {
@@ -394,22 +394,6 @@ public class BossEnemy : MonoBehaviour
                 }
             }
         }
-
-        /*
-        else if (attackType == AttackType.ranged)
-        {
-            if (myState == enemyState.attacking && attackCD <= 0 && readyToAttack == true)
-            {
-                attacking = false;
-                readyToAttack = false;
-                StartCoroutine(CoolDown());
-                //Debug.Log("Bang Bang");
-                GameObject bullet = Instantiate(projectile, transform.position, transform.rotation);
-                bullet.GetComponent<Bullet>().damageToDeal = baseAttack;
-
-            }
-        }
-        */
     }
 
     //attacks
@@ -454,6 +438,7 @@ public class BossEnemy : MonoBehaviour
                 {
                     Debug.Log("HitPlayer");
                     attackRay.transform.GetComponent<Player>().TakeDamage(thrustAttack);
+                    yield return new WaitForSeconds(1.5f);
                     StartCoroutine(CoolDown());
                     StopCoroutine(ThrustForward());
                     //yield break; ;
@@ -462,6 +447,7 @@ public class BossEnemy : MonoBehaviour
                 else if(LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Enviroment")
                 {
                     Debug.Log("hit wall stawp");
+                    yield return new WaitForSeconds(1.5f);
                     StartCoroutine(CoolDown());
                     StopCoroutine(ThrustForward());
                     //yield break;
@@ -536,7 +522,7 @@ public class BossEnemy : MonoBehaviour
                 //set variables to bullet
                 Quaternion rot = new Quaternion(0, Random.rotation.y, Random.rotation.y, Random.rotation.w);
                 bullet.transform.rotation = Quaternion.RotateTowards(bullet.transform.rotation, rot, spreadAngle);
-
+                bullet.transform.parent = GameObject.Find("TileGen").transform;
                 //change this attack stat later or balancing
                 bullet.GetComponent<Bullet>().damageToDeal = shotgunPelletDamage;
                 c++;
@@ -553,6 +539,7 @@ public class BossEnemy : MonoBehaviour
     {
         //selects random starting index, this is the one that doesnt shoot
         int indexAvoid = Random.Range(0, bulletRing.Length - 1);
+        Debug.Log(indexAvoid);
         int ringsFired = 1;
         float pauseBetweenRings = 1.0f;
         //can repeat this multiple times
@@ -578,7 +565,8 @@ public class BossEnemy : MonoBehaviour
 
                     //change this damage value later for balancing
                     bullet.GetComponent<Bullet>().damageToDeal = bulletRingDamage;
-
+                    bullet.transform.parent = GameObject.Find("TileGen").transform;
+                    //bullet.transform.parent = this.transform;
                     //bullet.GetComponent<Bullet>().speed = bullet.GetComponent<Bullet>().speed / 2;
                 }
             }
@@ -588,7 +576,7 @@ public class BossEnemy : MonoBehaviour
         }
         
 
-        attackCD = attackSpeed;
+        //attackCD = attackSpeed;
         StartCoroutine(CoolDown());
     }
 
@@ -632,13 +620,13 @@ public class BossEnemy : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
-        attackCD = attackSpeed;
+        //attackCD = attackSpeed;
         StartCoroutine(CoolDown());
     }
 
     IEnumerator CoolDown()
     {
-        
+        attackSpeed = 2;
         //reset attack cooldown
         if (mbossPhase == bossPhases.phase1)
         {
