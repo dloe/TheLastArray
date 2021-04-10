@@ -587,7 +587,7 @@ public class TileGeneration : MonoBehaviour
         secretRoom.transform.parent = this.transform;
         secretRoom.GetComponent<Tile>().ShadeSecret();
         secretRoom.GetComponent<Tile>().ActivateWalls();
-        Debug.Log("SecretRoom added");
+        //Debug.Log("SecretRoom added");
     }
 
     void CreateSpawnRoom()

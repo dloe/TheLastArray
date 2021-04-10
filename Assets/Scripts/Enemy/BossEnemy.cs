@@ -37,7 +37,12 @@ public class BossEnemy : MonoBehaviour
     public int baseHealth = 100;
 
     //enemys base attack value - changes based on attack
-    int baseAttack = 5;
+    [Header("attack stats")]
+    public int baseAttack = 5;
+    public int thrustAttack = 5;
+    public int shotgunPelletDamage = 3;
+    public int bulletRingDamage = 3;
+    public int slamDamage = 5;
 
     // the base move speed
     float baseSpeed = 5;
@@ -57,13 +62,6 @@ public class BossEnemy : MonoBehaviour
 
     int rays = 25;
     float angle = 90;
-
-    [Header("Wander_Stats")]
-    // this is the speed at which the enemy will wonder around
-   // public float wanderSpeed;
-
-    //This is the distance around its spawn the enemy will explore
-    //public float wanderRadius;
 
     //the starting point of the enemy
     Vector3 _spawnPoint;
@@ -112,7 +110,7 @@ public class BossEnemy : MonoBehaviour
 
    // [Header("Boss apendages")]
     GameObject attack1_hand;
-    GameObject minion;
+    public GameObject minion;
 
     public GameObject[] bulletRing;
     
@@ -226,6 +224,13 @@ public class BossEnemy : MonoBehaviour
                     attacking = true;
                 }
                 break;
+            case attackTypes.forthAttack:
+                if (myState == enemyState.attacking && readyToAttack == true)
+                {
+                    // this.transform.position += delta * Time.deltaTime;
+                    attacking = true;
+                }
+                break;
             case attackTypes.thirdAttack:
                 if(mbossPhase == bossPhases.phase2)
                 {
@@ -281,112 +286,110 @@ public class BossEnemy : MonoBehaviour
     //determines which attack we use when we attack
     void BaseAttack()
     {
-        //randomly pick from 3 attacks
+        //randomly pick from 4 attacks
         //if player is in certain distance, have weight  be more for close range
         if (myState == enemyState.attacking && readyToAttack)
         {
-            //first determine player distance from baddie
-            //LocatePlayer();
-
             if (playerDistanceFromBoss <= 4.5)
             {
                 //more weight to close range attacks
                 if (mbossPhase == bossPhases.phase1)
                 {
-                    //40 - 40 - 20
-                    if (Random.value > 0.6f)
+                    //30 - 30 - 30 - 10
+                    if (Random.value <= 0.9f)
                     {
-                        if (Random.value > 0.5f)
+                        if (Random.value <= 0.33f)
                         {
-                            mAttackType = attackTypes.firstAttack;
                             ThrustHandAttack();
+                        }
+                        else if (Random.value <= 0.33f)
+                        {
+                            BulletRingAttack();
                         }
                         else
                         {
-                            mAttackType = attackTypes.secondAttack;
-                            BulletRingAttack();
+                            ShootGunBlast();
                         }
                     }
                     else
                     {
-                        mAttackType = attackTypes.thirdAttack;
                         //spawn stuff
                         SpawnMinions();
-
                     }
                 }
                 else
                 {
                     //besserk mode
-                    //40 - 40 - 20
-                    if (Random.value > 0.6f)
+                    //30 - 30 - 30 - 10
+                    if (Random.value >= 0.6f)
                     {
-                        if (Random.value > 0.5f)
+                        if (Random.value < 0.3f)
                         {
-                            mAttackType = attackTypes.firstAttack;
                             ThrustHandAttack();
+                        }
+                        else if(Random.value < 0.3f)
+                        {
+                            BulletRingAttack();
                         }
                         else
                         {
-                            mAttackType = attackTypes.secondAttack;
-                            BulletRingAttack();
+                            ShootGunBlast();
                         }
                     }
                     else
                     {
-                        mAttackType = attackTypes.thirdAttack;
                         SlamAttack();
                     }
                 }
             }
             else
             {
-                //player farther from player
+                //boss farther from player
 
                 if (mbossPhase == bossPhases.phase1)
                 {
-                    //25 - 25 - 50
-                    if (Random.value > 0.5f)
+                    //35 - 25 - 30 - 10
+                    if (Random.value <= 0.35f)
                     {
-                        mAttackType = attackTypes.thirdAttack;
-                        SpawnMinions();
+                        ThrustHandAttack();
+                    }
+                    else if(Random.value <= 0.3f)
+                    {
+                        ShootGunBlast();
+                    }
+                    else if(Random.value <= 0.25f)
+                    {
+                        BulletRingAttack();
                     }
                     else
                     {
-                        if (Random.value > 0.5)
-                        {
-                            mAttackType = attackTypes.secondAttack;
-                            BulletRingAttack();
-
-                        }
-                        else
-                        {
-                            mAttackType = attackTypes.firstAttack;
-                            ThrustHandAttack();
-                        }
+                        SpawnMinions();
                     }
                 }
                 else
                 {
                     //besserk mode
-                    //25 - 25 - 50
-                    if (Random.value > 0.5f)
+                    //30 - 25 - 30 - 15
+                    if (Random.value <= 0.3f)
                     {
-                        mAttackType = attackTypes.thirdAttack;
-                        SlamAttack();
-                    }
-                    else
-                    {
-                        if (Random.value > 0.5)
+                        if (Random.value >= 0.5)
                         {
-                            mAttackType = attackTypes.secondAttack;
-                            BulletRingAttack();
+                            ShootGunBlast();
                         }
                         else
                         {
-                            mAttackType = attackTypes.firstAttack;
                             ThrustHandAttack();
                         }
+                        
+                    }
+                    else if(Random.value > 0.25)
+                    {
+                        BulletRingAttack();
+                        
+                    }
+                    else
+                    {
+                        SlamAttack();
                     }
                 }
             }
@@ -412,6 +415,7 @@ public class BossEnemy : MonoBehaviour
     //attacks
     void ThrustHandAttack()
     {
+        mAttackType = attackTypes.firstAttack;
         Debug.Log("Starting Thrust");
         StartCoroutine(ThrustForward());
     }
@@ -422,63 +426,74 @@ public class BossEnemy : MonoBehaviour
         _currentlyInAttackMovement = true;
         //show some indication of about to thrust (maybe color, sound or something)
         readyToAttack = false;
-        for (int distance2 = 0; distance2 <= 10; distance2++)
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX;
+        for (int distance2 = 0; distance2 <= 12; distance2++)
         {
-            this.transform.position -= Vector3.forward * Time.deltaTime * speed;
+            //prevent
+            Vector3 thrustV = new Vector3(Vector3.forward.x, 0, Vector3.forward.z);
+            
+            this.transform.position -= thrustV * Time.deltaTime * speed;
+            yield return new WaitForSeconds(0.1f);
         }
-
-            attackCD = attackSpeed;
+        
+        attackCD = attackSpeed;
         yield return new WaitForSeconds(1.0f);
         
         for(int distance = 0; distance <= 8; distance++)
         {
             //causes it to skip forward (kinda cool)
             this.transform.Translate(Vector3.forward);
-            
-            //or move forward really fast
-            
-            //transform.position += (Vector3.forward  * Time.deltaTime * combatSpeed * 2);
+           // this.transform.position = new Vector3(transform.position.x, yPos, transform.position.z);
              
             RaycastHit attackRay;
 
             if (Physics.BoxCast(this.transform.position, Vector3.zero, transform.forward, out attackRay, transform.rotation, attackRange))
             {
-                if ((LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Player" || LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Enviroment") && attackCD <= 0 && myState == enemyState.attacking)
+                
+                if (LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Player")
                 {
+                    Debug.Log("HitPlayer");
+                    attackRay.transform.GetComponent<Player>().TakeDamage(thrustAttack);
                     StartCoroutine(CoolDown());
-
-                    attackRay.transform.GetComponent<Player>().TakeDamage(baseAttack);
                     StopCoroutine(ThrustForward());
-                    Debug.LogError("HitPlayer");
+                    //yield break; ;
+                    break;
                 }
+                else if(LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Enviroment")
+                {
+                    Debug.Log("hit wall stawp");
+                    StartCoroutine(CoolDown());
+                    StopCoroutine(ThrustForward());
+                    //yield break;
+                    break;
+                } 
             }
             yield return new WaitForSeconds(0.2f);
         }
         //delay after attack
         yield return new WaitForSeconds(1.5f);
-        
-        
+        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
         StartCoroutine(CoolDown());
     }
 
     public bool shotGun = false;
     void BulletRingAttack()
     {
+        mAttackType = attackTypes.secondAttack;
         readyToAttack = false;
-
-        if (!shotGun)
-        {
-            Debug.Log("Ring attack");
-
-            StartCoroutine(BulletRingAttackMovement());
-        }
-        else
-        {
-            StartCoroutine(ShotGunBlast());
-        }
+        Debug.Log("Ring attack");
+        StartCoroutine(BulletRingAttackMovement());
     }
 
-    public int pelletCountMin = 10;
+    void ShootGunBlast()
+    {
+        mAttackType = attackTypes.forthAttack;
+        readyToAttack = false;
+        Debug.Log("Shutgun");
+        StartCoroutine(ShotGunBlast());
+    }
+
+    public int pelletCountMin = 3;
     public int pelletCountMax = 5;
     public float spreadAngle = 10;
     List<Quaternion> pellets;
@@ -499,7 +514,12 @@ public class BossEnemy : MonoBehaviour
 
         for (int shootsFired = 0; shootsFired < repeat; shootsFired++)
         {
-            int pelletNum = Random.Range(pelletCountMin, pelletCountMax);
+            int pelletNum = 2;
+            if (mbossPhase == bossPhases.phase1)
+                pelletNum = Random.Range(pelletCountMin, pelletCountMax);
+            else
+                pelletNum = Random.Range(pelletCountMin + 2, pelletCountMax + 1);
+
             pellets = new List<Quaternion>(pelletNum);
             for (int a = 0; a < pelletNum; a++)
             {
@@ -507,20 +527,21 @@ public class BossEnemy : MonoBehaviour
             }
 
             //fire shot
-            Debug.Log("PEW");
+            //Debug.Log("PEW");
             //int i = 0;
             for (int c = 0; c < pellets.Count; c++)
             {
                 pellets[c] = Random.rotation;
                 GameObject bullet = Instantiate(projectile, transform.position, transform.rotation);
                 //set variables to bullet
-                bullet.transform.rotation = Quaternion.RotateTowards(bullet.transform.rotation, Random.rotation, spreadAngle);
-                // bullet.GetComponent<Bullet>().type = type;
-                //bullet.GetComponent<Bullet>().damage = damage;
-                //bullet.GetComponent<Rigidbody>().AddForce(bullet.transform.forward * bulletVelocity);
+                Quaternion rot = new Quaternion(0, Random.rotation.y, Random.rotation.y, Random.rotation.w);
+                bullet.transform.rotation = Quaternion.RotateTowards(bullet.transform.rotation, rot, spreadAngle);
+
+                //change this attack stat later or balancing
+                bullet.GetComponent<Bullet>().damageToDeal = shotgunPelletDamage;
                 c++;
             }
-            if(shootsFired == repeat - 1)
+            if(shootsFired != repeat - 1)
             {
                 yield return new WaitForSeconds(pauseBetweenShoots);
             }
@@ -555,7 +576,9 @@ public class BossEnemy : MonoBehaviour
                 {
                     GameObject bullet = Instantiate(projectile, bulletRing[index].transform.position, bulletRing[index].transform.rotation);
 
-                    
+                    //change this damage value later for balancing
+                    bullet.GetComponent<Bullet>().damageToDeal = bulletRingDamage;
+
                     //bullet.GetComponent<Bullet>().speed = bullet.GetComponent<Bullet>().speed / 2;
                 }
             }
@@ -572,6 +595,7 @@ public class BossEnemy : MonoBehaviour
     //bool spawningMinions = false;
     void SpawnMinions()
     {
+        mAttackType = attackTypes.thirdAttack;
         //spawningMinions = true;
         readyToAttack = false;
         Debug.Log("Starting spawn");
@@ -586,7 +610,28 @@ public class BossEnemy : MonoBehaviour
     {
         readyToAttack = false;
         Debug.Log("Starting slam");
-        
+
+        StartCoroutine(SlamAttackMovement());
+    }
+
+    IEnumerator SlamAttackMovement()
+    {
+        yield return new WaitForSeconds(1.0f);
+
+        int liftHeight = 20;
+        //raise up boss, then drop them causing area of effect
+        for(int lift = 0; lift < liftHeight; lift++)
+        {
+            this.transform.position += Vector3.up * Time.deltaTime * speed;
+            yield return new WaitForSeconds(0.1f);
+        }
+        yield return new WaitForSeconds(0.3f);
+        for(int drop = 0; drop < liftHeight; drop++)
+        {
+            this.transform.position += -Vector3.up * Time.deltaTime * speed;
+            yield return new WaitForSeconds(0.1f);
+        }
+
         attackCD = attackSpeed;
         StartCoroutine(CoolDown());
     }
@@ -637,42 +682,6 @@ public class BossEnemy : MonoBehaviour
         { poi = wanderPoint; }
         else if (agro)
         { poi = _target.transform.position; }
-    }
-
-    /// <summary>
-    /// This will be called when the enemy is goes agro
-    /// </summary>
-    void onAgro()
-    {
-
-    }
-
-    float x;
-    float z;
-
-    bool start = false;
-   /* void WanderingPoint()
-    {
-
-
-        if (start == false)
-        {
-            x = Random.Range(-1f, 1f);
-            z = Random.Range(-1f, 1f);
-
-            start = true;
-        }
-
-        if (Vector3.Distance(wanderPoint, _spawnPoint) >= wanderRadius)
-        {
-            ChangeDirW();
-        }
-        wanderPoint += new Vector3(x, 0, z) * 1.4f * Time.deltaTime;
-  */  
-    void ChangeDirW()
-    {
-        x = -x;
-        z = -z;
     }
 
     public void TakeDamage(int damage)
@@ -734,7 +743,7 @@ public class BossEnemy : MonoBehaviour
         
 
         //Gizmos.color = Color.blue;
-        // Gizmos.DrawLine(transform.position, _spawnPoint);
+        //Gizmos.DrawCube(transform.position + Vector3.forward, )
 
 
         if (agro)

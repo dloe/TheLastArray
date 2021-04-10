@@ -440,7 +440,7 @@ public class Player : MonoBehaviour
         RaycastHit hit;
         if(inventory.selectedItem.itemData.canAttack)
         {
-            Debug.Log("Melee Attack");
+            //Debug.Log("Melee Attack");
             if (Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward, out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange))
             {
 

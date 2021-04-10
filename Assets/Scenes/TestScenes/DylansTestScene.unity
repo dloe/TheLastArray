@@ -204,6 +204,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: TileGen
       objectReference: {fileID: 0}
+    - target: {fileID: 4003264855528296061, guid: 9b9cea3461719ad4fb4fd11d2c2b63fb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4003264855528296062, guid: 9b9cea3461719ad4fb4fd11d2c2b63fb,
         type: 3}
       propertyPath: playerPref
@@ -440,7 +445,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &952306325
 GameObject:
@@ -561,7 +566,7 @@ GameObject:
   m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1514382807
 Transform:
   m_ObjectHideFlags: 0
@@ -660,12 +665,17 @@ PrefabInstance:
     - target: {fileID: 5846302392562144004, guid: 5736b444104112c4eb0432f9dd4357c7,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8423679397287645227, guid: 5736b444104112c4eb0432f9dd4357c7,
         type: 3}
       propertyPath: m_Name
       value: Objectives
+      objectReference: {fileID: 0}
+    - target: {fileID: 8423679397287645227, guid: 5736b444104112c4eb0432f9dd4357c7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8423679397287645237, guid: 5736b444104112c4eb0432f9dd4357c7,
         type: 3}
