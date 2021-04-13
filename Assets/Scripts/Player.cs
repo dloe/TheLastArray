@@ -443,10 +443,14 @@ public class Player : MonoBehaviour
             //Debug.Log("Melee Attack");
             if (Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward, out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange))
             {
-
-                
                 StartCoroutine(inventory.selectedItem.itemData.CoolDown());
-                if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
+
+                if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy" && hit.transform.TryGetComponent<BossEnemy>(out BossEnemy mBossEnemy))
+                {
+                    mBossEnemy.TakeDamage(inventory.selectedItem.itemData.damage);
+                    Debug.Log("yep boss hit");
+                }
+                else if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
                 {
                     Debug.Log("Durability Before: " + inventory.selectedItem.itemData.durability);
                     if (inventory.selectedItem.itemData.hasDurability)
