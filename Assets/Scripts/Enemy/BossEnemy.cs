@@ -108,11 +108,13 @@ public class BossEnemy : MonoBehaviour
     [Header("if ranged enemy")]
     public GameObject projectile;
 
-    // [Header("Boss apendages")]
-    GameObject attack1_hand;
-    public GameObject minion;
+    public float rangeSpawnRadius = 6;
+    public GameObject minionAirdrop;
 
     public GameObject[] bulletRing;
+
+    //speed at which boss rotates while thrusting
+    static private float thrustRotateDamp = 0.5f;
 
 
     private void Start()
@@ -137,7 +139,10 @@ public class BossEnemy : MonoBehaviour
         { OnDeath(); }
 
         if (baseHealth <= 30)
+        {
             mbossPhase = bossPhases.phase2;
+            speed = speed_phase2;
+        }
 
         playerDistanceFromBoss = (transform.position - poi).magnitude;
     }
@@ -156,6 +161,7 @@ public class BossEnemy : MonoBehaviour
 
     //public Vector3 delta;
     public float speed = 5;
+    public float speed_phase2 = 6;
     //public Quaternion rotMod;
     //public Vector3 dir;
     // public RaycastHit hitInfo;
@@ -266,6 +272,13 @@ public class BossEnemy : MonoBehaviour
 
         if (!_currentlyInAttackMovement)
             this.transform.LookAt(poi);
+        else
+        {
+            //look slowly at poi
+            var rotation = Quaternion.LookRotation(poi - transform.position);
+            
+            transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * thrustRotateDamp);
+        }
     }
 
     void StateChanger()
@@ -401,12 +414,12 @@ public class BossEnemy : MonoBehaviour
         //show some indication of about to thrust (maybe color, sound or something)
         readyToAttack = false;
         //GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX;
-        for (int distance2 = 0; distance2 <= 12; distance2++)
+        for (int distance2 = 0; distance2 <= 15; distance2++)
         {
             //prevent
-            Vector3 thrustV = new Vector3(Vector3.forward.x, 0, Vector3.forward.z);
+            //Vector3 thrustV = new Vector3(Vector3.forward.x, 0, Vector3.forward.z);
             
-            this.transform.position -= thrustV * Time.deltaTime * speed;
+            this.transform.position -= Vector3.forward * Time.deltaTime * speed;
             yield return new WaitForSeconds(0.1f);
         }
         
@@ -581,6 +594,45 @@ public class BossEnemy : MonoBehaviour
         
         attackCD = attackSpeed;
 
+        StartCoroutine(Spawning());
+    }
+
+    IEnumerator Spawning()
+    {
+        //has radius around boss, finds locations around, spawns them there
+        yield return new WaitForSeconds(1.0f);
+        //first determine how many minions to spawn
+        int minionsToSpawn = Random.Range(2, 4);
+        Debug.Log(minionsToSpawn);
+
+        for (int spawnCount = 0; spawnCount < minionsToSpawn; spawnCount++)
+        {
+            for (int checkCount = 0; checkCount < 5; checkCount++)
+            {
+                Debug.Log("choosing spawn pos");
+                //find location thats in this radius around the boss, check if we can spawn enemies by casting raycast down
+                float xPos = Random.Range(-rangeSpawnRadius, rangeSpawnRadius);
+                float zPos = Random.Range(-rangeSpawnRadius, rangeSpawnRadius);
+                Vector3 spawnPos = new Vector3(transform.position.x + xPos, transform.position.y + 10, transform.position.z + zPos);
+
+                RaycastHit hit;
+                Debug.DrawRay(transform.position, -Vector3.up, Color.red, 1);
+                if (Physics.Raycast(spawnPos, transform.TransformDirection(-transform.up), out hit, 15))
+                {
+                    //if sphere hits ground
+                    if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "FloorBossDetection")
+                    {
+                        //Debug.Log("found");
+                        Instantiate(minionAirdrop, spawnPos, transform.rotation);
+                        break;
+                    }
+
+                    
+                }
+                //Debug.Log("reroll");
+            }
+        }
+        yield return new WaitForSeconds(3.0f);
         StartCoroutine(CoolDown());
     }
 

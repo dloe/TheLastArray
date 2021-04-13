@@ -435,7 +435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c80f6f6056679b45958903bcc370ee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mbossPhase: 1
+  mbossPhase: 0
   norm: {fileID: 2100000, guid: 42794c7cf62616344bd191fbbeb6fd38, type: 2}
   damaged: {fileID: 2100000, guid: a9021586276d2c0469733a3caaa23e02, type: 2}
   myState: 1
@@ -459,7 +459,9 @@ MonoBehaviour:
   attackRange: 1
   projectile: {fileID: 1117753128864750618, guid: 1788c6df2c85bcc46997603962117caf,
     type: 3}
-  minion: {fileID: 0}
+  rangeSpawnRadius: 6
+  minionAirdrop: {fileID: 3709228446565014393, guid: 85fc1b48ebd48b448ae5dee6d1440415,
+    type: 3}
   bulletRing:
   - {fileID: 1312572112326862582}
   - {fileID: 1837074752288191902}
@@ -486,6 +488,7 @@ MonoBehaviour:
   - {fileID: 7990442504849532759}
   - {fileID: 8406214517579162889}
   speed: 5
+  speed_phase2: 6
   shotGun: 1
   pelletCountMin: 5
   pelletCountMax: 7
