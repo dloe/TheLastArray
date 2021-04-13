@@ -52,7 +52,7 @@ MeshRenderer:
   m_GameObject: {fileID: 3709228446565014393}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
@@ -108,9 +108,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
-  speed: 4
-  checkRadius: 2
-  lineSpeed: 13
+  speed: 3
+  checkRadius: 1
+  lineSpeed: 12
 --- !u!120 &3709228446565014392
 LineRenderer:
   m_ObjectHideFlags: 0

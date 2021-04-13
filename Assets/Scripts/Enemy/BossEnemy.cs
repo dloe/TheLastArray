@@ -100,6 +100,8 @@ public class BossEnemy : MonoBehaviour
     public float playerDistanceFromBoss;
     //how far the enemy needs to get away from its target to lose agro
     float agroLoseDis = 25;
+    public float speed = 5;
+    public float speed_phase2 = 6;
 
     [Header("if melee")]
     //how far the attack will go
@@ -107,8 +109,9 @@ public class BossEnemy : MonoBehaviour
 
     [Header("if ranged enemy")]
     public GameObject projectile;
-
-    public float rangeSpawnRadius = 6;
+    [Header("Radius around boss where we check to spawn minions")]
+    public float rangeSpawnRadius = 5;
+    [Header("Minion airdrop prefab")]
     public GameObject minionAirdrop;
 
     public GameObject[] bulletRing;
@@ -160,8 +163,7 @@ public class BossEnemy : MonoBehaviour
     }
 
     //public Vector3 delta;
-    public float speed = 5;
-    public float speed_phase2 = 6;
+
     //public Quaternion rotMod;
     //public Vector3 dir;
     // public RaycastHit hitInfo;

@@ -101,6 +101,7 @@ public class MinionAirDropBehavior : MonoBehaviour
 
         //spawn minion
         Debug.Log("Spawn minion");
+        //set y pos to 0.5f in case detonation takes place to soon
 
         Destroy(this.gameObject);
     }
