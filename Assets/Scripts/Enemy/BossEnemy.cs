@@ -400,7 +400,7 @@ public class BossEnemy : MonoBehaviour
         _currentlyInAttackMovement = true;
         //show some indication of about to thrust (maybe color, sound or something)
         readyToAttack = false;
-        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX;
+        //GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX;
         for (int distance2 = 0; distance2 <= 12; distance2++)
         {
             //prevent
@@ -448,7 +448,7 @@ public class BossEnemy : MonoBehaviour
         }
         //delay after attack
         yield return new WaitForSeconds(1.5f);
-        GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
+        //GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
         StartCoroutine(CoolDown());
     }
 
@@ -593,48 +593,60 @@ public class BossEnemy : MonoBehaviour
         StartCoroutine(SlamAttackMovement());
     }
 
-    public int slamDistance = 7;
+    public int slamDistance = 8;
     IEnumerator SlamAttackMovement()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.5f);
 
-        int liftHeight = 30;
+        int liftHeight = 25;
         //raise up boss, then drop them causing area of effect
         for(int lift = 0; lift < liftHeight; lift++)
         {
             this.transform.position += Vector3.up * Time.deltaTime * speed * 2;
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.025f);
         }
-        yield return new WaitForSeconds(1f);
-        for(int drop = 0; drop < liftHeight/3; drop++)
+        yield return new WaitForSeconds(0.5f);
+        for (int drop = 0; drop < liftHeight * 2.5; drop++)
         {
-            this.transform.position += -Vector3.up * Time.deltaTime * speed * 6;
-            yield return new WaitForSeconds(0.05f);
+            this.transform.position += -Vector3.up * Time.deltaTime * speed;
+
+            RaycastHit attackRay;
+            Debug.DrawRay(transform.position, -Vector3.up, Color.red, 1);
+            if (Physics.BoxCast(this.transform.position, Vector3.zero, -transform.up, out attackRay, transform.rotation, 1.25f))
+            {
+                //if sphere hits ground
+                if (LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "FloorBossDetection")
+                {
+                    Debug.Log("hit floor stawp");
+                    break;
+                }
+            }
+            yield return new WaitForSeconds(0.00675f);
         }
 
         if(playerDistanceFromBoss < slamDistance)
         {
 
             //find multiplier based on how close player is
-            float multiplier = playerDistanceFromBoss / slamDistance;
+            float multiplier = 1/(playerDistanceFromBoss / slamDistance);
             Debug.Log(multiplier);
 
             //if in range takes damage based on proximity and pushed away
-            Debug.Log("Player in range");
+            //Debug.Log("Player in range");
             transform.LookAt(_target.transform.position);
 
             //push target based on how close they are to boss
-            _target.GetComponent<Rigidbody>().AddForce(this.transform.forward * multiplier * 1000);
-            _target.GetComponent<Rigidbody>().AddForce(Vector3.up * multiplier * 1000);
+            _target.GetComponent<Rigidbody>().AddForce(this.transform.forward * multiplier * 300);
+            _target.GetComponent<Rigidbody>().AddForce(Vector3.up * multiplier * 250);
 
             //to prevent less than 1 damage being applied but not really applied weird zone
-            if (playerDistanceFromBoss <= slamDistance - 1.5f)
-            {
-                Debug.Log((int)((1 / multiplier) * slamDamage));
+           // if (playerDistanceFromBoss <= slamDistance - 1.5f)
+            //{
+                Debug.Log((int)((multiplier) * slamDamage));
                 _target.GetComponent<Player>().TakeDamage((int)(1 / multiplier * slamDamage));
-            }
+            //}
         }
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
         //attackCD = attackSpeed;
         StartCoroutine(CoolDown());
     }
