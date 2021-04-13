@@ -15,6 +15,8 @@ public class MinionAirDropBehavior : MonoBehaviour
     float distance;
     float increment;
 
+    public GameObject minion;
+
     /// <summary>
     /// Dylan Loe
     /// Updated: 4-12
@@ -102,7 +104,7 @@ public class MinionAirDropBehavior : MonoBehaviour
         //spawn minion
         Debug.Log("Spawn minion");
         //set y pos to 0.5f in case detonation takes place to soon
-
+        Instantiate(minion, transform.position, transform.rotation);
 
         Destroy(this.gameObject);
     }

@@ -651,7 +651,7 @@ public class BossEnemy : MonoBehaviour
         StartCoroutine(SlamAttackMovement());
     }
 
-    public int slamDistance = 8;
+    public int slamDistance = 9;
     IEnumerator SlamAttackMovement()
     {
         yield return new WaitForSeconds(0.5f);
