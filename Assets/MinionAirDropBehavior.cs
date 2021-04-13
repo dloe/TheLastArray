@@ -95,7 +95,7 @@ public class MinionAirDropBehavior : MonoBehaviour
             if (potentialTarget.gameObject.tag == "Player")
             {
                 //player in range, damage player
-                //potentialTarget.gameObject.GetComponent<PlayerMovement>().takeDamage(damage);
+                potentialTarget.gameObject.GetComponent<Player>().TakeDamage(1);
             }
         }
 

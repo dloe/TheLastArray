@@ -444,7 +444,7 @@ public class BossEnemy : MonoBehaviour
                 
                 if (LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Player")
                 {
-                    Debug.Log("HitPlayer");
+                    //Debug.Log("HitPlayer");
                     attackRay.transform.GetComponent<Player>().TakeDamage(thrustAttack);
                     yield return new WaitForSeconds(1.5f);
                     StartCoroutine(CoolDown());
@@ -454,7 +454,7 @@ public class BossEnemy : MonoBehaviour
                 }
                 else if(LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Enviroment")
                 {
-                    Debug.Log("hit wall stawp");
+                    //Debug.Log("hit wall stawp");
                     yield return new WaitForSeconds(1.5f);
                     StartCoroutine(CoolDown());
                     StopCoroutine(ThrustForward());
@@ -483,7 +483,7 @@ public class BossEnemy : MonoBehaviour
     {
         mAttackType = attackTypes.forthAttack;
         readyToAttack = false;
-        Debug.Log("Shutgun");
+        //Debug.Log("Shutgun");
         StartCoroutine(ShotGunBlast());
     }
 
@@ -548,7 +548,7 @@ public class BossEnemy : MonoBehaviour
     {
         //selects random starting index, this is the one that doesnt shoot
         int indexAvoid = Random.Range(0, bulletRing.Length - 1);
-        Debug.Log(indexAvoid);
+        //Debug.Log(indexAvoid);
         int ringsFired = 1;
         float pauseBetweenRings = 1.0f;
         //can repeat this multiple times
@@ -615,7 +615,7 @@ public class BossEnemy : MonoBehaviour
         {
             for (int checkCount = 0; checkCount < 5; checkCount++)
             {
-                Debug.Log("choosing spawn pos");
+               // Debug.Log("choosing spawn pos");
                 //find location thats in this radius around the boss, check if we can spawn enemies by casting raycast down
                 float xPos = Random.Range(-rangeSpawnRadius, rangeSpawnRadius);
                 float zPos = Random.Range(-rangeSpawnRadius, rangeSpawnRadius);
@@ -664,7 +664,7 @@ public class BossEnemy : MonoBehaviour
             yield return new WaitForSeconds(0.025f);
         }
         yield return new WaitForSeconds(0.5f);
-        for (int drop = 0; drop < liftHeight * 2.5; drop++)
+        for (int drop = 0; drop < liftHeight * 3; drop++)
         {
             this.transform.position += -Vector3.up * Time.deltaTime * speed;
 
@@ -676,6 +676,7 @@ public class BossEnemy : MonoBehaviour
                 if (LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "FloorBossDetection")
                 {
                     Debug.Log("hit floor stawp");
+                    this.transform.position = new Vector3(transform.position.x, 1, transform.position.z);
                     break;
                 }
             }

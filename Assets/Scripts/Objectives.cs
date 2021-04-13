@@ -54,7 +54,7 @@ public class Objectives : MonoBehaviour
 
     public void UpdateObjectiveText()
     {
-        Debug.Log("check");
+        //Debug.Log("check");
         if (mainObjective.objectiveMessage == gasMessage || mainObjective.objectiveMessage == generatorMessage)
         {
             objectiveText.text = mainObjective.objectiveMessage + " " + (objectiveCount - mainObjective.numTimes) + "/" + objectiveCount;
