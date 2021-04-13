@@ -7,7 +7,8 @@ public class BossSpawn : MonoBehaviour
 
     //checks for player to enter radius
     //when player enters radisu, change objective, look door behind player and spawn boss
-    public GameObject Bossdoor;
+    public Boss_PresetTileInfo tile;
+    public GameObject bossdoor;
    // public Objectives obj;
     public float radius = 6.25f;
     public GameObject bossObj;
@@ -35,13 +36,13 @@ public class BossSpawn : MonoBehaviour
             if(potentialTarget.gameObject.tag == "Player")
             {
                 Debug.Log("begininng boss fight");
-                Bossdoor.SetActive(true);
+                bossdoor.SetActive(true);
                 Objectives.Instance.UpdateFinalObjective(0);
 
                 GameObject b0ss = Instantiate(bossObj, transform.position, transform.rotation);
 
                 //give ref to door and to last array interactable to boss for when it is killed (so player can open doors and complete objectives
-
+                b0ss.GetComponent<BossEnemy>().lastArray = tile.lastArrayInteractable;
                 Destroy(this.gameObject);
             }
         }
@@ -51,6 +52,7 @@ public class BossSpawn : MonoBehaviour
     {
         yield return new WaitForSeconds(1.0f);
         startCheck = true;
+        bossdoor = tile.door;
     }
 
     private void OnDrawGizmos()

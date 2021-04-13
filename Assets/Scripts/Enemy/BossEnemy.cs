@@ -119,6 +119,9 @@ public class BossEnemy : MonoBehaviour
     //speed at which boss rotates while thrusting
     static private float thrustRotateDamp = 0.5f;
 
+    [HideInInspector]
+    public GameObject lastArray;
+
 
     private void Start()
     {
@@ -530,6 +533,7 @@ public class BossEnemy : MonoBehaviour
                 bullet.transform.parent = GameObject.Find("TileGen").transform;
                 //change this attack stat later or balancing
                 bullet.GetComponent<Bullet>().damageToDeal = shotgunPelletDamage;
+                bullet.transform.localEulerAngles = new Vector3(Random.Range(-2,5), bullet.transform.localEulerAngles.y, bullet.transform.localEulerAngles.z);
                 c++;
             }
             if(shootsFired != repeat - 1)
@@ -784,11 +788,12 @@ public class BossEnemy : MonoBehaviour
     void OnDeath()
     {
         //make last array interactable
+        lastArray.GetComponent<BoxCollider>().isTrigger = true;
+        Objectives.Instance.UpdateFinalObjective(1);
 
-
-      //  if (isObjectiveEnemy)
-      //  {
-            Objectives.Instance.SendCompletedMessage(Condition.KillEnemy);
+        //  if (isObjectiveEnemy)
+        //  {
+        Objectives.Instance.SendCompletedMessage(Condition.KillEnemy);
       //  }
         Destroy(this.gameObject);
     }

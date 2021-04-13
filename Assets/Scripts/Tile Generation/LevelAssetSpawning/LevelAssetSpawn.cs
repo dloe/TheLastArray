@@ -460,23 +460,25 @@ public class LevelAssetSpawn : MonoBehaviour
         }
         else
         {
+            Objectives.Instance.UpdateFinalObjective(3);
             //FOR FINAL LEVEL, ONLY ONE OBJECTIVE, LOCATE LAST ARRAY
-                Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, null);
-                //spawns in a placeholder detection, when player gets within range of this obj, objective changes to survive and boss spawns. (after boss dies then objective changes to activate last array)
-                endObjTile.GetComponent<Boss_PresetTileInfo>().lastArrayInteractable.transform.rotation = playerSpawn.transform.rotation;
-                endObjTile.GetComponent<Boss_PresetTileInfo>().craftingTableOutside.transform.rotation = playerSpawn.transform.rotation;
-                //REMEMBER, to make sure  the player can complete objective, this has to be turned on after boss dies
-                endObjTile.GetComponent<Boss_PresetTileInfo>().lastArrayInteractable.GetComponent<BoxCollider>().isTrigger = false;
-                GameObject bossDetection = Instantiate(myLevelAsset.bossDetection, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform);
-                bossDetection.GetComponent<BossSpawn>().Bossdoor = endObjTile.GetComponent<Boss_PresetTileInfo>().door;
-                
-                //bossDetection.GetComponent<BossSpawn>().obj = Objectives.Instance;
-                _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
-                bossDetection.name = "BossPlaceholder";
-                bossDetection.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
+            Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, null);
+            //spawns in a placeholder detection, when player gets within range of this obj, objective changes to survive and boss spawns. (after boss dies then objective changes to activate last array)
+            endObjTile.GetComponent<Boss_PresetTileInfo>().lastArrayInteractable.transform.rotation = playerSpawn.transform.rotation;
+            endObjTile.GetComponent<Boss_PresetTileInfo>().craftingTableOutside.transform.rotation = playerSpawn.transform.rotation;
+            //REMEMBER, to make sure  the player can complete objective, this has to be turned on after boss dies
+            endObjTile.GetComponent<Boss_PresetTileInfo>().lastArrayInteractable.GetComponent<BoxCollider>().isTrigger = false;
+            GameObject bossDetection = Instantiate(myLevelAsset.bossDetection, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform);
+            //bossDetection.GetComponent<BossSpawn>().Bossdoor = endObjTile.GetComponent<Boss_PresetTileInfo>().door;
+            bossDetection.GetComponent<BossSpawn>().tile = endObjTile.GetComponent<Boss_PresetTileInfo>();
 
-                ///TEMP WILL REMOVE LATER
-               // play.transform.position = endObjTile.GetComponent<Boss_PresetTileInfo>().craftingTableOutside.transform.position;
+            //bossDetection.GetComponent<BossSpawn>().obj = Objectives.Instance;
+            _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
+            bossDetection.name = "BossPlaceholder";
+            bossDetection.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
+                
+            ///TEMP WILL REMOVE LATER
+            // play.transform.position = endObjTile.GetComponent<Boss_PresetTileInfo>().craftingTableOutside.transform.position;
         }
     }
     #endregion
