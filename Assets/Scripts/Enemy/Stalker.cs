@@ -4,15 +4,37 @@ using UnityEngine;
 
 public class Stalker : BaseEnemy
 {
-    // Start is called before the first frame update
-    void Start()
+    public int stealthTime;
+    bool hidden;
+
+    public override void specialAttack(Vector3 temp)
     {
+        if (myState != enemyState.attacking && readyToAttack == true)
+        {
+            this.transform.position += temp * Time.deltaTime;
+        }
+
+        else if (myState == enemyState.attacking && readyToAttack == true)
+        {
+            this.transform.position += temp * Time.deltaTime;
+            attacking = true;
+            if(!hidden)
+            StartCoroutine(Stealth());
+        }
+        else if (myState == enemyState.attacking && readyToAttack == false)
+        {
+            this.transform.position -= temp * Time.deltaTime;
+        }
         
     }
 
-    // Update is called once per frame
-    void Update()
+    IEnumerator Stealth()
     {
-        
+        this.GetComponent<MeshRenderer>().material.color = Color.clear;
+        hidden = true;
+        yield return new WaitForSeconds(stealthTime);
+        this.GetComponent<MeshRenderer>().material = norm;
+        hidden = false;
     }
+
 }

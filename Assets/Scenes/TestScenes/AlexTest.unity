@@ -1924,7 +1924,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1725432235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1937,9 +1937,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e91116e6bb0c8164ea2eccdce6ee9feb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  norm: {fileID: 0}
-  damaged: {fileID: 0}
-  key: {fileID: 0}
+  norm: {fileID: 2100000, guid: 604fb74eb12138040906615acfe4ca21, type: 2}
+  damaged: {fileID: 2100000, guid: a9021586276d2c0469733a3caaa23e02, type: 2}
+  key: {fileID: 2100000, guid: a338947236265e2418c8d544b89e1f94, type: 2}
   isObjectiveEnemy: 0
   myType: 0
   myState: 0
@@ -1949,7 +1949,7 @@ MonoBehaviour:
   detectionRadius: 20
   tickRate: 1
   avodinceRange: 2
-  wanderSpeed: 2
+  wanderSpeed: 1.08
   wanderRadius: 10
   attackType: 0
   agro: 0
@@ -1996,7 +1996,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 604fb74eb12138040906615acfe4ca21, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2224,7 +2224,7 @@ PrefabInstance:
     - target: {fileID: 6263994880208539687, guid: b5054fc2551c64b428f275d7210f29f6,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b5054fc2551c64b428f275d7210f29f6, type: 3}
@@ -2298,7 +2298,7 @@ PrefabInstance:
     - target: {fileID: 3026296788328612720, guid: b542a32ce6acf6f45ae122e4d05fedd7,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3026296788328612721, guid: b542a32ce6acf6f45ae122e4d05fedd7,
         type: 3}
