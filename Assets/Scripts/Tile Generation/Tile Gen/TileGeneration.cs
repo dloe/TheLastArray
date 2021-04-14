@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -424,9 +425,13 @@ public class TileGeneration : MonoBehaviour
         _endTile.pathNumber = _pathNumber;
         //check each of this tiles sides, 
 
+
+        levelPath = levelPath.Distinct().ToList();
+        _allActiveTiles = _allActiveTiles.Distinct().ToList();
+
         //label path in scene from list
         //Debug.Log("Path Finished");
-        if(debugPathOn)
+        if (debugPathOn)
             this.GetComponent<LineRenderer>().positionCount = levelPath.Count;
 
         //add random rooms to dungeon
@@ -442,6 +447,8 @@ public class TileGeneration : MonoBehaviour
             SetUpSecretRoom();
         }
 
+
+        
         if (hasDoors)
         {
             ActivateAllDoors();
@@ -582,7 +589,7 @@ public class TileGeneration : MonoBehaviour
         secretRoom.transform.parent = this.transform;
         secretRoom.GetComponent<Tile>().ShadeSecret();
         secretRoom.GetComponent<Tile>().ActivateWalls();
-        Debug.Log("SecretRoom added");
+        //Debug.Log("SecretRoom added");
     }
 
     void CreateSpawnRoom()
@@ -982,8 +989,18 @@ public class TileGeneration : MonoBehaviour
     }
     void ActivateAllDoors()
     {
+        //int pathCount = 0;
+        //Tile tempPrev = null;
+        
+      for(int pathCount = 0; pathCount < levelPath.Count; pathCount++)
+      {
+           // if(pathCount > 0 && levelPath[pathCount] != levelPath[pathCount - 1])
+                levelPath[pathCount].pathNumber = pathCount;
+      }
+
         foreach (Tile t in levelPath)
         {
+            
             t.ActivateDoors();
         }
         DeactivateInActiveRooms();
@@ -1012,6 +1029,9 @@ public class TileGeneration : MonoBehaviour
     /// </summary>
     void CheckTile(Tile tile, List<Tile> current)
     {
+      //  if (current.Contains(tile))
+       //     return;
+
 
         //failsafe to stop possible infinate loop, causes being looked at
         if (failsafeCount == _levelHeight * _levelWidth * 2)

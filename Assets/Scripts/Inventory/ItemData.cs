@@ -19,15 +19,16 @@ public enum ItemType
     Heal,
     Key,
     Binoculars,
-    BackPack
+    BackPack,
+    finalObjective
 }
 [Serializable][CreateAssetMenu]
 public class ItemData : ScriptableObject
 {
-    
 
 
-   
+
+
 
     public Sprite itemSprite;
     public ItemType itemType;
@@ -45,13 +46,13 @@ public class ItemData : ScriptableObject
     public AmmoType ammoType;
     public int magSize = 5;
     public int loadedAmmo;
-    
+
 
     public int amountToHeal = 1;
 
     public bool canAttack = true;
     public bool reloading = false;
-    
+
 
     public IEnumerator CoolDown()
     {
@@ -90,7 +91,7 @@ public class ItemData : ScriptableObject
             reloading = false;
         }
     }
-    
+
 }
 
 [Serializable]
@@ -204,16 +205,16 @@ public class ItemDataEditor : Editor
             itemData.ammoType = (AmmoType)EditorGUILayout.EnumPopup("Ammo Type", itemData.ammoType);
             itemData.reloadTime = EditorGUILayout.FloatField("Reload Time(seconds)", itemData.reloadTime);
             itemData.magSize = EditorGUILayout.IntField("Magazine Size", itemData.magSize);
-            
+
         }
 
         if(itemData.itemType == ItemType.Heal)
         {
             itemData.amountToHeal = EditorGUILayout.IntField("Amount to Heal", itemData.amountToHeal);
-            
+
         }
 
-        
+
 
         bool somethingChanged = EditorGUI.EndChangeCheck();
 

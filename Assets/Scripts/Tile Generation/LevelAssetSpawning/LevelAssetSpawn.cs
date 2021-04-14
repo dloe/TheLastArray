@@ -80,11 +80,9 @@ public class LevelAssetSpawn : MonoBehaviour
 
     private void Awake()
     {
-       // Debug.Log("y");
         assetCountArray = new int[myLevelAsset.presetTileAssets.Count];
         bigAssetCountArray = new int[myLevelAsset.presetBigTileAssets.Count];
 
-        //Debug.Log("n");
     }
 
     /// <summary>
@@ -113,7 +111,7 @@ public class LevelAssetSpawn : MonoBehaviour
         ActivateEnemies();
 
     }
-
+    GameObject play;
     /// <summary>
     /// checks each tile for purpose of adding walls, linking 2 x 2, bringing in 2 x 2 tiles
     /// </summary>
@@ -123,7 +121,10 @@ public class LevelAssetSpawn : MonoBehaviour
         foreach (Tile t in myTileGeneration._allActiveTiles)
         {
             t.ActivateWalls();
-            AnalyzeTile(t);
+            if (myLocalLevel.thisLevelTier != levelTier.level4)
+                AnalyzeTile(t);
+            else
+                AnalyzeTile_Lvl4Modifier(t);
 
             //condisider first linking 2 x 2s then goingthrough to activate walls
 
@@ -138,8 +139,8 @@ public class LevelAssetSpawn : MonoBehaviour
                 }
                 playerSpawn = t.presetTile.GetComponent<PresetTileInfo>().playerSpawn;
                 //SPAWN PLAYER
-                GameObject play = Instantiate(playerPref, Vector3.zero, playerSpawn.transform.rotation);
-                Debug.Log("Player Spawn set");
+                play = Instantiate(playerPref, Vector3.zero, playerSpawn.transform.rotation);
+                //Debug.Log("Player Spawn set");
                 StartCoroutine(setPlayerPosition(play, playerSpawn.transform.position));
 
                 myLocalLevel.myPlayer = play.transform.GetChild(0).gameObject.GetComponent<Player>();
@@ -156,7 +157,7 @@ public class LevelAssetSpawn : MonoBehaviour
     //doors would be active linking tiles, just add doors on sides that dont have doors yeet im so tired please help i feel myself slowly drifitng away into oblivion oh god
     void ActivateLvl4Walls()
     {
-        Debug.Log("start activate");
+        //Debug.Log("start activate");
         foreach (Tile t in myTileGeneration._allActiveTiles)
         {
             if (t.tileStatus != Tile.TileStatus.startingRoom)
@@ -177,14 +178,17 @@ public class LevelAssetSpawn : MonoBehaviour
                         t.ReSyncDoors();
                     }
 
-                    if ((t.doors[0].tag == "Door" && t.doors[0].GetComponent<DoorBehavior>().notInUse) || (t.upNeighbor.doors[1].tag == "Door" && t.upNeighbor.doors[1].GetComponent<DoorBehavior>().notInUse))
+                    if (t.upNeighbor.tileStatus != Tile.TileStatus.startingRoom)
                     {
-                        wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
-                        wall.transform.parent = t.transform;
-                        wall.transform.localPosition = new Vector3(-12.5f, 5, 0);
-                        wall.transform.eulerAngles = new Vector3(-90, 0, -90);
-                        wall.name = "WallPlaceholder_LVL4WALLFUNCTION_0";
-                        t.doors[0] = wall;
+                        if ((t.doors[0].tag == "Door" && t.doors[0].GetComponent<DoorBehavior>().notInUse) || (t.upNeighbor.doors[1].tag == "Door" && t.upNeighbor.doors[1].GetComponent<DoorBehavior>().notInUse))
+                        {
+                            wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
+                            wall.transform.parent = t.transform;
+                            wall.transform.localPosition = new Vector3(-12.5f, 5, 0);
+                            wall.transform.eulerAngles = new Vector3(-90, 0, -90);
+                            wall.name = "WallPlaceholder_LVL4WALLFUNCTION_0";
+                            t.doors[0] = wall;
+                        }
                     }
                     //else
                     //    Debug.Log("dont spawn wall between " + t.name + " and " + t.upNeighbor.name);
@@ -204,14 +208,17 @@ public class LevelAssetSpawn : MonoBehaviour
                         t.ReSyncDoors();
                     }
 
-                    if ((t.doors[1].tag == "Door" && t.doors[1].GetComponent<DoorBehavior>().notInUse) || (t.downNeighbor.doors[0].tag == "Door" && t.downNeighbor.doors[0].GetComponent<DoorBehavior>().notInUse))
+                    if (t.downNeighbor.tileStatus != Tile.TileStatus.startingRoom)
                     {
-                        wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
-                        wall.transform.parent = t.transform;
-                        wall.transform.localPosition = new Vector3(12.5f, 5, 0);
-                        wall.transform.eulerAngles = new Vector3(-90, 0, 90);
-                        wall.name = "WallPlaceholder_LVL4WALLFUNCTION_1";
-                        t.doors[1] = wall;
+                        if ((t.doors[1].tag == "Door" && t.doors[1].GetComponent<DoorBehavior>().notInUse) || (t.downNeighbor.doors[0].tag == "Door" && t.downNeighbor.doors[0].GetComponent<DoorBehavior>().notInUse))
+                        {
+                            wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
+                            wall.transform.parent = t.transform;
+                            wall.transform.localPosition = new Vector3(12.5f, 5, 0);
+                            wall.transform.eulerAngles = new Vector3(-90, 0, 90);
+                            wall.name = "WallPlaceholder_LVL4WALLFUNCTION_1";
+                            t.doors[1] = wall;
+                        }
                     }
                     //else
                     //    Debug.Log("dont spawn wall between " + t.name + " and " + t.downNeighbor.name);
@@ -231,14 +238,17 @@ public class LevelAssetSpawn : MonoBehaviour
                         t.ReSyncDoors();
                     }
 
-                    if ((t.doors[2].tag == "Door" && t.doors[2].GetComponent<DoorBehavior>().notInUse) || (t.leftNeighbor.doors[3].tag == "Door" && t.leftNeighbor.doors[3].GetComponent<DoorBehavior>().notInUse))
+                    if (t.leftNeighbor.tileStatus != Tile.TileStatus.startingRoom)
                     {
-                        wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
-                        wall.transform.parent = t.transform;
-                        wall.transform.localPosition = new Vector3(0, 5, -12.5f);
-                        wall.transform.eulerAngles = new Vector3(-90, 0, -180);
-                        wall.name = "WallPlaceholder_LVL4WALLFUNCTION_2";
-                        t.doors[2] = wall;
+                        if ((t.doors[2].tag == "Door" && t.doors[2].GetComponent<DoorBehavior>().notInUse) || (t.leftNeighbor.doors[3].tag == "Door" && t.leftNeighbor.doors[3].GetComponent<DoorBehavior>().notInUse))
+                        {
+                            wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
+                            wall.transform.parent = t.transform;
+                            wall.transform.localPosition = new Vector3(0, 5, -12.5f);
+                            wall.transform.eulerAngles = new Vector3(-90, 0, -180);
+                            wall.name = "WallPlaceholder_LVL4WALLFUNCTION_2";
+                            t.doors[2] = wall;
+                        }
                     }
                     //else
                     //    Debug.Log("dont spawn wall between " + t.name + " and " + t.leftNeighbor.name);
@@ -258,14 +268,17 @@ public class LevelAssetSpawn : MonoBehaviour
                         t.ReSyncDoors();
                     }
 
-                    if ((t.doors[3].tag == "Door" && t.doors[3].GetComponent<DoorBehavior>().notInUse) || (t.rightNeighbor.doors[2].tag == "Door" && t.rightNeighbor.doors[2].GetComponent<DoorBehavior>().notInUse))
+                    if (t.rightNeighbor.tileStatus != Tile.TileStatus.startingRoom)
                     {
-                        wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
-                        wall.transform.parent = t.transform;
-                        wall.transform.localPosition = new Vector3(0, 5, 12.5f);
-                        wall.transform.eulerAngles = new Vector3(-90, 0, 0);
-                        wall.name = "WallPlaceholder_LVL4WALLFUNCTION_3";
-                        t.doors[3] = wall;
+                        if ((t.doors[3].tag == "Door" && t.doors[3].GetComponent<DoorBehavior>().notInUse) || (t.rightNeighbor.doors[2].tag == "Door" && t.rightNeighbor.doors[2].GetComponent<DoorBehavior>().notInUse))
+                        {
+                            wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
+                            wall.transform.parent = t.transform;
+                            wall.transform.localPosition = new Vector3(0, 5, 12.5f);
+                            wall.transform.eulerAngles = new Vector3(-90, 0, 0);
+                            wall.name = "WallPlaceholder_LVL4WALLFUNCTION_3";
+                            t.doors[3] = wall;
+                        }
                     }
                     //else
                     //    Debug.Log("dont spawn wall between " + t.name + " and " + t.rightNeighbor.name);
@@ -316,6 +329,7 @@ public class LevelAssetSpawn : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         Player.Instance.transform.position = spawnPos;
+
     }
 
     
@@ -446,19 +460,25 @@ public class LevelAssetSpawn : MonoBehaviour
         }
         else
         {
+            Objectives.Instance.UpdateFinalObjective(3);
             //FOR FINAL LEVEL, ONLY ONE OBJECTIVE, LOCATE LAST ARRAY
-            if(myLocalLevel.objective == 4)
-            {
-                Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, null);
-                //spawns in a placeholder detection, when player gets within range of this obj, objective changes to survive and boss spawns. (after boss dies then objective changes to activate last array)
+            Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, null);
+            //spawns in a placeholder detection, when player gets within range of this obj, objective changes to survive and boss spawns. (after boss dies then objective changes to activate last array)
+            endObjTile.GetComponent<Boss_PresetTileInfo>().lastArrayInteractable.transform.rotation = playerSpawn.transform.rotation;
+            endObjTile.GetComponent<Boss_PresetTileInfo>().craftingTableOutside.transform.rotation = playerSpawn.transform.rotation;
+            //REMEMBER, to make sure  the player can complete objective, this has to be turned on after boss dies
+            endObjTile.GetComponent<Boss_PresetTileInfo>().lastArrayInteractable.GetComponent<BoxCollider>().isTrigger = false;
+            GameObject bossDetection = Instantiate(myLevelAsset.bossDetection, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform);
+            //bossDetection.GetComponent<BossSpawn>().Bossdoor = endObjTile.GetComponent<Boss_PresetTileInfo>().door;
+            bossDetection.GetComponent<BossSpawn>().tile = endObjTile.GetComponent<Boss_PresetTileInfo>();
 
-                GameObject bossDetection = Instantiate(myLevelAsset.bossDetection, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform);
-                _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
-                bossDetection.name = "BossPlaceholder";
-                bossDetection.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
-
-            }
-
+            //bossDetection.GetComponent<BossSpawn>().obj = Objectives.Instance;
+            _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
+            bossDetection.name = "BossPlaceholder";
+            bossDetection.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
+                
+            ///TEMP WILL REMOVE LATER
+            // play.transform.position = endObjTile.GetComponent<Boss_PresetTileInfo>().craftingTableOutside.transform.position;
         }
     }
     #endregion
@@ -614,6 +634,153 @@ public class LevelAssetSpawn : MonoBehaviour
                // Debug.Log(tile.posOnGrid.x + " " + tile.posOnGrid.y);
                 SpawnLevelSmallAsset(tile);
             }
+    }
+
+
+    void AnalyzeTile_Lvl4Modifier(Tile tile)
+    {
+        //will first see if we can link tiles
+        _tArray = new Tile[4];
+        List<GameObject> bigTileDoors = new List<GameObject>();
+        bool obj = false;
+        //check neighbors, first up, then left, then right then down
+        if (!tile.checkFor4Some && tile.tileStatus != Tile.TileStatus.boss)
+        {
+            Tile t;
+            //Debug.Log("Starting at tile: " + tile.posOnGrid.x + " " + tile.posOnGrid.y);
+            if (tile.upNeighbor != null && tile.upNeighbor.tileStatus != Tile.TileStatus.nullRoom && !tile.upNeighbor.checkFor4Some && tile.upNeighbor.tileStatus != Tile.TileStatus.secretRoom && tile.upNeighbor.tileStatus != Tile.TileStatus.boss)
+            {
+
+                bigTileDoors.Add(tile.doors[0]);
+                t = tile.upNeighbor;
+
+                _tArray[0] = t;
+                //Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
+                if (t.rightNeighbor != null && t.rightNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.rightNeighbor.checkFor4Some && t.rightNeighbor.tileStatus != Tile.TileStatus.secretRoom && t.rightNeighbor.tileStatus != Tile.TileStatus.boss)
+                {
+                    bigTileDoors.Add(t.doors[3]);
+                    t = t.rightNeighbor;
+                    _tArray[1] = t;
+                    //Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
+                    if (t.downNeighbor != null && t.downNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.downNeighbor.checkFor4Some && t.downNeighbor.tileStatus != Tile.TileStatus.secretRoom && t.downNeighbor.tileStatus != Tile.TileStatus.boss)
+                    {
+                        bigTileDoors.Add(t.doors[1]);
+                        t = t.downNeighbor;
+                        _tArray[2] = t;
+                        // Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
+                        if (t.leftNeighbor != null && t.leftNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.leftNeighbor.checkFor4Some && t.leftNeighbor.tileStatus != Tile.TileStatus.secretRoom && t.leftNeighbor.tileStatus != Tile.TileStatus.boss)
+                        {
+                            bigTileDoors.Add(t.doors[2]);
+                            //all of these tiles can be linked
+                            t = t.leftNeighbor;
+                            // Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
+                            _tArray[3] = t;
+
+                            //random chance we dont use this 4 some tile and have og be single
+                            if (Random.value <= twoBYtwo_SpawnChance)
+                            {
+                                fourSomeCount++;
+                                GameObject fourSomeTile = new GameObject("BigTile_" + fourSomeCount);
+                                _bigTilesList.Add(fourSomeTile);
+                                _av = Vector3.zero;
+                                fourSomeTile.transform.parent = this.transform;
+                                foreach (Tile tile2 in _tArray)
+                                {
+                                    _av += tile2.transform.position;
+                                }
+                                _av = _av / 4;
+                                foreach (GameObject door in bigTileDoors)
+                                {
+                                    Destroy(door);
+                                }
+
+                                //Debug.Log(av);
+                                fourSomeTile.transform.position = _av;
+                                foreach (Tile tile3 in _tArray)
+                                {
+
+                                    //could remove doors/walls here as well
+
+
+                                    //Debug.Log("ap");
+                                    tile3.levelAssetPlaced = true;
+
+                                    if (tile3.tileStatus == Tile.TileStatus.boss)
+                                    {
+                                        //Debug.Log("big tile has objectvie");
+                                        obj = true;
+                                    }
+
+                                    //Debug.Log(tile3.presetNum);
+                                    if (tile3.presetNum != -1)
+                                    {
+                                        // Debug.Log(tile3.presetNum);
+                                        //remove its possible items from _possileItems if it has already assigned preset tile
+                                        assetCountArray[tile3.presetNum] -= 1;
+                                        if (tile3.presetTile.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
+                                        {
+                                            //Debug.Log(tile3.name);
+                                            foreach (GameObject item in mPresetTileInfo.GetComponent<PresetTileInfo>().possiblePresetItems)
+                                            {
+                                                _possibleItems.Remove(item);
+                                                _possibleObjectives.Remove(item);
+
+                                            }
+
+                                            //Note to self maybe consider running for loop to remove possible enemies as wells - Added last night 3/10
+                                            foreach (GameObject enemy in mPresetTileInfo.GetComponent<PresetTileInfo>().enemiesOnPreset)
+                                            {
+                                                _possibleEnemiesInLevel.Remove(enemy);
+
+                                            }
+
+                                            if (mPresetTileInfo.objectiveSpawn != null)
+                                            {
+                                                _possibleObjectives.Remove(mPresetTileInfo.objectiveSpawn);
+                                                //Debug.Log("removed bad obj spot");
+                                            }
+
+
+                                            _possibleTileObjectivesInLevel.Remove(tile3.presetTile);
+                                        }
+                                    }
+
+                                    if (tile3.presetTile != null)
+                                    {
+                                        // Debug.Log("(Due to 2 x 2 Linkage - Deleting: " + tile3.presetTile.gameObject + tile3.name);
+                                        Destroy(tile3.presetTile.gameObject);
+                                    }
+                                    tile3.checkFor4Some = true;
+                                    tile3.transform.parent = fourSomeTile.transform;
+                                }
+                                SpawnLevelBigAsset(fourSomeTile, obj);
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            _tArray[0] = null;
+                            _tArray[1] = null;
+                            _tArray[2] = null;
+                        }
+                    }
+                    else
+                    {
+                        _tArray[0] = null;
+                        _tArray[1] = null;
+                    }
+                }
+                else
+                {
+                    _tArray[0] = null;
+                }
+            }
+        }
+        if (!tile.levelAssetPlaced)
+        {
+            // Debug.Log(tile.posOnGrid.x + " " + tile.posOnGrid.y);
+            SpawnLevelSmallAsset(tile);
+        }
     }
 
 

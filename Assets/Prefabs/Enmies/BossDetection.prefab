@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5541895093933435286}
   - component: {fileID: 5946573732556492252}
   - component: {fileID: 2733998471565241710}
+  - component: {fileID: 6098115434651671233}
   m_Layer: 0
   m_Name: BossDetection
   m_TagString: Untagged
@@ -93,3 +94,19 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6098115434651671233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1661849643039973771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34308628a4a84f9419e1e0207a8d51de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tile: {fileID: 0}
+  bossdoor: {fileID: 0}
+  radius: 12
+  bossObj: {fileID: 3451182372090860985, guid: 997a6faddcb8e4d4393d49993a18979b, type: 3}
