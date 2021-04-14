@@ -129,6 +129,8 @@ public class InventoryUI : MonoBehaviour
                 if (inventory.ItemAtIndex(index).itemData.itemSprite != null)
                 {
                     slotList[index].GetChild(0).gameObject.SetActive(true);
+                    //Debug.LogError("bruh", inventory.ItemAtIndex(index).itemData.itemSprite);
+                    //Debug.Log(slotList[index].GetChild(0).GetComponent<Image>().sprite);
                     slotList[index].GetChild(0).GetComponent<Image>().sprite = inventory.ItemAtIndex(index).itemData.itemSprite;
                 }
                 else
@@ -176,26 +178,26 @@ public class InventoryUI : MonoBehaviour
                     Player.Instance.SetMeleeVisualActive(true);
 
                     break;
-                case ItemType.Pistol:
-                    //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
-                    equipedWeaponDashText.gameObject.SetActive(true);
-
-                    currentAmmoName.gameObject.SetActive(true);
-                    equipedWeaponReservesText.gameObject.SetActive(true);
-                    equipedWeaponAmmoText.text = inventory.selectedItem.itemData.loadedAmmo.ToString();
-                    equipedWeaponReservesText.text = Player.Instance.currentLightAmmo.ToString();
-                    currentAmmoName.text = inventory.selectedItem.itemData.ammoType.ToString();
-
-                    Player.Instance.SetMeleeVisualActive(false);
-                    break;
-                case ItemType.Rifle:
+                case ItemType.RangedWeapon:
                     //equipedItemLabelText.text = inventory.selectedItem.itemType.ToString();
                     equipedWeaponDashText.gameObject.SetActive(true);
                     currentAmmoName.gameObject.SetActive(true);
                     equipedWeaponReservesText.gameObject.SetActive(true);
 
+                    switch (inventory.selectedItem.itemData.ammoType)
+                    {
+                        case AmmoType.LightAmmo:
+                            equipedWeaponReservesText.text = Player.Instance.currentLightAmmo.ToString();
+                            break;
+                        case AmmoType.HeavyAmmo:
+                            equipedWeaponReservesText.text = Player.Instance.currentHeavyAmmo.ToString();
+                            break;
+                        default:
+                            break;
+                    }
+
                     equipedWeaponAmmoText.text = inventory.selectedItem.itemData.loadedAmmo.ToString();
-                    equipedWeaponReservesText.text = Player.Instance.currentHeavyAmmo.ToString();
+                    
                     currentAmmoName.text = inventory.selectedItem.itemData.ammoType.ToString();
 
                     Player.Instance.SetMeleeVisualActive(false);
@@ -215,6 +217,12 @@ public class InventoryUI : MonoBehaviour
 
                     break;
                 default:
+                    Player.Instance.SetMeleeVisualActive(false);
+                    currentAmmoName.text = "";
+                    equipedWeaponAmmoText.text = "";
+                    equipedWeaponDashText.gameObject.SetActive(false);
+                    currentAmmoName.text = "";
+                    equipedWeaponReservesText.text = "" ;
                     break;
             }
         }

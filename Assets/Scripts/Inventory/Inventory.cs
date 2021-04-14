@@ -70,6 +70,11 @@ public class Inventory
 
     public void AddItem(Item item)
     {
+        if (item.itemData.itemType == ItemType.Binoculars)
+        {
+            CameraController.Instance.ToggleBinocularMode(true);
+        }
+
         itemList.Add(item);
 
         if(InventoryUI.Instance)
@@ -84,6 +89,11 @@ public class Inventory
 
     public void AddItem(ItemData itemData)
     {
+        if (itemData.itemType == ItemType.Binoculars)
+        {
+            CameraController.Instance.ToggleBinocularMode(true);
+        }
+
         itemList.Add(new Item(itemData));
         if (InventoryUI.Instance)
         {
@@ -97,6 +107,10 @@ public class Inventory
 
     public void AddItemNoUI(ItemData itemData)
     {
+        if (itemData.itemType == ItemType.Binoculars)
+        {
+            CameraController.Instance.ToggleBinocularMode(true);
+        }
         itemList.Add(new Item(itemData));
 
     }
@@ -105,6 +119,11 @@ public class Inventory
 
     public void RemoveItem(Item item)
     {
+        if (selectedItem.itemData.itemType == ItemType.Binoculars)
+        {
+            CameraController.Instance.ToggleBinocularMode(false);
+        }
+
         itemList.Remove(item);
         if (InventoryUI.Instance)
         {
@@ -116,9 +135,41 @@ public class Inventory
         }
     }
 
+    /// <summary>
+    /// probably should not be used because this creates a new item in memory
+    /// </summary>
+    /// <param name="itemData"></param>
     public void RemoveItem(ItemData itemData)
     {
         itemList.Remove(new Item(itemData));
+        if (InventoryUI.Instance)
+        {
+            InventoryUI.Instance.RefreshUI();
+        }
+        else
+        {
+            Debug.LogWarning("Warning, Inventory UI was not found");
+        }
+    }
+
+    /// <summary>
+    /// Removes Item by Type, Recommended to only use for items that dont carry unique data
+    /// </summary>
+    /// <param name="itemType">type to remove</param>
+    public void RemoveItemByType(ItemType itemType)
+    {
+        Item itemToRemove = null;
+        foreach(Item item in itemList)
+        {
+            if(item.itemData.itemType == itemType)
+            {
+                itemToRemove = item;
+                break;
+            }
+        }
+
+        itemList.Remove(itemToRemove);
+
         if (InventoryUI.Instance)
         {
             InventoryUI.Instance.RefreshUI();
@@ -199,7 +250,7 @@ public class Inventory
         {
             itemSave = new ItemDataSave();
             itemSave.SaveFromItemData(item.itemData);
-            jsonList.Add(JsonUtility.ToJson(item.itemData));
+            jsonList.Add(JsonUtility.ToJson(itemSave));
         }
 
         return jsonList;

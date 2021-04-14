@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    public static CameraController Instance;
     private GameObject playerObject;
     public Vector3 offset;
     public float offsetLimitX = 1f;
@@ -16,6 +17,18 @@ public class CameraController : MonoBehaviour
     public float originalOffsetLimitX;
     public float originalOffsetLimitZ;
 
+    private float xModifier, zModifier;
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(Instance.gameObject);
+        }
+        Instance = this;
+        originalOffsetLimitX = offsetLimitX;
+        originalOffsetLimitZ = offsetLimitZ;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -27,8 +40,8 @@ public class CameraController : MonoBehaviour
         offset = transform.localPosition - Player.Instance.playerHolderTransform.TransformPoint(playerObject.transform.position);
         baseOffset = offset;
 
-        originalOffsetLimitX = offsetLimitX;
-        originalOffsetLimitZ = offsetLimitZ;
+        //originalOffsetLimitX = offsetLimitX;
+        //originalOffsetLimitZ = offsetLimitZ;
     }
 
     // Update is called once per frame
@@ -48,44 +61,77 @@ public class CameraController : MonoBehaviour
         
         clampOffset();
 
+
+        //Dylan added this to exclude layer of secret room interior
+        Camera cam = GetComponent<Camera>();
+        cam.cullingMask = ~(1 << LayerMask.NameToLayer("HiddenSecretInterior"));
+
     }
 
     private void panCamera()
     {
 
-
-        float xModifier = Mathf.Abs(Input.mousePosition.x - getScrnFrac(true, 2f)) / getScrnFrac(true, 2f);
-        float zModifier = Mathf.Abs(Input.mousePosition.y - getScrnFrac(false, 2f)) / getScrnFrac(false, 2f);
-
+        xModifier = Mathf.Abs(Input.mousePosition.x - getScrnFrac(true, 2f)) / getScrnFrac(true, 2f);
+        zModifier = Mathf.Abs(Input.mousePosition.y - getScrnFrac(false, 2f)) / getScrnFrac(false, 2f);
 
         if (Input.mousePosition.x < getScrnFrac(true, 2f) - getScrnFrac(true, horizontalNeutralZone))
         {
-            offset.x -= xModifier * panSpeed * Time.deltaTime;
-
+            if(offset.x > baseOffset.x)
+            {
+                offset.x -= xModifier * panSpeed * 1.2f * Time.deltaTime;
+            }
+            else
+            {
+                offset.x -= xModifier * panSpeed * Time.deltaTime;
+            }
+            
+            //offset.x = -Mathf.MoveTowards(offset.x,offsetLimitX - xModifier*-offsetLimitX , 0.1f);
         }
         else if (Input.mousePosition.x > getScrnFrac(true, 2f) + getScrnFrac(true, horizontalNeutralZone))
         {
-            offset.x += xModifier * panSpeed * Time.deltaTime;
+            if (offset.x < baseOffset.x)
+            {
+                offset.x += xModifier * panSpeed * 1.2f * Time.deltaTime;
+            }
+            else
+            {
+                offset.x += xModifier * panSpeed * Time.deltaTime;
+            }
 
         }
         else
         {
-            //offset.x = Mathf.SmoothStep(offset.x, baseOffset.x, panSpeed * 3f * Time.deltaTime);
-            offset.x = Mathf.Lerp(offset.x, baseOffset.x, panSpeed * 0.5f * Time.deltaTime);
+            //offset.x = Mathf.Lerp(offset.x, baseOffset.x, panSpeed * 0.5f * Time.deltaTime);
+            offset.x = Mathf.MoveTowards(offset.x, baseOffset.x, panSpeed * Time.deltaTime);
         }
 
         if (Input.mousePosition.y < getScrnFrac(false, 2f) - getScrnFrac(false, verticalNeutralZone))
         {
-            offset.z -= zModifier * panSpeed * Time.deltaTime;
+            if(offset.z > baseOffset.z)
+            {
+                offset.z -= zModifier * panSpeed * 1.2f* Time.deltaTime;
+            }
+            else
+            {
+                offset.z -= zModifier * panSpeed * Time.deltaTime;
+            }
+            
         }
         else if (Input.mousePosition.y > getScrnFrac(false, 2f) + getScrnFrac(false, verticalNeutralZone))
         {
-            offset.z += zModifier * panSpeed * Time.deltaTime;
+            if (offset.z < baseOffset.z)
+            {
+                offset.z += zModifier * panSpeed * 1.2f * Time.deltaTime;
+            }
+            else
+            {
+                offset.z += zModifier * panSpeed * Time.deltaTime;
+            }
         }
         else
         {
-            //offset.z = Mathf.SmoothStep(offset.z, baseOffset.z, panSpeed * 3f * Time.deltaTime);
-            offset.z = Mathf.Lerp(offset.z, baseOffset.z, panSpeed * 0.4f * Time.deltaTime);
+            //offset.z = Mathf.Lerp(offset.z, baseOffset.z, panSpeed * 0.5f * Time.deltaTime);
+            offset.z = Mathf.MoveTowards(offset.z, baseOffset.z, panSpeed * Time.deltaTime);
         }
     }
 
@@ -97,10 +143,10 @@ public class CameraController : MonoBehaviour
 
     public void ToggleBinocularMode(bool state)
     {
-        if(state)
+        if(state && offsetLimitX == originalOffsetLimitX && offsetLimitZ == originalOffsetLimitZ)
         {
-            offsetLimitX += 1;
-            offsetLimitZ += 1;
+            offsetLimitX += 6;
+            offsetLimitZ += 1.7f;
         }
         else
         {

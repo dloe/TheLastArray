@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3b4527728302af4885a95fe26cba0ed, type: 3}
   m_Name: Bandage
   m_EditorClassIdentifier: 
-  itemSprite: {fileID: 0}
-  itemType: 3
+  itemSprite: {fileID: 21300000, guid: e5d2114e91fdfe44493e384d4e9f94cb, type: 3}
+  itemType: 2
   itemName: Bandage
+  itemDescription: Heals 5 health when used
   hasDurability: 0
   damage: 1
   durability: -1
@@ -23,4 +24,7 @@ MonoBehaviour:
   meleeRange: 1
   ammoType: 0
   magSize: 5
+  loadedAmmo: 0
   amountToHeal: 5
+  canAttack: 1
+  reloading: 0

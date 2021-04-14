@@ -32,6 +32,8 @@ public class CraftingTable : Activatable
             tempOption = Instantiate(craftingOptionPrefab, optionParent.transform).GetComponent<CraftingOption>();
             tempOption.recipe = recipe;
 
+            
+
             if (recipe.craftingResult.isAmmoResult)
             {
                 switch (recipe.craftingResult.ammoType)
@@ -45,7 +47,7 @@ public class CraftingTable : Activatable
                     default:
                         break;
                 }
-
+                tempOption.description.text = "";
                 InventoryUI.Instance.RefreshUI();
                 tempOption.SetDropDown();
                 
@@ -54,6 +56,11 @@ public class CraftingTable : Activatable
             {
                 //Debug.Log(recipe.name);
                 tempOption.itemName.text = recipe.craftingResult.itemResult.itemName;
+                tempOption.description.text = recipe.craftingResult.itemResult.itemDescription;
+                if (recipe.craftingResult.itemResult.itemSprite != null)
+                {
+                    tempOption.itemImage.sprite = recipe.craftingResult.itemResult.itemSprite;
+                }
             }
 
             
@@ -75,7 +82,7 @@ public class CraftingTable : Activatable
                 }
             }
 
-           
+            
             tempOption.craftButton.onClick.AddListener(() => recipe.Craft(Player.Instance));
             tempOption.craftButton.onClick.AddListener(() => tempOption.SetDropDown());
             if (!recipe.IsCraftable(Player.Instance))

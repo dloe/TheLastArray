@@ -24,9 +24,11 @@ public class Player : MonoBehaviour
     [Header("Activatable / Interactable To Use")]
     public Activatable thingToActivate;
 
+    [Header("Player Stats")]
     public int speedStat = 5;
     public int dmgResist;
     public int skillPoints = 0;
+    public bool hasBackPack = false;
 
     //public int healthUpgradesLeft;
     //public int dmgResistUpgradesLeft;
@@ -210,8 +212,7 @@ public class Player : MonoBehaviour
                     case ItemType.MeleeWeapon:
                         meleeAttack();
                         break;
-                    case ItemType.Pistol:
-                    case ItemType.Rifle:
+                    case ItemType.RangedWeapon:
                         rangedAttack();
                         break;
                     case ItemType.Heal:
@@ -230,6 +231,7 @@ public class Player : MonoBehaviour
             //drops currently selected item on the ground at the player's feet
             if (Input.GetKeyDown(KeyCode.Q) && inventory.selectedItem != null && !thingToActivate)
             {
+                
                 inventory.DropItem();
             }
 
@@ -241,19 +243,7 @@ public class Player : MonoBehaviour
                 reload();
             }
 
-            //if (Input.GetKey(KeyCode.RightShift))
-            //{
-            //    if (Input.GetKeyDown(KeyCode.Equals))
-            //    {
-            //        Debug.Log("Trying To Save...");
-            //        SavePlayer();
-            //    }
-            //}
-            //else if (Input.GetKeyDown(KeyCode.Minus))
-            //{
-            //    Debug.Log("Trying To Load...");
-            //    LoadPlayer();
-            //}
+            
 
 #if UNITY_EDITOR
             //for testing damage and healing
@@ -261,19 +251,29 @@ public class Player : MonoBehaviour
             {
                 TakeDamage(1);
             }
+            else if (Input.GetKeyDown(KeyCode.T))
+            {
+                Debug.Log("Reseting Player Save...");
+                inventory.Clear();
+                SetStatsToBase();
+                InventoryUI.Instance.ResetSlots();
+                SavePlayer();
+                InventoryUI.Instance.RefreshUI();
+            }
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                
+                
+                Debug.Log("Trying To Save...");
+                SavePlayer();
+                
+            }
+            else if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                Debug.Log("Trying To Load...");
+                LoadPlayer();
+            }
 
-           
-            
-                if (Input.GetKeyDown(KeyCode.T))
-                {
-                    Debug.Log("Reseting Player Save...");
-                    inventory.Clear();
-                    SetStatsToBase();
-                    InventoryUI.Instance.ResetSlots();
-                    SavePlayer();
-                    InventoryUI.Instance.RefreshUI();
-                }
-            
 #endif
 
         }
@@ -329,7 +329,7 @@ public class Player : MonoBehaviour
             lookDir = new Vector3(ray.GetPoint(dist - xLookOffset).x , _mainTransform.position.y, ray.GetPoint(dist - zLookOffset).z );
             lookDir -= _mainTransform.position;
 
-            _mainTransform.rotation = Quaternion.Slerp(_mainTransform.rotation, Quaternion.LookRotation(lookDir), 0.15F);
+            _mainTransform.rotation = Quaternion.Slerp(_mainTransform.rotation, Quaternion.LookRotation(lookDir), 12f * Time.deltaTime);
             
            
         }
@@ -386,7 +386,7 @@ public class Player : MonoBehaviour
     /// </summary>
     private void reload()
     {
-        if(inventory.selectedItem.itemData.itemType == ItemType.Pistol || inventory.selectedItem.itemData.itemType == ItemType.Rifle)
+        if(inventory.selectedItem.itemData.itemType == ItemType.RangedWeapon)
         {
             switch (inventory.selectedItem.itemData.ammoType)
             {
@@ -570,6 +570,7 @@ public class Player : MonoBehaviour
         playerSave.cloth = ClothCount;
         playerSave.meds = MedsCount;
         playerSave.skillPoints = skillPoints;
+        playerSave.hasBackPack = hasBackPack;
         playerSave.lightAmmo = currentLightAmmo;
         playerSave.heavyAmmo = currentHeavyAmmo;
         
@@ -598,6 +599,7 @@ public class Player : MonoBehaviour
             ClothCount = playerSave.cloth;
             MedsCount = playerSave.meds;
             skillPoints = playerSave.skillPoints;
+            hasBackPack = playerSave.hasBackPack;
 
             currentLightAmmo = playerSave.lightAmmo;
             currentHeavyAmmo = playerSave.heavyAmmo;
@@ -641,6 +643,7 @@ public class PlayerSave
     public int speedStat;
     public int scrap, cloth, meds;
     public int skillPoints;
+    public bool hasBackPack;
 
     public int lightAmmo;
     public int heavyAmmo;

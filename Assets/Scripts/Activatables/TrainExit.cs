@@ -24,7 +24,7 @@ public class TrainExit : Activatable
     {
         myTransition.StartFadeOut();
         yield return new WaitForSeconds(1.0f);
-        SceneManager.LoadScene(GetLevelToLoad(playerData.previousLevelName));
+        LevelLoader.Instance.LoadLevel(GetLevelToLoad(playerData.previousLevelName));
     }
 
     public string GetLevelToLoad(string previousLevelName)
