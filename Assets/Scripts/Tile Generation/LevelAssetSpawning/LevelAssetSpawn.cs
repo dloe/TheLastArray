@@ -469,10 +469,10 @@ public class LevelAssetSpawn : MonoBehaviour
                     parents.Add(objMulti.transform.parent.parent.gameObject);
                     objectivesInLevel.Add(objMulti);
 
-                    Destroy(_possibleObjectives[indexO]);
-                    //_possibleObjectives.Remove(_possibleObjectives[indexO]);
+                    //Destroy(_possibleObjectives[indexO]);
+                    _possibleObjectives.Remove(_possibleObjectives[indexO]);
                     
-                    //_possibleItems.Remove(_possibleObjectives[indexO]);
+                    _possibleItems.Remove(_possibleObjectives[indexO]);
                     
                 }
             }
