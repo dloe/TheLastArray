@@ -243,7 +243,7 @@ public class BaseEnemy : MonoBehaviour
         }
 
 
-        this.transform.LookAt(poi);
+        this.transform.LookAt(new Vector3(poi.x,this.transform.position.y,poi.z));
     }
     public virtual void specialAttack(Vector3 temp)
     {
