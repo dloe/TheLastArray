@@ -470,10 +470,11 @@ public class LevelAssetSpawn : MonoBehaviour
                     objectivesInLevel.Add(objMulti);
 
                     //Destroy(_possibleObjectives[indexO]);
-                    _possibleObjectives.Remove(_possibleObjectives[indexO]);
+                    
                     
                     _possibleItems.Remove(_possibleObjectives[indexO]);
-                    
+                    _possibleObjectives.Remove(_possibleObjectives[indexO]);
+
                 }
             }
             else if (myLocalLevel.objective == 1)
