@@ -25,7 +25,7 @@ public class CraftingOption : MonoBehaviour
 
     public void SetDropDown()
     {
-        if(recipe.craftingResult.isAmmoResult)
+        if(recipe.craftingResult.resultType == ResultType.ammo)
         {
             amountDropDown.gameObject.SetActive(true);
             amountDropDown.ClearOptions();

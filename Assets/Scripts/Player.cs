@@ -25,10 +25,11 @@ public class Player : MonoBehaviour
     public Activatable thingToActivate;
 
     [Header("Player Stats")]
-    public int speedStat = 5;
+    public float speedStat = 5f;
     public int dmgResist;
     public int skillPoints = 0;
     public bool hasBackPack = false;
+    public bool hasArmorPlate = false;
 
     //public int healthUpgradesLeft;
     //public int dmgResistUpgradesLeft;
@@ -51,12 +52,13 @@ public class Player : MonoBehaviour
 
     #endregion
 
-
+    public LineRenderer laserLine;
 
     #region UI Variables
     public GameObject endScreen;
     public Text endScreenText;
     public Text levelText;
+    public Image ArmorPlateImage;
     #endregion
 
     #region Health Variables
@@ -152,7 +154,7 @@ public class Player : MonoBehaviour
 
     Vector3 moveDir;
     Vector3 lookDir;
-    Plane rayPlane = new Plane(Vector3.up, 1);
+    Plane rayPlane = new Plane(Vector3.up, 0.5f);
 
 
     private void Awake()
@@ -182,6 +184,11 @@ public class Player : MonoBehaviour
 
         //Updates the level text string to show which level is active
         levelText.text = SceneManager.GetActiveScene().name;
+
+        if(hasArmorPlate)
+        {
+            ArmorPlateImage.gameObject.SetActive(true);
+        }
     }
 
     // Update is called once per frame
@@ -273,6 +280,11 @@ public class Player : MonoBehaviour
                 Debug.Log("Trying To Load...");
                 LoadPlayer();
             }
+            else if(Input.GetKeyDown(KeyCode.Comma) && inventory.selectedItem != null && inventory.selectedItem.itemData.itemType == ItemType.RangedWeapon)
+            {
+                inventory.selectedItem.itemData.hasLaserSight = true;
+                laserLine.gameObject.SetActive(true);
+            }
 
 #endif
 
@@ -297,6 +309,7 @@ public class Player : MonoBehaviour
         }
         meleeVisual.SetActive(active);
     }
+
 
     /// <summary>
     /// Moves Player Based On WASD
@@ -327,12 +340,20 @@ public class Player : MonoBehaviour
         {
             //if(Input.mousePosition.x)
             lookDir = new Vector3(ray.GetPoint(dist - xLookOffset).x , _mainTransform.position.y, ray.GetPoint(dist - zLookOffset).z );
+            //lookDir = new Vector3(ray.GetPoint(dist - xLookOffset).x , _mainTransform.position.y, ray.GetPoint(dist - zLookOffset).z );
             lookDir -= _mainTransform.position;
 
-            _mainTransform.rotation = Quaternion.Slerp(_mainTransform.rotation, Quaternion.LookRotation(lookDir), 12f * Time.deltaTime);
+            _mainTransform.rotation = Quaternion.Slerp(_mainTransform.rotation, Quaternion.LookRotation(lookDir), 20f * Time.deltaTime);
             
            
         }
+
+        if(inventory.selectedItem != null && inventory.selectedItem.itemData.hasLaserSight)
+        {
+            laserLine.SetPosition(0, transform.position);
+            laserLine.SetPosition(1, transform.position + lookDir);
+        }
+        
     }
 
     /// <summary>
@@ -342,7 +363,7 @@ public class Player : MonoBehaviour
     {
         if(inventory.selectedItem.itemData.canAttack && !inventory.selectedItem.itemData.reloading)
         {
-            
+            Debug.Log(inventory.selectedItem.itemData.loadedAmmo);   
             if (inventory.selectedItem.itemData.ammoType == AmmoType.LightAmmo )
             {
                 if(inventory.selectedItem.itemData.loadedAmmo > 0)
@@ -491,15 +512,24 @@ public class Player : MonoBehaviour
     /// </summary>
     public void TakeDamage(int damage)
     {
-        Health -= damage;
-        StartCoroutine(Damaged());
+        if(hasArmorPlate)
+        {
+            hasArmorPlate = false;
+            ArmorPlateImage.gameObject.SetActive(false);
+        }
+        else
+        {
+            Health -= damage;
+            StartCoroutine(Damaged());
+        }
+        
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.TryGetComponent(out thingToActivate))
         {
-            Debug.Log("cock");
+            //Debug.Log("cock");
             thingToActivate = other.GetComponent<Activatable>();
         }
     }
@@ -543,7 +573,7 @@ public class Player : MonoBehaviour
         maxHealth = baseData.maxHealth;
         Health = baseData.health;
         dmgResist = baseData.dmgResist;
-
+        speedStat = baseData.speedStat;
        
         
         ScrapCount = baseData.scrap;
@@ -575,6 +605,7 @@ public class Player : MonoBehaviour
         playerSave.meds = MedsCount;
         playerSave.skillPoints = skillPoints;
         playerSave.hasBackPack = hasBackPack;
+        playerSave.hasArmorPlate = hasArmorPlate;
         playerSave.lightAmmo = currentLightAmmo;
         playerSave.heavyAmmo = currentHeavyAmmo;
         
@@ -604,13 +635,14 @@ public class Player : MonoBehaviour
             MedsCount = playerSave.meds;
             skillPoints = playerSave.skillPoints;
             hasBackPack = playerSave.hasBackPack;
+            hasArmorPlate = playerSave.hasArmorPlate;
 
             currentLightAmmo = playerSave.lightAmmo;
             currentHeavyAmmo = playerSave.heavyAmmo;
-            
 
-            inventory.LoadFromJsonList(playerSave.invJsonList);
             inventory.numInvSlots = playerSave.numInvSlots;
+            inventory.LoadFromJsonList(playerSave.invJsonList);
+            
         }
         else
         {
@@ -625,17 +657,17 @@ public class Player : MonoBehaviour
     }
     #endregion
 
-    private void OnDrawGizmos()
-    {
-        if (Input.GetKey(KeyCode.Semicolon) && Application.isPlaying && inventory.selectedItem != null)
-        {
-            Gizmos.color = Color.red;
-
-            Gizmos.DrawCube(_mainTransform.position + _mainTransform.forward * inventory.selectedItem.itemData.meleeRange, meleeExtents);
-        }
-
-
-    }
+    //private void OnDrawGizmos()
+    //{
+    //    if (Input.GetKey(KeyCode.Semicolon) && Application.isPlaying && inventory.selectedItem != null)
+    //    {
+    //        Gizmos.color = Color.red;
+    //
+    //        Gizmos.DrawCube(_mainTransform.position + _mainTransform.forward * inventory.selectedItem.itemData.meleeRange, meleeExtents);
+    //    }
+    //
+    //
+    //}
 }
 
 [System.Serializable]
@@ -644,10 +676,11 @@ public class PlayerSave
     public int maxHealth;
     public int health;
     public int dmgResist;
-    public int speedStat;
+    public float speedStat;
     public int scrap, cloth, meds;
     public int skillPoints;
     public bool hasBackPack;
+    public bool hasArmorPlate;
 
     public int lightAmmo;
     public int heavyAmmo;

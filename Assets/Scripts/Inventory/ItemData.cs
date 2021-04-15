@@ -52,6 +52,7 @@ public class ItemData : ScriptableObject
 
     public bool canAttack = true;
     public bool reloading = false;
+    public bool hasLaserSight = false;
 
 
     public IEnumerator CoolDown()
@@ -115,6 +116,8 @@ public class ItemDataSave
 
     public int amountToHeal;
 
+    public bool hasLaserSight;
+
     public void SaveFromItemData(ItemData itemData)
     {
         //Debug.Log(itemData.itemSprite.name);
@@ -132,6 +135,9 @@ public class ItemDataSave
         magSize = itemData.magSize;
         loadedAmmo = itemData.loadedAmmo;
         amountToHeal = itemData.amountToHeal;
+        hasLaserSight = itemData.hasLaserSight;
+        //Debug.Log(loadedAmmo + "item save ammo");
+        //Debug.Log(itemData.loadedAmmo + "item data ammo");
     }
 
     public void LoadToItemData(ItemData itemData)
@@ -151,8 +157,9 @@ public class ItemDataSave
         itemData.magSize = magSize;
         itemData.loadedAmmo = loadedAmmo;
         itemData.amountToHeal = amountToHeal;
+        itemData.hasLaserSight = hasLaserSight;
 
-
+        //Debug.Log(itemData.loadedAmmo, itemData);
     }
 }
 

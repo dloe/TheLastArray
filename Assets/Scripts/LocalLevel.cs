@@ -24,6 +24,8 @@ public class LocalLevel : MonoBehaviour
     TileGeneration _myTileGen;
     [Header("Player Data Obj")]
     public PlayerData myPlayerData;
+    [Header("Level Asset Data Obj")]
+    public LevelAssetsData myLvlAssetData;
     [HideInInspector]
     public List<int> _posObjectives;
 
@@ -51,7 +53,19 @@ public class LocalLevel : MonoBehaviour
     //public Text objectiveText;
     //private int objectiveCountStart = 0;
     public static LocalLevel Instance;
-    
+
+    [Header("Starting Tile Prefabs")]
+    public List<GameObject> presetStartingTileAssets;
+    [Header("The Small 1 Tile Preset Variations")]
+    public List<GameObject> presetTileAssets;
+    [Header("The Big 4 Tile Preset Variations")]
+    public List<GameObject> presetBigTileAssets;
+    [Header("Tile Prefabs with objectives")]
+    public List<GameObject> presetObjectiveTiles;
+    [Header("Big Tile Prefabs with objectives")]
+    public List<GameObject> presetBigObjectiveTiles;
+    public GameObject presetStartingTile;
+
 
     private void Awake()
     {
@@ -61,6 +75,8 @@ public class LocalLevel : MonoBehaviour
         }
         Instance = this;
 
+        //assign proper preset tile data for level
+        AssetDataSetup();
 
         //assign tileGen obj
         _myTileGen = FindObjectOfType<TileGeneration>();
@@ -183,6 +199,45 @@ public class LocalLevel : MonoBehaviour
             ar[r] = tmp;
         }
         return ar;
+    }
+
+    void AssetDataSetup()
+    {
+        switch (thisLevelTier)
+        {
+            case levelTier.level1:
+                //forest
+                presetTileAssets = new List<GameObject>(myLvlAssetData.forest_presetTileAssets);
+                presetBigTileAssets = new List<GameObject>(myLvlAssetData.forest_presetBigTileAssets);
+                presetObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetObjectiveTiles);
+                presetBigObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetBigTileObjectives);
+                presetStartingTile = myLvlAssetData.forest_presetStartingTile;
+                break;
+            case levelTier.level2:
+                //outskirts
+                presetTileAssets = new List<GameObject>(myLvlAssetData.outskirts_presetTileAssets);
+                presetBigTileAssets = new List<GameObject>(myLvlAssetData.outskirts_presetBigTileAssets);
+                presetObjectiveTiles = new List<GameObject>(myLvlAssetData.outskirts_presetObjectiveTiles);
+                presetBigObjectiveTiles = new List<GameObject>(myLvlAssetData.outskirts_presetBigTileObjectives);
+                presetStartingTile = myLvlAssetData.outskirts_presetStartingTile;
+                break;
+            case levelTier.level3:
+                presetTileAssets = new List<GameObject>(myLvlAssetData.forest_presetTileAssets);
+                presetBigTileAssets = new List<GameObject>(myLvlAssetData.forest_presetBigTileAssets);
+                presetObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetObjectiveTiles);
+                presetBigObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetBigTileObjectives);
+                presetStartingTile = myLvlAssetData.forest_presetStartingTile;
+                break;
+            case levelTier.level4:
+                presetTileAssets = new List<GameObject>(myLvlAssetData.forest_presetTileAssets);
+                presetBigTileAssets = new List<GameObject>(myLvlAssetData.forest_presetBigTileAssets);
+                presetObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetObjectiveTiles);
+                presetBigObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetBigTileObjectives);
+                presetStartingTile = myLvlAssetData.forest_presetStartingTile;
+                break;
+            default:
+                break;
+        }
     }
 
     #region Scene Transitions

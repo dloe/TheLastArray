@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Resource : Activatable
 {
@@ -13,6 +14,13 @@ public class Resource : Activatable
 
     public ResourceType resourceType;
     public int amountToAdd = 1;
+    public Text resourceText;
+    
+    public void Start()
+    {
+        amountToAdd = Random.Range(1, 4);
+        resourceText.text += " (" + amountToAdd + ")";
+    }
 
     public override void Activate()
     {

@@ -80,6 +80,7 @@ public class MinionAirDropBehavior : MonoBehaviour
             Detonation();
     }
 
+    bool check = false;
     /// <summary>
     /// Dylan Loe
     /// Updated: 4-12
@@ -102,9 +103,13 @@ public class MinionAirDropBehavior : MonoBehaviour
         }
 
         //spawn minion
-        Debug.Log("Spawn minion");
+        //Debug.Log("Spawn minion");
         //set y pos to 0.5f in case detonation takes place to soon
-        Instantiate(minion, transform.position, transform.rotation);
+        if (!check)
+        {
+            check = true;
+            Instantiate(minion, transform.position, transform.rotation);
+        }
 
         Destroy(this.gameObject);
     }

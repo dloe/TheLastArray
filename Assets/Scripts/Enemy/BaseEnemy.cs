@@ -40,6 +40,8 @@ public class BaseEnemy : MonoBehaviour
 
     public enemyState myState = enemyState.wandering;
 
+    public bool notWarden = false;
+
     // the base health of the enemy
     public int baseHealth = 5;
 
@@ -118,7 +120,7 @@ public class BaseEnemy : MonoBehaviour
     public GameObject projectile;
 
 
-    private void Start()
+    public virtual void Start()
     {
 
         _spawnPoint = transform.position;
@@ -202,6 +204,7 @@ public class BaseEnemy : MonoBehaviour
         switch (attackType)
         {
             case AttackType.none:
+                specialAttack(delta);
                 break;
             case AttackType.melee:
                 if (myState != enemyState.attacking && readyToAttack == true)
@@ -240,7 +243,11 @@ public class BaseEnemy : MonoBehaviour
         }
 
 
-        this.transform.LookAt(poi);
+        this.transform.LookAt(new Vector3(poi.x,this.transform.position.y,poi.z));
+    }
+    public virtual void specialAttack(Vector3 temp)
+    {
+
     }
 
     void StateChanger()
@@ -263,7 +270,7 @@ public class BaseEnemy : MonoBehaviour
     void BaseAttack()
     {
         RaycastHit attackRay;
-        if (attackType == AttackType.melee)
+        if (attackType == AttackType.melee || (attackType == AttackType.none && notWarden))
         {
             if (Physics.BoxCast(this.transform.position, Vector3.zero, transform.forward, out attackRay, transform.rotation, attackRange))
             {
@@ -421,7 +428,7 @@ public class BaseEnemy : MonoBehaviour
         }
     }
 
-    void OnDeath()
+    public virtual void OnDeath()
     {
         if (isObjectiveEnemy)
         {
