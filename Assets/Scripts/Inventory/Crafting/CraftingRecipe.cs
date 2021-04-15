@@ -218,6 +218,7 @@ public class CraftingRecipe : ScriptableObject
                 {
                     InventoryUI.Instance.AddSlot();
                     InventoryUI.Instance.AddSlot();
+                    player.hasBackPack = true;
                 }
                 else
                 {
