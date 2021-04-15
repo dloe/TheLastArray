@@ -18,6 +18,11 @@ public class WorldItem : Activatable
             gameObject.GetComponentInChildren<Image>().sprite = worldItemData.itemSprite;
         }
         gameObject.name = worldItemData.itemName + "_Interatable";
+
+        if(!worldItemData.name.Contains("Instance"))
+        {
+            worldItemData.loadedAmmo = worldItemData.magSize;
+        }
     }
 
     public override void Activate()
