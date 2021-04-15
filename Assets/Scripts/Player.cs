@@ -474,24 +474,24 @@ public class Player : MonoBehaviour
                 else if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
                 {
                     Debug.Log("Durability Before: " + inventory.selectedItem.itemData.durability);
+                    
+                    hit.transform.GetComponent<BaseEnemy>().TakeDamage(inventory.selectedItem.itemData.damage);
                     if (inventory.selectedItem.itemData.hasDurability)
                     {
                         inventory.selectedItem.itemData.durability--;
                         Debug.Log("Durability After: " + inventory.selectedItem.itemData.durability);
-                        
-                        InventoryUI.Instance.RefreshUI();
-                    }
-                    hit.transform.GetComponent<BaseEnemy>().TakeDamage(inventory.selectedItem.itemData.damage);
-                    if (inventory.selectedItem.itemData.durability <= 0)
-                    {
-                        if (inventory.selectedItem.itemData.name.Contains("Instance"))
+                        if (inventory.selectedItem.itemData.durability <= 0)
                         {
-                            Destroy(inventory.selectedItem.itemData);
-                            
+                            if (inventory.selectedItem.itemData.name.Contains("Instance"))
+                            {
+                                Destroy(inventory.selectedItem.itemData);
+
+
+                            }
+                            inventory.RemoveItem(inventory.selectedItem);
 
                         }
-                        inventory.RemoveItem(inventory.selectedItem);
-
+                        InventoryUI.Instance.RefreshUI();
                     }
                     Debug.Log("yep enemy hit");
                 }

@@ -45,6 +45,7 @@ public class Objectives : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log(Player.Instance);
         if (SceneManager.GetActiveScene().name == Player.Instance.baseData.trainSceneName)
         {
             gameObject.SetActive(false);
