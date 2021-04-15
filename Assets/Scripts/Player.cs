@@ -478,19 +478,21 @@ public class Player : MonoBehaviour
                     {
                         inventory.selectedItem.itemData.durability--;
                         Debug.Log("Durability After: " + inventory.selectedItem.itemData.durability);
-                        if (inventory.selectedItem.itemData.durability <= 0)
-                        {
-                            if (inventory.selectedItem.itemData.name.Contains("Instance"))
-                            {
-                                Destroy(inventory.selectedItem.itemData);
-                                inventory.RemoveItem(inventory.selectedItem);
-
-                            }
-
-                        }
+                        
                         InventoryUI.Instance.RefreshUI();
                     }
                     hit.transform.GetComponent<BaseEnemy>().TakeDamage(inventory.selectedItem.itemData.damage);
+                    if (inventory.selectedItem.itemData.durability <= 0)
+                    {
+                        if (inventory.selectedItem.itemData.name.Contains("Instance"))
+                        {
+                            Destroy(inventory.selectedItem.itemData);
+                            
+
+                        }
+                        inventory.RemoveItem(inventory.selectedItem);
+
+                    }
                     Debug.Log("yep enemy hit");
                 }
             }
