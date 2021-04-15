@@ -42,6 +42,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
     [Header("Enemies In Level")]
     public List<GameObject> enemiesInLevel = new List<GameObject>();
+    public List<GameObject> miniBossesInLevel = new List<GameObject>();
     List<GameObject> _possibleEnemiesInLevel = new List<GameObject>();
 
     [Header("number of possible drop prefabs")]
@@ -56,6 +57,7 @@ public class LevelAssetSpawn : MonoBehaviour
     public int collectables;
     [Header("Amount of enemies spawned in level")]
     public int enemyCount;
+    public int miniBossCount;
     static int tier1EnemyCap = 15;
     static int tier2EnemyCap = 22;
     static int tier3EnemyCap = 30;
@@ -533,6 +535,9 @@ public class LevelAssetSpawn : MonoBehaviour
                                 _bigTilesList.Add(fourSomeTile);
                                 _av = Vector3.zero;
                                 fourSomeTile.transform.parent = this.transform;
+
+                                bool canSpawnMiniBoss = false;
+
                                 foreach (Tile tile2 in _tArray)
                                 {
                                     _av += tile2.transform.position;
@@ -580,7 +585,12 @@ public class LevelAssetSpawn : MonoBehaviour
                                             foreach (GameObject enemy in mPresetTileInfo.GetComponent<PresetTileInfo>().enemiesOnPreset)
                                             {
                                                 _possibleEnemiesInLevel.Remove(enemy);
+                                                miniBossesInLevel.Remove(enemy);
+                                            }
 
+                                            if(tile3.endOfBranchPath)
+                                            {
+                                                canSpawnMiniBoss = true;
                                             }
 
                                             if (mPresetTileInfo.objectiveSpawn != null)
@@ -602,7 +612,7 @@ public class LevelAssetSpawn : MonoBehaviour
                                     tile3.checkFor4Some = true;
                                     tile3.transform.parent = fourSomeTile.transform;
                                 }
-                                SpawnLevelBigAsset(fourSomeTile, obj);
+                                SpawnLevelBigAsset(fourSomeTile, obj, canSpawnMiniBoss);
                                 return;
                             }
                         }
@@ -680,6 +690,9 @@ public class LevelAssetSpawn : MonoBehaviour
                                 _bigTilesList.Add(fourSomeTile);
                                 _av = Vector3.zero;
                                 fourSomeTile.transform.parent = this.transform;
+
+                                bool canSpawnMiniboss = false;
+
                                 foreach (Tile tile2 in _tArray)
                                 {
                                     _av += tile2.transform.position;
@@ -727,7 +740,7 @@ public class LevelAssetSpawn : MonoBehaviour
                                             foreach (GameObject enemy in mPresetTileInfo.GetComponent<PresetTileInfo>().enemiesOnPreset)
                                             {
                                                 _possibleEnemiesInLevel.Remove(enemy);
-
+                                                miniBossesInLevel.Remove(enemy);
                                             }
 
                                             if (mPresetTileInfo.objectiveSpawn != null)
@@ -735,7 +748,7 @@ public class LevelAssetSpawn : MonoBehaviour
                                                 _possibleObjectives.Remove(mPresetTileInfo.objectiveSpawn);
                                                 //Debug.Log("removed bad obj spot");
                                             }
-
+                                            
 
                                             _possibleTileObjectivesInLevel.Remove(tile3.presetTile);
                                         }
@@ -746,10 +759,15 @@ public class LevelAssetSpawn : MonoBehaviour
                                         // Debug.Log("(Due to 2 x 2 Linkage - Deleting: " + tile3.presetTile.gameObject + tile3.name);
                                         Destroy(tile3.presetTile.gameObject);
                                     }
+                                    if(tile3.endOfBranchPath)
+                                    {
+                                        canSpawnMiniboss = true;
+                                    }
+
                                     tile3.checkFor4Some = true;
                                     tile3.transform.parent = fourSomeTile.transform;
                                 }
-                                SpawnLevelBigAsset(fourSomeTile, obj);
+                                SpawnLevelBigAsset(fourSomeTile, obj, canSpawnMiniboss);
                                 return;
                             }
                         }
@@ -800,6 +818,19 @@ public class LevelAssetSpawn : MonoBehaviour
             preset.transform.parent = tile.transform.parent;
             tile.presetTile = preset;
             assetCountArray[index] += 1;
+
+            //check for miniboss
+            if(tile.endOfBranchPath)
+            {
+                if(preset.GetComponent<PresetTileInfo>().enemiesOnPreset.Length > 0)
+                {
+                    //if enemies can be picked from pick one
+                    int indexEnemies = Random.Range(0, preset.GetComponent<PresetTileInfo>().enemiesOnPreset.Length);
+
+                    miniBossesInLevel.Add(preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies]);
+                    _possibleEnemiesInLevel.Remove(preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies]);
+                }
+            }
 
             tile.levelAssetPlaced = true;
         }
@@ -882,7 +913,7 @@ public class LevelAssetSpawn : MonoBehaviour
     /// - spawns bigger 4 tile asset
     /// </summary>
     /// <param name="bigTile"> The parent of the 4 linked tiles being analyzed and spawned on. </param>
-    void SpawnLevelBigAsset(GameObject bigTile, bool hasObj)
+    void SpawnLevelBigAsset(GameObject bigTile, bool hasObj, bool canSpawnMiniBoss)
     {
         //Debug.Log("Spawned big boi");
         //will pick the least used preset but for now it will be random
@@ -905,6 +936,17 @@ public class LevelAssetSpawn : MonoBehaviour
             Debug.Log("BIG ASSET WITH OBJ");
         }
 
+        if(canSpawnMiniBoss)
+        {
+            if (preset.GetComponent<PresetTileInfo>().enemiesOnPreset.Length > 0)
+            {
+                //if enemies can be picked from pick one
+                int indexEnemies = Random.Range(0, preset.GetComponent<PresetTileInfo>().enemiesOnPreset.Length);
+
+                miniBossesInLevel.Add(preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies]);
+                _possibleEnemiesInLevel.Remove(preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies]);
+            }
+        }
 
         if (preset.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
         {
@@ -1344,7 +1386,10 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                else
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
                                 break;
                             case 1:
                                 enemy = myLevelAsset.enemyPrefab.dogEnemy;
@@ -1359,7 +1404,10 @@ public class LevelAssetSpawn : MonoBehaviour
                         }
                         break;
                     case EnemyWeightType.Outcast:
-                        enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                        if (Random.value <= 0.5f)
+                            enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                        else
+                            enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
                         //tier 1
                         break;
                     case EnemyWeightType.Dog:
@@ -1373,7 +1421,7 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
                                 break;
                             case 1:
                                 enemy = myLevelAsset.enemyPrefab.dogEnemy;
@@ -1393,7 +1441,10 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                else
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
                                 break;
                             case 1:
                                 enemy = myLevelAsset.enemyPrefab.dogEnemy;
@@ -1413,7 +1464,10 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                else
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
                                 break;
                             case 1:
                                 enemy = myLevelAsset.enemyPrefab.dogEnemy;
@@ -1433,7 +1487,10 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                else
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
                                 break;
                             case 1:
                                 enemy = myLevelAsset.enemyPrefab.dogEnemy;
@@ -1457,7 +1514,10 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                else
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
                                 break;
                             case 1:
                                 enemy = myLevelAsset.enemyPrefab.dogEnemy;
@@ -1477,7 +1537,10 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                else
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
                                 break;
                             case 1:
                                 enemy = myLevelAsset.enemyPrefab.dogEnemy;
@@ -1530,7 +1593,10 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                else
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
                                 break;
                             case 1:
                                 enemy = myLevelAsset.enemyPrefab.dogEnemy;
@@ -1554,7 +1620,11 @@ public class LevelAssetSpawn : MonoBehaviour
                         }
                         break;
                     case EnemyWeightType.Outcast:
-                        enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                        //enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                        if (Random.value <= 0.5f)
+                            enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                        else
+                            enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
                         //tier 1
                         break;
                     case EnemyWeightType.Dog:
@@ -1577,7 +1647,11 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                // enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                else
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
                                 break;
                             case 1:
                                 enemy = myLevelAsset.enemyPrefab.dogEnemy;
@@ -1610,7 +1684,11 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                //enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                else
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
                                 break;
                             case 1:
                                 enemy = myLevelAsset.enemyPrefab.dogEnemy;
@@ -1639,7 +1717,11 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                //enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                else
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
                                 break;
                             case 1:
                                 enemy = myLevelAsset.enemyPrefab.dogEnemy;
@@ -1699,7 +1781,10 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                else
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
                                 break;
                             case 1:
                                 enemy = myLevelAsset.enemyPrefab.dogEnemy;
@@ -1732,7 +1817,10 @@ public class LevelAssetSpawn : MonoBehaviour
                         }
                         break;
                     case EnemyWeightType.Outcast:
-                        enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                        if (Random.value <= 0.5f)
+                            enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                        else
+                            enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
                         break;
                     case EnemyWeightType.Dog:
                         enemy = myLevelAsset.enemyPrefab.dogEnemy;

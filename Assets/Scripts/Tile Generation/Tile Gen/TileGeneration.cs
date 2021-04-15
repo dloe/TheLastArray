@@ -747,10 +747,12 @@ public class TileGeneration : MonoBehaviour
                     //if this tile is on the active tile list, remove it so we dont see it again later
 
                 }
-               // if(t != 0)
-                //{
-                   // _branch[t].SyncDoors();
-                //}
+                if(t == _branch.Count - 1)
+                {
+                    //mark as end of branch for possible miniboss spawning
+                    _branch[t].endOfBranchPath = true;
+                    
+                }
             }
 
             //---------------------

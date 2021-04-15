@@ -56,7 +56,7 @@ public class Tile : MonoBehaviour
     //[HideInInspector]
     //what number does this tile have on path (-1 means not on path)
     public int pathNumber = -1;
-
+    public bool endOfBranchPath = false;
     
     [HideInInspector]
     //is this tile connected to path (like branch or other)

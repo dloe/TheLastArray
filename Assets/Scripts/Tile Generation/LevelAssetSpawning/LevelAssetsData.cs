@@ -5,7 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class EnemyPrefab
 {
-    public GameObject outcastEnemy;
+    public GameObject outcastEnemyRanged;
+    public GameObject outcastEnemyMelee;
     public GameObject dogEnemy;
     public GameObject wardenEnemy;
     public GameObject stalkerEnemy;

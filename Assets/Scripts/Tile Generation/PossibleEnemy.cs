@@ -25,4 +25,5 @@ public enum EnemyWeightType
 public class PossibleEnemy : MonoBehaviour
 {
     public EnemyWeightType type;
+    public bool canBeMiniBoss = false;
 }
