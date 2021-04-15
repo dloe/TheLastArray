@@ -171,7 +171,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 //Debug.Log("Player Spawn set");
                 StartCoroutine(setPlayerPosition(play, playerSpawn.transform.position));
 
-                myLocalLevel.myPlayer = play.transform.GetChild(0).gameObject.GetComponent<Player>();
+                myLocalLevel.myPlayer = play.transform.GetChild(1).gameObject.GetComponent<Player>();
             }
         }
 
@@ -2061,7 +2061,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 Destroy(_possibleEnemiesInLevel[enemyCount]);
                 if (mPossibleEnemy.canBeMiniBoss)
                 {
-                    Debug.Log("cehck");
+                    //Debug.Log("cehck");
                     enemy.name += "_MINIBOSS";
                     miniBossesInLevel.Add(enemy);
                     currentMiniBossCount++;
