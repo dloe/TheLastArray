@@ -78,18 +78,14 @@ public class LevelAssetSpawn : MonoBehaviour
 
     static private float twoBYtwo_SpawnChance = 0.25f;
 
-    private void Awake()
-    {
-        assetCountArray = new int[myLevelAsset.presetTileAssets.Count];
-        bigAssetCountArray = new int[myLevelAsset.presetBigTileAssets.Count];
-
-    }
 
     /// <summary>
     /// Populate grid with assets, called from TileGeneration once it is done setting up
     /// </summary>
     public void PopulateGrid()
     {
+        assetCountArray = new int[myLocalLevel.presetTileAssets.Count];
+        bigAssetCountArray = new int[myLocalLevel.presetBigTileAssets.Count];
         //Debug.Log("Populating Level with Assets...");
 
         GridAnalysis();
@@ -799,7 +795,7 @@ public class LevelAssetSpawn : MonoBehaviour
         // Debug.Log(index);
         if (tile.tileStatus != Tile.TileStatus.boss)
         {
-            preset = Instantiate(myLevelAsset.presetTileAssets[index], tile.transform.position, tile.transform.rotation);
+            preset = Instantiate(myLocalLevel.presetTileAssets[index], tile.transform.position, tile.transform.rotation);
             tile.presetNum = index;
             preset.transform.parent = tile.transform.parent;
             tile.presetTile = preset;
@@ -809,7 +805,7 @@ public class LevelAssetSpawn : MonoBehaviour
         }
         else
         {
-            GameObject tileObj = myLevelAsset.presetObjectiveTiles[Random.Range(0, myLevelAsset.presetObjectiveTiles.Count)];
+            GameObject tileObj = myLocalLevel.presetObjectiveTiles[Random.Range(0, myLocalLevel.presetObjectiveTiles.Count)];
             //if  this tile is the final room, make sure it has an objective
             if (myLocalLevel.thisLevelTier == levelTier.level4)
             {
@@ -843,7 +839,7 @@ public class LevelAssetSpawn : MonoBehaviour
             preset.transform.parent = tile.transform.parent;
             preset.transform.localEulerAngles = rotation;
             tile.presetTile = preset;
-            int tileIndex = myLevelAsset.presetTileAssets.IndexOf(myLevelAsset.presetObjectiveTiles[Random.Range(0, myLevelAsset.presetObjectiveTiles.Count)]);
+            int tileIndex = myLocalLevel.presetTileAssets.IndexOf(myLocalLevel.presetObjectiveTiles[Random.Range(0, myLocalLevel.presetObjectiveTiles.Count)]);
             //Debug.Log(tileIndex);
             assetCountArray[tileIndex] += 1;
             tile.presetNum = tileIndex;
@@ -890,18 +886,18 @@ public class LevelAssetSpawn : MonoBehaviour
     {
         //Debug.Log("Spawned big boi");
         //will pick the least used preset but for now it will be random
-        int index = Random.Range(0, myLevelAsset.presetBigTileAssets.Count);
+        int index = Random.Range(0, myLocalLevel.presetBigTileAssets.Count);
         GameObject preset;
         if (!hasObj)
         {
-            preset = Instantiate(myLevelAsset.presetBigTileAssets[index], bigTile.transform.position, bigTile.transform.rotation);
+            preset = Instantiate(myLocalLevel.presetBigTileAssets[index], bigTile.transform.position, bigTile.transform.rotation);
             preset.transform.parent = bigTile.transform;
 
             bigAssetCountArray[index] += 1;
         }
         else
         {
-            preset = Instantiate(myLevelAsset.presetBigTileAssets[1], bigTile.transform.position, bigTile.transform.rotation);
+            preset = Instantiate(myLocalLevel.presetBigTileAssets[1], bigTile.transform.position, bigTile.transform.rotation);
             preset.transform.parent = bigTile.transform;
 
             bigAssetCountArray[1] += 1;
