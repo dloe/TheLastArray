@@ -1,5 +1,163 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &897166369336881720
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5645220106858586687}
+  - component: {fileID: 2005940967709374558}
+  - component: {fileID: 6111689189527988048}
+  m_Layer: 22
+  m_Name: Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5645220106858586687
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 897166369336881720}
+  m_LocalRotation: {x: -0, y: 0.023343187, z: -0, w: 0.99972755}
+  m_LocalPosition: {x: -0.35, y: 0.391, z: 0.396}
+  m_LocalScale: {x: 0.16474418, y: 0.16474418, z: 0.5765058}
+  m_Children: []
+  m_Father: {fileID: 3026296788328612621}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 2.6750002, z: 0}
+--- !u!33 &2005940967709374558
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 897166369336881720}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &6111689189527988048
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 897166369336881720}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!1 &2738026228263426368
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 336631186961187851}
+  - component: {fileID: 3594118872177016183}
+  - component: {fileID: 4283403630381579281}
+  m_Layer: 22
+  m_Name: Cube (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &336631186961187851
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2738026228263426368}
+  m_LocalRotation: {x: -0, y: 0.023343187, z: -0, w: 0.99972755}
+  m_LocalPosition: {x: 0.352, y: 0.371, z: 0.363}
+  m_LocalScale: {x: 0.16474418, y: 0.16474418, z: 0.5765058}
+  m_Children: []
+  m_Father: {fileID: 3026296788328612621}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 2.6750002, z: 0}
+--- !u!33 &3594118872177016183
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2738026228263426368}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &4283403630381579281
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2738026228263426368}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
 --- !u!1 &3026296788328612720
 GameObject:
   m_ObjectHideFlags: 0
@@ -31,7 +189,9 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 12.69, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 5645220106858586687}
+  - {fileID: 336631186961187851}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -113,6 +273,7 @@ MonoBehaviour:
   isObjectiveEnemy: 0
   myType: 0
   myState: 0
+  notWarden: 0
   baseHealth: 10
   baseAttack: 4
   baseSpeed: 3
@@ -132,10 +293,29 @@ MonoBehaviour:
   agroLoseDis: 30
   attackRange: 1.6
   projectile: {fileID: 0}
-  itemsToDrop:
-  - {fileID: 5592362334672371228, guid: 2af283d9837165744aee86904560b21d, type: 3}
-  - {fileID: 5365553755346175783, guid: 640c04ae91d93184c9d9e74ae12971ae, type: 3}
-  - {fileID: 2097489239979528253, guid: f333b97cfe79e354ebc031ece830d079, type: 3}
+  dropableItem:
+  - itemToDrop: {fileID: 0}
+    bottomChance: 0
+    topChance: 30
+  - itemToDrop: {fileID: 5365553755346175783, guid: 640c04ae91d93184c9d9e74ae12971ae,
+      type: 3}
+    bottomChance: 31
+    topChance: 50
+  - itemToDrop: {fileID: 5365553755346175783, guid: 8c00929c69581764da7f7c9d1e34a659,
+      type: 3}
+    bottomChance: 51
+    topChance: 70
+  - itemToDrop: {fileID: 8000860620030751788, guid: 8bd6bd81e8f419d4a8474e8909c3e22e,
+      type: 3}
+    bottomChance: 71
+    topChance: 90
+  - itemToDrop: {fileID: 0}
+    bottomChance: 91
+    topChance: 94
+  - itemToDrop: {fileID: 5592362334672371228, guid: 54ccf75b61b34334ab8bcdafede0ce90,
+      type: 3}
+    bottomChance: 95
+    topChance: 100
 --- !u!54 &941149546
 Rigidbody:
   m_ObjectHideFlags: 0
