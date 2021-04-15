@@ -54,6 +54,7 @@ public class Objectives : MonoBehaviour
 
     public void UpdateObjectiveText()
     {
+        //Debug.Log("check");
         if (mainObjective.objectiveMessage == gasMessage || mainObjective.objectiveMessage == generatorMessage)
         {
             objectiveText.text = mainObjective.objectiveMessage + " " + (objectiveCount - mainObjective.numTimes) + "/" + objectiveCount;
@@ -115,8 +116,42 @@ public class Objectives : MonoBehaviour
         return returnObj;
     }
 
-
-    
+    /// <summary>
+    /// Dylan
+    /// 
+    /// - temporary objective tracker for last level
+    /// </summary>
+    /// <param name="phase"> to show what part of objective player is on </param>
+    public void UpdateFinalObjective(int phase)
+    {
+        if(phase == 0)
+        {
+            Debug.Log("Spawned boss");
+            finalMessage = "Survive";
+            mainObjective.objectiveMessage = finalMessage;
+            UpdateObjectiveText();
+        }
+        else if(phase == 1)
+        {
+            Debug.Log("Activate array");
+            finalMessage = "Activate Last Array";
+            mainObjective.objectiveMessage = finalMessage;
+            UpdateObjectiveText();
+        }
+        else if(phase == 2)
+        {
+            Debug.Log("objective complete");
+            finalMessage = "Return to Train for Extraction";
+            mainObjective.objectiveMessage = finalMessage;
+            UpdateObjectiveText();
+        }
+        else if(phase == 3)
+        {
+            Debug.Log("last objective");
+            finalMessage = "Locate the Last Array";
+            UpdateObjectiveText();
+        }
+    }
     
 
 

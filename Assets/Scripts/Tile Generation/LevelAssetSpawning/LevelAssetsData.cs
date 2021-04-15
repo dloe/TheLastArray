@@ -5,7 +5,8 @@ using UnityEngine;
 [System.Serializable]
 public class EnemyPrefab
 {
-    public GameObject outcastEnemy;
+    public GameObject outcastEnemyRanged;
+    public GameObject outcastEnemyMelee;
     public GameObject dogEnemy;
     public GameObject wardenEnemy;
     public GameObject stalkerEnemy;
@@ -42,21 +43,43 @@ public class LevelAssetsData : ScriptableObject
     [Header("Level Tier")]
     public int levelTier = 0;
     [Space(10)]
-    [Header("Starting Tile Prefabs")]
-    public List<GameObject> presetStartingTileAssets;
-    [Header("The Small 1 Tile Preset Variations")]
-    public List<GameObject> presetTileAssets;
-    [Header("The Big 4 Tile Preset Variations")]
-    public List<GameObject> presetBigTileAssets;
-    [Header("Secret Room Varations")]
-    public List<GameObject> secretRoomAssets;
-    [Space(10)]
     public EnemyPrefab enemyPrefab;
+    public EnemyPrefab EnemyMINIBOSSPrefab;
     [Space(10)]
-    [Header("Tile Prefabs with objectives")]
-    public List<GameObject> presetObjectiveTiles;
+    
     [Header("Boss Detection")]
     public GameObject bossDetection;
     public GameObject bossTileLastArray;
+
+    //[Header("Starting Tile Prefabs")]
+    //public List<GameObject> presetStartingTileAssets;
+
+    [Header("Secret Room Varations")]
+    public List<GameObject> secretRoomAssets;
+    [Space(10)]
+    [Header("Different varients of perset tile (by themes)")]
+    [Header("Forest")]
+    [Header("The Small 1 Tile Preset Variations")]
+    public List<GameObject> forest_presetTileAssets;
+    [Header("The Big 4 Tile Preset Variations")]
+    public List<GameObject> forest_presetBigTileAssets;
+    [Header("Small Tile Prefabs with objectives")]
+    public List<GameObject> forest_presetObjectiveTiles;
+    [Header("Big Tile Prefabs with objects")]
+    public List<GameObject> forest_presetBigTileObjectives;
+    [Header("Tile starting tile")]
+    public GameObject forest_presetStartingTile;
+    [Space(5)]
+    [Header("Outskirts")]
+    [Header("The Small 1 Tile Preset Variations")]
+    public List<GameObject> outskirts_presetTileAssets;
+    [Header("The Big 4 Tile Preset Variations")]
+    public List<GameObject> outskirts_presetBigTileAssets;
+    [Header("Tile Prefabs with objectives")]
+    public List<GameObject> outskirts_presetObjectiveTiles;
+    [Header("Big Tile Prefabs with objects")]
+    public List<GameObject> outskirts_presetBigTileObjectives;
+    [Header("Tile starting tile")]
+    public GameObject outskirts_presetStartingTile;
 }
 

@@ -40,43 +40,82 @@ MonoBehaviour:
   - {fileID: 0}
   keyData: {fileID: 11400000, guid: f5dc6cc82c46e4545b3c5588fb3aa2c4, type: 2}
   levelTier: 1
-  presetStartingTileAssets:
-  - {fileID: 5920207283979134193, guid: 5886b7dd836c3a2498e287084aff5bd3, type: 3}
-  presetTileAssets:
+  enemyPrefab:
+    outcastEnemyRanged: {fileID: 5936581776603195737, guid: 1fd0623acc1c4274aa345fd3413a5f4d,
+      type: 3}
+    outcastEnemyMelee: {fileID: 3026296788328612720, guid: b542a32ce6acf6f45ae122e4d05fedd7,
+      type: 3}
+    dogEnemy: {fileID: 3026296788328612720, guid: b542a32ce6acf6f45ae122e4d05fedd7,
+      type: 3}
+    wardenEnemy: {fileID: 2945613408608033783, guid: 38b510bb934ff714cbfffa5fa1ab3e3f,
+      type: 3}
+    stalkerEnemy: {fileID: 3735092165022855664, guid: 0778cb689473b0c448c7e177312bda61,
+      type: 3}
+    spitterEnemy: {fileID: 4754676294027055966, guid: 6ea8098e2b54976469ce2def4fcb224e,
+      type: 3}
+    shadowEnemy: {fileID: 2991571648610066384, guid: 5cb940d0f616f874f9c57dc4d155a1bf,
+      type: 3}
+    lostOneEnemy: {fileID: 6263994880208539687, guid: b5054fc2551c64b428f275d7210f29f6,
+      type: 3}
+    fuglyEnemy: {fileID: 7515553172443960076, guid: 208719bdd29f3c24d96ff233c2d0d9ae,
+      type: 3}
+    dozerEnemy: {fileID: 7515553172443960076, guid: 208719bdd29f3c24d96ff233c2d0d9ae,
+      type: 3}
+  EnemyMINIBOSSPrefab:
+    outcastEnemyRanged: {fileID: 738135234709192363, guid: b285615814af1434a92a1daa2f04dd91,
+      type: 3}
+    outcastEnemyMelee: {fileID: 3956703461566894387, guid: a1fd7dcec70618b4f8322b700895db9e,
+      type: 3}
+    dogEnemy: {fileID: 3956703461566894387, guid: a1fd7dcec70618b4f8322b700895db9e,
+      type: 3}
+    wardenEnemy: {fileID: 2857951345878593036, guid: d29c9646d642a074d830fbb956ef669e,
+      type: 3}
+    stalkerEnemy: {fileID: 4812438487678446091, guid: 91adf10d0cb39934faa4b33bd27e5bcc,
+      type: 3}
+    spitterEnemy: {fileID: 4832307950259442110, guid: 2933cb87891bdf54d916efb7be9043ae,
+      type: 3}
+    shadowEnemy: {fileID: 5967549400247981277, guid: 1d64b125347086a4bbd5795b7f7acd5a,
+      type: 3}
+    lostOneEnemy: {fileID: 1021839711745790132, guid: 220e9737809b7a7479d008b853dbb78b,
+      type: 3}
+    fuglyEnemy: {fileID: 1026431151281626147, guid: e7fabfced798c5343ab5401ba2fd2120,
+      type: 3}
+    dozerEnemy: {fileID: 1026431151281626147, guid: e7fabfced798c5343ab5401ba2fd2120,
+      type: 3}
+  bossDetection: {fileID: 1661849643039973771, guid: a8409c24e21c95f42859dc182b1f2f11,
+    type: 3}
+  bossTileLastArray: {fileID: 8020160294585728237, guid: 045ef29b13a8cb549b7f3c2d593ae8f3,
+    type: 3}
+  secretRoomAssets:
+  - {fileID: 1451995107224220843, guid: 61444b11e0d0683488817bd1ef844f3c, type: 3}
+  forest_presetTileAssets:
   - {fileID: 6788155082730055033, guid: cbd83895cbe4fe34a91d7cfaadea49d9, type: 3}
   - {fileID: 2491550240180468348, guid: 1e46d7aba3697234c92ea1a7f666327c, type: 3}
   - {fileID: 4271971832177901491, guid: 175cbaafe5faa7246b80c0e88719dfe6, type: 3}
   - {fileID: 1094030203275173360, guid: c5a72eaeb8c16af499ef2ad0c0f85b1e, type: 3}
   - {fileID: 49113382130430813, guid: d5ea87be3ea3eaf4091c3714ecf0e422, type: 3}
   - {fileID: 706230309678498519, guid: a0ab7e7f868dd984e92a83a2ee21e253, type: 3}
-  presetBigTileAssets:
+  forest_presetBigTileAssets:
   - {fileID: 5309213323416237651, guid: 670caa19829d1ed428f9582ded567620, type: 3}
   - {fileID: 6055382818629170747, guid: 09406fb1f6994fc4d8b59a2722d967fd, type: 3}
-  secretRoomAssets:
-  - {fileID: 1451995107224220843, guid: 61444b11e0d0683488817bd1ef844f3c, type: 3}
-  enemyPrefab:
-    outcastEnemy: {fileID: 2991571648610066384, guid: 5cb940d0f616f874f9c57dc4d155a1bf,
-      type: 3}
-    dogEnemy: {fileID: 2991571648610066384, guid: 5cb940d0f616f874f9c57dc4d155a1bf,
-      type: 3}
-    wardenEnemy: {fileID: 7515553172443960076, guid: 208719bdd29f3c24d96ff233c2d0d9ae,
-      type: 3}
-    stalkerEnemy: {fileID: 2991571648610066384, guid: 5cb940d0f616f874f9c57dc4d155a1bf,
-      type: 3}
-    spitterEnemy: {fileID: 7515553172443960076, guid: 208719bdd29f3c24d96ff233c2d0d9ae,
-      type: 3}
-    shadowEnemy: {fileID: 2991571648610066384, guid: 5cb940d0f616f874f9c57dc4d155a1bf,
-      type: 3}
-    lostOneEnemy: {fileID: 7515553172443960076, guid: 208719bdd29f3c24d96ff233c2d0d9ae,
-      type: 3}
-    fuglyEnemy: {fileID: 7515553172443960076, guid: 208719bdd29f3c24d96ff233c2d0d9ae,
-      type: 3}
-    dozerEnemy: {fileID: 7515553172443960076, guid: 208719bdd29f3c24d96ff233c2d0d9ae,
-      type: 3}
-  presetObjectiveTiles:
+  forest_presetObjectiveTiles:
   - {fileID: 2491550240180468348, guid: 1e46d7aba3697234c92ea1a7f666327c, type: 3}
   - {fileID: 706230309678498519, guid: a0ab7e7f868dd984e92a83a2ee21e253, type: 3}
-  bossDetection: {fileID: 1661849643039973771, guid: a8409c24e21c95f42859dc182b1f2f11,
+  forest_presetBigTileObjectives:
+  - {fileID: 6055382818629170747, guid: 09406fb1f6994fc4d8b59a2722d967fd, type: 3}
+  forest_presetStartingTile: {fileID: 5920207283979134193, guid: 5886b7dd836c3a2498e287084aff5bd3,
     type: 3}
-  bossTileLastArray: {fileID: 8020160294585728237, guid: 045ef29b13a8cb549b7f3c2d593ae8f3,
+  outskirts_presetTileAssets:
+  - {fileID: 3453678062230488893, guid: 48a4108abb027cf47ae75f579a547075, type: 3}
+  - {fileID: 8491958751569609819, guid: 257719607739cfc4cb739d1ab071cea6, type: 3}
+  - {fileID: 4282564080898043940, guid: 51324c7ea5b0755429e722bf4aebecaa, type: 3}
+  - {fileID: 447539440142192531, guid: 61e929e5a0293564f99017fc498e7e6d, type: 3}
+  - {fileID: 9167645457358671312, guid: de37045950007434597d2eebffe2022d, type: 3}
+  - {fileID: 2696050778315923679, guid: 6b1168b20d9dbde419a1cf85b5eba099, type: 3}
+  outskirts_presetBigTileAssets: []
+  outskirts_presetObjectiveTiles:
+  - {fileID: 4282564080898043940, guid: 51324c7ea5b0755429e722bf4aebecaa, type: 3}
+  - {fileID: 8491958751569609819, guid: 257719607739cfc4cb739d1ab071cea6, type: 3}
+  outskirts_presetBigTileObjectives: []
+  outskirts_presetStartingTile: {fileID: 4848572554297731142, guid: 5674621dffa6296498ef9290b5b2b1a9,
     type: 3}

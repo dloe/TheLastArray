@@ -152,12 +152,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tempEndLevel: 0
   myPlayerData: {fileID: 11400000, guid: 56bd1463a4fbb7648baa0b3fb1fe334c, type: 2}
+  myLvlAssetData: {fileID: 11400000, guid: 92ab8452f29185041b2d0ac31e64e594, type: 2}
   _posObjectives: 
   transBar: {fileID: 1590245071}
   objective: 0
   _myObjs: {fileID: 966245025}
   myPlayer: {fileID: 0}
   thisLevelTier: 3
+  presetStartingTileAssets: []
+  presetTileAssets: []
+  presetBigTileAssets: []
+  presetObjectiveTiles: []
 --- !u!4 &276886928
 Transform:
   m_ObjectHideFlags: 0
@@ -203,6 +208,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TileGen
+      objectReference: {fileID: 0}
+    - target: {fileID: 4003264855528296061, guid: 9b9cea3461719ad4fb4fd11d2c2b63fb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4003264855528296062, guid: 9b9cea3461719ad4fb4fd11d2c2b63fb,
         type: 3}
@@ -440,7 +450,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &952306325
 GameObject:
@@ -546,36 +556,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c105f75320f2f3445a35069bea08e19e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1514382806
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1514382807}
-  m_Layer: 0
-  m_Name: ObjectiveSpawn
-  m_TagString: Untagged
-  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1514382807
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1514382806}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: -6}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1590245069
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,12 +640,17 @@ PrefabInstance:
     - target: {fileID: 5846302392562144004, guid: 5736b444104112c4eb0432f9dd4357c7,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8423679397287645227, guid: 5736b444104112c4eb0432f9dd4357c7,
         type: 3}
       propertyPath: m_Name
       value: Objectives
+      objectReference: {fileID: 0}
+    - target: {fileID: 8423679397287645227, guid: 5736b444104112c4eb0432f9dd4357c7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8423679397287645237, guid: 5736b444104112c4eb0432f9dd4357c7,
         type: 3}

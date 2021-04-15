@@ -42,6 +42,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
     [Header("Enemies In Level")]
     public List<GameObject> enemiesInLevel = new List<GameObject>();
+    public List<GameObject> miniBossesInLevel = new List<GameObject>();
     List<GameObject> _possibleEnemiesInLevel = new List<GameObject>();
 
     [Header("number of possible drop prefabs")]
@@ -56,13 +57,19 @@ public class LevelAssetSpawn : MonoBehaviour
     public int collectables;
     [Header("Amount of enemies spawned in level")]
     public int enemyCount;
+    public int possibleminiBossCount;
+    static int tier1MiniBossCap = 1;
+    static int tier2MiniBossCap = 1;
+    static int tier3MiniBossCap = 2;
+    static int tier4MiniBossCap = 2;
+    int _miniBossCap;
     static int tier1EnemyCap = 15;
     static int tier2EnemyCap = 22;
     static int tier3EnemyCap = 30;
     static int tier1CollectableCap = 25;
     static int tier2CollectableCap = 20;
     static int tier3CollectableCap = 17;
-
+    public int currentMiniBossCount = 0;
     //first number represents the number of times tiles in that list were spawned
     //second number represents the tile numbers that were spawned that amount of times
     List<List<int>> _magAssetCount;
@@ -78,13 +85,29 @@ public class LevelAssetSpawn : MonoBehaviour
 
     static private float twoBYtwo_SpawnChance = 0.25f;
 
-    private void Awake()
+    //sets some values when this script is first called
+    void StartUpLevelAssetSpawn()
     {
-       // Debug.Log("y");
-        assetCountArray = new int[myLevelAsset.presetTileAssets.Count];
-        bigAssetCountArray = new int[myLevelAsset.presetBigTileAssets.Count];
+        assetCountArray = new int[myLocalLevel.presetTileAssets.Count];
+        bigAssetCountArray = new int[myLocalLevel.presetBigTileAssets.Count];
 
-        //Debug.Log("n");
+        switch (myLocalLevel.thisLevelTier)
+        {
+            case levelTier.level1:
+                _miniBossCap = tier1MiniBossCap;
+                break;
+            case levelTier.level2:
+                _miniBossCap = tier2MiniBossCap;
+                break;
+            case levelTier.level3:
+                _miniBossCap = tier3MiniBossCap;
+                break;
+            case levelTier.level4:
+                _miniBossCap = tier4MiniBossCap;
+                break;
+            default:
+                break;
+        }
     }
 
     /// <summary>
@@ -92,6 +115,9 @@ public class LevelAssetSpawn : MonoBehaviour
     /// </summary>
     public void PopulateGrid()
     {
+        StartUpLevelAssetSpawn();
+
+
         //Debug.Log("Populating Level with Assets...");
 
         GridAnalysis();
@@ -113,7 +139,7 @@ public class LevelAssetSpawn : MonoBehaviour
         ActivateEnemies();
 
     }
-
+    GameObject play;
     /// <summary>
     /// checks each tile for purpose of adding walls, linking 2 x 2, bringing in 2 x 2 tiles
     /// </summary>
@@ -123,7 +149,10 @@ public class LevelAssetSpawn : MonoBehaviour
         foreach (Tile t in myTileGeneration._allActiveTiles)
         {
             t.ActivateWalls();
-            AnalyzeTile(t);
+            if (myLocalLevel.thisLevelTier != levelTier.level4)
+                AnalyzeTile(t);
+            else
+                AnalyzeTile_Lvl4Modifier(t);
 
             //condisider first linking 2 x 2s then goingthrough to activate walls
 
@@ -138,8 +167,8 @@ public class LevelAssetSpawn : MonoBehaviour
                 }
                 playerSpawn = t.presetTile.GetComponent<PresetTileInfo>().playerSpawn;
                 //SPAWN PLAYER
-                GameObject play = Instantiate(playerPref, Vector3.zero, playerSpawn.transform.rotation);
-                Debug.Log("Player Spawn set");
+                play = Instantiate(playerPref, Vector3.zero, playerSpawn.transform.rotation);
+                //Debug.Log("Player Spawn set");
                 StartCoroutine(setPlayerPosition(play, playerSpawn.transform.position));
 
                 myLocalLevel.myPlayer = play.transform.GetChild(0).gameObject.GetComponent<Player>();
@@ -156,7 +185,7 @@ public class LevelAssetSpawn : MonoBehaviour
     //doors would be active linking tiles, just add doors on sides that dont have doors yeet im so tired please help i feel myself slowly drifitng away into oblivion oh god
     void ActivateLvl4Walls()
     {
-        Debug.Log("start activate");
+        //Debug.Log("start activate");
         foreach (Tile t in myTileGeneration._allActiveTiles)
         {
             if (t.tileStatus != Tile.TileStatus.startingRoom)
@@ -177,14 +206,17 @@ public class LevelAssetSpawn : MonoBehaviour
                         t.ReSyncDoors();
                     }
 
-                    if ((t.doors[0].tag == "Door" && t.doors[0].GetComponent<DoorBehavior>().notInUse) || (t.upNeighbor.doors[1].tag == "Door" && t.upNeighbor.doors[1].GetComponent<DoorBehavior>().notInUse))
+                    if (t.upNeighbor.tileStatus != Tile.TileStatus.startingRoom)
                     {
-                        wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
-                        wall.transform.parent = t.transform;
-                        wall.transform.localPosition = new Vector3(-12.5f, 5, 0);
-                        wall.transform.eulerAngles = new Vector3(-90, 0, -90);
-                        wall.name = "WallPlaceholder_LVL4WALLFUNCTION_0";
-                        t.doors[0] = wall;
+                        if ((t.doors[0].tag == "Door" && t.doors[0].GetComponent<DoorBehavior>().notInUse) || (t.upNeighbor.doors[1].tag == "Door" && t.upNeighbor.doors[1].GetComponent<DoorBehavior>().notInUse))
+                        {
+                            wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
+                            wall.transform.parent = t.transform;
+                            wall.transform.localPosition = new Vector3(-12.5f, 5, 0);
+                            wall.transform.eulerAngles = new Vector3(-90, 0, -90);
+                            wall.name = "WallPlaceholder_LVL4WALLFUNCTION_0";
+                            t.doors[0] = wall;
+                        }
                     }
                     //else
                     //    Debug.Log("dont spawn wall between " + t.name + " and " + t.upNeighbor.name);
@@ -204,14 +236,17 @@ public class LevelAssetSpawn : MonoBehaviour
                         t.ReSyncDoors();
                     }
 
-                    if ((t.doors[1].tag == "Door" && t.doors[1].GetComponent<DoorBehavior>().notInUse) || (t.downNeighbor.doors[0].tag == "Door" && t.downNeighbor.doors[0].GetComponent<DoorBehavior>().notInUse))
+                    if (t.downNeighbor.tileStatus != Tile.TileStatus.startingRoom)
                     {
-                        wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
-                        wall.transform.parent = t.transform;
-                        wall.transform.localPosition = new Vector3(12.5f, 5, 0);
-                        wall.transform.eulerAngles = new Vector3(-90, 0, 90);
-                        wall.name = "WallPlaceholder_LVL4WALLFUNCTION_1";
-                        t.doors[1] = wall;
+                        if ((t.doors[1].tag == "Door" && t.doors[1].GetComponent<DoorBehavior>().notInUse) || (t.downNeighbor.doors[0].tag == "Door" && t.downNeighbor.doors[0].GetComponent<DoorBehavior>().notInUse))
+                        {
+                            wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
+                            wall.transform.parent = t.transform;
+                            wall.transform.localPosition = new Vector3(12.5f, 5, 0);
+                            wall.transform.eulerAngles = new Vector3(-90, 0, 90);
+                            wall.name = "WallPlaceholder_LVL4WALLFUNCTION_1";
+                            t.doors[1] = wall;
+                        }
                     }
                     //else
                     //    Debug.Log("dont spawn wall between " + t.name + " and " + t.downNeighbor.name);
@@ -231,14 +266,17 @@ public class LevelAssetSpawn : MonoBehaviour
                         t.ReSyncDoors();
                     }
 
-                    if ((t.doors[2].tag == "Door" && t.doors[2].GetComponent<DoorBehavior>().notInUse) || (t.leftNeighbor.doors[3].tag == "Door" && t.leftNeighbor.doors[3].GetComponent<DoorBehavior>().notInUse))
+                    if (t.leftNeighbor.tileStatus != Tile.TileStatus.startingRoom)
                     {
-                        wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
-                        wall.transform.parent = t.transform;
-                        wall.transform.localPosition = new Vector3(0, 5, -12.5f);
-                        wall.transform.eulerAngles = new Vector3(-90, 0, -180);
-                        wall.name = "WallPlaceholder_LVL4WALLFUNCTION_2";
-                        t.doors[2] = wall;
+                        if ((t.doors[2].tag == "Door" && t.doors[2].GetComponent<DoorBehavior>().notInUse) || (t.leftNeighbor.doors[3].tag == "Door" && t.leftNeighbor.doors[3].GetComponent<DoorBehavior>().notInUse))
+                        {
+                            wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
+                            wall.transform.parent = t.transform;
+                            wall.transform.localPosition = new Vector3(0, 5, -12.5f);
+                            wall.transform.eulerAngles = new Vector3(-90, 0, -180);
+                            wall.name = "WallPlaceholder_LVL4WALLFUNCTION_2";
+                            t.doors[2] = wall;
+                        }
                     }
                     //else
                     //    Debug.Log("dont spawn wall between " + t.name + " and " + t.leftNeighbor.name);
@@ -258,14 +296,17 @@ public class LevelAssetSpawn : MonoBehaviour
                         t.ReSyncDoors();
                     }
 
-                    if ((t.doors[3].tag == "Door" && t.doors[3].GetComponent<DoorBehavior>().notInUse) || (t.rightNeighbor.doors[2].tag == "Door" && t.rightNeighbor.doors[2].GetComponent<DoorBehavior>().notInUse))
+                    if (t.rightNeighbor.tileStatus != Tile.TileStatus.startingRoom)
                     {
-                        wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
-                        wall.transform.parent = t.transform;
-                        wall.transform.localPosition = new Vector3(0, 5, 12.5f);
-                        wall.transform.eulerAngles = new Vector3(-90, 0, 0);
-                        wall.name = "WallPlaceholder_LVL4WALLFUNCTION_3";
-                        t.doors[3] = wall;
+                        if ((t.doors[3].tag == "Door" && t.doors[3].GetComponent<DoorBehavior>().notInUse) || (t.rightNeighbor.doors[2].tag == "Door" && t.rightNeighbor.doors[2].GetComponent<DoorBehavior>().notInUse))
+                        {
+                            wall = Instantiate(myLevelAsset.levelWall, t.gameObject.transform.position, t.gameObject.transform.rotation);
+                            wall.transform.parent = t.transform;
+                            wall.transform.localPosition = new Vector3(0, 5, 12.5f);
+                            wall.transform.eulerAngles = new Vector3(-90, 0, 0);
+                            wall.name = "WallPlaceholder_LVL4WALLFUNCTION_3";
+                            t.doors[3] = wall;
+                        }
                     }
                     //else
                     //    Debug.Log("dont spawn wall between " + t.name + " and " + t.rightNeighbor.name);
@@ -316,6 +357,7 @@ public class LevelAssetSpawn : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         Player.Instance.transform.position = spawnPos;
+
     }
 
     
@@ -365,6 +407,7 @@ public class LevelAssetSpawn : MonoBehaviour
         //preset.transform.rotation = assetRot;
         //Debug.Log(preset.transform.rotation.y);
 
+        myTileGeneration.secretRoom.layer = 22;
 
         //EITHER ADD KEY TO SPAWN RANDOMLY IN LEVEL OR HAVE KEY BE ACQUIRED RANDOMLY EARLIER -  added here before we add the secret tiles items and whatnot
 
@@ -446,19 +489,25 @@ public class LevelAssetSpawn : MonoBehaviour
         }
         else
         {
+            Objectives.Instance.UpdateFinalObjective(3);
             //FOR FINAL LEVEL, ONLY ONE OBJECTIVE, LOCATE LAST ARRAY
-            if(myLocalLevel.objective == 4)
-            {
-                Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, null);
-                //spawns in a placeholder detection, when player gets within range of this obj, objective changes to survive and boss spawns. (after boss dies then objective changes to activate last array)
+            Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, null);
+            //spawns in a placeholder detection, when player gets within range of this obj, objective changes to survive and boss spawns. (after boss dies then objective changes to activate last array)
+            endObjTile.GetComponent<Boss_PresetTileInfo>().lastArrayInteractable.transform.rotation = playerSpawn.transform.rotation;
+            endObjTile.GetComponent<Boss_PresetTileInfo>().craftingTableOutside.transform.rotation = playerSpawn.transform.rotation;
+            //REMEMBER, to make sure  the player can complete objective, this has to be turned on after boss dies
+            endObjTile.GetComponent<Boss_PresetTileInfo>().lastArrayInteractable.GetComponent<BoxCollider>().isTrigger = false;
+            GameObject bossDetection = Instantiate(myLevelAsset.bossDetection, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform);
+            //bossDetection.GetComponent<BossSpawn>().Bossdoor = endObjTile.GetComponent<Boss_PresetTileInfo>().door;
+            bossDetection.GetComponent<BossSpawn>().tile = endObjTile.GetComponent<Boss_PresetTileInfo>();
 
-                GameObject bossDetection = Instantiate(myLevelAsset.bossDetection, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform);
-                _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
-                bossDetection.name = "BossPlaceholder";
-                bossDetection.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
-
-            }
-
+            //bossDetection.GetComponent<BossSpawn>().obj = Objectives.Instance;
+            _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
+            bossDetection.name = "BossPlaceholder";
+            bossDetection.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
+                
+            ///TEMP WILL REMOVE LATER
+            // play.transform.position = endObjTile.GetComponent<Boss_PresetTileInfo>().craftingTableOutside.transform.position;
         }
     }
     #endregion
@@ -517,6 +566,9 @@ public class LevelAssetSpawn : MonoBehaviour
                                 _bigTilesList.Add(fourSomeTile);
                                 _av = Vector3.zero;
                                 fourSomeTile.transform.parent = this.transform;
+
+                                bool canSpawnMiniBoss = false;
+
                                 foreach (Tile tile2 in _tArray)
                                 {
                                     _av += tile2.transform.position;
@@ -564,7 +616,11 @@ public class LevelAssetSpawn : MonoBehaviour
                                             foreach (GameObject enemy in mPresetTileInfo.GetComponent<PresetTileInfo>().enemiesOnPreset)
                                             {
                                                 _possibleEnemiesInLevel.Remove(enemy);
-
+                                                if (miniBossesInLevel.Remove(enemy))
+                                                {
+                                                    currentMiniBossCount--;
+                                                    possibleminiBossCount--;
+                                                }
                                             }
 
                                             if (mPresetTileInfo.objectiveSpawn != null)
@@ -573,8 +629,11 @@ public class LevelAssetSpawn : MonoBehaviour
                                                 //Debug.Log("removed bad obj spot");
                                             }
 
-
                                             _possibleTileObjectivesInLevel.Remove(tile3.presetTile);
+                                        }
+                                        if (tile3.endOfBranchPath)
+                                        {
+                                            canSpawnMiniBoss = true;
                                         }
                                     }
 
@@ -586,7 +645,7 @@ public class LevelAssetSpawn : MonoBehaviour
                                     tile3.checkFor4Some = true;
                                     tile3.transform.parent = fourSomeTile.transform;
                                 }
-                                SpawnLevelBigAsset(fourSomeTile, obj);
+                                SpawnLevelBigAsset(fourSomeTile, obj, canSpawnMiniBoss);
                                 return;
                             }
                         }
@@ -617,6 +676,165 @@ public class LevelAssetSpawn : MonoBehaviour
     }
 
 
+    void AnalyzeTile_Lvl4Modifier(Tile tile)
+    {
+        //will first see if we can link tiles
+        _tArray = new Tile[4];
+        List<GameObject> bigTileDoors = new List<GameObject>();
+        bool obj = false;
+        //check neighbors, first up, then left, then right then down
+        if (!tile.checkFor4Some && tile.tileStatus != Tile.TileStatus.boss)
+        {
+            Tile t;
+            //Debug.Log("Starting at tile: " + tile.posOnGrid.x + " " + tile.posOnGrid.y);
+            if (tile.upNeighbor != null && tile.upNeighbor.tileStatus != Tile.TileStatus.nullRoom && !tile.upNeighbor.checkFor4Some && tile.upNeighbor.tileStatus != Tile.TileStatus.secretRoom && tile.upNeighbor.tileStatus != Tile.TileStatus.boss)
+            {
+
+                bigTileDoors.Add(tile.doors[0]);
+                t = tile.upNeighbor;
+
+                _tArray[0] = t;
+                //Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
+                if (t.rightNeighbor != null && t.rightNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.rightNeighbor.checkFor4Some && t.rightNeighbor.tileStatus != Tile.TileStatus.secretRoom && t.rightNeighbor.tileStatus != Tile.TileStatus.boss)
+                {
+                    bigTileDoors.Add(t.doors[3]);
+                    t = t.rightNeighbor;
+                    _tArray[1] = t;
+                    //Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
+                    if (t.downNeighbor != null && t.downNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.downNeighbor.checkFor4Some && t.downNeighbor.tileStatus != Tile.TileStatus.secretRoom && t.downNeighbor.tileStatus != Tile.TileStatus.boss)
+                    {
+                        bigTileDoors.Add(t.doors[1]);
+                        t = t.downNeighbor;
+                        _tArray[2] = t;
+                        // Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
+                        if (t.leftNeighbor != null && t.leftNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.leftNeighbor.checkFor4Some && t.leftNeighbor.tileStatus != Tile.TileStatus.secretRoom && t.leftNeighbor.tileStatus != Tile.TileStatus.boss)
+                        {
+                            bigTileDoors.Add(t.doors[2]);
+                            //all of these tiles can be linked
+                            t = t.leftNeighbor;
+                            // Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
+                            _tArray[3] = t;
+
+                            //random chance we dont use this 4 some tile and have og be single
+                            if (Random.value <= twoBYtwo_SpawnChance)
+                            {
+                                fourSomeCount++;
+                                GameObject fourSomeTile = new GameObject("BigTile_" + fourSomeCount);
+                                _bigTilesList.Add(fourSomeTile);
+                                _av = Vector3.zero;
+                                fourSomeTile.transform.parent = this.transform;
+
+                                bool canSpawnMiniboss = false;
+
+                                foreach (Tile tile2 in _tArray)
+                                {
+                                    _av += tile2.transform.position;
+                                }
+                                _av = _av / 4;
+                                foreach (GameObject door in bigTileDoors)
+                                {
+                                    Destroy(door);
+                                }
+
+                                //Debug.Log(av);
+                                fourSomeTile.transform.position = _av;
+                                foreach (Tile tile3 in _tArray)
+                                {
+
+                                    //could remove doors/walls here as well
+
+
+                                    //Debug.Log("ap");
+                                    tile3.levelAssetPlaced = true;
+
+                                    if (tile3.tileStatus == Tile.TileStatus.boss)
+                                    {
+                                        //Debug.Log("big tile has objectvie");
+                                        obj = true;
+                                    }
+
+                                    //Debug.Log(tile3.presetNum);
+                                    if (tile3.presetNum != -1)
+                                    {
+                                        // Debug.Log(tile3.presetNum);
+                                        //remove its possible items from _possileItems if it has already assigned preset tile
+                                        assetCountArray[tile3.presetNum] -= 1;
+                                        if (tile3.presetTile.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
+                                        {
+                                            //Debug.Log(tile3.name);
+                                            foreach (GameObject item in mPresetTileInfo.GetComponent<PresetTileInfo>().possiblePresetItems)
+                                            {
+                                                _possibleItems.Remove(item);
+                                                _possibleObjectives.Remove(item);
+
+                                            }
+
+                                            //Note to self maybe consider running for loop to remove possible enemies as wells - Added last night 3/10
+                                            foreach (GameObject enemy in mPresetTileInfo.GetComponent<PresetTileInfo>().enemiesOnPreset)
+                                            {
+                                                _possibleEnemiesInLevel.Remove(enemy);
+                                                if (miniBossesInLevel.Remove(enemy))
+                                                {
+                                                    currentMiniBossCount--;
+                                                    possibleminiBossCount--;
+                                                }
+                                            }
+
+                                            if (mPresetTileInfo.objectiveSpawn != null)
+                                            {
+                                                _possibleObjectives.Remove(mPresetTileInfo.objectiveSpawn);
+                                                //Debug.Log("removed bad obj spot");
+                                            }
+                                            
+
+                                            _possibleTileObjectivesInLevel.Remove(tile3.presetTile);
+                                        }
+                                    }
+
+                                    if (tile3.presetTile != null)
+                                    {
+                                        // Debug.Log("(Due to 2 x 2 Linkage - Deleting: " + tile3.presetTile.gameObject + tile3.name);
+                                        Destroy(tile3.presetTile.gameObject);
+                                    }
+                                    if(tile3.endOfBranchPath)
+                                    {
+                                        canSpawnMiniboss = true;
+                                    }
+
+                                    tile3.checkFor4Some = true;
+                                    tile3.transform.parent = fourSomeTile.transform;
+                                }
+                                SpawnLevelBigAsset(fourSomeTile, obj, canSpawnMiniboss);
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            _tArray[0] = null;
+                            _tArray[1] = null;
+                            _tArray[2] = null;
+                        }
+                    }
+                    else
+                    {
+                        _tArray[0] = null;
+                        _tArray[1] = null;
+                    }
+                }
+                else
+                {
+                    _tArray[0] = null;
+                }
+            }
+        }
+        if (!tile.levelAssetPlaced)
+        {
+            // Debug.Log(tile.posOnGrid.x + " " + tile.posOnGrid.y);
+            SpawnLevelSmallAsset(tile);
+        }
+    }
+
+    
     /// <summary>
     /// - spawn level asset, called in analyze tile. Spawns in and adds to assetCount array
     /// - will determine position and rotation of where asset goes on tile
@@ -632,17 +850,30 @@ public class LevelAssetSpawn : MonoBehaviour
         // Debug.Log(index);
         if (tile.tileStatus != Tile.TileStatus.boss)
         {
-            preset = Instantiate(myLevelAsset.presetTileAssets[index], tile.transform.position, tile.transform.rotation);
+            preset = Instantiate(myLocalLevel.presetTileAssets[index], tile.transform.position, tile.transform.rotation);
             tile.presetNum = index;
             preset.transform.parent = tile.transform.parent;
             tile.presetTile = preset;
             assetCountArray[index] += 1;
 
+            //check for miniboss
+            if(currentMiniBossCount <= _miniBossCap && tile.endOfBranchPath)
+            {
+                if(preset.GetComponent<PresetTileInfo>().enemiesOnPreset.Length > 0)
+                {
+                    //if enemies can be picked from pick one
+                    int indexEnemies = Random.Range(0, preset.GetComponent<PresetTileInfo>().enemiesOnPreset.Length);
+                    preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies].GetComponent<PossibleEnemy>().canBeMiniBoss = true;
+                    _possibleEnemiesInLevel.Remove(preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies]);
+                    possibleminiBossCount++;
+                }
+            }
+
             tile.levelAssetPlaced = true;
         }
         else
         {
-            GameObject tileObj = myLevelAsset.presetObjectiveTiles[Random.Range(0, myLevelAsset.presetObjectiveTiles.Count)];
+            GameObject tileObj = myLocalLevel.presetObjectiveTiles[Random.Range(0, myLocalLevel.presetObjectiveTiles.Count)];
             //if  this tile is the final room, make sure it has an objective
             if (myLocalLevel.thisLevelTier == levelTier.level4)
             {
@@ -676,7 +907,7 @@ public class LevelAssetSpawn : MonoBehaviour
             preset.transform.parent = tile.transform.parent;
             preset.transform.localEulerAngles = rotation;
             tile.presetTile = preset;
-            int tileIndex = myLevelAsset.presetTileAssets.IndexOf(myLevelAsset.presetObjectiveTiles[Random.Range(0, myLevelAsset.presetObjectiveTiles.Count)]);
+            int tileIndex = myLocalLevel.presetTileAssets.IndexOf(myLocalLevel.presetObjectiveTiles[Random.Range(0, myLocalLevel.presetObjectiveTiles.Count)]);
             //Debug.Log(tileIndex);
             assetCountArray[tileIndex] += 1;
             tile.presetNum = tileIndex;
@@ -719,22 +950,22 @@ public class LevelAssetSpawn : MonoBehaviour
     /// - spawns bigger 4 tile asset
     /// </summary>
     /// <param name="bigTile"> The parent of the 4 linked tiles being analyzed and spawned on. </param>
-    void SpawnLevelBigAsset(GameObject bigTile, bool hasObj)
+    void SpawnLevelBigAsset(GameObject bigTile, bool hasObj, bool canSpawnMiniBoss)
     {
         //Debug.Log("Spawned big boi");
         //will pick the least used preset but for now it will be random
-        int index = Random.Range(0, myLevelAsset.presetBigTileAssets.Count);
+        int index = Random.Range(0, myLocalLevel.presetBigTileAssets.Count);
         GameObject preset;
         if (!hasObj)
         {
-            preset = Instantiate(myLevelAsset.presetBigTileAssets[index], bigTile.transform.position, bigTile.transform.rotation);
+            preset = Instantiate(myLocalLevel.presetBigTileAssets[index], bigTile.transform.position, bigTile.transform.rotation);
             preset.transform.parent = bigTile.transform;
 
             bigAssetCountArray[index] += 1;
         }
         else
         {
-            preset = Instantiate(myLevelAsset.presetBigTileAssets[1], bigTile.transform.position, bigTile.transform.rotation);
+            preset = Instantiate(myLocalLevel.presetBigObjectiveTiles[Random.Range(0, myLocalLevel.presetBigObjectiveTiles.Count)], bigTile.transform.position, bigTile.transform.rotation);
             preset.transform.parent = bigTile.transform;
 
             bigAssetCountArray[1] += 1;
@@ -742,6 +973,18 @@ public class LevelAssetSpawn : MonoBehaviour
             Debug.Log("BIG ASSET WITH OBJ");
         }
 
+        if(canSpawnMiniBoss)
+        {
+            if (currentMiniBossCount <= _miniBossCap && preset.GetComponent<PresetTileInfo>().enemiesOnPreset.Length > 0)
+            {
+                //if enemies can be picked from pick one
+                int indexEnemies = Random.Range(0, preset.GetComponent<PresetTileInfo>().enemiesOnPreset.Length);
+                preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies].GetComponent<PossibleEnemy>().canBeMiniBoss = true;
+               // miniBossesInLevel.Add(preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies]);
+                _possibleEnemiesInLevel.Remove(preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies]);
+                possibleminiBossCount++;
+            }
+        }
 
         if (preset.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
         {
@@ -1138,6 +1381,17 @@ public class LevelAssetSpawn : MonoBehaviour
     void ActivateEnemies()
     {
         _possibleEnemiesInLevel = reshuffle(_possibleEnemiesInLevel);
+
+       // Debug.Log(currentMiniBossCount);
+        if(possibleminiBossCount < _miniBossCap)
+        {
+            Debug.Log("added miniboss");
+            int enemyIndex = Random.Range(0, _possibleEnemiesInLevel.Count);
+            _possibleEnemiesInLevel[enemyIndex].GetComponent<PossibleEnemy>().canBeMiniBoss = true;
+            _possibleEnemiesInLevel.RemoveAt(enemyIndex);
+            
+        }
+
         //Debug.Log(myLevelAsset.levelTier);
         switch (myLocalLevel.thisLevelTier)
         {
@@ -1181,14 +1435,33 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyRanged;
+                                }
+                                else
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyMelee;
+                                }
                                 break;
                             case 1:
-                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.dogEnemy;
                                 //dog
                                 break;
                             case 2:
-                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.lostOneEnemy;
                                 //lost ones
                                 break;
                             default:
@@ -1196,11 +1469,27 @@ public class LevelAssetSpawn : MonoBehaviour
                         }
                         break;
                     case EnemyWeightType.Outcast:
-                        enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                        if (Random.value <= 0.5f)
+                        {
+                            if (!mPossibleEnemy.canBeMiniBoss)
+                                enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                            else
+                                enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyRanged;
+                        }
+                        else
+                        {
+                            if (!mPossibleEnemy.canBeMiniBoss)
+                                enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
+                            else
+                                enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyMelee;
+                        }
                         //tier 1
                         break;
                     case EnemyWeightType.Dog:
-                        enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                        if (!mPossibleEnemy.canBeMiniBoss)
+                            enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                        else
+                            enemy = myLevelAsset.EnemyMINIBOSSPrefab.dogEnemy;
                         //tier 1
                         break;
                     case EnemyWeightType.Warden:
@@ -1210,14 +1499,33 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyRanged;
+                                }
+                                else
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyMelee;
+                                };
                                 break;
                             case 1:
-                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.dogEnemy;
                                 //dog
                                 break;
                             case 2:
-                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.lostOneEnemy;
                                 //lost ones
                                 break;
                             default:
@@ -1230,14 +1538,23 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                else
+                                    enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
                                 break;
                             case 1:
-                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.dogEnemy;
                                 //dog
                                 break;
                             case 2:
-                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.lostOneEnemy;
                                 //lost ones
                                 break;
                             default:
@@ -1250,14 +1567,33 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
-                                break;
+                                if (Random.value <= 0.5f)
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyRanged;
+                                }
+                                else
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyMelee;
+                                }
+                                    break;
                             case 1:
-                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.dogEnemy;
                                 //dog
                                 break;
                             case 2:
-                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.lostOneEnemy;
                                 //lost ones
                                 break;
                             default:
@@ -1270,14 +1606,33 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
-                                break;
+                                if (Random.value <= 0.5f)
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyRanged;
+                                }
+                                else
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyMelee;
+                                }
+                                    break;
                             case 1:
-                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.dogEnemy;
                                 //dog
                                 break;
                             case 2:
-                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.lostOneEnemy;
                                 //lost ones
                                 break;
                             default:
@@ -1285,7 +1640,10 @@ public class LevelAssetSpawn : MonoBehaviour
                         }
                         break;
                     case EnemyWeightType.LostOne:
-                        enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                        if (!mPossibleEnemy.canBeMiniBoss)
+                            enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                        else
+                            enemy = myLevelAsset.EnemyMINIBOSSPrefab.lostOneEnemy;
                         //tier 1
                         break;
                     case EnemyWeightType.Fugly:
@@ -1294,14 +1652,33 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyRanged;
+                                }
+                                else
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyMelee;
+                                }
                                 break;
                             case 1:
-                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.dogEnemy;
                                 //dog
                                 break;
                             case 2:
-                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.lostOneEnemy;
                                 //lost ones
                                 break;
                             default:
@@ -1314,14 +1691,33 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyRanged;
+                                }
+                                else
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyMelee;
+                                }
                                 break;
                             case 1:
-                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.dogEnemy;
                                 //dog
                                 break;
                             case 2:
-                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.lostOneEnemy;
                                 //lost ones
                                 break;
                             default:
@@ -1338,8 +1734,13 @@ public class LevelAssetSpawn : MonoBehaviour
                 enemy.transform.parent = mPossibleEnemy.transform.parent;
 
                 Destroy(_possibleEnemiesInLevel[enemyCount]);
-                //_possibleEnemiesInLevel.RemoveAt(enemyCount);
-                //Debug.Log(enemyCount);
+                if (mPossibleEnemy.canBeMiniBoss)
+                {
+                    Debug.Log("cehck");
+                    enemy.name += "_MINIBOSS";
+                    miniBossesInLevel.Add(enemy);
+                    currentMiniBossCount++;
+                }
             }
         }
         for(int deleteCount = enemyCount; deleteCount < _possibleEnemiesInLevel.Count; deleteCount++)
@@ -1367,46 +1768,100 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyRanged;
+                                }
+                                else
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyMelee;
+                                }
                                 break;
                             case 1:
-                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.dogEnemy;
                                 //dog
                                 break;
                             case 2:
-                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.lostOneEnemy;
                                 //lost ones
                                 break;
                             case 3:
-                                enemy = myLevelAsset.enemyPrefab.spitterEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.spitterEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.spitterEnemy;
                                 break;
                             case 4:
-                                enemy = myLevelAsset.enemyPrefab.wardenEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.wardenEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.wardenEnemy;
                                 break;
                             case 5:
-                                enemy = myLevelAsset.enemyPrefab.stalkerEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.stalkerEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.stalkerEnemy;
                                 break;
                             default:
                                 break;
                         }
                         break;
                     case EnemyWeightType.Outcast:
-                        enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                        //enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                        if (Random.value <= 0.5f)
+                        {
+                            if (!mPossibleEnemy.canBeMiniBoss)
+                                enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                            else
+                                enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyRanged;
+                        }
+                        else
+                        {
+                            if (!mPossibleEnemy.canBeMiniBoss)
+                                enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
+                            else
+                                enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyMelee;
+                        }
                         //tier 1
                         break;
                     case EnemyWeightType.Dog:
-                        enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                        if (!mPossibleEnemy.canBeMiniBoss)
+                            enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                        else
+                            enemy = myLevelAsset.EnemyMINIBOSSPrefab.dogEnemy;
                         //tier 1
                         break;
                     case EnemyWeightType.Warden:
                         //other types not in tier 1 will default to random tier 1
-                        enemy = myLevelAsset.enemyPrefab.wardenEnemy;
+                        if (!mPossibleEnemy.canBeMiniBoss)
+                            enemy = myLevelAsset.enemyPrefab.wardenEnemy;
+                        else
+                            enemy = myLevelAsset.EnemyMINIBOSSPrefab.wardenEnemy;
                         break;
                     case EnemyWeightType.Stalker:
-                        enemy = myLevelAsset.enemyPrefab.stalkerEnemy;
+                        if (!mPossibleEnemy.canBeMiniBoss)
+                            enemy = myLevelAsset.enemyPrefab.stalkerEnemy;
+                        else
+                            enemy = myLevelAsset.EnemyMINIBOSSPrefab.stalkerEnemy;
                         break;
                     case EnemyWeightType.Splitter:
-                        enemy = myLevelAsset.enemyPrefab.spitterEnemy;
+                        if (!mPossibleEnemy.canBeMiniBoss)
+                            enemy = myLevelAsset.enemyPrefab.spitterEnemy;
+                        else
+                            enemy = myLevelAsset.EnemyMINIBOSSPrefab.spitterEnemy;
                         break;
                     case EnemyWeightType.Shadow:
                         choice = Random.Range(0, 6);
@@ -1414,31 +1869,63 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                // enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyRanged;
+                                }
+                                else
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyMelee;
+                                }
                                 break;
                             case 1:
-                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.dogEnemy;
                                 //dog
                                 break;
                             case 2:
-                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.lostOneEnemy;
                                 //lost ones
                                 break;
                             case 3:
-                                enemy = myLevelAsset.enemyPrefab.spitterEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.spitterEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.spitterEnemy;
                                 break;
                             case 4:
-                                enemy = myLevelAsset.enemyPrefab.wardenEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.wardenEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.wardenEnemy;
                                 break;
                             case 5:
-                                enemy = myLevelAsset.enemyPrefab.stalkerEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.stalkerEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.stalkerEnemy;
                                 break;
                             default:
                                 break;
                         }
                         break;
                     case EnemyWeightType.LostOne:
-                        enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                        if (!mPossibleEnemy.canBeMiniBoss)
+                            enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                        else
+                            enemy = myLevelAsset.EnemyMINIBOSSPrefab.lostOneEnemy;
                         //tier 1
                         break;
                     case EnemyWeightType.Fugly:
@@ -1447,24 +1934,53 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                //enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyRanged;
+                                }
+                                else
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyMelee;
+                                }
                                 break;
                             case 1:
-                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.dogEnemy;
                                 //dog
                                 break;
                             case 2:
-                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.lostOneEnemy;
                                 //lost ones
                                 break;
                             case 3:
-                                enemy = myLevelAsset.enemyPrefab.spitterEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.spitterEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.spitterEnemy;
                                 break;
                             case 4:
-                                enemy = myLevelAsset.enemyPrefab.wardenEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.wardenEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.wardenEnemy;
                                 break;
                             case 5:
-                                enemy = myLevelAsset.enemyPrefab.stalkerEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.stalkerEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.stalkerEnemy;
                                 break;
                             default:
                                 break;
@@ -1476,24 +1992,53 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                //enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyRanged;
+                                }
+                                else
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyMelee;
+                                }
                                 break;
                             case 1:
-                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.dogEnemy;
                                 //dog
                                 break;
                             case 2:
-                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.lostOneEnemy;
                                 //lost ones
                                 break;
                             case 3:
-                                enemy = myLevelAsset.enemyPrefab.spitterEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.spitterEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.spitterEnemy;
                                 break;
                             case 4:
-                                enemy = myLevelAsset.enemyPrefab.wardenEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.wardenEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.wardenEnemy;
                                 break;
                             case 5:
-                                enemy = myLevelAsset.enemyPrefab.stalkerEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.stalkerEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.stalkerEnemy;
                                 break;
                             default:
                                 break;
@@ -1508,8 +2053,12 @@ public class LevelAssetSpawn : MonoBehaviour
                 enemiesInLevel.Add(enemy);
                 enemy.transform.parent = mPossibleEnemy.transform.parent;
                 Destroy(_possibleEnemiesInLevel[enemyCount]);
-                //_possibleEnemiesInLevel.RemoveAt(enemyCount);
-                //Destroy(mPossibleEnemy.gameObject);
+                if (mPossibleEnemy.canBeMiniBoss)
+                {
+                    enemy.name += "_MINIBOSS";
+                    miniBossesInLevel.Add(enemy);
+                    currentMiniBossCount++;
+                }
 
             }
         }
@@ -1536,64 +2085,138 @@ public class LevelAssetSpawn : MonoBehaviour
                         {
                             case 0:
                                 //outcast
-                                enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                                if (Random.value <= 0.5f)
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyRanged;
+                                }
+                                else
+                                {
+                                    if (!mPossibleEnemy.canBeMiniBoss)
+                                        enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
+                                    else
+                                        enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyMelee;
+                                }
                                 break;
                             case 1:
-                                enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.dogEnemy;
                                 //dog
                                 break;
                             case 2:
-                                enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.lostOneEnemy;
                                 //lost ones
                                 break;
                             case 3:
-                                enemy = myLevelAsset.enemyPrefab.spitterEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.spitterEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.spitterEnemy;
                                 break;
                             case 4:
-                                enemy = myLevelAsset.enemyPrefab.wardenEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.wardenEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.wardenEnemy;
                                 break;
                             case 5:
-                                enemy = myLevelAsset.enemyPrefab.stalkerEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.stalkerEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.stalkerEnemy;
                                 break;
                             case 6:
-                                enemy = myLevelAsset.enemyPrefab.shadowEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.shadowEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.shadowEnemy;
                                 break;
                             case 7:
-                                enemy = myLevelAsset.enemyPrefab.fuglyEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.fuglyEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.fuglyEnemy;
                                 break;
                             case 8:
-                                enemy = myLevelAsset.enemyPrefab.dozerEnemy;
+                                if (!mPossibleEnemy.canBeMiniBoss)
+                                    enemy = myLevelAsset.enemyPrefab.dozerEnemy;
+                                else
+                                    enemy = myLevelAsset.EnemyMINIBOSSPrefab.dozerEnemy;
                                 break;
                             default:
                                 break;
                         }
                         break;
                     case EnemyWeightType.Outcast:
-                        enemy = myLevelAsset.enemyPrefab.outcastEnemy;
+                        if (Random.value <= 0.5f)
+                        {
+                            if (!mPossibleEnemy.canBeMiniBoss)
+                                enemy = myLevelAsset.enemyPrefab.outcastEnemyRanged;
+                            else
+                                enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyRanged;
+                        }
+                        else
+                        {
+                            if (!mPossibleEnemy.canBeMiniBoss)
+                                enemy = myLevelAsset.enemyPrefab.outcastEnemyMelee;
+                            else
+                                enemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyMelee;
+                        }
                         break;
                     case EnemyWeightType.Dog:
-                        enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                        if (!mPossibleEnemy.canBeMiniBoss)
+                            enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                        else
+                            enemy = myLevelAsset.EnemyMINIBOSSPrefab.dogEnemy;
                         break;
                     case EnemyWeightType.Warden:
-                        enemy = myLevelAsset.enemyPrefab.wardenEnemy;
+                        if (!mPossibleEnemy.canBeMiniBoss)
+                            enemy = myLevelAsset.enemyPrefab.wardenEnemy;
+                        else
+                            enemy = myLevelAsset.EnemyMINIBOSSPrefab.wardenEnemy;
                         break;
                     case EnemyWeightType.Stalker:
-                        enemy = myLevelAsset.enemyPrefab.stalkerEnemy;
+                        if (!mPossibleEnemy.canBeMiniBoss)
+                            enemy = myLevelAsset.enemyPrefab.stalkerEnemy;
+                        else
+                            enemy = myLevelAsset.EnemyMINIBOSSPrefab.stalkerEnemy;
                         break;
                     case EnemyWeightType.Splitter:
-                        enemy = myLevelAsset.enemyPrefab.spitterEnemy;
+                        if (!mPossibleEnemy.canBeMiniBoss)
+                            enemy = myLevelAsset.enemyPrefab.spitterEnemy;
+                        else
+                            enemy = myLevelAsset.EnemyMINIBOSSPrefab.spitterEnemy;
                         break;
                     case EnemyWeightType.Shadow:
-                        enemy = myLevelAsset.enemyPrefab.shadowEnemy;
+                        if (!mPossibleEnemy.canBeMiniBoss)
+                            enemy = myLevelAsset.enemyPrefab.shadowEnemy;
+                        else
+                            enemy = myLevelAsset.EnemyMINIBOSSPrefab.shadowEnemy;
                         break;
                     case EnemyWeightType.LostOne:
-                        enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                        if (!mPossibleEnemy.canBeMiniBoss)
+                            enemy = myLevelAsset.enemyPrefab.lostOneEnemy;
+                        else
+                            enemy = myLevelAsset.EnemyMINIBOSSPrefab.lostOneEnemy;
                         break;
                     case EnemyWeightType.Fugly:
-                        enemy = myLevelAsset.enemyPrefab.fuglyEnemy;
+                        if (!mPossibleEnemy.canBeMiniBoss)
+                            enemy = myLevelAsset.enemyPrefab.fuglyEnemy;
+                        else
+                            enemy = myLevelAsset.EnemyMINIBOSSPrefab.fuglyEnemy;
                         break;
                     case EnemyWeightType.Dozer:
-                        enemy = myLevelAsset.enemyPrefab.dozerEnemy;
+                        if (!mPossibleEnemy.canBeMiniBoss)
+                            enemy = myLevelAsset.enemyPrefab.dozerEnemy;
+                        else
+                            enemy = myLevelAsset.EnemyMINIBOSSPrefab.dozerEnemy;
                         break;
                     default:
                         break;
@@ -1606,7 +2229,13 @@ public class LevelAssetSpawn : MonoBehaviour
                 Destroy(_possibleEnemiesInLevel[enemyCount]);
                 //_possibleEnemiesInLevel.RemoveAt(enemyCount);
                 //Destroy(mPossibleEnemy.gameObject);
-
+                if (mPossibleEnemy.canBeMiniBoss)
+                {
+                    Debug.Log("cehck");
+                    enemy.name += "_MINIBOSS";
+                    miniBossesInLevel.Add(enemy);
+                    currentMiniBossCount++;
+                }
             }
         }
         for (int deleteCount = enemyCount; deleteCount < _possibleEnemiesInLevel.Count; deleteCount++)
@@ -1614,6 +2243,7 @@ public class LevelAssetSpawn : MonoBehaviour
             Destroy(_possibleEnemiesInLevel[deleteCount]);
         }
     }
+
     #endregion
 
     //For Debuging whats in list - NOT IN USE
