@@ -616,8 +616,8 @@ public class LevelAssetSpawn : MonoBehaviour
                                             foreach (GameObject enemy in mPresetTileInfo.GetComponent<PresetTileInfo>().enemiesOnPreset)
                                             {
                                                 _possibleEnemiesInLevel.Remove(enemy);
-                                                miniBossesInLevel.Remove(enemy);
-                                                currentMiniBossCount--;
+                                                if(miniBossesInLevel.Remove(enemy))
+                                                    currentMiniBossCount--;
                                             }
 
                                             if (mPresetTileInfo.objectiveSpawn != null)
@@ -770,8 +770,8 @@ public class LevelAssetSpawn : MonoBehaviour
                                             foreach (GameObject enemy in mPresetTileInfo.GetComponent<PresetTileInfo>().enemiesOnPreset)
                                             {
                                                 _possibleEnemiesInLevel.Remove(enemy);
-                                                 miniBossesInLevel.Remove(enemy);
-                                                currentMiniBossCount--;
+                                                 if(miniBossesInLevel.Remove(enemy))
+                                                    currentMiniBossCount--;
                                             }
 
                                             if (mPresetTileInfo.objectiveSpawn != null)
@@ -858,9 +858,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     //if enemies can be picked from pick one
                     int indexEnemies = Random.Range(0, preset.GetComponent<PresetTileInfo>().enemiesOnPreset.Length);
                     preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies].GetComponent<PossibleEnemy>().canBeMiniBoss = true;
-                    
                     _possibleEnemiesInLevel.Remove(preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies]);
-                    //currentMiniBossCount++;
                 }
             }
 
