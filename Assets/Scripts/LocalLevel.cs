@@ -214,12 +214,12 @@ public class LocalLevel : MonoBehaviour
                 presetStartingTile = myLvlAssetData.forest_presetStartingTile;
                 break;
             case levelTier.level2:
-                //urban? for now use forest for everything
-                presetTileAssets = new List<GameObject>(myLvlAssetData.forest_presetTileAssets);
-                presetBigTileAssets = new List<GameObject>(myLvlAssetData.forest_presetBigTileAssets);
-                presetObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetObjectiveTiles);
-                presetBigObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetBigTileObjectives);
-                presetStartingTile = myLvlAssetData.forest_presetStartingTile;
+                //outskirts
+                presetTileAssets = new List<GameObject>(myLvlAssetData.outskirts_presetTileAssets);
+                presetBigTileAssets = new List<GameObject>(myLvlAssetData.outskirts_presetBigTileAssets);
+                presetObjectiveTiles = new List<GameObject>(myLvlAssetData.outskirts_presetObjectiveTiles);
+                presetBigObjectiveTiles = new List<GameObject>(myLvlAssetData.outskirts_presetBigTileObjectives);
+                presetStartingTile = myLvlAssetData.outskirts_presetStartingTile;
                 break;
             case levelTier.level3:
                 presetTileAssets = new List<GameObject>(myLvlAssetData.forest_presetTileAssets);
