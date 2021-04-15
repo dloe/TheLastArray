@@ -51,7 +51,7 @@ public class Player : MonoBehaviour
 
     #endregion
 
-
+    public LineRenderer laserLine;
 
     #region UI Variables
     public GameObject endScreen;
@@ -152,7 +152,7 @@ public class Player : MonoBehaviour
 
     Vector3 moveDir;
     Vector3 lookDir;
-    Plane rayPlane = new Plane(Vector3.up, 1);
+    Plane rayPlane = new Plane(Vector3.up, 0.5f);
 
 
     private void Awake()
@@ -273,6 +273,11 @@ public class Player : MonoBehaviour
                 Debug.Log("Trying To Load...");
                 LoadPlayer();
             }
+            else if(Input.GetKeyDown(KeyCode.Comma) && inventory.selectedItem != null && inventory.selectedItem.itemData.itemType == ItemType.RangedWeapon)
+            {
+                inventory.selectedItem.itemData.hasLaserSight = true;
+                laserLine.gameObject.SetActive(true);
+            }
 
 #endif
 
@@ -297,6 +302,7 @@ public class Player : MonoBehaviour
         }
         meleeVisual.SetActive(active);
     }
+
 
     /// <summary>
     /// Moves Player Based On WASD
@@ -327,12 +333,20 @@ public class Player : MonoBehaviour
         {
             //if(Input.mousePosition.x)
             lookDir = new Vector3(ray.GetPoint(dist - xLookOffset).x , _mainTransform.position.y, ray.GetPoint(dist - zLookOffset).z );
+            //lookDir = new Vector3(ray.GetPoint(dist - xLookOffset).x , _mainTransform.position.y, ray.GetPoint(dist - zLookOffset).z );
             lookDir -= _mainTransform.position;
 
-            _mainTransform.rotation = Quaternion.Slerp(_mainTransform.rotation, Quaternion.LookRotation(lookDir), 12f * Time.deltaTime);
+            _mainTransform.rotation = Quaternion.Slerp(_mainTransform.rotation, Quaternion.LookRotation(lookDir), 20f * Time.deltaTime);
             
            
         }
+
+        if(inventory.selectedItem != null && inventory.selectedItem.itemData.hasLaserSight)
+        {
+            laserLine.SetPosition(0, transform.position);
+            laserLine.SetPosition(1, transform.position + lookDir);
+        }
+        
     }
 
     /// <summary>
@@ -342,7 +356,7 @@ public class Player : MonoBehaviour
     {
         if(inventory.selectedItem.itemData.canAttack && !inventory.selectedItem.itemData.reloading)
         {
-            
+            Debug.Log(inventory.selectedItem.itemData.loadedAmmo);   
             if (inventory.selectedItem.itemData.ammoType == AmmoType.LightAmmo )
             {
                 if(inventory.selectedItem.itemData.loadedAmmo > 0)
@@ -495,7 +509,7 @@ public class Player : MonoBehaviour
     {
         if(other.TryGetComponent(out thingToActivate))
         {
-            Debug.Log("cock");
+            //Debug.Log("cock");
             thingToActivate = other.GetComponent<Activatable>();
         }
     }
@@ -603,10 +617,10 @@ public class Player : MonoBehaviour
 
             currentLightAmmo = playerSave.lightAmmo;
             currentHeavyAmmo = playerSave.heavyAmmo;
-            
 
-            inventory.LoadFromJsonList(playerSave.invJsonList);
             inventory.numInvSlots = playerSave.numInvSlots;
+            inventory.LoadFromJsonList(playerSave.invJsonList);
+            
         }
         else
         {
@@ -621,17 +635,17 @@ public class Player : MonoBehaviour
     }
     #endregion
 
-    private void OnDrawGizmos()
-    {
-        if (Input.GetKey(KeyCode.Semicolon) && Application.isPlaying && inventory.selectedItem != null)
-        {
-            Gizmos.color = Color.red;
-
-            Gizmos.DrawCube(_mainTransform.position + _mainTransform.forward * inventory.selectedItem.itemData.meleeRange, meleeExtents);
-        }
-
-
-    }
+    //private void OnDrawGizmos()
+    //{
+    //    if (Input.GetKey(KeyCode.Semicolon) && Application.isPlaying && inventory.selectedItem != null)
+    //    {
+    //        Gizmos.color = Color.red;
+    //
+    //        Gizmos.DrawCube(_mainTransform.position + _mainTransform.forward * inventory.selectedItem.itemData.meleeRange, meleeExtents);
+    //    }
+    //
+    //
+    //}
 }
 
 [System.Serializable]

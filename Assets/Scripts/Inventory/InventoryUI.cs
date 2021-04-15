@@ -96,7 +96,7 @@ public class InventoryUI : MonoBehaviour
 
     }
 
-    void SetIndex(int index)
+    public void SetIndex(int index)
     {
 
 
@@ -176,6 +176,7 @@ public class InventoryUI : MonoBehaviour
                     currentAmmoName.text = "Durability Left";
 
                     Player.Instance.SetMeleeVisualActive(true);
+                    Player.Instance.laserLine.gameObject.SetActive(false);
 
                     break;
                 case ItemType.RangedWeapon:
@@ -201,13 +202,15 @@ public class InventoryUI : MonoBehaviour
                     currentAmmoName.text = inventory.selectedItem.itemData.ammoType.ToString();
 
                     Player.Instance.SetMeleeVisualActive(false);
-
+                    Player.Instance.laserLine.gameObject.SetActive(inventory.selectedItem.itemData.hasLaserSight);
+                    //Debug.Log("Laser: " + inventory.selectedItem.itemData.hasLaserSight);
                     break;
                 case ItemType.Heal:
                     equipedWeaponAmmoText.text = "";
                     // equipedWeaponReservesText.text = "";
                     equipedWeaponDashText.gameObject.SetActive(false);
                     Player.Instance.SetMeleeVisualActive(false);
+                    Player.Instance.laserLine.gameObject.SetActive(false);
 
                     equipedWeaponReservesText.gameObject.SetActive(true);
                     currentAmmoName.gameObject.SetActive(true);
@@ -218,6 +221,7 @@ public class InventoryUI : MonoBehaviour
                     break;
                 default:
                     Player.Instance.SetMeleeVisualActive(false);
+                    Player.Instance.laserLine.gameObject.SetActive(false);
                     currentAmmoName.text = "";
                     equipedWeaponAmmoText.text = "";
                     equipedWeaponDashText.gameObject.SetActive(false);

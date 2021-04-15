@@ -34,7 +34,7 @@ public class CraftingTable : Activatable
 
             
 
-            if (recipe.craftingResult.isAmmoResult)
+            if (recipe.craftingResult.resultType == ResultType.ammo)
             {
                 switch (recipe.craftingResult.ammoType)
                 {
@@ -50,7 +50,30 @@ public class CraftingTable : Activatable
                 tempOption.description.text = "";
                 InventoryUI.Instance.RefreshUI();
                 tempOption.SetDropDown();
-                
+                if (recipe.craftingResult.displaySprite != null)
+                {
+                    tempOption.itemImage.sprite = recipe.craftingResult.displaySprite;
+                }
+            }
+            else if(recipe.craftingResult.resultType == ResultType.attachment)
+            {
+                switch (recipe.craftingResult.attachType)
+                {
+                    case AttachType.laser:
+                        tempOption.itemName.text = "Laser Sight";
+                        break;
+                    case AttachType.tunedBarrel:
+                        break;
+                    default:
+                        break;
+                }
+                tempOption.description.text = "";
+                InventoryUI.Instance.RefreshUI();
+                //tempOption.SetDropDown();
+                if (recipe.craftingResult.displaySprite != null)
+                {
+                    tempOption.itemImage.sprite = recipe.craftingResult.displaySprite;
+                }
             }
             else
             {
@@ -121,7 +144,7 @@ public class CraftingTable : Activatable
         {
             CraftingOption craftOption = option.GetComponent<CraftingOption>();
 
-            if (craftOption.recipe.craftingResult.isAmmoResult)
+            if (craftOption.recipe.craftingResult.resultType == ResultType.ammo)
             {
                 craftOption.SetDropDown();
             }
@@ -141,9 +164,9 @@ public class CraftingTable : Activatable
         foreach (Transform option in optionParent.transform)
         {
             CraftingOption craftOption = option.GetComponent<CraftingOption>();
-            craftOption.craftButton.interactable = craftOption.recipe.IsCraftable(Player.Instance) ;
+            craftOption.craftButton.interactable = craftOption.recipe.IsCraftable(Player.Instance);
 
-            if(craftOption.recipe.craftingResult.isAmmoResult)
+            if(craftOption.recipe.craftingResult.resultType == ResultType.ammo)
             {
                 foreach (ResourceRequirement requirement in craftOption.recipe.Requirements)
                 {
@@ -162,6 +185,34 @@ public class CraftingTable : Activatable
                             break;
                     }
                 }
+            }
+            else if(craftOption.recipe.craftingResult.resultType == ResultType.attachment)
+            {
+                
+                if(Player.Instance.inventory.selectedItem == null || Player.Instance.inventory.selectedItem.itemData.itemType != ItemType.RangedWeapon)
+                {
+                   
+                    craftOption.craftButton.GetComponentInChildren<Text>().text = "Select A Ranged Weapon to Craft an Attachment";
+                }
+                else
+                {
+                    craftOption.craftButton.GetComponentInChildren<Text>().text = "Craft";
+                    switch (craftOption.recipe.craftingResult.attachType)
+                    {
+                        case AttachType.laser:
+                            if(Player.Instance.inventory.selectedItem != null && Player.Instance.inventory.selectedItem.itemData.hasLaserSight)
+                            {
+                                craftOption.craftButton.GetComponentInChildren<Text>().text = "Can't Craft Because Gun Already has Laser";
+                            }
+                            break;
+                        case AttachType.tunedBarrel:
+                            break;
+                        default:
+                            break;
+                    }
+                    
+                }
+
             }
             
         }
