@@ -617,11 +617,7 @@ public class LevelAssetSpawn : MonoBehaviour
                                             {
                                                 _possibleEnemiesInLevel.Remove(enemy);
                                                 miniBossesInLevel.Remove(enemy);
-                                            }
-
-                                            if(tile3.endOfBranchPath)
-                                            {
-                                                canSpawnMiniBoss = true;
+                                                currentMiniBossCount--;
                                             }
 
                                             if (mPresetTileInfo.objectiveSpawn != null)
@@ -630,8 +626,11 @@ public class LevelAssetSpawn : MonoBehaviour
                                                 //Debug.Log("removed bad obj spot");
                                             }
 
-
                                             _possibleTileObjectivesInLevel.Remove(tile3.presetTile);
+                                        }
+                                        if (tile3.endOfBranchPath)
+                                        {
+                                            canSpawnMiniBoss = true;
                                         }
                                     }
 
@@ -771,7 +770,8 @@ public class LevelAssetSpawn : MonoBehaviour
                                             foreach (GameObject enemy in mPresetTileInfo.GetComponent<PresetTileInfo>().enemiesOnPreset)
                                             {
                                                 _possibleEnemiesInLevel.Remove(enemy);
-                                                miniBossesInLevel.Remove(enemy);
+                                                 miniBossesInLevel.Remove(enemy);
+                                                currentMiniBossCount--;
                                             }
 
                                             if (mPresetTileInfo.objectiveSpawn != null)
@@ -858,9 +858,9 @@ public class LevelAssetSpawn : MonoBehaviour
                     //if enemies can be picked from pick one
                     int indexEnemies = Random.Range(0, preset.GetComponent<PresetTileInfo>().enemiesOnPreset.Length);
                     preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies].GetComponent<PossibleEnemy>().canBeMiniBoss = true;
-                    miniBossesInLevel.Add(preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies]);
+                    
                     _possibleEnemiesInLevel.Remove(preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies]);
-                    currentMiniBossCount++;
+                    //currentMiniBossCount++;
                 }
             }
 
@@ -975,9 +975,9 @@ public class LevelAssetSpawn : MonoBehaviour
                 //if enemies can be picked from pick one
                 int indexEnemies = Random.Range(0, preset.GetComponent<PresetTileInfo>().enemiesOnPreset.Length);
                 preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies].GetComponent<PossibleEnemy>().canBeMiniBoss = true;
-                miniBossesInLevel.Add(preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies]);
+               // miniBossesInLevel.Add(preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies]);
                 _possibleEnemiesInLevel.Remove(preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies]);
-                currentMiniBossCount++;
+                //currentMiniBossCount++;
             }
         }
 
@@ -1718,8 +1718,12 @@ public class LevelAssetSpawn : MonoBehaviour
                 enemy.transform.parent = mPossibleEnemy.transform.parent;
 
                 Destroy(_possibleEnemiesInLevel[enemyCount]);
-                //_possibleEnemiesInLevel.RemoveAt(enemyCount);
-                //Debug.Log(enemyCount);
+                if (mPossibleEnemy.canBeMiniBoss)
+                {
+                    enemy.name += "_MINIBOSS";
+                    miniBossesInLevel.Add(enemy);
+                    currentMiniBossCount++;
+                }
             }
         }
         for(int deleteCount = enemyCount; deleteCount < _possibleEnemiesInLevel.Count; deleteCount++)
@@ -2033,7 +2037,11 @@ public class LevelAssetSpawn : MonoBehaviour
                 enemy.transform.parent = mPossibleEnemy.transform.parent;
                 Destroy(_possibleEnemiesInLevel[enemyCount]);
                 if (mPossibleEnemy.canBeMiniBoss)
+                {
                     enemy.name += "_MINIBOSS";
+                    miniBossesInLevel.Add(enemy);
+                    currentMiniBossCount++;
+                }
 
             }
         }
@@ -2205,7 +2213,11 @@ public class LevelAssetSpawn : MonoBehaviour
                 //_possibleEnemiesInLevel.RemoveAt(enemyCount);
                 //Destroy(mPossibleEnemy.gameObject);
                 if (mPossibleEnemy.canBeMiniBoss)
+                {
                     enemy.name += "_MINIBOSS";
+                    miniBossesInLevel.Add(enemy);
+                    currentMiniBossCount++;
+                }
             }
         }
         for (int deleteCount = enemyCount; deleteCount < _possibleEnemiesInLevel.Count; deleteCount++)
