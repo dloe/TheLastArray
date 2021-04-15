@@ -57,7 +57,7 @@ public class LevelAssetSpawn : MonoBehaviour
     public int collectables;
     [Header("Amount of enemies spawned in level")]
     public int enemyCount;
-    public int possibleminiBossCount;
+    public int possibleminiBossCount = 0;
     static int tier1MiniBossCap = 1;
     static int tier2MiniBossCap = 1;
     static int tier3MiniBossCap = 2;
@@ -1382,13 +1382,13 @@ public class LevelAssetSpawn : MonoBehaviour
     {
         _possibleEnemiesInLevel = reshuffle(_possibleEnemiesInLevel);
 
-       // Debug.Log(currentMiniBossCount);
+        Debug.Log(possibleminiBossCount);
         if(possibleminiBossCount < _miniBossCap)
         {
             Debug.Log("added miniboss");
             int enemyIndex = Random.Range(0, _possibleEnemiesInLevel.Count);
             _possibleEnemiesInLevel[enemyIndex].GetComponent<PossibleEnemy>().canBeMiniBoss = true;
-            _possibleEnemiesInLevel.RemoveAt(enemyIndex);
+            //_possibleEnemiesInLevel.RemoveAt(enemyIndex);
             
         }
 
