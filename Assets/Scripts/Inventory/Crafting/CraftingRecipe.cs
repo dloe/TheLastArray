@@ -4,6 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+public enum ResultType
+{
+    item,
+    ammo,
+    attachment
+}
+
 [Serializable]
 public struct ResourceRequirement
 {
@@ -15,10 +22,17 @@ public struct ResourceRequirement
 [Serializable]
 public class Result
 {
-    public bool isAmmoResult = false;
+    public ResultType resultType;
     public ItemData itemResult;
-    [Header("ignore if isAmmoResult is false")]
+
+    [Header("Sprite for if the result is not an item")]
+    public Sprite displaySprite;
+    
+    [Header("ignore if result type is not ammo")]
     public AmmoType ammoType;
+
+    [Header("ignore if result type is not attachment")]
+    public AttachType attachType;
 }
 
 [CreateAssetMenu]
@@ -66,7 +80,7 @@ public class CraftingRecipe : ScriptableObject
                     break;
             }
 
-            if(!craftingResult.isAmmoResult && craftingResult.itemResult.itemType == ItemType.BackPack && player.hasBackPack)
+            if(craftingResult.resultType == ResultType.item && craftingResult.itemResult.itemType == ItemType.BackPack && player.hasBackPack)
             {
                 result = false;
             }
@@ -77,7 +91,7 @@ public class CraftingRecipe : ScriptableObject
             }
         }
 
-        if(craftingResult.isAmmoResult && result)
+        if(craftingResult.resultType == ResultType.ammo && result)
         {
             switch (craftingResult.ammoType)
             {
@@ -92,6 +106,27 @@ public class CraftingRecipe : ScriptableObject
             }
         }
         
+        if(craftingResult.resultType == ResultType.attachment && result)
+        {
+            if(player.inventory.selectedItem != null && player.inventory.selectedItem.itemData.itemType == ItemType.RangedWeapon)
+            {
+                switch (craftingResult.attachType)
+                {
+                    case AttachType.laser:
+                            result = !player.inventory.selectedItem.itemData.hasLaserSight;
+                            break;
+                    case AttachType.tunedBarrel:
+                        break;
+                    default:
+                        break;
+                }
+            }
+            else
+            {
+                result = false;
+            }
+           
+        }
 
         if(amountToCraft == 0)
         {
@@ -106,7 +141,7 @@ public class CraftingRecipe : ScriptableObject
     /// <param name="player">The Player</param>
     public void Craft(Player player)
     {
-        if(player.inventory.IsFull() && !craftingResult.isAmmoResult && craftingResult.itemResult.itemType != ItemType.BackPack)
+        if(player.inventory.IsFull() && craftingResult.resultType == ResultType.item && craftingResult.itemResult.itemType != ItemType.BackPack)
         {
             Debug.Log("can't craft, inventory is full chief");
         }
@@ -130,7 +165,7 @@ public class CraftingRecipe : ScriptableObject
                 }
                 
             }
-            if(craftingResult.isAmmoResult)
+            if(craftingResult.resultType == ResultType.ammo)
             {
                 switch (craftingResult.ammoType)
                 {
@@ -146,6 +181,24 @@ public class CraftingRecipe : ScriptableObject
 
                 InventoryUI.Instance.RefreshUI();
                 
+            }
+            else if(craftingResult.resultType == ResultType.attachment)
+            {
+                switch (craftingResult.attachType)
+                {
+                    case AttachType.laser:
+                        if (!Player.Instance.inventory.selectedItem.itemData.hasLaserSight)
+                        {
+                            Player.Instance.inventory.selectedItem.itemData.hasLaserSight = true;
+                            Player.Instance.laserLine.gameObject.SetActive(true);
+                            
+                        }
+                        break;
+                    case AttachType.tunedBarrel:
+                        break;
+                    default:
+                        break;
+                }
             }
             else
             {

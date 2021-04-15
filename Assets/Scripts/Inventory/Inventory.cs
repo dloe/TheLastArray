@@ -260,14 +260,17 @@ public class Inventory
     {
         ItemDataSave itemSave;
         ItemData itemData;
+        Clear();
         foreach (string json in jsonList)
         {
             itemSave = new ItemDataSave();
             JsonUtility.FromJsonOverwrite(json, itemSave);
             itemData = ScriptableObject.CreateInstance<ItemData>();
             itemSave.LoadToItemData(itemData);
-
+           // Debug.Log(itemData.itemName + " ammo: " + itemData.loadedAmmo);
             AddItemNoUI(itemData);
         }
+
+        
     }
 }

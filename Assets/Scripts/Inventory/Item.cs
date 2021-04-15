@@ -33,7 +33,8 @@ public class Item
                 itemData.ammoType = data.ammoType;
                 itemData.reloadTime = data.reloadTime;
                 itemData.magSize = data.magSize;
-                itemData.loadedAmmo = data.magSize;
+                itemData.loadedAmmo = data.loadedAmmo;
+                itemData.hasLaserSight = data.hasLaserSight;
             }
             else if (data.itemType == ItemType.Heal)
             {
