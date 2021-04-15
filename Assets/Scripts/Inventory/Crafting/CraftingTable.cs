@@ -75,6 +75,17 @@ public class CraftingTable : Activatable
                     tempOption.itemImage.sprite = recipe.craftingResult.displaySprite;
                 }
             }
+            else if(recipe.craftingResult.resultType == ResultType.armor)
+            {
+                tempOption.itemName.text = "Armor Plate";
+                tempOption.description.text = recipe.craftingResult.nonItemDescription;
+                InventoryUI.Instance.RefreshUI();
+                //tempOption.SetDropDown();
+                if (recipe.craftingResult.displaySprite != null)
+                {
+                    tempOption.itemImage.sprite = recipe.craftingResult.displaySprite;
+                }
+            }
             else
             {
                 //Debug.Log(recipe.name);
@@ -213,8 +224,20 @@ public class CraftingTable : Activatable
                     
                 }
 
-            }
             
+            }
+            else if (craftOption.recipe.craftingResult.resultType == ResultType.armor)
+            {
+                if(Player.Instance.hasArmorPlate)
+                {
+                    craftOption.craftButton.GetComponentInChildren<Text>().text = "Can't Craft Because You Already have an Armor Plate";
+                }
+                else
+                {
+                    craftOption.craftButton.GetComponentInChildren<Text>().text = "Craft";
+                }
+            }
+
         }
     }
 

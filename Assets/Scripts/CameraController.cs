@@ -42,6 +42,7 @@ public class CameraController : MonoBehaviour
 
         //originalOffsetLimitX = offsetLimitX;
         //originalOffsetLimitZ = offsetLimitZ;
+
     }
 
     // Update is called once per frame

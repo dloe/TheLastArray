@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -424,9 +425,13 @@ public class TileGeneration : MonoBehaviour
         _endTile.pathNumber = _pathNumber;
         //check each of this tiles sides, 
 
+
+        levelPath = levelPath.Distinct().ToList();
+        _allActiveTiles = _allActiveTiles.Distinct().ToList();
+
         //label path in scene from list
         //Debug.Log("Path Finished");
-        if(debugPathOn)
+        if (debugPathOn)
             this.GetComponent<LineRenderer>().positionCount = levelPath.Count;
 
         //add random rooms to dungeon
@@ -442,6 +447,8 @@ public class TileGeneration : MonoBehaviour
             SetUpSecretRoom();
         }
 
+
+        
         if (hasDoors)
         {
             ActivateAllDoors();
@@ -582,7 +589,7 @@ public class TileGeneration : MonoBehaviour
         secretRoom.transform.parent = this.transform;
         secretRoom.GetComponent<Tile>().ShadeSecret();
         secretRoom.GetComponent<Tile>().ActivateWalls();
-        Debug.Log("SecretRoom added");
+        //Debug.Log("SecretRoom added");
     }
 
     void CreateSpawnRoom()
@@ -599,7 +606,7 @@ public class TileGeneration : MonoBehaviour
             case spawnRoomSide.right:
                 spawnPos = new Vector3(_startTile.transform.position.x - (myLevelAssetsData.tileSize/2), _startTile.transform.position.y, _startTile.transform.position.z);
                 tile = Instantiate(tilePlaceholder, spawnPos, _startTile.transform.rotation);
-                _playerSpawnPreset = Instantiate(myLevelAssetsData.presetStartingTileAssets[Random.Range(0, myLevelAssetsData.presetStartingTileAssets.Count)], spawnPos, _startTile.transform.rotation);
+                _playerSpawnPreset = Instantiate(myLocalLevel.presetStartingTile, spawnPos, _startTile.transform.rotation);
                 tile.GetComponent<Tile>().downNeighbor = _allActiveTiles[0];
                 _allActiveTiles[0].upNeighbor = tile.GetComponent<Tile>();
                 _playerSpawnPreset.transform.localEulerAngles = new Vector3(tile.transform.localEulerAngles.x, -90, tile.transform.localEulerAngles.z);
@@ -607,7 +614,7 @@ public class TileGeneration : MonoBehaviour
             case spawnRoomSide.left:
                 spawnPos = new Vector3(_startTile.transform.position.x + (myLevelAssetsData.tileSize / 2), _startTile.transform.position.y, _startTile.transform.position.z);
                 tile = Instantiate(tilePlaceholder, spawnPos, _startTile.transform.rotation);
-                _playerSpawnPreset = Instantiate(myLevelAssetsData.presetStartingTileAssets[Random.Range(0, myLevelAssetsData.presetStartingTileAssets.Count)], spawnPos, _startTile.transform.rotation);
+                _playerSpawnPreset = Instantiate(myLocalLevel.presetStartingTile, spawnPos, _startTile.transform.rotation);
                 tile.GetComponent<Tile>().upNeighbor = _allActiveTiles[0];
                 _allActiveTiles[0].downNeighbor = tile.GetComponent<Tile>();
                 _playerSpawnPreset.transform.localEulerAngles = new Vector3(tile.transform.localEulerAngles.x, 90, tile.transform.localEulerAngles.z);
@@ -615,14 +622,14 @@ public class TileGeneration : MonoBehaviour
             case spawnRoomSide.up:
                 spawnPos = new Vector3(_startTile.transform.position.x, _startTile.transform.position.y, _startTile.transform.position.z + (myLevelAssetsData.tileSize / 2));
                 tile = Instantiate(tilePlaceholder, spawnPos, _startTile.transform.rotation);
-                _playerSpawnPreset = Instantiate(myLevelAssetsData.presetStartingTileAssets[Random.Range(0, myLevelAssetsData.presetStartingTileAssets.Count)], spawnPos, _startTile.transform.rotation);
+                _playerSpawnPreset = Instantiate(myLocalLevel.presetStartingTile, spawnPos, _startTile.transform.rotation);
                 tile.GetComponent<Tile>().leftNeighbor = _allActiveTiles[0];
                 _allActiveTiles[0].rightNeighbor = tile.GetComponent<Tile>();
                 break;
             case spawnRoomSide.down:
                 spawnPos = new Vector3(_startTile.transform.position.x, _startTile.transform.position.y, _startTile.transform.position.z - (myLevelAssetsData.tileSize / 2));
                 tile = Instantiate(tilePlaceholder, spawnPos, _startTile.transform.rotation);
-                _playerSpawnPreset = Instantiate(myLevelAssetsData.presetStartingTileAssets[Random.Range(0, myLevelAssetsData.presetStartingTileAssets.Count)], spawnPos, _startTile.transform.rotation);
+                _playerSpawnPreset = Instantiate(myLocalLevel.presetStartingTile, spawnPos, _startTile.transform.rotation);
                 tile.GetComponent<Tile>().rightNeighbor = _allActiveTiles[0];
                 _allActiveTiles[0].leftNeighbor = tile.GetComponent<Tile>();
                 _playerSpawnPreset.transform.localEulerAngles = new Vector3(tile.transform.localEulerAngles.x, 180, tile.transform.localEulerAngles.z);
@@ -740,10 +747,12 @@ public class TileGeneration : MonoBehaviour
                     //if this tile is on the active tile list, remove it so we dont see it again later
 
                 }
-               // if(t != 0)
-                //{
-                   // _branch[t].SyncDoors();
-                //}
+                if(t == _branch.Count - 1)
+                {
+                    //mark as end of branch for possible miniboss spawning
+                    _branch[t].endOfBranchPath = true;
+                    
+                }
             }
 
             //---------------------
@@ -982,8 +991,18 @@ public class TileGeneration : MonoBehaviour
     }
     void ActivateAllDoors()
     {
+        //int pathCount = 0;
+        //Tile tempPrev = null;
+        
+      for(int pathCount = 0; pathCount < levelPath.Count; pathCount++)
+      {
+           // if(pathCount > 0 && levelPath[pathCount] != levelPath[pathCount - 1])
+                levelPath[pathCount].pathNumber = pathCount;
+      }
+
         foreach (Tile t in levelPath)
         {
+            
             t.ActivateDoors();
         }
         DeactivateInActiveRooms();
@@ -1012,6 +1031,9 @@ public class TileGeneration : MonoBehaviour
     /// </summary>
     void CheckTile(Tile tile, List<Tile> current)
     {
+      //  if (current.Contains(tile))
+       //     return;
+
 
         //failsafe to stop possible infinate loop, causes being looked at
         if (failsafeCount == _levelHeight * _levelWidth * 2)

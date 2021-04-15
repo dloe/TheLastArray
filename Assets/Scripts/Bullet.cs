@@ -29,13 +29,18 @@ public class Bullet : MonoBehaviour
         RaycastHit hit;
         if(Physics.SphereCast(transform.position, 0.1f,transform.forward,out hit, 0.3f))
         {
-            
-            if(LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy" && !isEnemyBullet)
+            if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy" && !isEnemyBullet && hit.transform.TryGetComponent<BossEnemy>(out BossEnemy mBossEnemy))
+            {
+                mBossEnemy.TakeDamage(damageToDeal);
+                Destroy(gameObject);
+            }
+            else if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy" && !isEnemyBullet)
             {
 
                 hit.transform.GetComponent<BaseEnemy>().TakeDamage(damageToDeal);
                 Destroy(gameObject);
             }
+            
             if(LayerMask.LayerToName(hit.transform.gameObject.layer) == "Player" && isEnemyBullet)
             {
                 hit.transform.GetComponent<Player>().TakeDamage(damageToDeal);

@@ -29,6 +29,7 @@ public class Player : MonoBehaviour
     public int dmgResist;
     public int skillPoints = 0;
     public bool hasBackPack = false;
+    public bool hasArmorPlate = false;
 
     //public int healthUpgradesLeft;
     //public int dmgResistUpgradesLeft;
@@ -57,6 +58,7 @@ public class Player : MonoBehaviour
     public GameObject endScreen;
     public Text endScreenText;
     public Text levelText;
+    public Image ArmorPlateImage;
     #endregion
 
     #region Health Variables
@@ -182,6 +184,11 @@ public class Player : MonoBehaviour
 
         //Updates the level text string to show which level is active
         levelText.text = SceneManager.GetActiveScene().name;
+
+        if(hasArmorPlate)
+        {
+            ArmorPlateImage.gameObject.SetActive(true);
+        }
     }
 
     // Update is called once per frame
@@ -454,13 +461,17 @@ public class Player : MonoBehaviour
         RaycastHit hit;
         if(inventory.selectedItem.itemData.canAttack)
         {
-            Debug.Log("Melee Attack");
+            //Debug.Log("Melee Attack");
             if (Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward, out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange))
             {
-
-                
                 StartCoroutine(inventory.selectedItem.itemData.CoolDown());
-                if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
+
+                if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy" && hit.transform.TryGetComponent<BossEnemy>(out BossEnemy mBossEnemy))
+                {
+                    mBossEnemy.TakeDamage(inventory.selectedItem.itemData.damage);
+                    Debug.Log("yep boss hit");
+                }
+                else if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
                 {
                     Debug.Log("Durability Before: " + inventory.selectedItem.itemData.durability);
                     if (inventory.selectedItem.itemData.hasDurability)
@@ -501,8 +512,17 @@ public class Player : MonoBehaviour
     /// </summary>
     public void TakeDamage(int damage)
     {
-        Health -= damage;
-        StartCoroutine(Damaged());
+        if(hasArmorPlate)
+        {
+            hasArmorPlate = false;
+            ArmorPlateImage.gameObject.SetActive(false);
+        }
+        else
+        {
+            Health -= damage;
+            StartCoroutine(Damaged());
+        }
+        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -585,6 +605,7 @@ public class Player : MonoBehaviour
         playerSave.meds = MedsCount;
         playerSave.skillPoints = skillPoints;
         playerSave.hasBackPack = hasBackPack;
+        playerSave.hasArmorPlate = hasArmorPlate;
         playerSave.lightAmmo = currentLightAmmo;
         playerSave.heavyAmmo = currentHeavyAmmo;
         
@@ -614,6 +635,7 @@ public class Player : MonoBehaviour
             MedsCount = playerSave.meds;
             skillPoints = playerSave.skillPoints;
             hasBackPack = playerSave.hasBackPack;
+            hasArmorPlate = playerSave.hasArmorPlate;
 
             currentLightAmmo = playerSave.lightAmmo;
             currentHeavyAmmo = playerSave.heavyAmmo;
@@ -658,6 +680,7 @@ public class PlayerSave
     public int scrap, cloth, meds;
     public int skillPoints;
     public bool hasBackPack;
+    public bool hasArmorPlate;
 
     public int lightAmmo;
     public int heavyAmmo;
