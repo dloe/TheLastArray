@@ -65,7 +65,7 @@ public class Upgrades : MonoBehaviour
         }
     }
 
-    public int Speed
+    public float Speed
     {
         get
         {
@@ -74,7 +74,7 @@ public class Upgrades : MonoBehaviour
         set
         {
             player.speedStat = value;
-            speedText.text = player.speedStat.ToString();
+            speedText.text = player.speedStat.ToString("#0.0");
         }
     }
     #endregion
@@ -270,7 +270,7 @@ public class Upgrades : MonoBehaviour
         }
         else if(button.name == speedExchangeButton.name)
         {
-            Speed += 1;
+            Speed += .3f;
         }
         else if (button.name == dmgResistExchangeButton.name)
         {
