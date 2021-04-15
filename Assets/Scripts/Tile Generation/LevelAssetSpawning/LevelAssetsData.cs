@@ -44,6 +44,7 @@ public class LevelAssetsData : ScriptableObject
     public int levelTier = 0;
     [Space(10)]
     public EnemyPrefab enemyPrefab;
+    public EnemyPrefab EnemyMINIBOSSPrefab;
     [Space(10)]
     
     [Header("Boss Detection")]
