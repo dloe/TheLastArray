@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
     public Activatable thingToActivate;
 
     [Header("Player Stats")]
-    public int speedStat = 5;
+    public float speedStat = 5f;
     public int dmgResist;
     public int skillPoints = 0;
     public bool hasBackPack = false;
@@ -553,7 +553,7 @@ public class Player : MonoBehaviour
         maxHealth = baseData.maxHealth;
         Health = baseData.health;
         dmgResist = baseData.dmgResist;
-
+        speedStat = baseData.speedStat;
        
         
         ScrapCount = baseData.scrap;
@@ -654,7 +654,7 @@ public class PlayerSave
     public int maxHealth;
     public int health;
     public int dmgResist;
-    public int speedStat;
+    public float speedStat;
     public int scrap, cloth, meds;
     public int skillPoints;
     public bool hasBackPack;
