@@ -62,6 +62,7 @@ public class LocalLevel : MonoBehaviour
     public List<GameObject> presetBigTileAssets;
     [Header("Tile Prefabs with objectives")]
     public List<GameObject> presetObjectiveTiles;
+    public GameObject presetStartingTile;
 
 
     private void Awake()
@@ -207,22 +208,26 @@ public class LocalLevel : MonoBehaviour
                 presetTileAssets = new List<GameObject>(myLvlAssetData.forest_presetTileAssets);
                 presetBigTileAssets = new List<GameObject>(myLvlAssetData.forest_presetBigTileAssets);
                 presetObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetObjectiveTiles);
+                presetStartingTile = myLvlAssetData.forest_presetStartingTile;
                 break;
             case levelTier.level2:
                 //urban? for now use forest for everything
                 presetTileAssets = new List<GameObject>(myLvlAssetData.forest_presetTileAssets);
                 presetBigTileAssets = new List<GameObject>(myLvlAssetData.forest_presetBigTileAssets);
                 presetObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetObjectiveTiles);
+                presetStartingTile = myLvlAssetData.forest_presetStartingTile;
                 break;
             case levelTier.level3:
                 presetTileAssets = new List<GameObject>(myLvlAssetData.forest_presetTileAssets);
                 presetBigTileAssets = new List<GameObject>(myLvlAssetData.forest_presetBigTileAssets);
                 presetObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetObjectiveTiles);
+                presetStartingTile = myLvlAssetData.forest_presetStartingTile;
                 break;
             case levelTier.level4:
                 presetTileAssets = new List<GameObject>(myLvlAssetData.forest_presetTileAssets);
                 presetBigTileAssets = new List<GameObject>(myLvlAssetData.forest_presetBigTileAssets);
                 presetObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetObjectiveTiles);
+                presetStartingTile = myLvlAssetData.forest_presetStartingTile;
                 break;
             default:
                 break;

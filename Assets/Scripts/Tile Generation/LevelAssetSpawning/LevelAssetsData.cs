@@ -51,8 +51,8 @@ public class LevelAssetsData : ScriptableObject
     public GameObject bossDetection;
     public GameObject bossTileLastArray;
 
-    [Header("Starting Tile Prefabs")]
-    public List<GameObject> presetStartingTileAssets;
+    //[Header("Starting Tile Prefabs")]
+    //public List<GameObject> presetStartingTileAssets;
 
     [Header("Secret Room Varations")]
     public List<GameObject> secretRoomAssets;
@@ -65,6 +65,8 @@ public class LevelAssetsData : ScriptableObject
     public List<GameObject> forest_presetBigTileAssets;
     [Header("Tile Prefabs with objectives")]
     public List<GameObject> forest_presetObjectiveTiles;
+    [Header("Tile starting tile")]
+    public GameObject forest_presetStartingTile;
     [Space(5)]
     [Header("Outskirts")]
     [Header("The Small 1 Tile Preset Variations")]
@@ -73,5 +75,7 @@ public class LevelAssetsData : ScriptableObject
     public List<GameObject> outskirts_presetBigTileAssets;
     [Header("Tile Prefabs with objectives")]
     public List<GameObject> outskirts_presetObjectiveTiles;
+    [Header("Tile starting tile")]
+    public GameObject outskirts_presetStartingTile;
 }
 
