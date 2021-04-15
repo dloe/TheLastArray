@@ -8,7 +8,8 @@ public enum ResultType
 {
     item,
     ammo,
-    attachment
+    attachment,
+    armor
 }
 
 [Serializable]
@@ -27,7 +28,10 @@ public class Result
 
     [Header("Sprite for if the result is not an item")]
     public Sprite displaySprite;
-    
+
+    [Header("Description for if the result is not an item")]
+    public string nonItemDescription;
+
     [Header("ignore if result type is not ammo")]
     public AmmoType ammoType;
 
@@ -105,8 +109,7 @@ public class CraftingRecipe : ScriptableObject
                     break;
             }
         }
-        
-        if(craftingResult.resultType == ResultType.attachment && result)
+        else if(craftingResult.resultType == ResultType.attachment && result)
         {
             if(player.inventory.selectedItem != null && player.inventory.selectedItem.itemData.itemType == ItemType.RangedWeapon)
             {
@@ -126,6 +129,10 @@ public class CraftingRecipe : ScriptableObject
                 result = false;
             }
            
+        }
+        else if(craftingResult.resultType == ResultType.armor && result)
+        {
+            result = !player.hasArmorPlate;
         }
 
         if(amountToCraft == 0)
@@ -199,6 +206,11 @@ public class CraftingRecipe : ScriptableObject
                     default:
                         break;
                 }
+            }
+            else if( craftingResult.resultType == ResultType.armor)
+            {
+                player.hasArmorPlate = true;
+                player.ArmorPlateImage.gameObject.SetActive(true);
             }
             else
             {
