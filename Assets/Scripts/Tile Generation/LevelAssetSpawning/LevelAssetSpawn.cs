@@ -1382,10 +1382,10 @@ public class LevelAssetSpawn : MonoBehaviour
     {
         _possibleEnemiesInLevel = reshuffle(_possibleEnemiesInLevel);
 
-        Debug.Log(possibleminiBossCount);
+        //Debug.Log(possibleminiBossCount);
         if(possibleminiBossCount < _miniBossCap)
         {
-            Debug.Log("added miniboss");
+            //Debug.Log("added miniboss");
             int enemyIndex = Random.Range(0, _possibleEnemiesInLevel.Count);
             _possibleEnemiesInLevel[enemyIndex].GetComponent<PossibleEnemy>().canBeMiniBoss = true;
             //_possibleEnemiesInLevel.RemoveAt(enemyIndex);
@@ -2231,7 +2231,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 //Destroy(mPossibleEnemy.gameObject);
                 if (mPossibleEnemy.canBeMiniBoss)
                 {
-                    Debug.Log("cehck");
+                    //Debug.Log("cehck");
                     enemy.name += "_MINIBOSS";
                     miniBossesInLevel.Add(enemy);
                     currentMiniBossCount++;
