@@ -63,8 +63,10 @@ public class LevelAssetsData : ScriptableObject
     public List<GameObject> forest_presetTileAssets;
     [Header("The Big 4 Tile Preset Variations")]
     public List<GameObject> forest_presetBigTileAssets;
-    [Header("Tile Prefabs with objectives")]
+    [Header("Small Tile Prefabs with objectives")]
     public List<GameObject> forest_presetObjectiveTiles;
+    [Header("Big Tile Prefabs with objects")]
+    public List<GameObject> forest_presetBigTileObjectives;
     [Header("Tile starting tile")]
     public GameObject forest_presetStartingTile;
     [Space(5)]
@@ -75,6 +77,8 @@ public class LevelAssetsData : ScriptableObject
     public List<GameObject> outskirts_presetBigTileAssets;
     [Header("Tile Prefabs with objectives")]
     public List<GameObject> outskirts_presetObjectiveTiles;
+    [Header("Big Tile Prefabs with objects")]
+    public List<GameObject> outskirts_presetBigTileObjectives;
     [Header("Tile starting tile")]
     public GameObject outskirts_presetStartingTile;
 }

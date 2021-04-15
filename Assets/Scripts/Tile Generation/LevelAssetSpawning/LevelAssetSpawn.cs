@@ -57,7 +57,7 @@ public class LevelAssetSpawn : MonoBehaviour
     public int collectables;
     [Header("Amount of enemies spawned in level")]
     public int enemyCount;
-    public int miniBossCount;
+    public int possibleminiBossCount;
     static int tier1MiniBossCap = 1;
     static int tier2MiniBossCap = 1;
     static int tier3MiniBossCap = 2;
@@ -616,8 +616,11 @@ public class LevelAssetSpawn : MonoBehaviour
                                             foreach (GameObject enemy in mPresetTileInfo.GetComponent<PresetTileInfo>().enemiesOnPreset)
                                             {
                                                 _possibleEnemiesInLevel.Remove(enemy);
-                                                if(miniBossesInLevel.Remove(enemy))
+                                                if (miniBossesInLevel.Remove(enemy))
+                                                {
                                                     currentMiniBossCount--;
+                                                    possibleminiBossCount--;
+                                                }
                                             }
 
                                             if (mPresetTileInfo.objectiveSpawn != null)
@@ -770,8 +773,11 @@ public class LevelAssetSpawn : MonoBehaviour
                                             foreach (GameObject enemy in mPresetTileInfo.GetComponent<PresetTileInfo>().enemiesOnPreset)
                                             {
                                                 _possibleEnemiesInLevel.Remove(enemy);
-                                                 if(miniBossesInLevel.Remove(enemy))
+                                                if (miniBossesInLevel.Remove(enemy))
+                                                {
                                                     currentMiniBossCount--;
+                                                    possibleminiBossCount--;
+                                                }
                                             }
 
                                             if (mPresetTileInfo.objectiveSpawn != null)
@@ -859,6 +865,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     int indexEnemies = Random.Range(0, preset.GetComponent<PresetTileInfo>().enemiesOnPreset.Length);
                     preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies].GetComponent<PossibleEnemy>().canBeMiniBoss = true;
                     _possibleEnemiesInLevel.Remove(preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies]);
+                    possibleminiBossCount++;
                 }
             }
 
@@ -958,7 +965,7 @@ public class LevelAssetSpawn : MonoBehaviour
         }
         else
         {
-            preset = Instantiate(myLocalLevel.presetBigTileAssets[1], bigTile.transform.position, bigTile.transform.rotation);
+            preset = Instantiate(myLocalLevel.presetBigObjectiveTiles[Random.Range(0, myLocalLevel.presetBigObjectiveTiles.Count)], bigTile.transform.position, bigTile.transform.rotation);
             preset.transform.parent = bigTile.transform;
 
             bigAssetCountArray[1] += 1;
@@ -975,7 +982,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies].GetComponent<PossibleEnemy>().canBeMiniBoss = true;
                // miniBossesInLevel.Add(preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies]);
                 _possibleEnemiesInLevel.Remove(preset.GetComponent<PresetTileInfo>().enemiesOnPreset[indexEnemies]);
-                //currentMiniBossCount++;
+                possibleminiBossCount++;
             }
         }
 
@@ -1374,6 +1381,17 @@ public class LevelAssetSpawn : MonoBehaviour
     void ActivateEnemies()
     {
         _possibleEnemiesInLevel = reshuffle(_possibleEnemiesInLevel);
+
+       // Debug.Log(currentMiniBossCount);
+        if(possibleminiBossCount < _miniBossCap)
+        {
+            Debug.Log("added miniboss");
+            int enemyIndex = Random.Range(0, _possibleEnemiesInLevel.Count);
+            _possibleEnemiesInLevel[enemyIndex].GetComponent<PossibleEnemy>().canBeMiniBoss = true;
+            _possibleEnemiesInLevel.RemoveAt(enemyIndex);
+            
+        }
+
         //Debug.Log(myLevelAsset.levelTier);
         switch (myLocalLevel.thisLevelTier)
         {
@@ -1718,6 +1736,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 Destroy(_possibleEnemiesInLevel[enemyCount]);
                 if (mPossibleEnemy.canBeMiniBoss)
                 {
+                    Debug.Log("cehck");
                     enemy.name += "_MINIBOSS";
                     miniBossesInLevel.Add(enemy);
                     currentMiniBossCount++;
@@ -2212,6 +2231,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 //Destroy(mPossibleEnemy.gameObject);
                 if (mPossibleEnemy.canBeMiniBoss)
                 {
+                    Debug.Log("cehck");
                     enemy.name += "_MINIBOSS";
                     miniBossesInLevel.Add(enemy);
                     currentMiniBossCount++;

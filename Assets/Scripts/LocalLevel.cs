@@ -62,6 +62,8 @@ public class LocalLevel : MonoBehaviour
     public List<GameObject> presetBigTileAssets;
     [Header("Tile Prefabs with objectives")]
     public List<GameObject> presetObjectiveTiles;
+    [Header("Big Tile Prefabs with objectives")]
+    public List<GameObject> presetBigObjectiveTiles;
     public GameObject presetStartingTile;
 
 
@@ -208,6 +210,7 @@ public class LocalLevel : MonoBehaviour
                 presetTileAssets = new List<GameObject>(myLvlAssetData.forest_presetTileAssets);
                 presetBigTileAssets = new List<GameObject>(myLvlAssetData.forest_presetBigTileAssets);
                 presetObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetObjectiveTiles);
+                presetBigObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetBigTileObjectives);
                 presetStartingTile = myLvlAssetData.forest_presetStartingTile;
                 break;
             case levelTier.level2:
@@ -215,18 +218,21 @@ public class LocalLevel : MonoBehaviour
                 presetTileAssets = new List<GameObject>(myLvlAssetData.forest_presetTileAssets);
                 presetBigTileAssets = new List<GameObject>(myLvlAssetData.forest_presetBigTileAssets);
                 presetObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetObjectiveTiles);
+                presetBigObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetBigTileObjectives);
                 presetStartingTile = myLvlAssetData.forest_presetStartingTile;
                 break;
             case levelTier.level3:
                 presetTileAssets = new List<GameObject>(myLvlAssetData.forest_presetTileAssets);
                 presetBigTileAssets = new List<GameObject>(myLvlAssetData.forest_presetBigTileAssets);
                 presetObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetObjectiveTiles);
+                presetBigObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetBigTileObjectives);
                 presetStartingTile = myLvlAssetData.forest_presetStartingTile;
                 break;
             case levelTier.level4:
                 presetTileAssets = new List<GameObject>(myLvlAssetData.forest_presetTileAssets);
                 presetBigTileAssets = new List<GameObject>(myLvlAssetData.forest_presetBigTileAssets);
                 presetObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetObjectiveTiles);
+                presetBigObjectiveTiles = new List<GameObject>(myLvlAssetData.forest_presetBigTileObjectives);
                 presetStartingTile = myLvlAssetData.forest_presetStartingTile;
                 break;
             default:
