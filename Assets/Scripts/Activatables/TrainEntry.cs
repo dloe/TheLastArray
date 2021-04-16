@@ -19,7 +19,7 @@ public class TrainEntry : Activatable
             localLevel.LevelBeat();
                 
         }
-        else if(isActivated && localLevel.thisLevelTier == levelTier.level4)
+        else if(!isActivated && localLevel.thisLevelTier == levelTier.level4)
             Objectives.Instance.SendCompletedMessage(Condition.KillEnemy);
 
     }
