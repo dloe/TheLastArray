@@ -794,7 +794,7 @@ public class BossEnemy : MonoBehaviour
 
         //  if (isObjectiveEnemy)
         //  {
-        Objectives.Instance.SendCompletedMessage(Condition.KillEnemy);
+        //Objectives.Instance.SendCompletedMessage(Condition.KillEnemy);
       //  }
         Destroy(this.gameObject);
     }

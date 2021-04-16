@@ -1775,7 +1775,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 Destroy(_possibleEnemiesInLevel[enemyCount]);
                 if (mPossibleEnemy.canBeMiniBoss)
                 {
-                    Debug.Log("cehck");
+                    //Debug.Log("cehck");
                     enemy.name += "_MINIBOSS";
                     miniBossesInLevel.Add(enemy);
                     currentMiniBossCount++;
@@ -2306,7 +2306,5 @@ public class LevelAssetSpawn : MonoBehaviour
 
 
     }
-
-
 
 }
