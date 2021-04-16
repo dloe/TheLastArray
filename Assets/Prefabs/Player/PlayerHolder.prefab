@@ -217,6 +217,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3652509706722602339}
   - component: {fileID: 5866610067693450670}
+  - component: {fileID: 5815296124250942414}
   m_Layer: 0
   m_Name: Fucking_minimap_cam
   m_TagString: Untagged
@@ -281,6 +282,21 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &5815296124250942414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4112895171807026954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dabcd6b328146184aad6c9e0ddd5ad0c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toExclude:
+    serializedVersion: 2
+    m_Bits: 4751392
 --- !u!1 &5943184818071383480
 GameObject:
   m_ObjectHideFlags: 0
