@@ -529,10 +529,23 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        //Debug.Log(other);
         if(other.TryGetComponent(out thingToActivate))
         {
             //Debug.Log("cock");
             thingToActivate = other.GetComponent<Activatable>();
+        }
+
+        if(other.TryGetComponent<PlayerDetection>(out PlayerDetection tile))
+        {
+            //Debug.Log("ow");
+            if(!tile.hasBeenVisited)
+            {
+               // Debug.Log("hit");
+                tile.hasBeenVisited = true;
+                tile.fogofwar.layer = 22;
+                
+            }
         }
     }
 

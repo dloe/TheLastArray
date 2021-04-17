@@ -87,6 +87,8 @@ public class Tile : MonoBehaviour
     public bool hasDoors = false;
     //when door is activated, it will not spawn any blockage or enviornment where the door is located, otherwise that direction/doorway will be blocked for the player
     public GameObject[] doors;
+
+    
     #endregion
 
     private void Start()
