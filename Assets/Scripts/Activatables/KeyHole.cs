@@ -19,7 +19,12 @@ public class KeyHole : Activatable
                 {
                     foreach (Transform gradchild in child.transform)
                     {
+                        //Debug.Log(gradchild.name);
                         gradchild.gameObject.layer = 15;
+                        if(gradchild.childCount > 0 && gradchild.GetChild(0).TryGetComponent<Canvas>(out Canvas mCanv))
+                        {
+                            gradchild.GetChild(0).transform.gameObject.layer = 15;
+                        }
                     }
                 }
             }
@@ -44,6 +49,10 @@ public class KeyHole : Activatable
                         foreach (Transform gradchild in child.transform)
                         {
                             gradchild.gameObject.layer = 0;
+                            if (gradchild.childCount > 0 && gradchild.GetChild(0).TryGetComponent<Canvas>(out Canvas mCanv))
+                            {
+                                gradchild.GetChild(0).transform.gameObject.layer = 5;
+                            }
                         }
                     }
                 }

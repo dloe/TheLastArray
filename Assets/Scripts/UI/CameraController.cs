@@ -43,6 +43,10 @@ public class CameraController : MonoBehaviour
         //originalOffsetLimitX = offsetLimitX;
         //originalOffsetLimitZ = offsetLimitZ;
 
+
+        //Dylan added this to exclude layer of secret room interior
+        //Camera cam = GetComponent<Camera>();
+        //cam.cullingMask = ~(1 << LayerMask.NameToLayer("HiddenSecretInterior"));
     }
 
     // Update is called once per frame
@@ -63,9 +67,6 @@ public class CameraController : MonoBehaviour
         clampOffset();
 
 
-        //Dylan added this to exclude layer of secret room interior
-        Camera cam = GetComponent<Camera>();
-        cam.cullingMask = ~(1 << LayerMask.NameToLayer("HiddenSecretInterior"));
 
     }
 
