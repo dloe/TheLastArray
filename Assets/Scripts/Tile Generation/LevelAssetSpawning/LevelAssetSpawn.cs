@@ -148,7 +148,8 @@ public class LevelAssetSpawn : MonoBehaviour
         //activate walls
         foreach (Tile t in myTileGeneration._allActiveTiles)
         {
-            t.ActivateWalls();
+            if(t.tileStatus != Tile.TileStatus.startingRoom)
+                t.ActivateWalls();
             if (myLocalLevel.thisLevelTier != levelTier.level4)
                 AnalyzeTile(t);
             else
