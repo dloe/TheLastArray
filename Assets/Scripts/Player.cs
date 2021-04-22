@@ -54,6 +54,9 @@ public class Player : MonoBehaviour
     public AudioClip pistolEmpty_clip;
     public AudioClip pistolReload_clip;
     public AudioClip melee_clip;
+    [Header("Damage Audio")]
+    public AudioClip[] takeDamage_clip;
+    public AudioClip armorDamage_clip;
 
     #region Ammo
     public int currentLightAmmo = 0;
@@ -535,6 +538,7 @@ public class Player : MonoBehaviour
     /// </summary>
     public void TakeDamage(int damage)
     {
+        TakeDamageAudio(hasArmorPlate);
         if (hasArmorPlate)
         {
             hasArmorPlate = false;
@@ -542,6 +546,7 @@ public class Player : MonoBehaviour
         }
         else
         {
+            
             Health -= damage;
             StartCoroutine(Damaged());
         }
@@ -626,6 +631,20 @@ public class Player : MonoBehaviour
 
     #region Audio
 
+    void TakeDamageAudio(bool tookDamage)
+    {
+        if (tookDamage)
+        {
+            int aIndex = Random.Range(0, takeDamage_clip.Length);
+            _audioSource.clip = takeDamage_clip[aIndex];
+        }
+        else
+        {
+            _audioSource.clip = armorDamage_clip;
+        }
+
+        _audioSource.Play();
+    }
     void WeaponFireAudio(int audio)
     {
         switch (audio)
