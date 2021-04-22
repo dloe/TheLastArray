@@ -9,7 +9,8 @@ public enum ResultType
     item,
     ammo,
     attachment,
-    armor
+    armor,
+    fireBullets
 }
 
 [Serializable]
@@ -32,7 +33,7 @@ public class Result
     [Header("Description for if the result is not an item")]
     public string nonItemDescription;
 
-    [Header("ignore if result type is not ammo")]
+    [Header("ignore if result type is not ammo/fire bullets")]
     public AmmoType ammoType;
 
     [Header("ignore if result type is not attachment")]
@@ -134,6 +135,26 @@ public class CraftingRecipe : ScriptableObject
         {
             result = !player.hasArmorPlate;
         }
+        else if(craftingResult.resultType == ResultType.fireBullets && result)
+        {
+            if (player.inventory.selectedItem != null && player.inventory.selectedItem.itemData.itemType == ItemType.RangedWeapon)
+            {
+                if(player.inventory.selectedItem.itemData.usingFireBullets)
+                {
+                    result = false;
+                }
+                else
+                {
+                    result = player.inventory.selectedItem.itemData.ammoType == craftingResult.ammoType;
+                }
+               
+
+            }
+            else
+            {
+                result = false;
+            }
+        }
 
         if(amountToCraft == 0)
         {
@@ -211,6 +232,11 @@ public class CraftingRecipe : ScriptableObject
             {
                 player.hasArmorPlate = true;
                 player.ArmorPlateImage.gameObject.SetActive(true);
+            }
+            else if(craftingResult.resultType == ResultType.fireBullets)
+            {
+                player.inventory.selectedItem.itemData.LoadFireBullets();
+
             }
             else
             {

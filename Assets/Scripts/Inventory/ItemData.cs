@@ -47,12 +47,29 @@ public class ItemData : ScriptableObject
     public int magSize = 5;
     public int loadedAmmo;
 
+    private int _FireAmmo;
+    public int fireLoadedAmmo
+    {
+        get => _FireAmmo;
+        set
+        {
+            _FireAmmo = value;
+            if(_FireAmmo == 0)
+            {
+                
+                InventoryUI.Instance.StartCoroutine(FireToNormal());
+            }
+        }
+        
+    }
+
 
     public int amountToHeal = 1;
 
     public bool canAttack = true;
     public bool reloading = false;
     public bool hasLaserSight = false;
+    public bool usingFireBullets = false;
 
 
     public IEnumerator CoolDown()
@@ -72,8 +89,16 @@ public class ItemData : ScriptableObject
         else
         {
             reloading = true;
+
             Debug.Log("Reloading...");
-            yield return new WaitForSeconds(reloadTime);
+            for(int i = (int)reloadTime; i > 0; i--)
+            {
+                InventoryUI.Instance.currentAmmoName.text = "Reloading... " + i;
+                yield return new WaitForSeconds(1);
+            }
+
+            
+            //yield return new WaitForSeconds(reloadTime);
             Debug.Log("Reloaded");
             loadedAmmo += amountToReload;
             switch (ammoType)
@@ -87,10 +112,45 @@ public class ItemData : ScriptableObject
                 default:
                     break;
             }
+            
+            
 
             InventoryUI.Instance.RefreshUI();
             reloading = false;
         }
+    }
+
+    public IEnumerator FireToNormal()
+    {
+        if (itemType != ItemType.RangedWeapon)
+        {
+            yield return new WaitForEndOfFrame();
+            Debug.LogError("This Function cannot be called unless the item is a ranged weapon, refrain from doing so");
+        }
+        else
+        {
+            reloading = true;
+
+            Debug.Log("Reloading...");
+            for (int i = (int)reloadTime; i > 0; i--)
+            {
+                InventoryUI.Instance.currentAmmoName.text = "Reloading... " + i;
+                yield return new WaitForSeconds(1);
+            }
+            Debug.Log("Reloaded");
+
+
+            usingFireBullets = false;
+            InventoryUI.Instance.RefreshUI();
+            reloading = false;
+        }
+    }
+
+    public void LoadFireBullets()
+    {
+        usingFireBullets = true;
+        fireLoadedAmmo = magSize;
+        InventoryUI.Instance.RefreshUI();
     }
 
 }

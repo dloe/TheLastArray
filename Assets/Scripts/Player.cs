@@ -366,13 +366,23 @@ public class Player : MonoBehaviour
             Debug.Log(inventory.selectedItem.itemData.loadedAmmo);   
             if (inventory.selectedItem.itemData.ammoType == AmmoType.LightAmmo )
             {
-                if(inventory.selectedItem.itemData.loadedAmmo > 0)
+                if(inventory.selectedItem.itemData.loadedAmmo > 0 )
                 {
                     Bullet bullet;
                     bullet = Instantiate(pistolBulletPrefab, transform.position, transform.rotation).GetComponent<Bullet>();
                     bullet.damageToDeal = inventory.selectedItem.itemData.damage;
+                    bullet.isFireBullet = inventory.selectedItem.itemData.usingFireBullets;
                     StartCoroutine(inventory.selectedItem.itemData.CoolDown());
-                    inventory.selectedItem.itemData.loadedAmmo--;
+
+                    if(inventory.selectedItem.itemData.usingFireBullets)
+                    {
+                        inventory.selectedItem.itemData.fireLoadedAmmo--;
+                    }
+                    else
+                    {
+                        inventory.selectedItem.itemData.loadedAmmo--;
+                    }
+                   
                     Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
                 }
                 else
@@ -383,13 +393,21 @@ public class Player : MonoBehaviour
             }
             else if (inventory.selectedItem.itemData.ammoType == AmmoType.HeavyAmmo )
             {
-                if (inventory.selectedItem.itemData.loadedAmmo > 0)
+                if (inventory.selectedItem.itemData.loadedAmmo > 0 )
                 {
                     Bullet bullet;
                     bullet = Instantiate(rifleBulletPrefab, transform.position, transform.rotation).GetComponent<Bullet>();
                     bullet.damageToDeal = inventory.selectedItem.itemData.damage;
+                    bullet.isFireBullet = inventory.selectedItem.itemData.usingFireBullets;
                     StartCoroutine(inventory.selectedItem.itemData.CoolDown());
-                    inventory.selectedItem.itemData.loadedAmmo--;
+                    if (inventory.selectedItem.itemData.usingFireBullets)
+                    {
+                        inventory.selectedItem.itemData.fireLoadedAmmo--;
+                    }
+                    else
+                    {
+                        inventory.selectedItem.itemData.loadedAmmo--;
+                    }
                     Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
                 }
                 else

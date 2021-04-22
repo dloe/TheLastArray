@@ -185,21 +185,34 @@ public class InventoryUI : MonoBehaviour
                     currentAmmoName.gameObject.SetActive(true);
                     equipedWeaponReservesText.gameObject.SetActive(true);
 
-                    switch (inventory.selectedItem.itemData.ammoType)
+                    if(inventory.selectedItem.itemData.usingFireBullets)
                     {
-                        case AmmoType.LightAmmo:
-                            equipedWeaponReservesText.text = Player.Instance.currentLightAmmo.ToString();
-                            break;
-                        case AmmoType.HeavyAmmo:
-                            equipedWeaponReservesText.text = Player.Instance.currentHeavyAmmo.ToString();
-                            break;
-                        default:
-                            break;
-                    }
+                        equipedWeaponDashText.gameObject.SetActive(false);
+                        equipedWeaponReservesText.gameObject.SetActive(false);
+                        equipedWeaponAmmoText.text = inventory.selectedItem.itemData.fireLoadedAmmo.ToString();
 
-                    equipedWeaponAmmoText.text = inventory.selectedItem.itemData.loadedAmmo.ToString();
+                        currentAmmoName.text = "Fire Bullets";
+                    }
+                    else
+                    {
+                        switch (inventory.selectedItem.itemData.ammoType)
+                        {
+                            case AmmoType.LightAmmo:
+                                equipedWeaponReservesText.text = Player.Instance.currentLightAmmo.ToString();
+                                break;
+                            case AmmoType.HeavyAmmo:
+                                equipedWeaponReservesText.text = Player.Instance.currentHeavyAmmo.ToString();
+                                break;
+                            default:
+                                break;
+                        }
+                        equipedWeaponAmmoText.text = inventory.selectedItem.itemData.loadedAmmo.ToString();
+
+                        currentAmmoName.text = inventory.selectedItem.itemData.ammoType.ToString();
+                    }
                     
-                    currentAmmoName.text = inventory.selectedItem.itemData.ammoType.ToString();
+
+                    
 
                     Player.Instance.SetMeleeVisualActive(false);
                     Player.Instance.laserLine.gameObject.SetActive(inventory.selectedItem.itemData.hasLaserSight);
