@@ -120,6 +120,7 @@ public class BaseEnemy : MonoBehaviour
 
     [Header("Audio")]
     public AudioClip[] agroSound;
+    public AudioClip[] takeDamageSound;
     [Space(25)]
     AudioSource _audioSource;
     
