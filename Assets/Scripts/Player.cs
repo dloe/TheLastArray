@@ -13,14 +13,14 @@ public class Player : MonoBehaviour
     public PlayerData baseData;
 
     public GameObject meleeVisual;
-    
+
     [Header("Prefabs for Bullet")]
     public GameObject pistolBulletPrefab;
     public GameObject rifleBulletPrefab;
-    
+
     //inventory of the player
     public Inventory inventory = new Inventory();
-    
+
     [Header("Activatable / Interactable To Use")]
     public Activatable thingToActivate;
 
@@ -43,6 +43,17 @@ public class Player : MonoBehaviour
     public Vector3 meleeExtents = new Vector3();
     [Header("Melee Forward Detection Distance")]
     public float meleeDist = 1f;
+
+    [Space(20)]
+    AudioSource _audioSource;
+    [Header("Weapon Audio")]
+    public AudioClip rifleFire_clip;
+    public AudioClip rifleReload_clip;
+    public AudioClip rifleEmpty_clip;
+    public AudioClip pistolFire_clip;
+    public AudioClip pistolEmpty_clip;
+    public AudioClip pistolReload_clip;
+    public AudioClip melee_clip;
 
     #region Ammo
     public int currentLightAmmo = 0;
@@ -70,11 +81,11 @@ public class Player : MonoBehaviour
         }
         set
         {
-            if(value > maxHealth)
+            if (value > maxHealth)
             {
                 health = maxHealth;
             }
-            else if(value < 0)
+            else if (value < 0)
             {
                 health = 0;
             }
@@ -83,12 +94,12 @@ public class Player : MonoBehaviour
                 health = value;
             }
             healthText.text = health + "/" + maxHealth;
-            if(health == 0)
+            if (health == 0)
             {
                 endScreen.SetActive(true);
                 Time.timeScale = 0;
             }
-            healthBar.fillAmount = health *1f / maxHealth;
+            healthBar.fillAmount = health * 1f / maxHealth;
         }
     }
     private int health;
@@ -171,9 +182,10 @@ public class Player : MonoBehaviour
     void Start()
     {
         Debug.Log("Player Start");
+        _audioSource = GetComponent<AudioSource>();
         _mainTransform = transform;
         playerHolderTransform = transform.parent;
-        if(SceneManager.GetActiveScene().name == baseData.levelOneName )
+        if (SceneManager.GetActiveScene().name == baseData.levelOneName)
         {
             SetStatsToBase();
         }
@@ -185,7 +197,7 @@ public class Player : MonoBehaviour
         //Updates the level text string to show which level is active
         levelText.text = SceneManager.GetActiveScene().name;
 
-        if(hasArmorPlate)
+        if (hasArmorPlate)
         {
             ArmorPlateImage.gameObject.SetActive(true);
         }
@@ -203,12 +215,12 @@ public class Player : MonoBehaviour
             //if there is a grabbable item and the inventory is not full, then E picks up item
             if (Input.GetKeyDown(KeyCode.E) && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
             {
-                if(thingToActivate)
+                if (thingToActivate)
                 {
                     thingToActivate.Activate();
-                    
+
                 }
-                
+
             }
 
             //uses currently selected item
@@ -238,19 +250,19 @@ public class Player : MonoBehaviour
             //drops currently selected item on the ground at the player's feet
             if (Input.GetKeyDown(KeyCode.Q) && inventory.selectedItem != null && !thingToActivate)
             {
-                
+
                 inventory.DropItem();
             }
 
-            
 
-            if(Input.GetKeyDown(KeyCode.R) && !inventory.selectedItem.itemData.reloading && inventory.selectedItem.itemData.loadedAmmo < inventory.selectedItem.itemData.magSize)
+
+            if (Input.GetKeyDown(KeyCode.R) && !inventory.selectedItem.itemData.reloading && inventory.selectedItem.itemData.loadedAmmo < inventory.selectedItem.itemData.magSize)
             {
 
                 reload();
             }
 
-            
+
 
 #if UNITY_EDITOR
             //for testing damage and healing
@@ -269,18 +281,18 @@ public class Player : MonoBehaviour
             }
             else if (Input.GetKeyDown(KeyCode.DownArrow))
             {
-                
-                
+
+
                 Debug.Log("Trying To Save...");
                 SavePlayer();
-                
+
             }
             else if (Input.GetKeyDown(KeyCode.UpArrow))
             {
                 Debug.Log("Trying To Load...");
                 LoadPlayer();
             }
-            else if(Input.GetKeyDown(KeyCode.Comma) && inventory.selectedItem != null && inventory.selectedItem.itemData.itemType == ItemType.RangedWeapon)
+            else if (Input.GetKeyDown(KeyCode.Comma) && inventory.selectedItem != null && inventory.selectedItem.itemData.itemType == ItemType.RangedWeapon)
             {
                 inventory.selectedItem.itemData.hasLaserSight = true;
                 laserLine.gameObject.SetActive(true);
@@ -303,7 +315,7 @@ public class Player : MonoBehaviour
     /// <param name="active"></param>
     public void SetMeleeVisualActive(bool active)
     {
-        if(active)
+        if (active)
         {
             meleeVisual.transform.position = _mainTransform.position + (_mainTransform.forward * inventory.selectedItem.itemData.meleeRange);
         }
@@ -320,7 +332,7 @@ public class Player : MonoBehaviour
         moveDir.Normalize();
         moveDir *= Time.deltaTime * speedStat;
 
-       // playerHolderTransform.TransformDirection(moveDir)
+        // playerHolderTransform.TransformDirection(moveDir)
 
         _mainTransform.Translate(playerHolderTransform.TransformDirection(moveDir), Space.World);
 
@@ -331,29 +343,29 @@ public class Player : MonoBehaviour
     /// </summary>
     private void mouseLook()
     {
-         
+
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        
+
         float dist;
         if (rayPlane.Raycast(ray, out dist) && Time.timeScale != 0)
         {
             //if(Input.mousePosition.x)
-            lookDir = new Vector3(ray.GetPoint(dist - xLookOffset).x , _mainTransform.position.y, ray.GetPoint(dist - zLookOffset).z );
+            lookDir = new Vector3(ray.GetPoint(dist - xLookOffset).x, _mainTransform.position.y, ray.GetPoint(dist - zLookOffset).z);
             //lookDir = new Vector3(ray.GetPoint(dist - xLookOffset).x , _mainTransform.position.y, ray.GetPoint(dist - zLookOffset).z );
             lookDir -= _mainTransform.position;
 
             _mainTransform.rotation = Quaternion.Slerp(_mainTransform.rotation, Quaternion.LookRotation(lookDir), 20f * Time.deltaTime);
-            
-           
+
+
         }
 
-        if(inventory.selectedItem != null && inventory.selectedItem.itemData.hasLaserSight)
+        if (inventory.selectedItem != null && inventory.selectedItem.itemData.hasLaserSight)
         {
             laserLine.SetPosition(0, transform.position);
             laserLine.SetPosition(1, transform.position + lookDir);
         }
-        
+
     }
 
     /// <summary>
@@ -361,27 +373,29 @@ public class Player : MonoBehaviour
     /// </summary>
     private void rangedAttack()
     {
-        if(inventory.selectedItem.itemData.canAttack && !inventory.selectedItem.itemData.reloading)
+        if (inventory.selectedItem.itemData.canAttack && !inventory.selectedItem.itemData.reloading)
         {
-            Debug.Log(inventory.selectedItem.itemData.loadedAmmo);   
-            if (inventory.selectedItem.itemData.ammoType == AmmoType.LightAmmo )
+            Debug.Log(inventory.selectedItem.itemData.loadedAmmo);
+            if (inventory.selectedItem.itemData.ammoType == AmmoType.LightAmmo)
             {
-                if(inventory.selectedItem.itemData.loadedAmmo > 0)
+                if (inventory.selectedItem.itemData.loadedAmmo > 0)
                 {
                     Bullet bullet;
                     bullet = Instantiate(pistolBulletPrefab, transform.position, transform.rotation).GetComponent<Bullet>();
                     bullet.damageToDeal = inventory.selectedItem.itemData.damage;
                     StartCoroutine(inventory.selectedItem.itemData.CoolDown());
                     inventory.selectedItem.itemData.loadedAmmo--;
-                    Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
+                    // Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
+                    WeaponFireAudio(4);
                 }
                 else
                 {
+                    WeaponFireAudio(6);
                     reload();
                 }
-                
+
             }
-            else if (inventory.selectedItem.itemData.ammoType == AmmoType.HeavyAmmo )
+            else if (inventory.selectedItem.itemData.ammoType == AmmoType.HeavyAmmo)
             {
                 if (inventory.selectedItem.itemData.loadedAmmo > 0)
                 {
@@ -390,16 +404,18 @@ public class Player : MonoBehaviour
                     bullet.damageToDeal = inventory.selectedItem.itemData.damage;
                     StartCoroutine(inventory.selectedItem.itemData.CoolDown());
                     inventory.selectedItem.itemData.loadedAmmo--;
-                   // Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
+                    // Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
+                    WeaponFireAudio(1);
                 }
                 else
                 {
+                    WeaponFireAudio(3);
                     reload();
                 }
             }
             InventoryUI.Instance.RefreshUI();
         }
-        
+
     }
 
     /// <summary>
@@ -407,13 +423,14 @@ public class Player : MonoBehaviour
     /// </summary>
     private void reload()
     {
-        if(inventory.selectedItem.itemData.itemType == ItemType.RangedWeapon)
+        if (inventory.selectedItem.itemData.itemType == ItemType.RangedWeapon)
         {
             switch (inventory.selectedItem.itemData.ammoType)
             {
                 case AmmoType.LightAmmo:
-                    if(currentLightAmmo != 0)
+                    if (currentLightAmmo != 0)
                     {
+                        WeaponFireAudio(5);
                         if (currentLightAmmo < (inventory.selectedItem.itemData.magSize - inventory.selectedItem.itemData.loadedAmmo))
                         {
                             StartCoroutine(inventory.selectedItem.itemData.Reload(currentLightAmmo));
@@ -427,11 +444,12 @@ public class Player : MonoBehaviour
                     {
                         Debug.Log("Can't reload, no light ammo");
                     }
-                    
+
                     break;
                 case AmmoType.HeavyAmmo:
                     if (currentHeavyAmmo != 0)
                     {
+                        WeaponFireAudio(2);
                         if (currentHeavyAmmo < (inventory.selectedItem.itemData.magSize - inventory.selectedItem.itemData.loadedAmmo))
                         {
                             StartCoroutine(inventory.selectedItem.itemData.Reload(currentHeavyAmmo));
@@ -457,13 +475,16 @@ public class Player : MonoBehaviour
     /// </summary>
     private void meleeAttack()
     {
-        
+
         RaycastHit hit;
-        if(inventory.selectedItem.itemData.canAttack)
+        if (inventory.selectedItem.itemData.canAttack)
         {
+            WeaponFireAudio(7);
+            Debug.Log("check");
             //Debug.Log("Melee Attack");
             if (Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward, out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange))
             {
+                
                 StartCoroutine(inventory.selectedItem.itemData.CoolDown());
 
                 if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy" && hit.transform.TryGetComponent<BossEnemy>(out BossEnemy mBossEnemy))
@@ -474,7 +495,7 @@ public class Player : MonoBehaviour
                 else if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
                 {
                     Debug.Log("Durability Before: " + inventory.selectedItem.itemData.durability);
-                    
+
                     hit.transform.GetComponent<BaseEnemy>().TakeDamage(inventory.selectedItem.itemData.damage);
                     if (inventory.selectedItem.itemData.hasDurability)
                     {
@@ -497,8 +518,8 @@ public class Player : MonoBehaviour
                 }
             }
         }
-        
-        
+
+
     }
 
     /// <summary>
@@ -514,7 +535,7 @@ public class Player : MonoBehaviour
     /// </summary>
     public void TakeDamage(int damage)
     {
-        if(hasArmorPlate)
+        if (hasArmorPlate)
         {
             hasArmorPlate = false;
             ArmorPlateImage.gameObject.SetActive(false);
@@ -524,27 +545,27 @@ public class Player : MonoBehaviour
             Health -= damage;
             StartCoroutine(Damaged());
         }
-        
+
     }
 
     private void OnTriggerEnter(Collider other)
     {
         //Debug.Log(other);
-        if(other.TryGetComponent(out thingToActivate))
+        if (other.TryGetComponent(out thingToActivate))
         {
             //Debug.Log("cock");
             thingToActivate = other.GetComponent<Activatable>();
         }
 
-        if(other.TryGetComponent<PlayerDetection>(out PlayerDetection tile))
+        if (other.TryGetComponent<PlayerDetection>(out PlayerDetection tile))
         {
             //Debug.Log("ow");
-            if(!tile.hasBeenVisited)
+            if (!tile.hasBeenVisited)
             {
-               // Debug.Log("hit");
+                // Debug.Log("hit");
                 tile.hasBeenVisited = true;
                 tile.fogofwar.layer = 22;
-                
+
             }
         }
     }
@@ -589,8 +610,8 @@ public class Player : MonoBehaviour
         Health = baseData.health;
         dmgResist = baseData.dmgResist;
         speedStat = baseData.speedStat;
-       
-        
+
+
         ScrapCount = baseData.scrap;
         ClothCount = baseData.cloth;
         MedsCount = baseData.meds;
@@ -602,6 +623,41 @@ public class Player : MonoBehaviour
         inventory.numInvSlots = 4;
         inventory.AddItemNoUI(baseData.initialItem);
     }
+
+    #region Audio
+
+    void WeaponFireAudio(int audio)
+    {
+        switch (audio)
+        {
+            case 1:
+                _audioSource.clip = rifleFire_clip;
+                break;
+            case 2:
+                _audioSource.clip = rifleReload_clip;
+                break;
+            case 3:
+                _audioSource.clip = rifleEmpty_clip;
+                break;
+            case 4:
+                _audioSource.clip = pistolFire_clip;
+                break;
+            case 5:
+                _audioSource.clip = pistolReload_clip;
+                break;
+            case 6:
+                _audioSource.clip = pistolEmpty_clip;
+                break;
+            case 7:
+                _audioSource.clip = melee_clip;
+                break;
+            default:
+                break;
+        }
+        _audioSource.Play();
+    }
+
+    #endregion
 
     #region Saving / Loading
     public void SavePlayer()

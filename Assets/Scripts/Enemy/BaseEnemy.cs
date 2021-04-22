@@ -503,7 +503,7 @@ public class BaseEnemy : MonoBehaviour
     /// </summary>
     void PlayAgroSound()
     {
-        Debug.Log("Play audio");
+        //Debug.Log("Play audio");
         int soundI = Random.Range(0, agroSound.Length);
 
         _audioSource.clip = agroSound[soundI];
