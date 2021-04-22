@@ -51,9 +51,6 @@ public class LevelAssetsData : ScriptableObject
     public GameObject bossDetection;
     public GameObject bossTileLastArray;
 
-    //[Header("Starting Tile Prefabs")]
-    //public List<GameObject> presetStartingTileAssets;
-
     [Header("Secret Room Varations")]
     public List<GameObject> secretRoomAssets;
     [Space(10)]

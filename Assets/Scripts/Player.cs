@@ -390,7 +390,7 @@ public class Player : MonoBehaviour
                     bullet.damageToDeal = inventory.selectedItem.itemData.damage;
                     StartCoroutine(inventory.selectedItem.itemData.CoolDown());
                     inventory.selectedItem.itemData.loadedAmmo--;
-                    Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
+                   // Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
                 }
                 else
                 {

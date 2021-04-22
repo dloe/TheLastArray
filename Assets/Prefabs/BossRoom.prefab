@@ -218,6 +218,8 @@ MonoBehaviour:
   isActivated: 0
   worldItemData: {fileID: 11400000, guid: cd8184e6e93c2d047a13f3afa8f3f70c, type: 2}
   bossDoor: {fileID: 936405387216625382}
+  ammoDrop: {fileID: 5592362334672371228, guid: 62dd5028d5e59d94ab90d9ee0ff8e4a3,
+    type: 3}
 --- !u!1 &694306541769122711
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,7 +658,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectiveSpawn: {fileID: 6654851252902404324}
-  playerSpawn: {fileID: 0}
+  playerSpawn: {fileID: 5592362334672371228, guid: 62dd5028d5e59d94ab90d9ee0ff8e4a3,
+    type: 3}
   possiblePresetItems: []
   enemiesOnPreset: []
   door: {fileID: 936405387216625382}
@@ -1784,6 +1787,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8020160294585728236}
     m_Modifications:
+    - target: {fileID: 6961012060006968694, guid: 8461dab126d97b943947e0d29a957261,
+        type: 3}
+      propertyPath: m_Layer
+      value: 16
+      objectReference: {fileID: 0}
     - target: {fileID: 7905213247294608223, guid: 8461dab126d97b943947e0d29a957261,
         type: 3}
       propertyPath: m_Layer

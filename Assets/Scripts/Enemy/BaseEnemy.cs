@@ -87,14 +87,13 @@ public class BaseEnemy : MonoBehaviour
     public AttackType attackType;
 
     // is the enemy agro
-    public bool agro;
+    public bool agro = false;
 
     //rate at which the attack will come out
     public float attackSpeed;
 
     float attackCD = 0;
 
-    
 
     public float combatSpeed;
 
@@ -107,7 +106,7 @@ public class BaseEnemy : MonoBehaviour
     public bool attacking;
 
     //is this enemy attacking
-    public bool readyToAttack = true;
+    public bool readyToAttack = false;
 
     //how far the enemy needs to get away from its target to lose agro
     public float agroLoseDis;
@@ -119,10 +118,15 @@ public class BaseEnemy : MonoBehaviour
     [Header("if ranged enemy")]
     public GameObject projectile;
 
+    [Header("Audio")]
+    public AudioClip[] agroSound;
+    [Space(25)]
+    AudioSource _audioSource;
+    
 
     public virtual void Start()
     {
-
+        _audioSource = GetComponent<AudioSource>();
         _spawnPoint = transform.position;
         wanderPoint = _spawnPoint;
         poi = wanderPoint;
@@ -319,6 +323,7 @@ public class BaseEnemy : MonoBehaviour
         if (Vector3.Distance(transform.position, _target.gameObject.transform.position) <= detectionRadius)
         {
             agro = true;
+            PlayAgroSound();
             myState = enemyState.following;
         }
 
@@ -479,7 +484,17 @@ public class BaseEnemy : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Plays sound when enemy becomes agro
+    /// </summary>
+    void PlayAgroSound()
+    {
+        int soundI = Random.Range(0, agroSound.Length);
 
+        _audioSource.clip = agroSound[soundI];
+        _audioSource.Play();
+        //_audioSource.PlayClipAtPoint(agroSound[soundI], transform.position, 1);
+    }
 
     //Old functions ignore
     /*

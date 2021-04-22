@@ -7,6 +7,8 @@ using UnityEditor;
 public class LastArrayInteractable : WorldItem
 {
     public GameObject bossDoor;
+    public GameObject ammoDrop;
+
     private void Start()
     {
 
@@ -21,12 +23,14 @@ public class LastArrayInteractable : WorldItem
 
     public override void Activate()
     {
-        base.Activate();
+        //base.Activate();
         if (worldItemData.itemType == ItemType.finalObjective)
         {
             Debug.Log("activated last array, go back now lol");
             Objectives.Instance.UpdateFinalObjective(2);
             bossDoor.SetActive(false);
+            Instantiate(ammoDrop, this.transform.position, this.transform.rotation);
+            Destroy(this.gameObject);
         }
     }
 }

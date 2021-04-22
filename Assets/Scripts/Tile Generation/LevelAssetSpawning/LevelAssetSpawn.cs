@@ -166,6 +166,8 @@ public class LevelAssetSpawn : MonoBehaviour
                     // Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                     _possibleItems.Add(t.presetTile.GetComponent<PresetTileInfo>().possiblePresetItems[posResourceCount]);
                 }
+
+
                 playerSpawn = t.presetTile.GetComponent<PresetTileInfo>().playerSpawn;
                 //SPAWN PLAYER
                 play = Instantiate(playerPref, Vector3.zero, playerSpawn.transform.rotation);

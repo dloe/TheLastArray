@@ -122,6 +122,7 @@ public class BossEnemy : MonoBehaviour
     [HideInInspector]
     public GameObject lastArray;
 
+    
 
     private void Start()
     {
@@ -798,6 +799,7 @@ public class BossEnemy : MonoBehaviour
       //  }
         Destroy(this.gameObject);
     }
+
 
 
     private void OnDrawGizmos()

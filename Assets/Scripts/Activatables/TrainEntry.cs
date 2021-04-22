@@ -12,15 +12,21 @@ public class TrainEntry : Activatable
 
     public override void Activate()
     {
-        if (!isActivated && Objectives.Instance.mainObjective.complete)
+        if (!isActivated && Objectives.Instance.mainObjective.complete && localLevel.thisLevelTier != levelTier.level4)
         {
             isActivated = true;
 
             localLevel.LevelBeat();
-                
+
         }
-        else if(!isActivated && localLevel.thisLevelTier == levelTier.level4)
+        else if (!isActivated)
+        {
+            Objectives.Instance.objectiveText.text = "You Win!";
+            Player.Instance.endScreenText.text = "You Win!";
+            Time.timeScale = 0;
+            Player.Instance.endScreen.SetActive(true);
             Objectives.Instance.SendCompletedMessage(Condition.KillEnemy);
+        }
 
     }
 }
