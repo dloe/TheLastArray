@@ -139,6 +139,7 @@ public class BaseEnemy : MonoBehaviour
 
     }
 
+    bool audioPrevent = true;
     private void Update()
     {
         //as of 3/7/21
@@ -149,7 +150,19 @@ public class BaseEnemy : MonoBehaviour
         if (baseHealth <= 0)
         { OnDeath(); }
 
+        if(agro == true && audioPrevent)
+        {
+            PlayAgroSound();
+            //audio cooldown
+            StartCoroutine(AudioCoolDown());
+        }
+    }
 
+    IEnumerator AudioCoolDown()
+    {
+        audioPrevent = false;
+        yield return new WaitForSeconds(10f);
+        audioPrevent = true;
     }
 
     /// <summary>
@@ -323,7 +336,7 @@ public class BaseEnemy : MonoBehaviour
         if (Vector3.Distance(transform.position, _target.gameObject.transform.position) <= detectionRadius)
         {
             agro = true;
-            PlayAgroSound();
+            
             myState = enemyState.following;
         }
 
@@ -489,6 +502,7 @@ public class BaseEnemy : MonoBehaviour
     /// </summary>
     void PlayAgroSound()
     {
+        Debug.Log("Play audio");
         int soundI = Random.Range(0, agroSound.Length);
 
         _audioSource.clip = agroSound[soundI];
