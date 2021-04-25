@@ -123,10 +123,12 @@ public class BaseEnemy : MonoBehaviour
     public AudioClip[] takeDamageSound;
     [Space(25)]
     AudioSource _audioSource;
-    
+
+    bool onAgroStart = false;
 
     public virtual void Start()
     {
+        StartCoroutine(AgroStartCoolDown());
         _audioSource = GetComponent<AudioSource>();
         _spawnPoint = transform.position;
         wanderPoint = _spawnPoint;
@@ -166,6 +168,12 @@ public class BaseEnemy : MonoBehaviour
         audioPrevent = true;
     }
 
+    //spawning system causes enemies to agro immediately on startup (wait a few seconds before they can agro)
+    IEnumerator AgroStartCoolDown()
+    {
+        yield return new WaitForSeconds(2.0f);
+        onAgroStart = true;
+    }
     /// <summary>
     /// this will handles functions that do not need to be run in update 
     /// </summary>
@@ -334,8 +342,9 @@ public class BaseEnemy : MonoBehaviour
     /// </summary>
     void SetTarget()
     {
-        if (Vector3.Distance(transform.position, _target.gameObject.transform.position) <= detectionRadius)
+        if (Vector3.Distance(transform.position, _target.gameObject.transform.position) <= detectionRadius && onAgroStart)
         {
+            Debug.Log(this.transform.position);
             agro = true;
             
             myState = enemyState.following;
