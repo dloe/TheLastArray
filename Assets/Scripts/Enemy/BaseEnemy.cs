@@ -394,6 +394,7 @@ public class BaseEnemy : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        TakeDamageAudio();
         baseHealth -= damage;
         StartCoroutine(Damaged());
     }
@@ -445,6 +446,15 @@ public class BaseEnemy : MonoBehaviour
             yield return new WaitForSeconds(.1f);
 
         }
+    }
+
+    void TakeDamageAudio()
+    {
+
+        int aIndex = Random.Range(0, takeDamageSound.Length);
+        _audioSource.clip = takeDamageSound[aIndex];
+
+        _audioSource.Play();
     }
 
     public virtual void OnDeath()
