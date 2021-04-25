@@ -56,7 +56,7 @@ public class Player : MonoBehaviour
     public AudioClip melee_clip;
     [Header("Damage Audio")]
     public AudioClip[] takeDamage_clip;
-    public AudioClip armorDamage_clip;
+    public AudioClip[] armorDamage_clip;
 
     #region Ammo
     public int currentLightAmmo = 0;
@@ -631,16 +631,17 @@ public class Player : MonoBehaviour
 
     #region Audio
 
-    void TakeDamageAudio(bool tookDamage)
+    void TakeDamageAudio(bool armor)
     {
-        if (tookDamage)
+        if (!armor)
         {
             int aIndex = Random.Range(0, takeDamage_clip.Length);
             _audioSource.clip = takeDamage_clip[aIndex];
         }
         else
         {
-            _audioSource.clip = armorDamage_clip;
+            int aIndex = Random.Range(0, armorDamage_clip.Length);
+            _audioSource.clip = armorDamage_clip[aIndex];
         }
 
         _audioSource.Play();
