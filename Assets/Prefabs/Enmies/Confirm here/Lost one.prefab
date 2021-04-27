@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 6263994880208539681}
   - component: {fileID: 6263994880208539680}
   - component: {fileID: 6263994880208539683}
-  - component: {fileID: 6263994880208539682}
   - component: {fileID: 6263994880208539684}
   - component: {fileID: 6263994880208539685}
+  - component: {fileID: 5879590985246248719}
   m_Layer: 19
   m_Name: Lost one
   m_TagString: Enemy
@@ -84,19 +84,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!135 &6263994880208539682
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6263994880208539687}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &6263994880208539684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,6 +102,7 @@ MonoBehaviour:
   isObjectiveEnemy: 0
   myType: 0
   myState: 0
+  notWarden: 0
   baseHealth: 10
   baseAttack: 5
   baseSpeed: 3
@@ -150,6 +138,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!65 &5879590985246248719
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6263994880208539687}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7946768348169253658
 GameObject:
   m_ObjectHideFlags: 0
