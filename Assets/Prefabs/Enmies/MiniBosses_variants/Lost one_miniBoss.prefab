@@ -11,10 +11,10 @@ GameObject:
   - component: {fileID: 1021839711745790130}
   - component: {fileID: 1021839711745790131}
   - component: {fileID: 1021839711745790128}
-  - component: {fileID: 1021839711745790129}
   - component: {fileID: 1021839711745790135}
   - component: {fileID: 1021839711745790134}
   - component: {fileID: 3368380889681515099}
+  - component: {fileID: 8684604072541360872}
   m_Layer: 19
   m_Name: Lost one_miniBoss
   m_TagString: Enemy
@@ -85,19 +85,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!135 &1021839711745790129
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1021839711745790132}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &1021839711745790135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,6 +249,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!65 &8684604072541360872
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1021839711745790132}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3140293823998159056
 GameObject:
   m_ObjectHideFlags: 0
