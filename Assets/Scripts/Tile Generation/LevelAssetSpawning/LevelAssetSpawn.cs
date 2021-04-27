@@ -520,6 +520,9 @@ public class LevelAssetSpawn : MonoBehaviour
             //spawns in a placeholder detection, when player gets within range of this obj, objective changes to survive and boss spawns. (after boss dies then objective changes to activate last array)
             endObjTile.GetComponent<Boss_PresetTileInfo>().lastArrayInteractable.transform.rotation = playerSpawn.transform.rotation;
             endObjTile.GetComponent<Boss_PresetTileInfo>().craftingTableOutside.transform.rotation = playerSpawn.transform.rotation;
+            Vector3 rot = new Vector3(endObjTile.GetComponent<Boss_PresetTileInfo>().textCanvas.transform.eulerAngles.x, playerSpawn.transform.eulerAngles.y, endObjTile.GetComponent<Boss_PresetTileInfo>().textCanvas.transform.eulerAngles.z);
+            
+            endObjTile.GetComponent<Boss_PresetTileInfo>().textCanvas.transform.eulerAngles = rot;
             //REMEMBER, to make sure  the player can complete objective, this has to be turned on after boss dies
             endObjTile.GetComponent<Boss_PresetTileInfo>().lastArrayInteractable.GetComponent<BoxCollider>().isTrigger = false;
             GameObject bossDetection = Instantiate(myLevelAsset.bossDetection, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform);

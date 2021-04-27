@@ -8,5 +8,5 @@ public class Boss_PresetTileInfo : PresetTileInfo
     public GameObject door;
     public GameObject lastArrayInteractable;
     public GameObject craftingTableOutside;
-
+    public GameObject textCanvas;
 }
