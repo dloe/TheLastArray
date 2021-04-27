@@ -20,7 +20,8 @@ public enum ItemType
     Key,
     Binoculars,
     BackPack,
-    finalObjective
+    finalObjective,
+    UnstableStim
 }
 [Serializable][CreateAssetMenu]
 public class ItemData : ScriptableObject
@@ -65,6 +66,8 @@ public class ItemData : ScriptableObject
 
 
     public int amountToHeal = 1;
+    public int healthDecrease = 5;
+    public int damageModifier = 5;
 
     public bool canAttack = true;
     public bool reloading = false;
@@ -240,6 +243,8 @@ public class ItemDataEditor : Editor
 
         EditorGUI.BeginChangeCheck();
 
+        EditorStyles.textField.wordWrap = true;
+
         itemData.itemSprite = (Sprite)EditorGUILayout.ObjectField(itemData.itemSprite, typeof(Sprite), false, GUILayout.Width(80), GUILayout.Height(80));
 
         itemData.itemType = (ItemType)EditorGUILayout.EnumPopup("Item Type", itemData.itemType);
@@ -279,6 +284,12 @@ public class ItemDataEditor : Editor
         {
             itemData.amountToHeal = EditorGUILayout.IntField("Amount to Heal", itemData.amountToHeal);
 
+        }
+
+        if(itemData.itemType == ItemType.UnstableStim)
+        {
+            itemData.healthDecrease = EditorGUILayout.IntField("Amount to Decrease Health", itemData.healthDecrease);
+            itemData.damageModifier = EditorGUILayout.IntField("Amount to Modify Damage", itemData.damageModifier);
         }
 
 

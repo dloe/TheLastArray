@@ -125,7 +125,7 @@ public class InventoryUI : MonoBehaviour
         {
             if (inventory.ItemAtIndex(index) != null)
             {
-                slotList[index].GetComponentInChildren<Text>().text = inventory.ItemAtIndex(index).itemData.itemName;
+                //slotList[index].GetComponentInChildren<Text>().text = inventory.ItemAtIndex(index).itemData.itemName;
                 if (inventory.ItemAtIndex(index).itemData.itemSprite != null)
                 {
                     slotList[index].GetChild(0).gameObject.SetActive(true);
@@ -141,7 +141,7 @@ public class InventoryUI : MonoBehaviour
             }
             else
             {
-                slotList[index].GetComponentInChildren<Text>().text = "none";
+                //slotList[index].GetComponentInChildren<Text>().text = "none";
                 slotList[index].GetChild(0).GetComponent<Image>().sprite = null;
                 slotList[index].GetChild(0).gameObject.SetActive(false);
             }
@@ -231,6 +231,19 @@ public class InventoryUI : MonoBehaviour
                     currentAmmoName.text = "Heals";
                     equipedWeaponReservesText.text = inventory.selectedItem.itemData.amountToHeal.ToString();
 
+                    break;
+                case ItemType.UnstableStim:
+                    equipedWeaponAmmoText.text = "";
+                    // equipedWeaponReservesText.text = "";
+                    equipedWeaponDashText.gameObject.SetActive(false);
+                    Player.Instance.SetMeleeVisualActive(false);
+                    Player.Instance.laserLine.gameObject.SetActive(false);
+
+                    equipedWeaponReservesText.gameObject.SetActive(false);
+                    currentAmmoName.gameObject.SetActive(true);
+
+                    currentAmmoName.text = "Damage Up, Health Down";
+                    //equipedWeaponReservesText.text = inventory.selectedItem.itemData.amountToHeal.ToString();
                     break;
                 default:
                     Player.Instance.SetMeleeVisualActive(false);

@@ -59,7 +59,11 @@ public class Player : MonoBehaviour
     public Text endScreenText;
     public Text levelText;
     public Image ArmorPlateImage;
+    public GameObject stimMessage;
     #endregion
+
+    private int damageModifier = 0;
+    private bool usingStimmy = false;
 
     #region Health Variables
     public int Health
@@ -226,6 +230,13 @@ public class Player : MonoBehaviour
                         if (Health < maxHealth)
                         {
                             heal();
+                            
+                        }
+                        break;
+                    case ItemType.UnstableStim:
+                        if (!usingStimmy)
+                        {
+                            StartCoroutine(UnstableStimmy());
                             inventory.RemoveItem(inventory.selectedItem);
                         }
                         break;
@@ -370,7 +381,7 @@ public class Player : MonoBehaviour
                 {
                     Bullet bullet;
                     bullet = Instantiate(pistolBulletPrefab, transform.position, transform.rotation).GetComponent<Bullet>();
-                    bullet.damageToDeal = inventory.selectedItem.itemData.damage;
+                    bullet.damageToDeal = inventory.selectedItem.itemData.damage + damageModifier;
                     bullet.isFireBullet = inventory.selectedItem.itemData.usingFireBullets;
                     StartCoroutine(inventory.selectedItem.itemData.CoolDown());
 
@@ -397,7 +408,7 @@ public class Player : MonoBehaviour
                 {
                     Bullet bullet;
                     bullet = Instantiate(rifleBulletPrefab, transform.position, transform.rotation).GetComponent<Bullet>();
-                    bullet.damageToDeal = inventory.selectedItem.itemData.damage;
+                    bullet.damageToDeal = inventory.selectedItem.itemData.damage + damageModifier;
                     bullet.isFireBullet = inventory.selectedItem.itemData.usingFireBullets;
                     StartCoroutine(inventory.selectedItem.itemData.CoolDown());
                     if (inventory.selectedItem.itemData.usingFireBullets)
@@ -486,14 +497,14 @@ public class Player : MonoBehaviour
 
                 if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy" && hit.transform.TryGetComponent<BossEnemy>(out BossEnemy mBossEnemy))
                 {
-                    mBossEnemy.TakeDamage(inventory.selectedItem.itemData.damage);
+                    mBossEnemy.TakeDamage(inventory.selectedItem.itemData.damage + damageModifier);
                     Debug.Log("yep boss hit");
                 }
                 else if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
                 {
                     Debug.Log("Durability Before: " + inventory.selectedItem.itemData.durability);
                     
-                    hit.transform.GetComponent<BaseEnemy>().TakeDamage(inventory.selectedItem.itemData.damage);
+                    hit.transform.GetComponent<BaseEnemy>().TakeDamage(inventory.selectedItem.itemData.damage + damageModifier);
                     if (inventory.selectedItem.itemData.hasDurability)
                     {
                         inventory.selectedItem.itemData.durability--;
@@ -587,6 +598,28 @@ public class Player : MonoBehaviour
         this.GetComponent<MeshRenderer>().material = norm;
     }
 
+    IEnumerator UnstableStimmy()
+    {
+        usingStimmy = true;
+        stimMessage.SetActive(true);
+        int originalMax = maxHealth;
+        if (Health == maxHealth)
+        {
+            Health -= inventory.selectedItem.itemData.healthDecrease;
+        }
+
+        maxHealth -= inventory.selectedItem.itemData.healthDecrease;
+        Health -= 0;
+
+        damageModifier = inventory.selectedItem.itemData.damageModifier;
+
+        yield return new WaitForSeconds(5f);
+        maxHealth = originalMax;
+        damageModifier = 0;
+        Health -= 0;
+        usingStimmy = false;
+        stimMessage.SetActive(false);
+    }
 
     public void SetStatsToBase()
     {
