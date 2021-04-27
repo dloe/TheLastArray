@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
 {
     public static Player Instance;
+    public float PlayerCamRot;
 
     public PlayerData baseData;
 
@@ -178,13 +179,13 @@ public class Player : MonoBehaviour
             Destroy(Instance.gameObject);
         }
         Instance = this;
-        Debug.Log("Player Awake");
+        //Debug.Log("Player Awake");
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Player Start");
+        //Debug.Log("Player Start");
         _audioSource = GetComponent<AudioSource>();
         _mainTransform = transform;
         playerHolderTransform = transform.parent;
@@ -483,7 +484,7 @@ public class Player : MonoBehaviour
         if (inventory.selectedItem.itemData.canAttack)
         {
             WeaponFireAudio(7);
-            Debug.Log("check");
+           // Debug.Log("check");
             //Debug.Log("Melee Attack");
             if (Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward, out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange))
             {

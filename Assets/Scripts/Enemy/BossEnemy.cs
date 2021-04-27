@@ -626,10 +626,11 @@ public class BossEnemy : MonoBehaviour
                 Debug.DrawRay(transform.position, -Vector3.up, Color.red, 1);
                 if (Physics.Raycast(spawnPos, transform.TransformDirection(-transform.up), out hit, 15))
                 {
+                    Debug.Log(hit.transform.name);
                     //if sphere hits ground
                     if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "FloorBossDetection")
                     {
-                        //Debug.Log("found");
+                        Debug.Log("found");
                         Instantiate(minionAirdrop, spawnPos, transform.rotation);
                         break;
                     }
