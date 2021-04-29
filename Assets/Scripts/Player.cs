@@ -161,7 +161,7 @@ public class Player : MonoBehaviour
     #endregion
 
     public Material damaged, norm;
-
+   
 
     //transform of the player
     Transform _mainTransform;
@@ -171,6 +171,8 @@ public class Player : MonoBehaviour
     Vector3 lookDir;
     Plane rayPlane = new Plane(Vector3.up, 0.5f);
 
+
+    
 
     private void Awake()
     {
@@ -552,6 +554,24 @@ public class Player : MonoBehaviour
             StartCoroutine(Damaged());
         }
 
+    }
+
+    bool ow = false;
+    public void poisned(int damage)
+    {
+        
+        if(!ow)
+        {
+            ow = true;
+            StartCoroutine(pois(damage));
+        }
+    }
+
+    IEnumerator pois(int damage)
+    {
+        TakeDamage(damage);
+        yield return new WaitForSeconds(2);
+        ow = false;
     }
 
     private void OnTriggerEnter(Collider other)

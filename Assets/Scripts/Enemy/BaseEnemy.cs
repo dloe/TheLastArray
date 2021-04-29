@@ -155,7 +155,7 @@ public class BaseEnemy : MonoBehaviour
 
         if(agro == true && audioPrevent)
         {
-            PlayAgroSound();
+           // PlayAgroSound();
             //audio cooldown
             StartCoroutine(AudioCoolDown());
         }
@@ -322,6 +322,7 @@ public class BaseEnemy : MonoBehaviour
                 StartCoroutine(CoolDown());
                 //Debug.Log("Bang Bang");
                 GameObject bullet = Instantiate(projectile, transform.position, transform.rotation);
+                if(notWarden == false)
                 bullet.GetComponent<Bullet>().damageToDeal = baseAttack;
 
             }
@@ -524,7 +525,7 @@ public class BaseEnemy : MonoBehaviour
     {
         //Debug.Log("Play audio");
         int soundI = Random.Range(0, agroSound.Length);
-
+        
         _audioSource.clip = agroSound[soundI];
         _audioSource.Play();
         //_audioSource.PlayClipAtPoint(agroSound[soundI], transform.position, 1);
