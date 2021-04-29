@@ -408,6 +408,21 @@ public class BaseEnemy : MonoBehaviour
         baseHealth -= damage;
         StartCoroutine(Damaged());
     }
+
+    public void TakeFireDamge(int dmgPerSecond)
+    {
+        StartCoroutine(TakeFireDamageCR(dmgPerSecond));
+    }
+
+    public IEnumerator TakeFireDamageCR(int dmgPerSecond)
+    {
+        for(int i = 0; i < 3; i++)
+        {
+            Debug.Log("Fire damage " + i);
+            TakeDamage(dmgPerSecond);
+            yield return new WaitForSeconds(1f);
+        }
+    }
     IEnumerator Damaged()
     {
         if (!isObjectiveEnemy)

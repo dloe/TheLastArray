@@ -69,7 +69,7 @@ public class CraftingTable : Activatable
                 }
                 tempOption.description.text = "";
                 InventoryUI.Instance.RefreshUI();
-                //tempOption.SetDropDown();
+                
                 if (recipe.craftingResult.displaySprite != null)
                 {
                     tempOption.itemImage.sprite = recipe.craftingResult.displaySprite;
@@ -80,7 +80,26 @@ public class CraftingTable : Activatable
                 tempOption.itemName.text = "Armor Plate";
                 tempOption.description.text = recipe.craftingResult.nonItemDescription;
                 InventoryUI.Instance.RefreshUI();
-                //tempOption.SetDropDown();
+                
+                if (recipe.craftingResult.displaySprite != null)
+                {
+                    tempOption.itemImage.sprite = recipe.craftingResult.displaySprite;
+                }
+            }
+            else if(recipe.craftingResult.resultType == ResultType.fireBullets)
+            {
+                if(recipe.craftingResult.ammoType == AmmoType.HeavyAmmo)
+                {
+                    tempOption.itemName.text = "Heavy Fire Bullets";
+                }
+                else
+                {
+                    tempOption.itemName.text = "Light Fire Bullets";
+                }
+                
+                tempOption.description.text = recipe.craftingResult.nonItemDescription;
+                InventoryUI.Instance.RefreshUI();
+                
                 if (recipe.craftingResult.displaySprite != null)
                 {
                     tempOption.itemImage.sprite = recipe.craftingResult.displaySprite;
@@ -235,6 +254,28 @@ public class CraftingTable : Activatable
                 else
                 {
                     craftOption.craftButton.GetComponentInChildren<Text>().text = "Craft";
+                }
+            }
+            else if(craftOption.recipe.craftingResult.resultType == ResultType.fireBullets)
+            {
+                if (Player.Instance.inventory.selectedItem == null || Player.Instance.inventory.selectedItem.itemData.itemType != ItemType.RangedWeapon)
+                {
+
+                    craftOption.craftButton.GetComponentInChildren<Text>().text = "Select A Ranged Weapon to Craft Fire Bullets";
+                }
+                else
+                {
+                    craftOption.craftButton.GetComponentInChildren<Text>().text = "Craft";
+                    
+                    if(Player.Instance.inventory.selectedItem.itemData.usingFireBullets)
+                    {
+                        craftOption.craftButton.GetComponentInChildren<Text>().text = "Can't Craft, Weapon Already has Fire Bullets";
+                    }
+                    if(Player.Instance.inventory.selectedItem.itemData.ammoType != craftOption.recipe.craftingResult.ammoType)
+                    {
+                        craftOption.craftButton.GetComponentInChildren<Text>().text = "Can't Craft, Incompatible Ammo Size";
+                    }
+
                 }
             }
 

@@ -267,6 +267,7 @@ public class Upgrades : MonoBehaviour
         if(button.name == maxHealthExchangeButton.name)
         {
             MaxHealth += 5;
+            player.Health += 5;
         }
         else if(button.name == speedExchangeButton.name)
         {

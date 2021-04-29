@@ -77,6 +77,8 @@ public class LevelAssetSpawn : MonoBehaviour
     
     [Header("Ref to player data obj")]
     public GameObject playerPref;
+    [Header("Light obj")]
+    public GameObject lightObj;
     [HideInInspector]
     public GameObject playerSpawn;
 
@@ -167,12 +169,16 @@ public class LevelAssetSpawn : MonoBehaviour
                     _possibleItems.Add(t.presetTile.GetComponent<PresetTileInfo>().possiblePresetItems[posResourceCount]);
                 }
 
-
                 playerSpawn = t.presetTile.GetComponent<PresetTileInfo>().playerSpawn;
                 //SPAWN PLAYER
                 play = Instantiate(playerPref, Vector3.zero, playerSpawn.transform.rotation);
                 //Debug.Log(play);
-                play.transform.GetChild(1).GetComponent<Player>().PlayerCamRot = playerSpawn.transform.eulerAngles.y;
+                play.transform.GetChild(2).GetComponent<Player>().PlayerCamRot = playerSpawn.transform.eulerAngles.y;
+
+                if (lightObj != null)
+                {
+                    lightObj.transform.rotation = Quaternion.Euler(playerSpawn.transform.eulerAngles);//new Quaternion(playerSpawn.transform.rotation);
+                }
                 //Debug.Log("Player Spawn set");
                 StartCoroutine(setPlayerPosition(play, playerSpawn.transform.position));
 
