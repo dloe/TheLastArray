@@ -60,6 +60,8 @@ public class Player : MonoBehaviour
     public Text levelText;
     public Image ArmorPlateImage;
     public GameObject stimMessage;
+    public Image playerImage;
+    public List<Sprite> playerSprites = new List<Sprite>(8);
     #endregion
 
     private int damageModifier = 0;
@@ -358,14 +360,66 @@ public class Player : MonoBehaviour
             
            
         }
+        Debug.Log(lookDir);
+
 
         if(inventory.selectedItem != null && inventory.selectedItem.itemData.hasLaserSight)
         {
             laserLine.SetPosition(0, transform.position);
             laserLine.SetPosition(1, transform.position + lookDir);
         }
+
         
+
+        int zFloor = Mathf.FloorToInt(Mathf.Abs(lookDir.z));
+        int xFloor = Mathf.FloorToInt(Mathf.Abs(lookDir.x));
+
+        if (zFloor == 0) 
+        {
+            if (lookDir.x < 0)
+            {
+                playerImage.sprite = playerSprites[4];
+            }
+            else if(lookDir.x > 0)
+            {
+                playerImage.sprite = playerSprites[5];
+            }
+        }
+        else if (xFloor == 0)
+        {
+            if (lookDir.z < 0)
+            {
+                playerImage.sprite = playerSprites[3];
+            }
+            else if (lookDir.z > 0)
+            {
+                playerImage.sprite = playerSprites[0];
+            }
+        }
+        else if(lookDir.x < 0)
+        {
+            if (lookDir.z < 0)
+            {
+                playerImage.sprite = playerSprites[1];
+            }
+            else if (lookDir.z > 0)
+            {
+                playerImage.sprite = playerSprites[6];
+            }
+        }
+        else if (lookDir.x > 0)
+        {
+            if (lookDir.z < 0)
+            {
+                playerImage.sprite = playerSprites[2];
+            }
+            else if (lookDir.z > 0)
+            {
+                playerImage.sprite = playerSprites[7];
+            }
+        }
     }
+    
 
     /// <summary>
     /// Performs Ranged Attack based on currently selected item
