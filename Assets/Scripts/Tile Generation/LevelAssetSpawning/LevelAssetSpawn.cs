@@ -172,7 +172,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 //SPAWN PLAYER
                 play = Instantiate(playerPref, Vector3.zero, playerSpawn.transform.rotation);
                 //Debug.Log(play);
-                play.transform.GetChild(1).GetComponent<Player>().PlayerCamRot = playerSpawn.transform.eulerAngles.y;
+                play.transform.GetChild(2).GetComponent<Player>().PlayerCamRot = playerSpawn.transform.eulerAngles.y;
                 //Debug.Log("Player Spawn set");
                 StartCoroutine(setPlayerPosition(play, playerSpawn.transform.position));
 
