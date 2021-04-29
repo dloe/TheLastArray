@@ -464,7 +464,7 @@ public class Player : MonoBehaviour
                         inventory.selectedItem.itemData.loadedAmmo--;
                     }
 
-                    Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
+                    
 
                     // Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
                     WeaponFireAudio(4);
@@ -493,7 +493,7 @@ public class Player : MonoBehaviour
                     {
                         inventory.selectedItem.itemData.loadedAmmo--;
                     }
-                    Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
+                    
 
                     // Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
                     WeaponFireAudio(1);
