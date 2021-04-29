@@ -360,7 +360,7 @@ public class Player : MonoBehaviour
             
            
         }
-        Debug.Log(lookDir);
+        //Debug.Log(lookDir);
 
 
         if(inventory.selectedItem != null && inventory.selectedItem.itemData.hasLaserSight)
