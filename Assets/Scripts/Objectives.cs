@@ -45,7 +45,7 @@ public class Objectives : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log(Player.Instance);
+        //Debug.Log(Player.Instance);
         if (SceneManager.GetActiveScene().name == Player.Instance.baseData.trainSceneName)
         {
             gameObject.SetActive(false);
@@ -93,7 +93,7 @@ public class Objectives : MonoBehaviour
                 objective.objectiveMessage = generatorMessage;
                 break;
             case 4:
-                objective.condition = Condition.KillEnemy;
+                //objective.condition = Condition.KillEnemy;
                 objective.objectiveMessage = finalMessage;
                 break;
             default:
@@ -144,6 +144,7 @@ public class Objectives : MonoBehaviour
             Debug.Log("objective complete");
             finalMessage = "Return to Train for Extraction";
             mainObjective.objectiveMessage = finalMessage;
+            mainObjective.complete = true;
             UpdateObjectiveText();
         }
         else if(phase == 3)
@@ -158,6 +159,7 @@ public class Objectives : MonoBehaviour
 
     public void SendCompletedMessage(Condition condition)
     {
+       // Debug.Log(mainObjective.complete);
         switch (condition)
         {
             case Condition.KillEnemy:
@@ -178,22 +180,24 @@ public class Objectives : MonoBehaviour
         }
         UpdateObjectiveText();
 
+        //Debug.Log(mainObjective.complete);
         if (mainObjective.complete)
         {
-            if(SceneManager.GetActiveScene().name == Player.Instance.baseData.levelFourName)
-            {
-                objectiveText.text = "YOU WIN!";
-                Player.Instance.endScreenText.text = "You Win!";
-                Time.timeScale = 0;
-                Player.Instance.endScreen.SetActive(true);
-            }
-            else
-            {
+         //   if(SceneManager.GetActiveScene().name == Player.Instance.baseData.levelFourName)
+         //   {
+         //       objectiveText.text = "YOU WIN!";
+          //      Player.Instance.endScreenText.text = "You Win!";
+          //      Time.timeScale = 0;
+          //      Player.Instance.endScreen.SetActive(true);
+           // }
+         //   else
+         //   {
                 objectiveText.text = "Return to Train";
-            }
+          //  }
             
         }
         
+            
     }
 
 }

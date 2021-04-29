@@ -21,7 +21,7 @@ public class OutCast : BaseEnemy
     void DropItem()
     {
         int i = UnityEngine.Random.Range(0, 100);
-        print(i);
+        //print(i);
         GameObject temp = null;
         for (int t = 0; t <= dropableItem.Length - 1; t++)
         {
@@ -31,8 +31,8 @@ public class OutCast : BaseEnemy
         }
         if (temp != null)
         {
-            Instantiate(temp, this.gameObject.transform.position, temp.transform.rotation);
-            
+            GameObject item = Instantiate(temp, this.gameObject.transform.position, temp.transform.rotation);
+            item.transform.eulerAngles = new Vector3(item.transform.eulerAngles.x, Player.Instance.PlayerCamRot, item.transform.eulerAngles.z);
         }
     }
 

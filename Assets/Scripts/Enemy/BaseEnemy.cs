@@ -87,14 +87,13 @@ public class BaseEnemy : MonoBehaviour
     public AttackType attackType;
 
     // is the enemy agro
-    public bool agro;
+    public bool agro = false;
 
     //rate at which the attack will come out
     public float attackSpeed;
 
     float attackCD = 0;
 
-    
 
     public float combatSpeed;
 
@@ -107,7 +106,7 @@ public class BaseEnemy : MonoBehaviour
     public bool attacking;
 
     //is this enemy attacking
-    public bool readyToAttack = true;
+    public bool readyToAttack = false;
 
     //how far the enemy needs to get away from its target to lose agro
     public float agroLoseDis;
@@ -119,10 +118,18 @@ public class BaseEnemy : MonoBehaviour
     [Header("if ranged enemy")]
     public GameObject projectile;
 
+    [Header("Audio")]
+    public AudioClip[] agroSound;
+    public AudioClip[] takeDamageSound;
+    [Space(25)]
+    AudioSource _audioSource;
+
+    bool onAgroStart = false;
 
     public virtual void Start()
     {
-
+        StartCoroutine(AgroStartCoolDown());
+        _audioSource = GetComponent<AudioSource>();
         _spawnPoint = transform.position;
         wanderPoint = _spawnPoint;
         poi = wanderPoint;
@@ -135,6 +142,7 @@ public class BaseEnemy : MonoBehaviour
 
     }
 
+    bool audioPrevent = true;
     private void Update()
     {
         //as of 3/7/21
@@ -145,9 +153,27 @@ public class BaseEnemy : MonoBehaviour
         if (baseHealth <= 0)
         { OnDeath(); }
 
-
+        if(agro == true && audioPrevent)
+        {
+            PlayAgroSound();
+            //audio cooldown
+            StartCoroutine(AudioCoolDown());
+        }
     }
 
+    IEnumerator AudioCoolDown()
+    {
+        audioPrevent = false;
+        yield return new WaitForSeconds(10f);
+        audioPrevent = true;
+    }
+
+    //spawning system causes enemies to agro immediately on startup (wait a few seconds before they can agro)
+    IEnumerator AgroStartCoolDown()
+    {
+        yield return new WaitForSeconds(2.0f);
+        onAgroStart = true;
+    }
     /// <summary>
     /// this will handles functions that do not need to be run in update 
     /// </summary>
@@ -316,9 +342,11 @@ public class BaseEnemy : MonoBehaviour
     /// </summary>
     void SetTarget()
     {
-        if (Vector3.Distance(transform.position, _target.gameObject.transform.position) <= detectionRadius)
+        if (Vector3.Distance(transform.position, _target.gameObject.transform.position) <= detectionRadius && onAgroStart)
         {
+            Debug.Log(this.transform.position);
             agro = true;
+            
             myState = enemyState.following;
         }
 
@@ -365,7 +393,7 @@ public class BaseEnemy : MonoBehaviour
         {
             ChangeDirW();
         }
-        wanderPoint += new Vector3(x, 0, z) * 1.4f * Time.deltaTime;
+        wanderPoint += new Vector3(x, 0, z) * (wanderSpeed * 1.5f) * Time.deltaTime;
     }
     void ChangeDirW()
     {
@@ -375,6 +403,7 @@ public class BaseEnemy : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        TakeDamageAudio();
         baseHealth -= damage;
         StartCoroutine(Damaged());
     }
@@ -443,6 +472,15 @@ public class BaseEnemy : MonoBehaviour
         }
     }
 
+    void TakeDamageAudio()
+    {
+
+        int aIndex = Random.Range(0, takeDamageSound.Length);
+        _audioSource.clip = takeDamageSound[aIndex];
+
+        _audioSource.Play();
+    }
+
     public virtual void OnDeath()
     {
         if (isObjectiveEnemy)
@@ -494,7 +532,18 @@ public class BaseEnemy : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Plays sound when enemy becomes agro
+    /// </summary>
+    void PlayAgroSound()
+    {
+        //Debug.Log("Play audio");
+        int soundI = Random.Range(0, agroSound.Length);
 
+        _audioSource.clip = agroSound[soundI];
+        _audioSource.Play();
+        //_audioSource.PlayClipAtPoint(agroSound[soundI], transform.position, 1);
+    }
 
     //Old functions ignore
     /*

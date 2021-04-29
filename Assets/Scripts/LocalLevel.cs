@@ -201,6 +201,9 @@ public class LocalLevel : MonoBehaviour
         return ar;
     }
 
+    /// <summary>
+    /// - establish which type of tile the generation system will be using
+    /// </summary>
     void AssetDataSetup()
     {
         switch (thisLevelTier)
