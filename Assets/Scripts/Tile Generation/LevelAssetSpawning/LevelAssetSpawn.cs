@@ -917,8 +917,8 @@ public class LevelAssetSpawn : MonoBehaviour
             if (tile.tileStatus != Tile.TileStatus.startingRoom)
             {
                 int choice = Random.Range(1, 4);
+                //Debug.Log(tile.gameObject.name);
                 //Debug.Log(choice);
-
                 switch (choice)
                 {
                     case 1:
