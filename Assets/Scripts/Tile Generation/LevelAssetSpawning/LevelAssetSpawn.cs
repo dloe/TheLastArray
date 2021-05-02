@@ -512,7 +512,27 @@ public class LevelAssetSpawn : MonoBehaviour
                 // eObj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
                 // objectivesInLevel.Add(eObj);
                 _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
-                GameObject enemy = Instantiate(myLevelAsset.enemyPrefab.dozerEnemy, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform);
+
+                GameObject objectiveEnemy = objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.dozerEnemy;
+                int choice = Random.Range(1, 3);
+                Debug.Log(choice);
+                switch (choice)
+                {
+                    case 1:
+                        objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.shadowEnemy;
+                        break;
+                    case 2:
+                        objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.fuglyEnemy;
+                        break;
+                    case 3:
+                        objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.dozerEnemy;
+                        break;
+                    default:
+                        break;
+                }
+
+
+                GameObject enemy = Instantiate(objectiveEnemy, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform);
                 enemy.GetComponent<BaseEnemy>().isObjectiveEnemy = true;
                 enemy.name = "OBJECTIVE_ENEMY";
                 enemy.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
