@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4812438487678446102}
   - component: {fileID: 4812438487678446089}
   - component: {fileID: 4812438487678446088}
+  - component: {fileID: 2513988129038038942}
   m_Layer: 19
   m_Name: Stalker_miniBoss
   m_TagString: Enemy
@@ -149,4 +150,109 @@ MonoBehaviour:
   agroLoseDis: 10
   attackRange: 3
   projectile: {fileID: 0}
+  agroSound:
+  - {fileID: 8300000, guid: 97046557569374b41a61ed34fd0c7167, type: 3}
+  takeDamageSound:
+  - {fileID: 8300000, guid: 44140a8ace0c7d046b526aa9a32e9b56, type: 3}
+  - {fileID: 8300000, guid: 47af7b609aeea36499a4930a20db2974, type: 3}
+  - {fileID: 8300000, guid: 5235e96933a596b4f8a2c143a40305c2, type: 3}
+  - {fileID: 8300000, guid: b69eabee477df3d4a9e4ef9241ff1308, type: 3}
+  - {fileID: 8300000, guid: 962d26dffaf3775438349ebb9a3a13b8, type: 3}
+  - {fileID: 8300000, guid: 5f50cb281054947438b75385c12920eb, type: 3}
   stealthTime: 4
+--- !u!82 &2513988129038038942
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4812438487678446091}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 250
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.055555556
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

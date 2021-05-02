@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 3573829929258997508}
   - component: {fileID: 3573829929258997511}
   - component: {fileID: 1758474817440782620}
+  - component: {fileID: 5785548247948499571}
   m_Layer: 19
   m_Name: BossBaby_miniBoss
   m_TagString: Enemy
@@ -29,7 +30,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3573829929258997510}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.761, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
   m_Children: []
   m_Father: {fileID: 0}
@@ -133,6 +134,21 @@ MonoBehaviour:
   agroLoseDis: 30
   attackRange: 1.2
   projectile: {fileID: 0}
+  agroSound:
+  - {fileID: 8300000, guid: d04298305fdf8484cb033e31dfbb08fe, type: 3}
+  - {fileID: 8300000, guid: 5fcabe1098ec4be4ba68b00207f98610, type: 3}
+  - {fileID: 8300000, guid: f39ec9fd343f57045a54c0ae5cb6462a, type: 3}
+  - {fileID: 8300000, guid: 166f9fb184a4d3b4796c71fcae0d1dd7, type: 3}
+  - {fileID: 8300000, guid: ea5696825ea22bb45a6d8565bf10480e, type: 3}
+  - {fileID: 8300000, guid: 0fa5f789a922a6f4e9da43ea290750ea, type: 3}
+  - {fileID: 8300000, guid: 0e4506dbcb4088c4ab74aaea45bd703b, type: 3}
+  takeDamageSound:
+  - {fileID: 8300000, guid: 44140a8ace0c7d046b526aa9a32e9b56, type: 3}
+  - {fileID: 8300000, guid: 47af7b609aeea36499a4930a20db2974, type: 3}
+  - {fileID: 8300000, guid: 5235e96933a596b4f8a2c143a40305c2, type: 3}
+  - {fileID: 8300000, guid: b69eabee477df3d4a9e4ef9241ff1308, type: 3}
+  - {fileID: 8300000, guid: 962d26dffaf3775438349ebb9a3a13b8, type: 3}
+  - {fileID: 8300000, guid: 5f50cb281054947438b75385c12920eb, type: 3}
   dropableItem:
   - itemToDrop: {fileID: 5592362334672371228, guid: 54ccf75b61b34334ab8bcdafede0ce90,
       type: 3}
@@ -157,3 +173,99 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!82 &5785548247948499571
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3573829929258997510}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 250
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.055555556
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

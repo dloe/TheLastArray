@@ -87,6 +87,8 @@ public class Tile : MonoBehaviour
     public bool hasDoors = false;
     //when door is activated, it will not spawn any blockage or enviornment where the door is located, otherwise that direction/doorway will be blocked for the player
     public GameObject[] doors;
+
+    
     #endregion
 
     private void Start()
@@ -102,39 +104,44 @@ public class Tile : MonoBehaviour
         }
     }
 
+    //establish this tile as a null tile (will not be used)
     public void ShadeNull()
     {
         _nodeColor = Color.red;
         tileStatus = Tile.TileStatus.nullRoom;
     }
+    //establish this tile as being part of main path that will be used throughout level
     public void ShadePath()
     {
         _nodeColor = Color.green;
         tileStatus = Tile.TileStatus.path;
     }
+    //establish this tile will be active during level
     public void ShadeActiveRoom()
     {
         _nodeColor = Color.grey;
         
     }
+    //establish boss room
     public void ShadeBoosRoom()
     {
         _nodeColor = Color.yellow;
         tileStatus = Tile.TileStatus.boss;
     }
+    //establish this tile as being the starting tile
     public void ShadeStarting()
     {
         //Debug.Log(posOnGrid.x + " " + posOnGrid.y);
         _nodeColor = Color.blue;
         tileStatus = Tile.TileStatus.startingRoom;
     }
-
+    //establish this tile as being a secret tile
     public void ShadeSecret()
     {
         _nodeColor = Color.black;
         tileStatus = Tile.TileStatus.secretRoom;
     }
-
+    //doors on this tile will be properly labeled and checked
     public void LabelDoors()
     {
         for(int i = 0; i < doors.Length; i++)
@@ -227,9 +234,7 @@ public class Tile : MonoBehaviour
      *-------------------------------------------------------------------------------------
      * 
      * - Planed to be used in last level
-     * 
-     * 
-     * 
+     * - will have doors between each tile be linked (ex: tile 1's left neighbor tile 2 both share a door (same door between tile1.leftdoor = tile2.rightdoor)
      */
 
     #region Doors
