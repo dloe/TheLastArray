@@ -74,7 +74,13 @@ public class Player : MonoBehaviour
     public Text endScreenText;
     public Text levelText;
     public Image ArmorPlateImage;
+    public GameObject stimMessage;
+    public Image playerImage;
+    public List<Sprite> playerSprites = new List<Sprite>(8);
     #endregion
+
+    private int damageModifier = 0;
+    private bool usingStimmy = false;
 
     #region Health Variables
     public int Health
@@ -244,6 +250,13 @@ public class Player : MonoBehaviour
                         if (Health < maxHealth)
                         {
                             heal();
+
+                        }
+                        break;
+                    case ItemType.UnstableStim:
+                        if (!usingStimmy)
+                        {
+                            StartCoroutine(UnstableStimmy());
                             inventory.RemoveItem(inventory.selectedItem);
                         }
                         break;
@@ -365,6 +378,8 @@ public class Player : MonoBehaviour
 
 
         }
+        //Debug.Log(lookDir);
+
 
         if (inventory.selectedItem != null && inventory.selectedItem.itemData.hasLaserSight)
         {
@@ -372,7 +387,57 @@ public class Player : MonoBehaviour
             laserLine.SetPosition(1, transform.position + lookDir);
         }
 
+
+
+        int zFloor = Mathf.FloorToInt(Mathf.Abs(lookDir.z));
+        int xFloor = Mathf.FloorToInt(Mathf.Abs(lookDir.x));
+
+        if (zFloor == 0)
+        {
+            if (lookDir.x < 0)
+            {
+                playerImage.sprite = playerSprites[4];
+            }
+            else if(lookDir.x > 0)
+            {
+                playerImage.sprite = playerSprites[5];
+            }
+        }
+        else if (xFloor == 0)
+        {
+            if (lookDir.z < 0)
+            {
+                playerImage.sprite = playerSprites[3];
+            }
+            else if (lookDir.z > 0)
+            {
+                playerImage.sprite = playerSprites[0];
+            }
+        }
+        else if(lookDir.x < 0)
+        {
+            if (lookDir.z < 0)
+            {
+                playerImage.sprite = playerSprites[1];
+            }
+            else if (lookDir.z > 0)
+            {
+                playerImage.sprite = playerSprites[6];
+            }
+        }
+        else if (lookDir.x > 0)
+        {
+            if (lookDir.z < 0)
+            {
+                playerImage.sprite = playerSprites[2];
+            }
+            else if (lookDir.z > 0)
+            {
+                playerImage.sprite = playerSprites[7];
+            }
+        }
     }
+
 
     /// <summary>
     /// Performs Ranged Attack based on currently selected item
@@ -388,9 +453,21 @@ public class Player : MonoBehaviour
                 {
                     Bullet bullet;
                     bullet = Instantiate(pistolBulletPrefab, transform.position, transform.rotation).GetComponent<Bullet>();
-                    bullet.damageToDeal = inventory.selectedItem.itemData.damage;
+                    bullet.damageToDeal = inventory.selectedItem.itemData.damage + damageModifier;
+                    bullet.isFireBullet = inventory.selectedItem.itemData.usingFireBullets;
                     StartCoroutine(inventory.selectedItem.itemData.CoolDown());
-                    inventory.selectedItem.itemData.loadedAmmo--;
+
+                    if(inventory.selectedItem.itemData.usingFireBullets)
+                    {
+                        inventory.selectedItem.itemData.fireLoadedAmmo--;
+                    }
+                    else
+                    {
+                        inventory.selectedItem.itemData.loadedAmmo--;
+                    }
+
+                    
+
                     // Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
                     WeaponFireAudio(4);
                 }
@@ -403,13 +480,23 @@ public class Player : MonoBehaviour
             }
             else if (inventory.selectedItem.itemData.ammoType == AmmoType.HeavyAmmo)
             {
-                if (inventory.selectedItem.itemData.loadedAmmo > 0)
+                if (inventory.selectedItem.itemData.loadedAmmo > 0 )
                 {
                     Bullet bullet;
                     bullet = Instantiate(rifleBulletPrefab, transform.position, transform.rotation).GetComponent<Bullet>();
-                    bullet.damageToDeal = inventory.selectedItem.itemData.damage;
+                    bullet.damageToDeal = inventory.selectedItem.itemData.damage + damageModifier;
+                    bullet.isFireBullet = inventory.selectedItem.itemData.usingFireBullets;
                     StartCoroutine(inventory.selectedItem.itemData.CoolDown());
-                    inventory.selectedItem.itemData.loadedAmmo--;
+                    if (inventory.selectedItem.itemData.usingFireBullets)
+                    {
+                        inventory.selectedItem.itemData.fireLoadedAmmo--;
+                    }
+                    else
+                    {
+                        inventory.selectedItem.itemData.loadedAmmo--;
+                    }
+                    
+
                     // Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
                     WeaponFireAudio(1);
                 }
@@ -490,19 +577,19 @@ public class Player : MonoBehaviour
             //Debug.Log("Melee Attack");
             if (Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward, out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange))
             {
-                
+
                 StartCoroutine(inventory.selectedItem.itemData.CoolDown());
 
                 if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy" && hit.transform.TryGetComponent<BossEnemy>(out BossEnemy mBossEnemy))
                 {
-                    mBossEnemy.TakeDamage(inventory.selectedItem.itemData.damage);
+                    mBossEnemy.TakeDamage(inventory.selectedItem.itemData.damage + damageModifier);
                     Debug.Log("yep boss hit");
                 }
                 else if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
                 {
                     Debug.Log("Durability Before: " + inventory.selectedItem.itemData.durability);
 
-                    hit.transform.GetComponent<BaseEnemy>().TakeDamage(inventory.selectedItem.itemData.damage);
+                    hit.transform.GetComponent<BaseEnemy>().TakeDamage(inventory.selectedItem.itemData.damage + damageModifier);
                     if (inventory.selectedItem.itemData.hasDurability)
                     {
                         inventory.selectedItem.itemData.durability--;
@@ -549,7 +636,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            
+
             Health -= damage;
             StartCoroutine(Damaged());
         }
@@ -629,6 +716,28 @@ public class Player : MonoBehaviour
         this.GetComponent<MeshRenderer>().material = norm;
     }
 
+    IEnumerator UnstableStimmy()
+    {
+        usingStimmy = true;
+        stimMessage.SetActive(true);
+        int originalMax = maxHealth;
+        if (Health == maxHealth)
+        {
+            Health -= inventory.selectedItem.itemData.healthDecrease;
+        }
+
+        maxHealth -= inventory.selectedItem.itemData.healthDecrease;
+        Health -= 0;
+
+        damageModifier = inventory.selectedItem.itemData.damageModifier;
+
+        yield return new WaitForSeconds(5f);
+        maxHealth = originalMax;
+        damageModifier = 0;
+        Health -= 0;
+        usingStimmy = false;
+        stimMessage.SetActive(false);
+    }
 
     public void SetStatsToBase()
     {
@@ -720,7 +829,7 @@ public class Player : MonoBehaviour
         playerSave.hasArmorPlate = hasArmorPlate;
         playerSave.lightAmmo = currentLightAmmo;
         playerSave.heavyAmmo = currentHeavyAmmo;
-        
+
 
         playerSave.invJsonList = inventory.SaveToJsonList();
         playerSave.numInvSlots = InventoryUI.Instance.slotList.Count;
@@ -754,7 +863,7 @@ public class Player : MonoBehaviour
 
             inventory.numInvSlots = playerSave.numInvSlots;
             inventory.LoadFromJsonList(playerSave.invJsonList);
-            
+
         }
         else
         {
@@ -804,5 +913,3 @@ public class PlayerSave
     public List<string> invJsonList;
     public int numInvSlots;
 }
-
-

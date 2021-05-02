@@ -5,6 +5,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 public enum EnemyType
 {
@@ -186,10 +187,10 @@ public class BaseEnemy : MonoBehaviour
         StartCoroutine(Tick());
     }
 
-
+    protected float speed;
     void Stearing()
     {
-        float speed = 0;
+        speed = 0;
         switch (myState)
         {
             case enemyState.wandering:
@@ -345,7 +346,7 @@ public class BaseEnemy : MonoBehaviour
     {
         if (Vector3.Distance(transform.position, _target.gameObject.transform.position) <= detectionRadius && onAgroStart)
         {
-            Debug.Log(this.transform.position);
+            //Debug.Log(this.transform.position);
             agro = true;
             
             myState = enemyState.following;
@@ -407,6 +408,21 @@ public class BaseEnemy : MonoBehaviour
         TakeDamageAudio();
         baseHealth -= damage;
         StartCoroutine(Damaged());
+    }
+
+    public void TakeFireDamge(int dmgPerSecond)
+    {
+        StartCoroutine(TakeFireDamageCR(dmgPerSecond));
+    }
+
+    public IEnumerator TakeFireDamageCR(int dmgPerSecond)
+    {
+        for(int i = 0; i < 3; i++)
+        {
+            Debug.Log("Fire damage " + i);
+            TakeDamage(dmgPerSecond);
+            yield return new WaitForSeconds(1f);
+        }
     }
     IEnumerator Damaged()
     {

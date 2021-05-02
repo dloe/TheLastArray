@@ -20,7 +20,8 @@ public enum ItemType
     Key,
     Binoculars,
     BackPack,
-    finalObjective
+    finalObjective,
+    UnstableStim
 }
 [Serializable][CreateAssetMenu]
 public class ItemData : ScriptableObject
@@ -47,12 +48,31 @@ public class ItemData : ScriptableObject
     public int magSize = 5;
     public int loadedAmmo;
 
+    private int _FireAmmo;
+    public int fireLoadedAmmo
+    {
+        get => _FireAmmo;
+        set
+        {
+            _FireAmmo = value;
+            if(_FireAmmo == 0)
+            {
+                
+                InventoryUI.Instance.StartCoroutine(FireToNormal());
+            }
+        }
+        
+    }
+
 
     public int amountToHeal = 1;
+    public int healthDecrease = 5;
+    public int damageModifier = 5;
 
     public bool canAttack = true;
     public bool reloading = false;
     public bool hasLaserSight = false;
+    public bool usingFireBullets = false;
 
 
     public IEnumerator CoolDown()
@@ -72,8 +92,16 @@ public class ItemData : ScriptableObject
         else
         {
             reloading = true;
+
             Debug.Log("Reloading...");
-            yield return new WaitForSeconds(reloadTime);
+            for(int i = (int)reloadTime; i > 0; i--)
+            {
+                InventoryUI.Instance.currentAmmoName.text = "Reloading... " + i;
+                yield return new WaitForSeconds(1);
+            }
+
+            
+            //yield return new WaitForSeconds(reloadTime);
             Debug.Log("Reloaded");
             loadedAmmo += amountToReload;
             switch (ammoType)
@@ -87,10 +115,45 @@ public class ItemData : ScriptableObject
                 default:
                     break;
             }
+            
+            
 
             InventoryUI.Instance.RefreshUI();
             reloading = false;
         }
+    }
+
+    public IEnumerator FireToNormal()
+    {
+        if (itemType != ItemType.RangedWeapon)
+        {
+            yield return new WaitForEndOfFrame();
+            Debug.LogError("This Function cannot be called unless the item is a ranged weapon, refrain from doing so");
+        }
+        else
+        {
+            reloading = true;
+
+            Debug.Log("Reloading...");
+            for (int i = (int)reloadTime; i > 0; i--)
+            {
+                InventoryUI.Instance.currentAmmoName.text = "Reloading... " + i;
+                yield return new WaitForSeconds(1);
+            }
+            Debug.Log("Reloaded");
+
+
+            usingFireBullets = false;
+            InventoryUI.Instance.RefreshUI();
+            reloading = false;
+        }
+    }
+
+    public void LoadFireBullets()
+    {
+        usingFireBullets = true;
+        fireLoadedAmmo = magSize;
+        InventoryUI.Instance.RefreshUI();
     }
 
 }
@@ -180,6 +243,8 @@ public class ItemDataEditor : Editor
 
         EditorGUI.BeginChangeCheck();
 
+        EditorStyles.textField.wordWrap = true;
+
         itemData.itemSprite = (Sprite)EditorGUILayout.ObjectField(itemData.itemSprite, typeof(Sprite), false, GUILayout.Width(80), GUILayout.Height(80));
 
         itemData.itemType = (ItemType)EditorGUILayout.EnumPopup("Item Type", itemData.itemType);
@@ -219,6 +284,12 @@ public class ItemDataEditor : Editor
         {
             itemData.amountToHeal = EditorGUILayout.IntField("Amount to Heal", itemData.amountToHeal);
 
+        }
+
+        if(itemData.itemType == ItemType.UnstableStim)
+        {
+            itemData.healthDecrease = EditorGUILayout.IntField("Amount to Decrease Health", itemData.healthDecrease);
+            itemData.damageModifier = EditorGUILayout.IntField("Amount to Modify Damage", itemData.damageModifier);
         }
 
 
