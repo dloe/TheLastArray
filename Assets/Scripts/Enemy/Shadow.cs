@@ -13,6 +13,14 @@ public class Shadow : BaseEnemy
 
     public override void specialAttack(Vector3 temp)
     {
+        if(Vector3.Distance(_target.transform.position, this.transform.position) < 1.5f)
+        {
+            GetComponent<BoxCollider>().enabled = true;
+            GetComponent<MeshRenderer>().enabled = true;
+            GetComponent<Rigidbody>().useGravity = true;
+            readyToAttack = false;
+        }
+
         if (myState != enemyState.attacking && readyToAttack == true)
         {
             this.transform.position += temp * Time.deltaTime;
@@ -32,13 +40,16 @@ public class Shadow : BaseEnemy
         }
         else if (myState == enemyState.attacking && readyToAttack == false)
         {
-            this.transform.position -= temp * Time.deltaTime;
+            this.transform.position += temp * Time.deltaTime;
         }
 
     }
 
     IEnumerator Teleport()
     {
+        GetComponent<MeshRenderer>().enabled = false;
+        GetComponent<BoxCollider>().enabled = false;
+        GetComponent<Rigidbody>().useGravity = false;
         //yield return new WaitForSeconds(Random.Range(1, 3));
         _speed = baseSpeed;
         speed = 0;
@@ -61,8 +72,8 @@ public class Shadow : BaseEnemy
                 attacking = false;
                 StopCoroutine(Teleport());
             }
-            GetComponent<BoxCollider>().enabled = false;
-            GetComponent<Rigidbody>().useGravity = false;
+            
+            
             Debug.Log("teleporting");
             hidden = true;
             Vector3 poi = hit.point;
@@ -77,7 +88,7 @@ public class Shadow : BaseEnemy
             GetComponent<Rigidbody>().useGravity = true;
 
             //moves to that location
-            yield return new WaitForSeconds(2.0f);
+            yield return new WaitForSeconds(1.0f);
         }
         speed = _speed;
         hidden = false;

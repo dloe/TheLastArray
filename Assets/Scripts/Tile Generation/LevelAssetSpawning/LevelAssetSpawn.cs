@@ -370,7 +370,6 @@ public class LevelAssetSpawn : MonoBehaviour
         Player.Instance.transform.position = spawnPos;
 
     }
-
     
     void ActivateSecretRoom()
     {
@@ -513,7 +512,27 @@ public class LevelAssetSpawn : MonoBehaviour
                 // eObj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
                 // objectivesInLevel.Add(eObj);
                 _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
-                GameObject enemy = Instantiate(myLevelAsset.enemyPrefab.dozerEnemy, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform);
+
+                GameObject objectiveEnemy = objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.dozerEnemy;
+                int choice = Random.Range(1, 3);
+                Debug.Log(choice);
+                switch (choice)
+                {
+                    case 1:
+                        objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.shadowEnemy;
+                        break;
+                    case 2:
+                        objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.fuglyEnemy;
+                        break;
+                    case 3:
+                        objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.dozerEnemy;
+                        break;
+                    default:
+                        break;
+                }
+
+
+                GameObject enemy = Instantiate(objectiveEnemy, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform);
                 enemy.GetComponent<BaseEnemy>().isObjectiveEnemy = true;
                 enemy.name = "OBJECTIVE_ENEMY";
                 enemy.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
@@ -895,8 +914,37 @@ public class LevelAssetSpawn : MonoBehaviour
             tile.presetTile = preset;
             assetCountArray[index] += 1;
 
+            if (tile.tileStatus != Tile.TileStatus.startingRoom)
+            {
+                int choice = Random.Range(1, 4);
+                //Debug.Log(tile.gameObject.name);
+                //Debug.Log(choice);
+                switch (choice)
+                {
+                    case 1:
+                        //local angle = 0
+                        tile.presetTile.transform.localEulerAngles = new Vector3(0, 0, 0);
+                        break;
+                    case 2:
+                        tile.presetTile.transform.localEulerAngles = new Vector3(0, 90, 0);
+                        //local angle = 90
+                        break;
+                    case 3:
+                        tile.presetTile.transform.localEulerAngles = new Vector3(0, 180, 0);
+                        //local angle = 180;
+                        break;
+                    case 4:
+                        tile.presetTile.transform.localEulerAngles = new Vector3(0, 270, 0);
+                        //local angle = 270;
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+
             //check for miniboss
-            if(currentMiniBossCount <= _miniBossCap && tile.endOfBranchPath)
+            if (currentMiniBossCount <= _miniBossCap && tile.endOfBranchPath)
             {
                 if(preset.GetComponent<PresetTileInfo>().enemiesOnPreset.Length > 0)
                 {
@@ -1012,7 +1060,34 @@ public class LevelAssetSpawn : MonoBehaviour
             Debug.Log("BIG ASSET WITH OBJ");
         }
 
-        if(canSpawnMiniBoss)
+
+        //random rotation on tile set
+            int choice = Random.Range(1, 4);
+            //Debug.Log(choice);
+
+            switch (choice)
+            {
+                case 1:
+                    //local angle = 0
+                    preset.transform.localEulerAngles = new Vector3(0, 0, 0);
+                    break;
+                case 2:
+                    preset.transform.localEulerAngles = new Vector3(0, 90, 0);
+                    //local angle = 90
+                    break;
+                case 3:
+                    preset.transform.localEulerAngles = new Vector3(0, 180, 0);
+                    //local angle = 180;
+                    break;
+                case 4:
+                    preset.transform.localEulerAngles = new Vector3(0, 270, 0);
+                    //local angle = 270;
+                    break;
+                default:
+                    break;
+            }
+
+        if (canSpawnMiniBoss)
         {
             if (currentMiniBossCount <= _miniBossCap && preset.GetComponent<PresetTileInfo>().enemiesOnPreset.Length > 0)
             {
