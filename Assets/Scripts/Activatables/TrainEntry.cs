@@ -19,7 +19,7 @@ public class TrainEntry : Activatable
             localLevel.LevelBeat();
 
         }
-        else if (!isActivated)
+        else if (!isActivated && Objectives.Instance.mainObjective.complete && localLevel.thisLevelTier == levelTier.level4)
         {
             Objectives.Instance.objectiveText.text = "You Win!";
             Player.Instance.endScreenText.text = "You Win!";
