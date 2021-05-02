@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &910311996915913920
+--- !u!1 &803032101261767439
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,48 +8,48 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 910311996915913934}
-  - component: {fileID: 910311996915913935}
-  - component: {fileID: 910311996915913932}
-  - component: {fileID: 910311996915913933}
-  - component: {fileID: 910311996915913922}
-  - component: {fileID: 910311996915913923}
+  - component: {fileID: 803032101261767429}
+  - component: {fileID: 803032101261767428}
+  - component: {fileID: 803032101261767435}
+  - component: {fileID: 803032101261767434}
+  - component: {fileID: 803032101261767433}
+  - component: {fileID: 803032101261767432}
   m_Layer: 19
-  m_Name: Tank
+  m_Name: Fugly_miniBoss
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &910311996915913934
+--- !u!4 &803032101261767429
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 910311996915913920}
+  m_GameObject: {fileID: 803032101261767439}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16, y: 1, z: -2}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 15.564807, y: 1.04, z: -0.082369804}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &910311996915913935
+--- !u!33 &803032101261767428
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 910311996915913920}
+  m_GameObject: {fileID: 803032101261767439}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &910311996915913932
+--- !u!23 &803032101261767435
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 910311996915913920}
+  m_GameObject: {fileID: 803032101261767439}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f18da65ebf276ad4dad1d52734925742, type: 2}
+  - {fileID: 2100000, guid: b66dcb524e406364691e9b0ef712e35e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -82,26 +82,26 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!65 &910311996915913933
+--- !u!65 &803032101261767434
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 910311996915913920}
+  m_GameObject: {fileID: 803032101261767439}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &910311996915913922
+--- !u!54 &803032101261767433
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 910311996915913920}
+  m_GameObject: {fileID: 803032101261767439}
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
@@ -111,44 +111,44 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &910311996915913923
+--- !u!114 &803032101261767432
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 910311996915913920}
+  m_GameObject: {fileID: 803032101261767439}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28fb8150f3d719244b3b6503712f1952, type: 3}
+  m_Script: {fileID: 11500000, guid: f6c8720b86af59b4294ed9678b7e288d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  norm: {fileID: 2100000, guid: f18da65ebf276ad4dad1d52734925742, type: 2}
+  norm: {fileID: 2100000, guid: 8c36b3785663fa84b857b632ccaea2aa, type: 2}
   damaged: {fileID: 2100000, guid: a9021586276d2c0469733a3caaa23e02, type: 2}
   key: {fileID: 2100000, guid: a338947236265e2418c8d544b89e1f94, type: 2}
   isObjectiveEnemy: 0
   myType: 0
   myState: 0
   notWarden: 1
-  baseHealth: 30
-  baseAttack: 14
-  baseSpeed: 3
+  baseHealth: 8
+  baseAttack: 0
+  baseSpeed: 4
   detectionRadius: 15
   tickRate: 0.5
   avodinceRange: 2
-  wanderSpeed: 1
-  wanderRadius: 10
-  attackType: 0
+  wanderSpeed: 2
+  wanderRadius: 12
+  attackType: 2
   agro: 0
-  attackSpeed: 2
+  attackSpeed: 5
   combatSpeed: 3
-  attackDistance: 1.5
+  attackDistance: 6
   _target: {fileID: 0}
   attacking: 0
   readyToAttack: 1
-  agroLoseDis: 10
-  attackRange: 2.2
-  projectile: {fileID: 0}
+  agroLoseDis: 6
+  attackRange: 0
+  projectile: {fileID: 6521083710386834856, guid: 93105df31da18d54682fd5479a055764,
+    type: 3}
   agroSound: []
   takeDamageSound: []
-  knockback: 1.3

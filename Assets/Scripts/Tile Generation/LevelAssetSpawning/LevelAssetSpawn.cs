@@ -181,8 +181,9 @@ public class LevelAssetSpawn : MonoBehaviour
                 }
                 //Debug.Log("Player Spawn set");
                 StartCoroutine(setPlayerPosition(play, playerSpawn.transform.position));
-
-                myLocalLevel.myPlayer = play.transform.GetChild(1).gameObject.GetComponent<Player>();
+                //Debug.Log(play.transform.GetChild(1).gameObject.name);
+                //will use getcomponent in scene next time
+                myLocalLevel.myPlayer = play.transform.GetChild(2).gameObject.GetComponent<Player>();
             }
         }
 
