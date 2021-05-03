@@ -142,10 +142,9 @@ public class BaseEnemy : MonoBehaviour
         if(isObjectiveEnemy)
         {
             this.GetComponent<MeshRenderer>().material = key;
-            
+            objectiveMinimapMarker.SetActive(true);
         }
-        else
-            objectiveMinimapMarker.SetActive(false);
+            
 
     }
 
