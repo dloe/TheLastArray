@@ -679,11 +679,11 @@ public class Player : MonoBehaviour
             StartCoroutine(pois(damage));
         }
     }
-
+   
     IEnumerator pois(int damage)
     {
         TakeDamage(damage);
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(2);//shawn here 
         ow = false;
     }
 
