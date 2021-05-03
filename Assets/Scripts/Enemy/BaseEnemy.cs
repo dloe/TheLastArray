@@ -122,6 +122,7 @@ public class BaseEnemy : MonoBehaviour
     [Header("Audio")]
     public AudioClip[] agroSound;
     public AudioClip[] takeDamageSound;
+    public AudioClip rifleSound;
     [Space(25)]
     AudioSource _audioSource;
 
@@ -156,7 +157,7 @@ public class BaseEnemy : MonoBehaviour
 
         if(agro == true && audioPrevent)
         {
-            PlayAgroSound();
+           // PlayAgroSound();
             //audio cooldown
             StartCoroutine(AudioCoolDown());
         }
@@ -318,11 +319,14 @@ public class BaseEnemy : MonoBehaviour
         {
             if(myState == enemyState.attacking && attackCD <= 0 && readyToAttack == true)
             {
+                _audioSource.clip = rifleSound;
+                _audioSource.Play();
                 attacking = false;
                 readyToAttack = false;
                 StartCoroutine(CoolDown());
                 //Debug.Log("Bang Bang");
                 GameObject bullet = Instantiate(projectile, transform.position, transform.rotation);
+                if(notWarden == false)
                 bullet.GetComponent<Bullet>().damageToDeal = baseAttack;
 
             }
@@ -540,7 +544,7 @@ public class BaseEnemy : MonoBehaviour
     {
         //Debug.Log("Play audio");
         int soundI = Random.Range(0, agroSound.Length);
-
+        
         _audioSource.clip = agroSound[soundI];
         _audioSource.Play();
         //_audioSource.PlayClipAtPoint(agroSound[soundI], transform.position, 1);
