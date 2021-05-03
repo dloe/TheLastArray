@@ -127,6 +127,8 @@ public class BaseEnemy : MonoBehaviour
     AudioSource _audioSource;
 
     bool onAgroStart = false;
+    [Header("Minimap Objective Marker")]
+    public GameObject objectiveMinimapMarker;
 
     public virtual void Start()
     {
@@ -140,7 +142,10 @@ public class BaseEnemy : MonoBehaviour
         if(isObjectiveEnemy)
         {
             this.GetComponent<MeshRenderer>().material = key;
+            
         }
+        else
+            objectiveMinimapMarker.SetActive(false);
 
     }
 
