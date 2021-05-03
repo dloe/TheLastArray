@@ -10,6 +10,7 @@ public class UI : MonoBehaviour
     public GameObject pauseMenu;
     //public GameObject controlMenu;
     public GameObject optionMenu;
+    public GameObject howToPlayMenu;
    // public GameObject restartPrompt;
     public GameObject mainMenuPrompt;
     public GameObject quitPrompt;
@@ -114,6 +115,7 @@ public class UI : MonoBehaviour
         Hide(pauseMenu);
         Hide(quitPrompt);
         Hide(mainMenuPrompt);
+        Hide(howToPlayMenu);
        // Hide(restartPrompt);
         Hide(optionMenu);
         //Hide(howToPlay);

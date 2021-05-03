@@ -226,7 +226,7 @@ public class CraftingTable : Activatable
                 }
                 else
                 {
-                    craftOption.craftButton.GetComponentInChildren<Text>().text = "Craft";
+                    craftOption.craftButton.GetComponentInChildren<Text>().text = "";
                     switch (craftOption.recipe.craftingResult.attachType)
                     {
                         case AttachType.laser:
@@ -253,7 +253,7 @@ public class CraftingTable : Activatable
                 }
                 else
                 {
-                    craftOption.craftButton.GetComponentInChildren<Text>().text = "Craft";
+                    craftOption.craftButton.GetComponentInChildren<Text>().text = "";
                 }
             }
             else if(craftOption.recipe.craftingResult.resultType == ResultType.fireBullets)
@@ -265,7 +265,7 @@ public class CraftingTable : Activatable
                 }
                 else
                 {
-                    craftOption.craftButton.GetComponentInChildren<Text>().text = "Craft";
+                    craftOption.craftButton.GetComponentInChildren<Text>().text = "";
                     
                     if(Player.Instance.inventory.selectedItem.itemData.usingFireBullets)
                     {

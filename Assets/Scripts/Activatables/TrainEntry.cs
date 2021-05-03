@@ -1,10 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TrainEntry : Activatable
 {
+    public static TrainEntry Instance;
+    public Text trainText;
     LocalLevel localLevel;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(Instance.gameObject);
+        }
+        Instance = this;
+    }
+
     public void Start()
     {
         localLevel = FindObjectOfType<LocalLevel>();
