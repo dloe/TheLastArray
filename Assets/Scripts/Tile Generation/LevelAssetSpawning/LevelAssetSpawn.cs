@@ -466,7 +466,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
                 objectivesInLevel.Add(obj);
 
-
+               // Debug.Log("check");
                 //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
                 //if objective is certain types (ie type 3), choose more objectives and add to list
 
@@ -474,6 +474,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 //make sure we can spawn 2 more objectives!
                 for (int objCount = 0; objCount < 2; objCount++)
                 {
+                    //Debug.Log("check 2");
                     //if this item is null, need to get another one
 
                     //randomly pick an objective (or item?)
@@ -484,7 +485,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     //run check to see if this is an adiquate location to use, otherwise rechoose
                     for (int indexO = 0; indexO <= _possibleObjectives.Count; indexO++)
                     {
-                        if (_possibleObjectives[indexO] && _possibleObjectives[indexO].TryGetComponent<PossibleItem>(out PossibleItem mPI2) && !mPI2.inUse)
+                        if (_possibleObjectives[indexO]) // && _possibleObjectives[indexO].TryGetComponent<PossibleItem>(out PossibleItem mPI2) && !mPI2.inUse)
                         {
                             GameObject objMulti = Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, _possibleObjectives[indexO]).gameObject;
 
@@ -496,12 +497,12 @@ public class LevelAssetSpawn : MonoBehaviour
                             //Destroy(_possibleObjectives[indexO]);
                             GameObject tempToDelete = _possibleObjectives[indexO];
 
-                            if (tempToDelete.TryGetComponent<PossibleItem>(out PossibleItem mPI))
-                                mPI.inUse = true;
-                            else
-                                Debug.Log("bad");
+                            //if (tempToDelete.TryGetComponent<PossibleItem>(out PossibleItem mPI))
+                           //     mPI.inUse = true;
+                           // else
+                           //     Debug.Log("bad");
 
-                            _possibleItems.Remove(_possibleObjectives[indexO]);
+                           // _possibleItems.Remove(_possibleObjectives[indexO]);
                             _possibleObjectives.Remove(_possibleObjectives[indexO]);
                             //tempToDelete.gameObject.
                             //DestroyImmediate(tempToDelete);
