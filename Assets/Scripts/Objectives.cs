@@ -193,8 +193,11 @@ public class Objectives : MonoBehaviour
          //   else
          //   {
                 objectiveText.text = "Return to Train";
-          //  }
-            
+            //  }
+
+            TrainEntry.Instance.trainText.text = "Enter Train \n" + "(Press E)";
+
+
         }
         
             
