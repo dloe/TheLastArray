@@ -523,7 +523,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
                 GameObject objectiveEnemy = objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.dozerEnemy;
                 int choice = Random.Range(1, 3);
-                Debug.Log(choice);
+                //Debug.Log(choice);
                 switch (myLocalLevel.thisLevelTier)
                 {
                     case levelTier.level1:
