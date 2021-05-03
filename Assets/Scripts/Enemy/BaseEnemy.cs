@@ -122,6 +122,7 @@ public class BaseEnemy : MonoBehaviour
     [Header("Audio")]
     public AudioClip[] agroSound;
     public AudioClip[] takeDamageSound;
+    public AudioClip rifleSound;
     [Space(25)]
     AudioSource _audioSource;
 
@@ -318,6 +319,8 @@ public class BaseEnemy : MonoBehaviour
         {
             if(myState == enemyState.attacking && attackCD <= 0 && readyToAttack == true)
             {
+                _audioSource.clip = rifleSound;
+                _audioSource.Play();
                 attacking = false;
                 readyToAttack = false;
                 StartCoroutine(CoolDown());
