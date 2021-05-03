@@ -1064,8 +1064,8 @@ public class LevelAssetSpawn : MonoBehaviour
                // Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                 _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
                // mPresetTileInfo.possiblePresetItems[posResourceCount].GetComponent<PossibleItem>().itemIndex = _possibleItems.Count - 1;
-                if (tile.tileStatus != Tile.TileStatus.startingRoom)
-                    _possibleObjectives.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
+                //if (tile.tileStatus != Tile.TileStatus.startingRoom)
+                   // _possibleObjectives.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
             }
             for (int posEnemyCount = 0; posEnemyCount < mPresetTileInfo.enemiesOnPreset.Length; posEnemyCount++)
             {
@@ -1078,7 +1078,7 @@ public class LevelAssetSpawn : MonoBehaviour
             }
         }
     }
-    //public int co = 0;
+
     /// <summary>
     /// - spawns bigger 4 tile asset
     /// </summary>
@@ -1155,7 +1155,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
                // mPresetTileInfo.possiblePresetItems[posResourceCount].GetComponent<PossibleItem>().itemIndex = _possibleItems.Count;
                 //if()
-                _possibleObjectives.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
+                //_possibleObjectives.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
             }
             for(int posEnemyCount = 0; posEnemyCount < mPresetTileInfo.enemiesOnPreset.Length; posEnemyCount++)
             {
