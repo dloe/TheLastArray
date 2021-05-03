@@ -780,6 +780,10 @@ public class Player : MonoBehaviour
         currentLightAmmo = 0;
         currentHeavyAmmo = 0;
 
+        hasBackPack = false;
+        hasArmorPlate = false;
+        ArmorPlateImage.gameObject.SetActive(false);
+
         inventory.selectedItem = null;
         inventory.numInvSlots = 4;
         inventory.AddItemNoUI(baseData.initialItem);
