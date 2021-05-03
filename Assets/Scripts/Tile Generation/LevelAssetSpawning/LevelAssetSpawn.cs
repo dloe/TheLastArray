@@ -463,24 +463,28 @@ public class LevelAssetSpawn : MonoBehaviour
                 obj.transform.rotation = playerSpawn.transform.rotation;
                 obj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
 
+                _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
                 objectivesInLevel.Add(obj);
+
 
                 //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
                 //if objective is certain types (ie type 3), choose more objectives and add to list
 
+                
                 //make sure we can spawn 2 more objectives!
                 for (int objCount = 0; objCount < 2; objCount++)
                 {
                     //if this item is null, need to get another one
 
                     //randomly pick an objective (or item?)
-                   // int indexO = Random.Range(0, _possibleObjectives.Count);
+                    // int indexO = Random.Range(0, _possibleObjectives.Count);
 
                     _possibleObjectives = reshuffle(_possibleObjectives);
+                    //_possibleObjectives = reshuffle(_possibleObjectives);
                     //run check to see if this is an adiquate location to use, otherwise rechoose
-                    for(int indexO = 0; indexO <= _possibleObjectives.Count; indexO++)
+                    for (int indexO = 0; indexO <= _possibleObjectives.Count; indexO++)
                     {
-                        if (_possibleObjectives[indexO])
+                        if (_possibleObjectives[indexO] && _possibleObjectives[indexO].TryGetComponent<PossibleItem>(out PossibleItem mPI2) && !mPI2.inUse)
                         {
                             GameObject objMulti = Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, _possibleObjectives[indexO]).gameObject;
 
@@ -494,10 +498,13 @@ public class LevelAssetSpawn : MonoBehaviour
 
                             if (tempToDelete.TryGetComponent<PossibleItem>(out PossibleItem mPI))
                                 mPI.inUse = true;
-
+                            else
+                                Debug.Log("bad");
 
                             _possibleItems.Remove(_possibleObjectives[indexO]);
                             _possibleObjectives.Remove(_possibleObjectives[indexO]);
+                            //tempToDelete.gameObject.
+                            //DestroyImmediate(tempToDelete);
                             Destroy(tempToDelete);
                             break;
                         }
@@ -517,22 +524,60 @@ public class LevelAssetSpawn : MonoBehaviour
                 GameObject objectiveEnemy = objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.dozerEnemy;
                 int choice = Random.Range(1, 3);
                 Debug.Log(choice);
-                switch (choice)
+                switch (myLocalLevel.thisLevelTier)
                 {
-                    case 1:
-                        objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.shadowEnemy;
+                    case levelTier.level1:
+                        switch (choice)
+                        {
+                            case 1:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyMelee;
+                                break;
+                            case 2:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyRanged;
+                                break;
+                            case 3:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.lostOneEnemy;
+                                break;
+                            default:
+                                break;
+                        }
                         break;
-                    case 2:
-                        objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.fuglyEnemy;
+                    case levelTier.level2:
+                        switch (choice)
+                        {
+                            case 1:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.stalkerEnemy;
+                                break;
+                            case 2:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.wardenEnemy;
+                                break;
+                            case 3:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.spitterEnemy;
+                                break;
+                            default:
+                                break;
+                        }
                         break;
-                    case 3:
-                        objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.dozerEnemy;
+                    case levelTier.level3:
+                        switch (choice)
+                        {
+                            case 1:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.shadowEnemy;
+                                break;
+                            case 2:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.fuglyEnemy;
+                                break;
+                            case 3:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.dozerEnemy;
+                                break;
+                            default:
+                                break;
+                        }
                         break;
                     default:
                         break;
                 }
-
-
+                
                 GameObject enemy = Instantiate(objectiveEnemy, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform);
                 enemy.GetComponent<BaseEnemy>().isObjectiveEnemy = true;
                 enemy.name = "OBJECTIVE_ENEMY";
