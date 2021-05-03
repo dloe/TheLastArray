@@ -181,8 +181,9 @@ public class LevelAssetSpawn : MonoBehaviour
                 }
                 //Debug.Log("Player Spawn set");
                 StartCoroutine(setPlayerPosition(play, playerSpawn.transform.position));
-
-                myLocalLevel.myPlayer = play.transform.GetChild(1).gameObject.GetComponent<Player>();
+                //Debug.Log(play.transform.GetChild(1).gameObject.name);
+                //will use getcomponent in scene next time
+                myLocalLevel.myPlayer = play.transform.GetChild(2).gameObject.GetComponent<Player>();
             }
         }
 
@@ -370,7 +371,6 @@ public class LevelAssetSpawn : MonoBehaviour
         Player.Instance.transform.position = spawnPos;
 
     }
-
     
     void ActivateSecretRoom()
     {
@@ -463,24 +463,28 @@ public class LevelAssetSpawn : MonoBehaviour
                 obj.transform.rotation = playerSpawn.transform.rotation;
                 obj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
 
+                _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
                 objectivesInLevel.Add(obj);
+
 
                 //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
                 //if objective is certain types (ie type 3), choose more objectives and add to list
 
+                
                 //make sure we can spawn 2 more objectives!
                 for (int objCount = 0; objCount < 2; objCount++)
                 {
                     //if this item is null, need to get another one
 
                     //randomly pick an objective (or item?)
-                   // int indexO = Random.Range(0, _possibleObjectives.Count);
+                    // int indexO = Random.Range(0, _possibleObjectives.Count);
 
                     _possibleObjectives = reshuffle(_possibleObjectives);
+                    //_possibleObjectives = reshuffle(_possibleObjectives);
                     //run check to see if this is an adiquate location to use, otherwise rechoose
-                    for(int indexO = 0; indexO <= _possibleObjectives.Count; indexO++)
+                    for (int indexO = 0; indexO <= _possibleObjectives.Count; indexO++)
                     {
-                        if (_possibleObjectives[indexO])
+                        if (_possibleObjectives[indexO] && _possibleObjectives[indexO].TryGetComponent<PossibleItem>(out PossibleItem mPI2) && !mPI2.inUse)
                         {
                             GameObject objMulti = Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, _possibleObjectives[indexO]).gameObject;
 
@@ -494,10 +498,13 @@ public class LevelAssetSpawn : MonoBehaviour
 
                             if (tempToDelete.TryGetComponent<PossibleItem>(out PossibleItem mPI))
                                 mPI.inUse = true;
-
+                            else
+                                Debug.Log("bad");
 
                             _possibleItems.Remove(_possibleObjectives[indexO]);
                             _possibleObjectives.Remove(_possibleObjectives[indexO]);
+                            //tempToDelete.gameObject.
+                            //DestroyImmediate(tempToDelete);
                             Destroy(tempToDelete);
                             break;
                         }
@@ -513,7 +520,65 @@ public class LevelAssetSpawn : MonoBehaviour
                 // eObj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
                 // objectivesInLevel.Add(eObj);
                 _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
-                GameObject enemy = Instantiate(myLevelAsset.enemyPrefab.dozerEnemy, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform);
+
+                GameObject objectiveEnemy = objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.dozerEnemy;
+                int choice = Random.Range(1, 3);
+                //Debug.Log(choice);
+                switch (myLocalLevel.thisLevelTier)
+                {
+                    case levelTier.level1:
+                        switch (choice)
+                        {
+                            case 1:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyMelee;
+                                break;
+                            case 2:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.outcastEnemyRanged;
+                                break;
+                            case 3:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.lostOneEnemy;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case levelTier.level2:
+                        switch (choice)
+                        {
+                            case 1:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.stalkerEnemy;
+                                break;
+                            case 2:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.wardenEnemy;
+                                break;
+                            case 3:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.spitterEnemy;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    case levelTier.level3:
+                        switch (choice)
+                        {
+                            case 1:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.shadowEnemy;
+                                break;
+                            case 2:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.fuglyEnemy;
+                                break;
+                            case 3:
+                                objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.dozerEnemy;
+                                break;
+                            default:
+                                break;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                
+                GameObject enemy = Instantiate(objectiveEnemy, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform);
                 enemy.GetComponent<BaseEnemy>().isObjectiveEnemy = true;
                 enemy.name = "OBJECTIVE_ENEMY";
                 enemy.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
@@ -895,8 +960,37 @@ public class LevelAssetSpawn : MonoBehaviour
             tile.presetTile = preset;
             assetCountArray[index] += 1;
 
+            if (tile.tileStatus != Tile.TileStatus.startingRoom)
+            {
+                int choice = Random.Range(1, 4);
+                //Debug.Log(tile.gameObject.name);
+                //Debug.Log(choice);
+                switch (choice)
+                {
+                    case 1:
+                        //local angle = 0
+                        tile.presetTile.transform.localEulerAngles = new Vector3(0, 0, 0);
+                        break;
+                    case 2:
+                        tile.presetTile.transform.localEulerAngles = new Vector3(0, 90, 0);
+                        //local angle = 90
+                        break;
+                    case 3:
+                        tile.presetTile.transform.localEulerAngles = new Vector3(0, 180, 0);
+                        //local angle = 180;
+                        break;
+                    case 4:
+                        tile.presetTile.transform.localEulerAngles = new Vector3(0, 270, 0);
+                        //local angle = 270;
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+
             //check for miniboss
-            if(currentMiniBossCount <= _miniBossCap && tile.endOfBranchPath)
+            if (currentMiniBossCount <= _miniBossCap && tile.endOfBranchPath)
             {
                 if(preset.GetComponent<PresetTileInfo>().enemiesOnPreset.Length > 0)
                 {
@@ -1012,7 +1106,34 @@ public class LevelAssetSpawn : MonoBehaviour
             Debug.Log("BIG ASSET WITH OBJ");
         }
 
-        if(canSpawnMiniBoss)
+
+        //random rotation on tile set
+            int choice = Random.Range(1, 4);
+            //Debug.Log(choice);
+
+            switch (choice)
+            {
+                case 1:
+                    //local angle = 0
+                    preset.transform.localEulerAngles = new Vector3(0, 0, 0);
+                    break;
+                case 2:
+                    preset.transform.localEulerAngles = new Vector3(0, 90, 0);
+                    //local angle = 90
+                    break;
+                case 3:
+                    preset.transform.localEulerAngles = new Vector3(0, 180, 0);
+                    //local angle = 180;
+                    break;
+                case 4:
+                    preset.transform.localEulerAngles = new Vector3(0, 270, 0);
+                    //local angle = 270;
+                    break;
+                default:
+                    break;
+            }
+
+        if (canSpawnMiniBoss)
         {
             if (currentMiniBossCount <= _miniBossCap && preset.GetComponent<PresetTileInfo>().enemiesOnPreset.Length > 0)
             {

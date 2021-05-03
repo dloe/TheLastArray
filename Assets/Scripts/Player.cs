@@ -167,7 +167,7 @@ public class Player : MonoBehaviour
     #endregion
 
     public Material damaged, norm;
-
+   
 
     //transform of the player
     Transform _mainTransform;
@@ -177,6 +177,8 @@ public class Player : MonoBehaviour
     Vector3 lookDir;
     Plane rayPlane = new Plane(Vector3.up, 0.5f);
 
+
+    
 
     private void Awake()
     {
@@ -248,7 +250,7 @@ public class Player : MonoBehaviour
                         if (Health < maxHealth)
                         {
                             heal();
-
+                            inventory.RemoveItem(inventory.selectedItem);
                         }
                         break;
                     case ItemType.UnstableStim:
@@ -386,50 +388,50 @@ public class Player : MonoBehaviour
         }
 
 
-
-        int zFloor = Mathf.FloorToInt(Mathf.Abs(lookDir.z));
-        int xFloor = Mathf.FloorToInt(Mathf.Abs(lookDir.x));
+        Vector3 localLook = Quaternion.AngleAxis(-playerHolderTransform.rotation.eulerAngles.y, Vector3.up) * lookDir;
+        int zFloor = Mathf.FloorToInt(Mathf.Abs(localLook.z));
+        int xFloor = Mathf.FloorToInt(Mathf.Abs(localLook.x));
 
         if (zFloor == 0)
         {
-            if (lookDir.x < 0)
+            if (localLook.x < 0)
             {
                 playerImage.sprite = playerSprites[4];
             }
-            else if(lookDir.x > 0)
+            else if(localLook.x > 0)
             {
                 playerImage.sprite = playerSprites[5];
             }
         }
         else if (xFloor == 0)
         {
-            if (lookDir.z < 0)
+            if (localLook.z < 0)
             {
                 playerImage.sprite = playerSprites[3];
             }
-            else if (lookDir.z > 0)
+            else if (localLook.z > 0)
             {
                 playerImage.sprite = playerSprites[0];
             }
         }
-        else if(lookDir.x < 0)
+        else if(localLook.x < 0)
         {
-            if (lookDir.z < 0)
+            if (localLook.z < 0)
             {
                 playerImage.sprite = playerSprites[1];
             }
-            else if (lookDir.z > 0)
+            else if (localLook.z > 0)
             {
                 playerImage.sprite = playerSprites[6];
             }
         }
-        else if (lookDir.x > 0)
+        else if (localLook.x > 0)
         {
-            if (lookDir.z < 0)
+            if (localLook.z < 0)
             {
                 playerImage.sprite = playerSprites[2];
             }
-            else if (lookDir.z > 0)
+            else if (localLook.z > 0)
             {
                 playerImage.sprite = playerSprites[7];
             }
@@ -634,11 +636,55 @@ public class Player : MonoBehaviour
         }
         else
         {
+            double levelMod;
+            if(levelText.text == baseData.levelOneName)
+            {
+                levelMod = 3.0;
+            }
+            else if (levelText.text == baseData.levelTwoName)
+            {
+                levelMod = 2.0;
+            }
+            else if (levelText.text == baseData.levelThreeName)
+            {
+                levelMod = 3.0;
+            }
+            else if (levelText.text == baseData.levelFourName)
+            {
+                levelMod = 3.0;
+            }
+            else
+            {
+                levelMod = 1.0;
+            }
 
-            Health -= damage;
+            Debug.Log("Damage Before Resistance: " + damage);
+            
+            
+            double resistance = dmgResist / (2 * levelMod + dmgResist);
+            Debug.Log("Damage After Resistance: " + (damage - (int)(damage * resistance)));
+            Health -= (damage - (int)(damage * resistance));
             StartCoroutine(Damaged());
         }
 
+    }
+
+    bool ow = false;
+    public void poisned(int damage)
+    {
+        
+        if(!ow)
+        {
+            ow = true;
+            StartCoroutine(pois(damage));
+        }
+    }
+   
+    IEnumerator pois(int damage)
+    {
+        TakeDamage(damage);
+        yield return new WaitForSeconds(2);//shawn here 
+        ow = false;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -675,25 +721,25 @@ public class Player : MonoBehaviour
 
     IEnumerator Damaged()
     {
-        this.GetComponent<MeshRenderer>().material = damaged;
+        playerImage.color = Color.red;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = norm;
+        playerImage.color = Color.white;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = damaged;
+        playerImage.color = Color.red;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = norm;
+        playerImage.color = Color.white;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = damaged;
+        playerImage.color = Color.red;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = norm;
+        playerImage.color = Color.white;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = damaged;
+        playerImage.color = Color.red;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = norm;
+        playerImage.color = Color.white;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = damaged;
+        playerImage.color = Color.red;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = norm;
+        playerImage.color = Color.white;
     }
 
     IEnumerator UnstableStimmy()

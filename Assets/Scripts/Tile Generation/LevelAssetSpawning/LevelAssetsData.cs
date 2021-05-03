@@ -78,5 +78,17 @@ public class LevelAssetsData : ScriptableObject
     public List<GameObject> outskirts_presetBigTileObjectives;
     [Header("Tile starting tile")]
     public GameObject outskirts_presetStartingTile;
+    [Space(5)]
+    [Header("Urban")]
+    [Header("The Small 1 Tile Preset Variations")]
+    public List<GameObject> urban_presetTileAssets;
+    [Header("The Big 4 Tile Preset Variations")]
+    public List<GameObject> urban_presetBigTileAssets;
+    [Header("Tile Prefabs with objectives")]
+    public List<GameObject> urban_presetObjectiveTiles;
+    [Header("Big Tile Prefabs with objects")]
+    public List<GameObject> urban_presetBigTileObjectives;
+    [Header("Tile starting tile")]
+    public GameObject urban_presetStartingTile;
 }
 

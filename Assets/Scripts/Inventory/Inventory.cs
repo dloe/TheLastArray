@@ -198,6 +198,7 @@ public class Inventory
     public void DropItem()
     {
         InventoryUI.Instance.SpawnItem(selectedItem);
+        Player.Instance.laserLine.gameObject.SetActive(false);
         RemoveItem(selectedItem);
     }
 
