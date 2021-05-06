@@ -466,7 +466,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
                 objectivesInLevel.Add(obj);
 
-               // Debug.Log("check");
+                // Debug.Log("check");
                 //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
                 //if objective is certain types (ie type 3), choose more objectives and add to list
 
@@ -478,14 +478,12 @@ public class LevelAssetSpawn : MonoBehaviour
                     //if this item is null, need to get another one
 
                     //randomly pick an objective (or item?)
-                    // int indexO = Random.Range(0, _possibleObjectives.Count);
-
                     _possibleObjectives = reshuffle(_possibleObjectives);
-                    //_possibleObjectives = reshuffle(_possibleObjectives);
+
                     //run check to see if this is an adiquate location to use, otherwise rechoose
                     for (int indexO = 0; indexO < _possibleObjectives.Count; indexO++)
                     {
-                        if (_possibleObjectives[indexO]) // && _possibleObjectives[indexO].TryGetComponent<PossibleItem>(out PossibleItem mPI2) && !mPI2.inUse)
+                        if (_possibleObjectives[indexO])
                         {
                             GameObject objMulti = Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, _possibleObjectives[indexO]).gameObject;
 
