@@ -278,6 +278,18 @@ public class CraftingTable : Activatable
 
                 }
             }
+            else if(craftOption.recipe.craftingResult.resultType == ResultType.item)
+            {
+                craftOption.craftButton.GetComponentInChildren<Text>().text = "";
+                if (Player.Instance.inventory.IsFull() && craftOption.recipe.craftingResult.itemResult.itemType != ItemType.BackPack)
+                {
+                    craftOption.craftButton.GetComponentInChildren<Text>().text = "Can't Craft, Inventory is Full";
+                }
+                else if(craftOption.recipe.craftingResult.itemResult.itemType == ItemType.BackPack && Player.Instance.hasBackPack)
+                {
+                    craftOption.craftButton.GetComponentInChildren<Text>().text = "Can't Craft, Already have Back Pack";
+                }
+            }
 
         }
     }

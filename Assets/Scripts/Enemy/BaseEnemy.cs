@@ -145,7 +145,7 @@ public class BaseEnemy : MonoBehaviour
         StartCoroutine(Tick());
         if(isObjectiveEnemy)
         {
-            this.GetComponent<MeshRenderer>().material = key;
+            EnemyImage.color = Color.yellow;
             objectiveMinimapMarker.SetActive(true);
         }
             
@@ -282,7 +282,7 @@ public class BaseEnemy : MonoBehaviour
         this.transform.LookAt(new Vector3(poi.x,this.transform.position.y,poi.z));
         if(EnemyImage != null)
         {
-            Vector3 localLook = Quaternion.AngleAxis(EnemyImage.transform.parent.rotation.eulerAngles.y, Vector3.up) * (imageDirMod*(_target.transform.position - transform.position).normalized);
+            Vector3 localLook = Quaternion.AngleAxis(EnemyImage.transform.parent.rotation.eulerAngles.y, Vector3.up) * (imageDirMod*(poi - transform.position).normalized);
             if (localLook.x < 0.01)
             {
                 EnemyImage.transform.localScale = new Vector3(-1, 1, 1);
@@ -504,23 +504,23 @@ public class BaseEnemy : MonoBehaviour
             {
                 EnemyImage.color = Color.red;
                 yield return new WaitForSeconds(.1f);
-                EnemyImage.color = Color.white;
+                EnemyImage.color = Color.yellow;
                 yield return new WaitForSeconds(.1f);
                 EnemyImage.color = Color.red;
                 yield return new WaitForSeconds(.1f);
-                EnemyImage.color = Color.white;
+                EnemyImage.color = Color.yellow;
                 yield return new WaitForSeconds(.1f);
                 EnemyImage.color = Color.red;
                 yield return new WaitForSeconds(.1f);
-                EnemyImage.color = Color.white;
+                EnemyImage.color = Color.yellow;
                 yield return new WaitForSeconds(.1f);
                 EnemyImage.color = Color.red;
                 yield return new WaitForSeconds(.1f);
-                EnemyImage.color = Color.white;
+                EnemyImage.color = Color.yellow;
                 yield return new WaitForSeconds(.1f);
                 EnemyImage.color = Color.red;
                 yield return new WaitForSeconds(.1f);
-                EnemyImage.color = Color.white;
+                EnemyImage.color = Color.yellow;
             }
             else
             {

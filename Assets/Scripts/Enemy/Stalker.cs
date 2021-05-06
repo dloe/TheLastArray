@@ -30,10 +30,18 @@ public class Stalker : BaseEnemy
 
     IEnumerator Stealth()
     {
-        this.GetComponent<MeshRenderer>().material.color = Color.clear;
+        Color trans = new Color(EnemyImage.color.r, EnemyImage.color.g, EnemyImage.color.b, 0.2f);
+        EnemyImage.color = trans;
         hidden = true;
         yield return new WaitForSeconds(stealthTime);
-        this.GetComponent<MeshRenderer>().material = norm;
+        if(isObjectiveEnemy)
+        {
+            EnemyImage.color = Color.yellow;
+        }
+        else
+        {
+            EnemyImage.color = Color.white;
+        }
         hidden = false;
     }
 
