@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 public enum EnemyType
 {
     basic
@@ -28,6 +29,9 @@ public enum enemyState
 
 public class BaseEnemy : MonoBehaviour
 {
+    [HideInInspector]
+    public int imageDirMod = 1;
+    public Image EnemyImage;
     public Material norm;
     public Material damaged;
     public Material key;
@@ -276,6 +280,19 @@ public class BaseEnemy : MonoBehaviour
 
 
         this.transform.LookAt(new Vector3(poi.x,this.transform.position.y,poi.z));
+        if(EnemyImage != null)
+        {
+            Vector3 localLook = Quaternion.AngleAxis(EnemyImage.transform.parent.rotation.eulerAngles.y, Vector3.up) * (imageDirMod*(_target.transform.position - transform.position).normalized);
+            if (localLook.x < 0.01)
+            {
+                EnemyImage.transform.localScale = new Vector3(-1, 1, 1);
+            }
+            else if (localLook.x >= 0)
+            {
+                EnemyImage.transform.localScale = new Vector3(1, 1, 1);
+            }
+        }
+        
     }
     public virtual void specialAttack(Vector3 temp)
     {
@@ -435,48 +452,100 @@ public class BaseEnemy : MonoBehaviour
     {
         if (!isObjectiveEnemy)
         {
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = norm;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = norm;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = norm;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = norm;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = norm;
+            if(EnemyImage != null)
+            {
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.white;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.white;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.white;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.white;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.white;
+            }
+            else
+            {
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = norm;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = norm;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = norm;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = norm;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = norm;
+            }
+            
         }
         if (isObjectiveEnemy)
         {
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = key;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = key;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = key;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = key;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = key;
-            yield return new WaitForSeconds(.1f);
+            if (EnemyImage != null)
+            {
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.white;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.white;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.white;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.white;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.white;
+            }
+            else
+            {
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = key;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = key;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = key;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = key;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = key;
+                yield return new WaitForSeconds(.1f);
+            }
+            
 
         }
     }
