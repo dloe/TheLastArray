@@ -742,11 +742,13 @@ public class Player : MonoBehaviour
         playerImage.color = Color.white;
     }
 
+    int originalMax;
+
     IEnumerator UnstableStimmy()
     {
         usingStimmy = true;
         stimMessage.SetActive(true);
-        int originalMax = maxHealth;
+         originalMax = maxHealth;
         if (Health == maxHealth)
         {
             Health -= inventory.selectedItem.itemData.healthDecrease;
@@ -846,7 +848,11 @@ public class Player : MonoBehaviour
         FileStream file = File.Create(Application.persistentDataPath + "/player_save.dat");
 
         PlayerSave playerSave = new PlayerSave();
-
+        if(usingStimmy)
+        {
+            maxHealth = originalMax;
+            usingStimmy = false;
+        }
         playerSave.maxHealth = maxHealth;
         playerSave.health = Health;
         playerSave.dmgResist = dmgResist;
