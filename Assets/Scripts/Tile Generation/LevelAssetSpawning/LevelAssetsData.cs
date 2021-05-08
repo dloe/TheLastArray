@@ -56,6 +56,8 @@ public class LevelAssetsData : ScriptableObject
     [Space(10)]
     [Header("Different varients of perset tile (by themes)")]
     [Header("Forest")]
+    [Header("Tile Mat")]
+    public Material forest_mat;
     [Header("The Small 1 Tile Preset Variations")]
     public List<GameObject> forest_presetTileAssets;
     [Header("The Big 4 Tile Preset Variations")]
@@ -68,6 +70,8 @@ public class LevelAssetsData : ScriptableObject
     public GameObject forest_presetStartingTile;
     [Space(5)]
     [Header("Outskirts")]
+    [Header("Tile Mat")]
+    public Material outskirts_mat;
     [Header("The Small 1 Tile Preset Variations")]
     public List<GameObject> outskirts_presetTileAssets;
     [Header("The Big 4 Tile Preset Variations")]
@@ -80,6 +84,8 @@ public class LevelAssetsData : ScriptableObject
     public GameObject outskirts_presetStartingTile;
     [Space(5)]
     [Header("Urban")]
+    [Header("Tile Mat")]
+    public Material urban_mat;
     [Header("The Small 1 Tile Preset Variations")]
     public List<GameObject> urban_presetTileAssets;
     [Header("The Big 4 Tile Preset Variations")]
@@ -92,6 +98,8 @@ public class LevelAssetsData : ScriptableObject
     public GameObject urban_presetStartingTile;
     [Space(5)]
     [Header("Plant Interior")]
+    [Header("Tile Mat")]
+    public Material plant_mat;
     [Header("The Small 1 Tile Preset Variations")]
     public List<GameObject> plant_presetTileAssets;
     [Header("The Big 4 Tile Preset Variations")]
