@@ -11,6 +11,9 @@ public class Player : MonoBehaviour
     public static Player Instance;
     public float PlayerCamRot;
 
+
+    int layerMask = ~(1 <<18);
+
     public PlayerData baseData;
 
     public GameObject meleeVisual;
@@ -23,7 +26,9 @@ public class Player : MonoBehaviour
     public Inventory inventory = new Inventory();
 
     [Header("Activatable / Interactable To Use")]
+    public List<Activatable> thingsToActivate = new List<Activatable>();
     public Activatable thingToActivate;
+    //public CraftingTable craftTable;
 
     [Header("Player Stats")]
     public float speedStat = 5f;
@@ -167,7 +172,7 @@ public class Player : MonoBehaviour
     #endregion
 
     public Material damaged, norm;
-
+   
 
     //transform of the player
     Transform _mainTransform;
@@ -177,6 +182,8 @@ public class Player : MonoBehaviour
     Vector3 lookDir;
     Plane rayPlane = new Plane(Vector3.up, 0.5f);
 
+
+    
 
     private void Awake()
     {
@@ -216,7 +223,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!UI.Instance.PausedStatus && (!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy))
+        if (!UI.Instance.PausedStatus && (!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy) && !endScreen.activeInHierarchy)
         {
             doMovement();
             mouseLook();
@@ -225,10 +232,34 @@ public class Player : MonoBehaviour
             //if there is a grabbable item and the inventory is not full, then E picks up item
             if (Input.GetKeyDown(KeyCode.E) && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
             {
-                if (thingToActivate)
+                if (thingsToActivate.Count > 0)
                 {
-                    thingToActivate.Activate();
+                    thingToActivate = thingsToActivate[0];
+                    
+                   
+                    if(thingToActivate is WorldItem && inventory.IsFull())
+                    {
+                        thingsToActivate.Remove(thingToActivate);
+                        thingsToActivate.Add(thingToActivate);
+                    }
+                    else if(!(thingToActivate is CraftingTable))
+                    {
+                        Debug.Log(thingToActivate.name + "activated, removing from reachable activatables");
+                        thingsToActivate.Remove(thingToActivate);
+                    }
+                    
+                    
+                    
 
+                    thingToActivate.Activate();
+                    thingToActivate = null;
+
+                    //if(thingToActivateTwo)
+                    //{
+                    //    thingToActivate = thingToActivateTwo;
+                    //    thingToActivateTwo = null;
+                    //}
+                    //thingToActivate = null;
                 }
 
             }
@@ -248,7 +279,7 @@ public class Player : MonoBehaviour
                         if (Health < maxHealth)
                         {
                             heal();
-
+                            inventory.RemoveItem(inventory.selectedItem);
                         }
                         break;
                     case ItemType.UnstableStim:
@@ -265,7 +296,7 @@ public class Player : MonoBehaviour
             }
 
             //drops currently selected item on the ground at the player's feet
-            if (Input.GetKeyDown(KeyCode.Q) && inventory.selectedItem != null && !thingToActivate)
+            if (Input.GetKeyDown(KeyCode.Q) && inventory.selectedItem != null )
             {
 
                 inventory.DropItem();
@@ -386,50 +417,50 @@ public class Player : MonoBehaviour
         }
 
 
-
-        int zFloor = Mathf.FloorToInt(Mathf.Abs(lookDir.z));
-        int xFloor = Mathf.FloorToInt(Mathf.Abs(lookDir.x));
+        Vector3 localLook = Quaternion.AngleAxis(-playerHolderTransform.rotation.eulerAngles.y, Vector3.up) * lookDir;
+        int zFloor = Mathf.FloorToInt(Mathf.Abs(localLook.z));
+        int xFloor = Mathf.FloorToInt(Mathf.Abs(localLook.x));
 
         if (zFloor == 0)
         {
-            if (lookDir.x < 0)
+            if (localLook.x < 0)
             {
                 playerImage.sprite = playerSprites[4];
             }
-            else if(lookDir.x > 0)
+            else if(localLook.x > 0)
             {
                 playerImage.sprite = playerSprites[5];
             }
         }
         else if (xFloor == 0)
         {
-            if (lookDir.z < 0)
+            if (localLook.z < 0)
             {
                 playerImage.sprite = playerSprites[3];
             }
-            else if (lookDir.z > 0)
+            else if (localLook.z > 0)
             {
                 playerImage.sprite = playerSprites[0];
             }
         }
-        else if(lookDir.x < 0)
+        else if(localLook.x < 0)
         {
-            if (lookDir.z < 0)
+            if (localLook.z < 0)
             {
                 playerImage.sprite = playerSprites[1];
             }
-            else if (lookDir.z > 0)
+            else if (localLook.z > 0)
             {
                 playerImage.sprite = playerSprites[6];
             }
         }
-        else if (lookDir.x > 0)
+        else if (localLook.x > 0)
         {
-            if (lookDir.z < 0)
+            if (localLook.z < 0)
             {
                 playerImage.sprite = playerSprites[2];
             }
-            else if (lookDir.z > 0)
+            else if (localLook.z > 0)
             {
                 playerImage.sprite = playerSprites[7];
             }
@@ -573,7 +604,7 @@ public class Player : MonoBehaviour
             WeaponFireAudio(7);
            // Debug.Log("check");
             //Debug.Log("Melee Attack");
-            if (Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward, out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange))
+            if (Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward, out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange, layerMask))
             {
 
                 StartCoroutine(inventory.selectedItem.itemData.CoolDown());
@@ -634,28 +665,94 @@ public class Player : MonoBehaviour
         }
         else
         {
+            double levelMod;
+            if(levelText.text == baseData.levelOneName)
+            {
+                levelMod = 3.0;
+            }
+            else if (levelText.text == baseData.levelTwoName)
+            {
+                levelMod = 2.0;
+            }
+            else if (levelText.text == baseData.levelThreeName)
+            {
+                levelMod = 3.0;
+            }
+            else if (levelText.text == baseData.levelFourName)
+            {
+                levelMod = 3.0;
+            }
+            else
+            {
+                levelMod = 1.0;
+            }
 
-            Health -= damage;
+            //Debug.Log("Damage Before Resistance: " + damage);
+            
+            
+            double resistance = dmgResist / (2 * levelMod + dmgResist);
+            //Debug.Log("Damage After Resistance: " + (damage - (int)(damage * resistance)));
+            Health -= (damage - (int)(damage * resistance));
             StartCoroutine(Damaged());
         }
 
     }
 
+    bool ow = false;
+    public void poisned(int damage)
+    {
+        
+        if(!ow)
+        {
+            ow = true;
+            StartCoroutine(pois(damage));
+        }
+    }
+   
+    IEnumerator pois(int damage)
+    {
+        TakeDamage(damage);
+        yield return new WaitForSeconds(2);//shawn here 
+        ow = false;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        //Debug.Log(other);
-        if (other.TryGetComponent(out thingToActivate))
+
+        if (other.TryGetComponent<Activatable>(out Activatable thing))
         {
-            //Debug.Log("cock");
-            thingToActivate = other.GetComponent<Activatable>();
+            thingsToActivate.Add(thing);
+            Debug.Log(thing.name + " trigger entered, added to reachable activatables");
         }
+
+        //if (other.TryGetComponent<Activatable>(out Activatable thing))
+        //{
+        //    if(thingToActivate)
+        //    {
+        //        if (thing != thingToActivate)
+        //        {
+        //            
+        //            thingToActivateTwo = thing;
+        //        }
+        //        
+        //    }
+        //    else
+        //    {
+        //        
+        //        
+        //        
+        //        thingToActivate = thing;
+        //
+        //    }
+        //    
+        //    
+        //    
+        //}
 
         if (other.TryGetComponent<PlayerDetection>(out PlayerDetection tile))
         {
-            //Debug.Log("ow");
             if (!tile.hasBeenVisited)
             {
-                // Debug.Log("hit");
                 tile.hasBeenVisited = true;
                 tile.fogofwar.layer = 22;
 
@@ -665,42 +762,60 @@ public class Player : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (thingToActivate && other.gameObject == thingToActivate.gameObject)
-        {
-            thingToActivate = null;
-        }
+       // if (thingToActivate && other.gameObject == thingToActivate.gameObject)
+       // {
+       //     thingToActivate = null;
+       //     if(thingToActivateTwo)
+       //     {
+       //         thingToActivate = thingToActivateTwo;
+       //         thingToActivateTwo = null;
+       //     }
+       // }
+       //
+       // if(thingToActivateTwo && other.gameObject == thingToActivateTwo.gameObject)
+       // {
+       //     thingToActivateTwo = null;
+       // }
 
+
+        if(other.TryGetComponent<Activatable>(out Activatable thing))
+        {
+            thingsToActivate.Remove(thing);
+            Debug.Log(thing.name + " trigger left, removed from reachable activatables");
+        }
     }
 
 
     IEnumerator Damaged()
     {
-        this.GetComponent<MeshRenderer>().material = damaged;
+        playerImage.color = Color.red;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = norm;
+        playerImage.color = Color.white;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = damaged;
+        playerImage.color = Color.red;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = norm;
+        playerImage.color = Color.white;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = damaged;
+        playerImage.color = Color.red;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = norm;
+        playerImage.color = Color.white;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = damaged;
+        playerImage.color = Color.red;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = norm;
+        playerImage.color = Color.white;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = damaged;
+        playerImage.color = Color.red;
         yield return new WaitForSeconds(.1f);
-        this.GetComponent<MeshRenderer>().material = norm;
+        playerImage.color = Color.white;
     }
+
+    int originalMax;
 
     IEnumerator UnstableStimmy()
     {
         usingStimmy = true;
         stimMessage.SetActive(true);
-        int originalMax = maxHealth;
+         originalMax = maxHealth;
         if (Health == maxHealth)
         {
             Health -= inventory.selectedItem.itemData.healthDecrease;
@@ -733,6 +848,10 @@ public class Player : MonoBehaviour
         skillPoints = baseData.skillPoints;
         currentLightAmmo = 0;
         currentHeavyAmmo = 0;
+
+        hasBackPack = false;
+        hasArmorPlate = false;
+        ArmorPlateImage.gameObject.SetActive(false);
 
         inventory.selectedItem = null;
         inventory.numInvSlots = 4;
@@ -796,7 +915,11 @@ public class Player : MonoBehaviour
         FileStream file = File.Create(Application.persistentDataPath + "/player_save.dat");
 
         PlayerSave playerSave = new PlayerSave();
-
+        if(usingStimmy)
+        {
+            maxHealth = originalMax;
+            usingStimmy = false;
+        }
         playerSave.maxHealth = maxHealth;
         playerSave.health = Health;
         playerSave.dmgResist = dmgResist;

@@ -34,6 +34,7 @@ public class WorldItem : Activatable
                 if(!Player.Instance.inventory.Contains(worldItemData))
                 {
                     Player.Instance.inventory.AddItem(new Item(worldItemData));
+
                     Destroy(gameObject);
                     Player.Instance.thingToActivate = null;
                 }

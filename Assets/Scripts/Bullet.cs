@@ -21,7 +21,9 @@ public class Bullet : MonoBehaviour
     {
         CheckCollision();
         transform.Translate(Vector3.forward * speed * Time.deltaTime, Space.Self);
-        
+        CheckCollision();
+
+
     }
 
     void CheckCollision()
@@ -30,38 +32,48 @@ public class Bullet : MonoBehaviour
         RaycastHit hit;
         if(Physics.SphereCast(transform.position, 0.01f,transform.forward,out hit, 0.3f))
         {
-            if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy" && !isEnemyBullet && hit.transform.TryGetComponent<BossEnemy>(out BossEnemy mBossEnemy))
+            if (!isEnemyBullet)
             {
-                mBossEnemy.TakeDamage(damageToDeal);
-                if (isFireBullet && mBossEnemy != null)
+                if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy" && hit.transform.TryGetComponent<BossEnemy>(out BossEnemy mBossEnemy))
                 {
-                    mBossEnemy.TakeFireDamge(1);
-                }
-               
-                Destroy(gameObject);
-            }
-            else if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy" && !isEnemyBullet)
-            {
+                    mBossEnemy.TakeDamage(damageToDeal);
+                    if (isFireBullet && mBossEnemy != null)
+                    {
+                        mBossEnemy.TakeFireDamge(1);
+                    }
 
-                hit.transform.GetComponent<BaseEnemy>().TakeDamage(damageToDeal);
-                if (isFireBullet && hit.transform.gameObject != null)
-                {
-                    hit.transform.GetComponent<BaseEnemy>().TakeFireDamge(1);
+                    Destroy(gameObject);
                 }
-                Destroy(gameObject);
+                else if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
+                {
+
+                    hit.transform.GetComponent<BaseEnemy>().TakeDamage(damageToDeal);
+                    if (isFireBullet && hit.transform.gameObject != null)
+                    {
+                        hit.transform.GetComponent<BaseEnemy>().TakeFireDamge(1);
+                    }
+                    Destroy(gameObject);
+                }
             }
-            
-            if(LayerMask.LayerToName(hit.transform.gameObject.layer) == "Player" && isEnemyBullet)
+            else
             {
-                hit.transform.GetComponent<Player>().TakeDamage(damageToDeal);
-                Destroy(gameObject);
+                if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Player")
+                {
+                    hit.transform.GetComponent<Player>().TakeDamage(damageToDeal);
+                    Destroy(gameObject);
+                }
+                
             }
+
+
             if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enviroment")
             {
                 Destroy(gameObject);
             }
 
         }
+
+        
     }
     private void OnDrawGizmos()
     {

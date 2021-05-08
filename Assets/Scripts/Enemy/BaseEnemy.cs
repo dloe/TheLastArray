@@ -7,6 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 public enum EnemyType
 {
     basic
@@ -28,6 +29,9 @@ public enum enemyState
 
 public class BaseEnemy : MonoBehaviour
 {
+    [HideInInspector]
+    public int imageDirMod = 1;
+    public Image EnemyImage;
     public Material norm;
     public Material damaged;
     public Material key;
@@ -122,10 +126,13 @@ public class BaseEnemy : MonoBehaviour
     [Header("Audio")]
     public AudioClip[] agroSound;
     public AudioClip[] takeDamageSound;
+    public AudioClip rifleSound;
     [Space(25)]
     AudioSource _audioSource;
 
     bool onAgroStart = false;
+    [Header("Minimap Objective Marker")]
+    public GameObject objectiveMinimapMarker;
 
     public virtual void Start()
     {
@@ -138,8 +145,10 @@ public class BaseEnemy : MonoBehaviour
         StartCoroutine(Tick());
         if(isObjectiveEnemy)
         {
-            this.GetComponent<MeshRenderer>().material = key;
+            EnemyImage.color = Color.yellow;
+            objectiveMinimapMarker.SetActive(true);
         }
+            
 
     }
 
@@ -156,7 +165,7 @@ public class BaseEnemy : MonoBehaviour
 
         if(agro == true && audioPrevent)
         {
-            PlayAgroSound();
+           // PlayAgroSound();
             //audio cooldown
             StartCoroutine(AudioCoolDown());
         }
@@ -271,6 +280,19 @@ public class BaseEnemy : MonoBehaviour
 
 
         this.transform.LookAt(new Vector3(poi.x,this.transform.position.y,poi.z));
+        if(EnemyImage != null)
+        {
+            Vector3 localLook = Quaternion.AngleAxis(EnemyImage.transform.parent.rotation.eulerAngles.y, Vector3.up) * (imageDirMod*(poi - transform.position).normalized);
+            if (localLook.x < 0.01)
+            {
+                EnemyImage.transform.localScale = new Vector3(-1, 1, 1);
+            }
+            else if (localLook.x >= 0)
+            {
+                EnemyImage.transform.localScale = new Vector3(1, 1, 1);
+            }
+        }
+        
     }
     public virtual void specialAttack(Vector3 temp)
     {
@@ -318,11 +340,14 @@ public class BaseEnemy : MonoBehaviour
         {
             if(myState == enemyState.attacking && attackCD <= 0 && readyToAttack == true)
             {
+                _audioSource.clip = rifleSound;
+                _audioSource.Play();
                 attacking = false;
                 readyToAttack = false;
                 StartCoroutine(CoolDown());
                 //Debug.Log("Bang Bang");
                 GameObject bullet = Instantiate(projectile, transform.position, transform.rotation);
+                if(notWarden == false)
                 bullet.GetComponent<Bullet>().damageToDeal = baseAttack;
 
             }
@@ -394,7 +419,7 @@ public class BaseEnemy : MonoBehaviour
         {
             ChangeDirW();
         }
-        wanderPoint += new Vector3(x, 0, z) * (wanderSpeed * 1.5f) * Time.deltaTime;
+        wanderPoint += new Vector3(x, 0, z).normalized * (wanderSpeed * 1.5f) * Time.deltaTime;
     }
     void ChangeDirW()
     {
@@ -427,48 +452,100 @@ public class BaseEnemy : MonoBehaviour
     {
         if (!isObjectiveEnemy)
         {
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = norm;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = norm;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = norm;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = norm;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = norm;
+            if(EnemyImage != null)
+            {
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.white;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.white;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.white;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.white;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.white;
+            }
+            else
+            {
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = norm;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = norm;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = norm;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = norm;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = norm;
+            }
+            
         }
         if (isObjectiveEnemy)
         {
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = key;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = key;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = key;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = key;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = key;
-            yield return new WaitForSeconds(.1f);
+            if (EnemyImage != null)
+            {
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.yellow;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.yellow;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.yellow;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.yellow;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.red;
+                yield return new WaitForSeconds(.1f);
+                EnemyImage.color = Color.yellow;
+            }
+            else
+            {
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = key;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = key;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = key;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = key;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = damaged;
+                yield return new WaitForSeconds(.1f);
+                this.GetComponent<MeshRenderer>().material = key;
+                yield return new WaitForSeconds(.1f);
+            }
+            
 
         }
     }
@@ -540,7 +617,7 @@ public class BaseEnemy : MonoBehaviour
     {
         //Debug.Log("Play audio");
         int soundI = Random.Range(0, agroSound.Length);
-
+        
         _audioSource.clip = agroSound[soundI];
         _audioSource.Play();
         //_audioSource.PlayClipAtPoint(agroSound[soundI], transform.position, 1);

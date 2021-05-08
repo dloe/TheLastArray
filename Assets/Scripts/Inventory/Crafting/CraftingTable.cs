@@ -226,7 +226,7 @@ public class CraftingTable : Activatable
                 }
                 else
                 {
-                    craftOption.craftButton.GetComponentInChildren<Text>().text = "Craft";
+                    craftOption.craftButton.GetComponentInChildren<Text>().text = "";
                     switch (craftOption.recipe.craftingResult.attachType)
                     {
                         case AttachType.laser:
@@ -253,7 +253,7 @@ public class CraftingTable : Activatable
                 }
                 else
                 {
-                    craftOption.craftButton.GetComponentInChildren<Text>().text = "Craft";
+                    craftOption.craftButton.GetComponentInChildren<Text>().text = "";
                 }
             }
             else if(craftOption.recipe.craftingResult.resultType == ResultType.fireBullets)
@@ -265,7 +265,7 @@ public class CraftingTable : Activatable
                 }
                 else
                 {
-                    craftOption.craftButton.GetComponentInChildren<Text>().text = "Craft";
+                    craftOption.craftButton.GetComponentInChildren<Text>().text = "";
                     
                     if(Player.Instance.inventory.selectedItem.itemData.usingFireBullets)
                     {
@@ -276,6 +276,18 @@ public class CraftingTable : Activatable
                         craftOption.craftButton.GetComponentInChildren<Text>().text = "Can't Craft, Incompatible Ammo Size";
                     }
 
+                }
+            }
+            else if(craftOption.recipe.craftingResult.resultType == ResultType.item)
+            {
+                craftOption.craftButton.GetComponentInChildren<Text>().text = "";
+                if (Player.Instance.inventory.IsFull() && craftOption.recipe.craftingResult.itemResult.itemType != ItemType.BackPack)
+                {
+                    craftOption.craftButton.GetComponentInChildren<Text>().text = "Can't Craft, Inventory is Full";
+                }
+                else if(craftOption.recipe.craftingResult.itemResult.itemType == ItemType.BackPack && Player.Instance.hasBackPack)
+                {
+                    craftOption.craftButton.GetComponentInChildren<Text>().text = "Can't Craft, Already have Back Pack";
                 }
             }
 
