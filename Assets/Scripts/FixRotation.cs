@@ -9,6 +9,7 @@ public class FixRotation : MonoBehaviour
     //{
     //    rotation = transform.rotation;
     //}
+    public bool isBoss = false;
     float yRot;
     void LateUpdate()
     {
@@ -17,7 +18,15 @@ public class FixRotation : MonoBehaviour
         if (Mathf.FloorToInt( Player.Instance.playerImage.transform.parent.rotation.eulerAngles.y) == 0)
         {
             yRot = 180;
-            transform.parent.parent.GetComponent<BaseEnemy>().imageDirMod = -1;
+            if(isBoss)
+            {
+                transform.parent.parent.GetComponent<BossEnemy>().imageDirMod = -1;
+            }
+            else
+            {
+                transform.parent.parent.GetComponent<BaseEnemy>().imageDirMod = -1;
+            }
+            
         }
         else
         {
@@ -25,11 +34,26 @@ public class FixRotation : MonoBehaviour
             if(yRot == -180)
             {
                 yRot += 180;
-                transform.parent.parent.GetComponent<BaseEnemy>().imageDirMod = -1;
+                if(isBoss)
+                {
+                    transform.parent.parent.GetComponent<BossEnemy>().imageDirMod = -1;
+                }
+                else
+                {
+                    transform.parent.parent.GetComponent<BaseEnemy>().imageDirMod = -1;
+                }
+                
             }
             else
             {
-                transform.parent.parent.GetComponent<BaseEnemy>().imageDirMod = 1;
+                if (isBoss)
+                {
+                    transform.parent.parent.GetComponent<BossEnemy>().imageDirMod = 1;
+                }
+                else
+                {
+                    transform.parent.parent.GetComponent<BaseEnemy>().imageDirMod = 1;
+                }
             }
             
         }
