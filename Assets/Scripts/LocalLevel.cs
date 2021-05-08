@@ -232,11 +232,11 @@ public class LocalLevel : MonoBehaviour
                 presetStartingTile = myLvlAssetData.urban_presetStartingTile;
                 break;
             case levelTier.level4:
-                presetTileAssets = new List<GameObject>(myLvlAssetData.urban_presetTileAssets);
-                presetBigTileAssets = new List<GameObject>(myLvlAssetData.urban_presetBigTileAssets);
-                presetObjectiveTiles = new List<GameObject>(myLvlAssetData.urban_presetObjectiveTiles);
-                presetBigObjectiveTiles = new List<GameObject>(myLvlAssetData.urban_presetBigTileObjectives);
-                presetStartingTile = myLvlAssetData.urban_presetStartingTile;
+                presetTileAssets = new List<GameObject>(myLvlAssetData.plant_presetTileAssets);
+                presetBigTileAssets = new List<GameObject>(myLvlAssetData.plant_presetBigTileAssets);
+                presetObjectiveTiles = new List<GameObject>(myLvlAssetData.plant_presetObjectiveTiles);
+                presetBigObjectiveTiles = new List<GameObject>(myLvlAssetData.plant_presetBigTileObjectives);
+                presetStartingTile = myLvlAssetData.plant_presetStartingTile;
                 break;
             default:
                 break;
