@@ -699,11 +699,7 @@ public class Player : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
 
-        //if (other.TryGetComponent(out thingToActivate))
-        //{
-        //    Debug.Log(thingToActivate);
-        //    thingToActivate = other.GetComponent<Activatable>();
-        //}
+
 
         if (other.TryGetComponent<Activatable>(out Activatable thing))
         {
@@ -713,7 +709,6 @@ public class Player : MonoBehaviour
                 {
                     
                     thingToActivateTwo = thing;
-                    Debug.Log("item two entered: " + thingToActivateTwo);
                 }
                 
             }
@@ -723,7 +718,6 @@ public class Player : MonoBehaviour
                 
                 
                 thingToActivate = thing;
-                Debug.Log("item one entered: " + thingToActivate);
 
             }
             
@@ -733,10 +727,8 @@ public class Player : MonoBehaviour
 
         if (other.TryGetComponent<PlayerDetection>(out PlayerDetection tile))
         {
-            //Debug.Log("ow");
             if (!tile.hasBeenVisited)
             {
-                // Debug.Log("hit");
                 tile.hasBeenVisited = true;
                 tile.fogofwar.layer = 22;
 
@@ -748,7 +740,6 @@ public class Player : MonoBehaviour
     {
         if (thingToActivate && other.gameObject == thingToActivate.gameObject)
         {
-            //Debug.Log("left item one:" + thingToActivate);
             thingToActivate = null;
             if(thingToActivateTwo)
             {
@@ -759,7 +750,6 @@ public class Player : MonoBehaviour
 
         if(thingToActivateTwo && other.gameObject == thingToActivateTwo.gameObject)
         {
-            //Debug.Log("left item two: " + thingToActivateTwo);
             thingToActivateTwo = null;
         }
 
