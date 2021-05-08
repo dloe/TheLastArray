@@ -667,11 +667,11 @@ public class Player : MonoBehaviour
                 levelMod = 1.0;
             }
 
-            Debug.Log("Damage Before Resistance: " + damage);
+            //Debug.Log("Damage Before Resistance: " + damage);
             
             
             double resistance = dmgResist / (2 * levelMod + dmgResist);
-            Debug.Log("Damage After Resistance: " + (damage - (int)(damage * resistance)));
+            //Debug.Log("Damage After Resistance: " + (damage - (int)(damage * resistance)));
             Health -= (damage - (int)(damage * resistance));
             StartCoroutine(Damaged());
         }

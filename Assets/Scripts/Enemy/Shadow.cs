@@ -16,7 +16,7 @@ public class Shadow : BaseEnemy
         if(Vector3.Distance(_target.transform.position, this.transform.position) < 1.5f)
         {
             GetComponent<BoxCollider>().enabled = true;
-            GetComponent<MeshRenderer>().enabled = true;
+            EnemyImage.enabled = true;
             GetComponent<Rigidbody>().useGravity = true;
             readyToAttack = false;
         }
@@ -47,7 +47,8 @@ public class Shadow : BaseEnemy
 
     IEnumerator Teleport()
     {
-        GetComponent<MeshRenderer>().enabled = false;
+        //GetComponent<MeshRenderer>().enabled = false;
+        EnemyImage.enabled = false;
         GetComponent<BoxCollider>().enabled = false;
         GetComponent<Rigidbody>().useGravity = false;
         //yield return new WaitForSeconds(Random.Range(1, 3));
@@ -84,7 +85,7 @@ public class Shadow : BaseEnemy
             transform.position = teleportPos;
             //Debug.Log("moving to teleportPos");
             GetComponent<BoxCollider>().enabled = true;
-            GetComponent<MeshRenderer>().enabled = true;
+            EnemyImage.enabled = true;
             GetComponent<Rigidbody>().useGravity = true;
 
             //moves to that location
