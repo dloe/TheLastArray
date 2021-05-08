@@ -419,7 +419,7 @@ public class BaseEnemy : MonoBehaviour
         {
             ChangeDirW();
         }
-        wanderPoint += new Vector3(x, 0, z) * (wanderSpeed * 1.5f) * Time.deltaTime;
+        wanderPoint += new Vector3(x, 0, z).normalized * (wanderSpeed * 1.5f) * Time.deltaTime;
     }
     void ChangeDirW()
     {
