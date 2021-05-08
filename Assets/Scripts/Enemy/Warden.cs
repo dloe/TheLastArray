@@ -31,7 +31,7 @@ public class Warden : BaseEnemy
 
     IEnumerator Swarm()
     {
-        Instantiate(sprout, spawnpoint.transform.position, this.transform.rotation);
+        Instantiate(sprout, spawnpoint.transform.position, Quaternion.Euler(Player.Instance.transform.parent.rotation.eulerAngles.x, -Player.Instance.transform.parent.rotation.eulerAngles.y, Player.Instance.transform.parent.rotation.eulerAngles.z));
         readyToAttack = false;
         yield return new WaitForSeconds(spawnrate);
         readyToAttack = true;
