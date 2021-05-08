@@ -11,6 +11,9 @@ public class Player : MonoBehaviour
     public static Player Instance;
     public float PlayerCamRot;
 
+
+    int layerMask = ~(1 <<18);
+
     public PlayerData baseData;
 
     public GameObject meleeVisual;
@@ -24,6 +27,7 @@ public class Player : MonoBehaviour
 
     [Header("Activatable / Interactable To Use")]
     public Activatable thingToActivate;
+    public Activatable thingToActivateTwo;
 
     [Header("Player Stats")]
     public float speedStat = 5f;
@@ -218,7 +222,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!UI.Instance.PausedStatus && (!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy))
+        if (!UI.Instance.PausedStatus && (!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy) && !endScreen.activeInHierarchy)
         {
             doMovement();
             mouseLook();
@@ -230,7 +234,12 @@ public class Player : MonoBehaviour
                 if (thingToActivate)
                 {
                     thingToActivate.Activate();
-
+                    if(thingToActivateTwo)
+                    {
+                        thingToActivate = thingToActivateTwo;
+                        thingToActivateTwo = null;
+                    }
+                    
                 }
 
             }
@@ -575,7 +584,7 @@ public class Player : MonoBehaviour
             WeaponFireAudio(7);
            // Debug.Log("check");
             //Debug.Log("Melee Attack");
-            if (Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward, out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange))
+            if (Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward, out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange, layerMask))
             {
 
                 StartCoroutine(inventory.selectedItem.itemData.CoolDown());
@@ -689,19 +698,37 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //Debug.Log(other);
-        if (other.TryGetComponent(out thingToActivate))
+
+
+
+        if (other.TryGetComponent<Activatable>(out Activatable thing))
         {
-            //Debug.Log("cock");
-            thingToActivate = other.GetComponent<Activatable>();
+            if(thingToActivate)
+            {
+                if (thing != thingToActivate)
+                {
+                    
+                    thingToActivateTwo = thing;
+                }
+                
+            }
+            else
+            {
+                
+                
+                
+                thingToActivate = thing;
+
+            }
+            
+            
+            
         }
 
         if (other.TryGetComponent<PlayerDetection>(out PlayerDetection tile))
         {
-            //Debug.Log("ow");
             if (!tile.hasBeenVisited)
             {
-                // Debug.Log("hit");
                 tile.hasBeenVisited = true;
                 tile.fogofwar.layer = 22;
 
@@ -714,6 +741,16 @@ public class Player : MonoBehaviour
         if (thingToActivate && other.gameObject == thingToActivate.gameObject)
         {
             thingToActivate = null;
+            if(thingToActivateTwo)
+            {
+                thingToActivate = thingToActivateTwo;
+                thingToActivateTwo = null;
+            }
+        }
+
+        if(thingToActivateTwo && other.gameObject == thingToActivateTwo.gameObject)
+        {
+            thingToActivateTwo = null;
         }
 
     }
@@ -742,11 +779,13 @@ public class Player : MonoBehaviour
         playerImage.color = Color.white;
     }
 
+    int originalMax;
+
     IEnumerator UnstableStimmy()
     {
         usingStimmy = true;
         stimMessage.SetActive(true);
-        int originalMax = maxHealth;
+         originalMax = maxHealth;
         if (Health == maxHealth)
         {
             Health -= inventory.selectedItem.itemData.healthDecrease;
@@ -846,7 +885,11 @@ public class Player : MonoBehaviour
         FileStream file = File.Create(Application.persistentDataPath + "/player_save.dat");
 
         PlayerSave playerSave = new PlayerSave();
-
+        if(usingStimmy)
+        {
+            maxHealth = originalMax;
+            usingStimmy = false;
+        }
         playerSave.maxHealth = maxHealth;
         playerSave.health = Health;
         playerSave.dmgResist = dmgResist;

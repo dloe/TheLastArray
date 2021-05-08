@@ -85,9 +85,18 @@ public class CraftingRecipe : ScriptableObject
                     break;
             }
 
-            if(craftingResult.resultType == ResultType.item && craftingResult.itemResult.itemType == ItemType.BackPack && player.hasBackPack)
+            if(craftingResult.resultType == ResultType.item)
             {
-                result = false;
+                if(craftingResult.itemResult.itemType == ItemType.BackPack )
+                {
+                    if(player.hasBackPack)
+                        result = false;
+                }
+                else if(player.inventory.IsFull())
+                {
+                    result = false;
+                }
+                
             }
 
             if(result == false)
@@ -160,6 +169,8 @@ public class CraftingRecipe : ScriptableObject
         {
             result = false;
         }
+
+        
         return result;
     }
 

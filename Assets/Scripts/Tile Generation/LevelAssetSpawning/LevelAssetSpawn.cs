@@ -481,7 +481,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     _possibleObjectives = reshuffle(_possibleObjectives);
 
                     //run check to see if this is an adiquate location to use, otherwise rechoose
-                    for (int indexO = 0; indexO <= _possibleObjectives.Count; indexO++)
+                    for (int indexO = 0; indexO < _possibleObjectives.Count; indexO++)
                     {
                         if (_possibleObjectives[indexO])
                         {
