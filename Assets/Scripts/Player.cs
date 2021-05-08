@@ -218,7 +218,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!UI.Instance.PausedStatus && (!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy))
+        if (!UI.Instance.PausedStatus && (!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy) && !endScreen.activeInHierarchy)
         {
             doMovement();
             mouseLook();
