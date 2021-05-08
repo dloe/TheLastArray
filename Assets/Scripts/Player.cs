@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     [Header("Activatable / Interactable To Use")]
     public List<Activatable> thingsToActivate = new List<Activatable>();
     public Activatable thingToActivate;
-    public CraftingTable craftTable;
+    //public CraftingTable craftTable;
 
     [Header("Player Stats")]
     public float speedStat = 5f;
@@ -235,24 +235,31 @@ public class Player : MonoBehaviour
                 if (thingsToActivate.Count > 0)
                 {
                     thingToActivate = thingsToActivate[0];
-                    thingsToActivate.Remove(thingToActivate);
-                    Debug.Log(thingToActivate.name + "activated, removing from reachable activatables");
-                    if(thingToActivate is CraftingTable craft)
-                    {
-                        craftTable = craft;
-                    }
-                    else
+                    
+                   
+                    if(thingToActivate is WorldItem && inventory.IsFull())
                     {
                         thingsToActivate.Remove(thingToActivate);
+                        thingsToActivate.Add(thingToActivate);
                     }
+                    else if(!(thingToActivate is CraftingTable))
+                    {
+                        Debug.Log(thingToActivate.name + "activated, removing from reachable activatables");
+                        thingsToActivate.Remove(thingToActivate);
+                    }
+                    
+                    
+                    
+
                     thingToActivate.Activate();
+                    thingToActivate = null;
 
                     //if(thingToActivateTwo)
                     //{
                     //    thingToActivate = thingToActivateTwo;
                     //    thingToActivateTwo = null;
                     //}
-                    thingToActivate = null;
+                    //thingToActivate = null;
                 }
 
             }

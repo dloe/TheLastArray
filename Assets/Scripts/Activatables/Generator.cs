@@ -7,6 +7,7 @@ public class Generator : Activatable
 {
     
     public Text generatorText;
+    public GameObject objectiveMarker;
 
     public override void Activate()
     {
@@ -15,6 +16,7 @@ public class Generator : Activatable
             isActivated = true;
             generatorText.text += "(Activated)";
             Objectives.Instance.SendCompletedMessage(Condition.FindGenerator);
+            objectiveMarker.SetActive(false);
         }
         
     }

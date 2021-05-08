@@ -267,7 +267,7 @@ public class CraftingRecipe : ScriptableObject
             
         }
 
-        player.craftTable.UpdateCraftingTable();
+        CraftingTable.Instance.UpdateCraftingTable();
     }
 
     
