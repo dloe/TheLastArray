@@ -26,8 +26,9 @@ public class Player : MonoBehaviour
     public Inventory inventory = new Inventory();
 
     [Header("Activatable / Interactable To Use")]
+    public List<Activatable> thingsToActivate = new List<Activatable>();
     public Activatable thingToActivate;
-    public Activatable thingToActivateTwo;
+    public CraftingTable craftTable;
 
     [Header("Player Stats")]
     public float speedStat = 5f;
@@ -231,15 +232,27 @@ public class Player : MonoBehaviour
             //if there is a grabbable item and the inventory is not full, then E picks up item
             if (Input.GetKeyDown(KeyCode.E) && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
             {
-                if (thingToActivate)
+                if (thingsToActivate.Count > 0)
                 {
-                    thingToActivate.Activate();
-                    if(thingToActivateTwo)
+                    thingToActivate = thingsToActivate[0];
+                    thingsToActivate.Remove(thingToActivate);
+                    Debug.Log(thingToActivate.name + "activated, removing from reachable activatables");
+                    if(thingToActivate is CraftingTable craft)
                     {
-                        thingToActivate = thingToActivateTwo;
-                        thingToActivateTwo = null;
+                        craftTable = craft;
                     }
-                    
+                    else
+                    {
+                        thingsToActivate.Remove(thingToActivate);
+                    }
+                    thingToActivate.Activate();
+
+                    //if(thingToActivateTwo)
+                    //{
+                    //    thingToActivate = thingToActivateTwo;
+                    //    thingToActivateTwo = null;
+                    //}
+                    thingToActivate = null;
                 }
 
             }
@@ -276,7 +289,7 @@ public class Player : MonoBehaviour
             }
 
             //drops currently selected item on the ground at the player's feet
-            if (Input.GetKeyDown(KeyCode.Q) && inventory.selectedItem != null && !thingToActivate)
+            if (Input.GetKeyDown(KeyCode.Q) && inventory.selectedItem != null )
             {
 
                 inventory.DropItem();
@@ -699,31 +712,35 @@ public class Player : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
 
-
-
         if (other.TryGetComponent<Activatable>(out Activatable thing))
         {
-            if(thingToActivate)
-            {
-                if (thing != thingToActivate)
-                {
-                    
-                    thingToActivateTwo = thing;
-                }
-                
-            }
-            else
-            {
-                
-                
-                
-                thingToActivate = thing;
-
-            }
-            
-            
-            
+            thingsToActivate.Add(thing);
+            Debug.Log(thing.name + " trigger entered, added to reachable activatables");
         }
+
+        //if (other.TryGetComponent<Activatable>(out Activatable thing))
+        //{
+        //    if(thingToActivate)
+        //    {
+        //        if (thing != thingToActivate)
+        //        {
+        //            
+        //            thingToActivateTwo = thing;
+        //        }
+        //        
+        //    }
+        //    else
+        //    {
+        //        
+        //        
+        //        
+        //        thingToActivate = thing;
+        //
+        //    }
+        //    
+        //    
+        //    
+        //}
 
         if (other.TryGetComponent<PlayerDetection>(out PlayerDetection tile))
         {
@@ -738,21 +755,27 @@ public class Player : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if (thingToActivate && other.gameObject == thingToActivate.gameObject)
-        {
-            thingToActivate = null;
-            if(thingToActivateTwo)
-            {
-                thingToActivate = thingToActivateTwo;
-                thingToActivateTwo = null;
-            }
-        }
+       // if (thingToActivate && other.gameObject == thingToActivate.gameObject)
+       // {
+       //     thingToActivate = null;
+       //     if(thingToActivateTwo)
+       //     {
+       //         thingToActivate = thingToActivateTwo;
+       //         thingToActivateTwo = null;
+       //     }
+       // }
+       //
+       // if(thingToActivateTwo && other.gameObject == thingToActivateTwo.gameObject)
+       // {
+       //     thingToActivateTwo = null;
+       // }
 
-        if(thingToActivateTwo && other.gameObject == thingToActivateTwo.gameObject)
-        {
-            thingToActivateTwo = null;
-        }
 
+        if(other.TryGetComponent<Activatable>(out Activatable thing))
+        {
+            thingsToActivate.Remove(thing);
+            Debug.Log(thing.name + " trigger left, removed from reachable activatables");
+        }
     }
 
 
