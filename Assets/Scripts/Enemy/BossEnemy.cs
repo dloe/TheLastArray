@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 
 
 public class BossEnemy : MonoBehaviour
 {
+    public Image EnemyImage;
+    [HideInInspector]
+    public int imageDirMod = 1;
     public enum bossPhases
     {
         phase1,
@@ -277,13 +280,30 @@ public class BossEnemy : MonoBehaviour
         }
 
         if (!_currentlyInAttackMovement)
+        {
             this.transform.LookAt(poi);
+
+        }
         else
         {
             //look slowly at poi
             var rotation = Quaternion.LookRotation(poi - transform.position);
-            
+
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * thrustRotateDamp);
+            
+        }
+
+        if (EnemyImage != null)
+        {
+            Vector3 localLook = Quaternion.AngleAxis(EnemyImage.transform.parent.rotation.eulerAngles.y, Vector3.up) * (imageDirMod * (poi - transform.position).normalized);
+            if (localLook.x < 0.01)
+            {
+                EnemyImage.transform.localScale = new Vector3(-1, 1, 1);
+            }
+            else if (localLook.x >= 0)
+            {
+                EnemyImage.transform.localScale = new Vector3(1, 1, 1);
+            }
         }
     }
 
@@ -782,25 +802,25 @@ public class BossEnemy : MonoBehaviour
 
     IEnumerator Damaged()
     {
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = norm;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = norm;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = norm;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = norm;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = damaged;
-            yield return new WaitForSeconds(.1f);
-            this.GetComponent<MeshRenderer>().material = norm;
+        EnemyImage.color = Color.red;
+        yield return new WaitForSeconds(.1f);
+        EnemyImage.color = Color.white;
+        yield return new WaitForSeconds(.1f);
+        EnemyImage.color = Color.red;
+        yield return new WaitForSeconds(.1f);
+        EnemyImage.color = Color.white;
+        yield return new WaitForSeconds(.1f);
+        EnemyImage.color = Color.red;
+        yield return new WaitForSeconds(.1f);
+        EnemyImage.color = Color.white;
+        yield return new WaitForSeconds(.1f);
+        EnemyImage.color = Color.red;
+        yield return new WaitForSeconds(.1f);
+        EnemyImage.color = Color.white;
+        yield return new WaitForSeconds(.1f);
+        EnemyImage.color = Color.red;
+        yield return new WaitForSeconds(.1f);
+        EnemyImage.color = Color.white;
     }
 
     void OnDeath()
