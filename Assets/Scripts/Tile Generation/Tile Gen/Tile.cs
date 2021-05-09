@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using JetBrains.Annotations;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -88,12 +89,16 @@ public class Tile : MonoBehaviour
     //when door is activated, it will not spawn any blockage or enviornment where the door is located, otherwise that direction/doorway will be blocked for the player
     public GameObject[] doors;
 
+    //visible mesh player stands on, material will be set based on which level we one
+    public GameObject tileStandable;
     
     #endregion
 
     private void Start()
     {
         myTileGen = GameObject.Find("TileGen").GetComponent<TileGeneration>();
+
+        SetStandableMat();
         if(!hasDoors)
         {
             
@@ -101,6 +106,29 @@ public class Tile : MonoBehaviour
             {
                 Destroy(door);
             }
+        }
+    }
+
+    void SetStandableMat()
+    {
+        LocalLevel myLocalLevel = GameObject.Find("LevelManager").GetComponent<LocalLevel>();
+
+        switch (myLocalLevel.thisLevelTier)
+        {
+            case levelTier.level1:
+                tileStandable.GetComponent<MeshRenderer>().material = myLocalLevel.myLvlAssetData.forest_mat;
+                break;
+            case levelTier.level2:
+                tileStandable.GetComponent<MeshRenderer>().material = myLocalLevel.myLvlAssetData.urban_mat;
+                break;
+            case levelTier.level3:
+                tileStandable.GetComponent<MeshRenderer>().material = myLocalLevel.myLvlAssetData.outskirts_mat;
+                break;
+            case levelTier.level4:
+                tileStandable.GetComponent<MeshRenderer>().material = myLocalLevel.myLvlAssetData.plant_mat;
+                break;
+            default:
+                break;
         }
     }
 
