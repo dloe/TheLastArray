@@ -369,6 +369,7 @@ public class LevelAssetSpawn : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         Player.Instance.transform.position = spawnPos;
+        Player.Instance.spawnPoint = spawnPos;
 
     }
     

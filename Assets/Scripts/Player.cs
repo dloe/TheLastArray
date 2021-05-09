@@ -179,9 +179,12 @@ public class Player : MonoBehaviour
     public Transform playerHolderTransform;
     public Rigidbody rb;
 
+    public Vector3 spawnPoint;
+
     Vector3 moveDir;
     Vector3 lookDir;
     Plane rayPlane = new Plane(Vector3.up, 0.5f);
+
 
 
     
@@ -383,8 +386,13 @@ public class Player : MonoBehaviour
         moveDir = playerHolderTransform.TransformDirection(moveDir);
         moveDir *= Time.deltaTime * speedStat;
 
-        // playerHolderTransform.TransformDirection(moveDir)
+        
         rb.MovePosition(transform.position + moveDir);
+
+        if(transform.position.y < -5)
+        {
+            transform.position = spawnPoint;
+        }
         //_mainTransform.Translate(playerHolderTransform.TransformDirection(moveDir), Space.World);
 
     }
