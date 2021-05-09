@@ -414,7 +414,7 @@ public class Player : MonoBehaviour
             //lookDir = new Vector3(ray.GetPoint(dist - xLookOffset).x , _mainTransform.position.y, ray.GetPoint(dist - zLookOffset).z );
             lookDir -= _mainTransform.position;
 
-            _mainTransform.rotation = Quaternion.Slerp(_mainTransform.rotation, Quaternion.LookRotation(lookDir), 20f * Time.deltaTime);
+            _mainTransform.rotation = Quaternion.Slerp(_mainTransform.rotation, Quaternion.LookRotation(lookDir), 35f * Time.deltaTime);
 
 
         }
@@ -431,7 +431,7 @@ public class Player : MonoBehaviour
         Vector3 localLook = Quaternion.AngleAxis(-playerHolderTransform.rotation.eulerAngles.y, Vector3.up) * lookDir;
         int zFloor = Mathf.FloorToInt(Mathf.Abs(localLook.z));
         int xFloor = Mathf.FloorToInt(Mathf.Abs(localLook.x));
-
+        
         if (zFloor == 0)
         {
             if (localLook.x < 0)
