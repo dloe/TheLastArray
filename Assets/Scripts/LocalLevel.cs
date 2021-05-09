@@ -37,6 +37,7 @@ public class LocalLevel : MonoBehaviour
     bool ctc = false;
     float a0, a1, a01;
     bool fading = false;
+    public float timeDuration = 1.5f;
     [SerializeField]
     public Image transBar;
 
@@ -275,7 +276,8 @@ public class LocalLevel : MonoBehaviour
         }
         if(fading)
         {
-            u = (Time.time - timeStart);
+            u = (Time.time - timeStart) / timeDuration;
+
             //u = 1 - u;
             if (u >= 1.0)
             {
@@ -306,7 +308,7 @@ public class LocalLevel : MonoBehaviour
         }
         if (fading)
         {
-            u = (Time.time - timeStart) / 1.0f;
+            u = (Time.time - timeStart) / timeDuration;
             u = 1 - u;
             if (u <= 0.0f)
             {
