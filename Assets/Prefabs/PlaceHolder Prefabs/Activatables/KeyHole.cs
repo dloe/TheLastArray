@@ -10,6 +10,10 @@ public class KeyHole : Activatable
 
     public void Start()
     {
+        GameObject posref = FindObjectOfType<TrainEntry>().gameObject;
+        this.transform.rotation = posref.transform.rotation;
+
+
         if (interior != null)
         {
             foreach (Transform child in interior.transform)
