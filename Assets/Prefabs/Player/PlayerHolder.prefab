@@ -799,6 +799,7 @@ MonoBehaviour:
   damaged: {fileID: 2100000, guid: a9021586276d2c0469733a3caaa23e02, type: 2}
   norm: {fileID: 2100000, guid: 39567cf36de3bd546a11a06b67160946, type: 2}
   playerHolderTransform: {fileID: 0}
+  rb: {fileID: 0}
 --- !u!82 &4612859109232061035
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1175,6 +1176,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_RotationAtRest.x
       value: 30.000038
+      objectReference: {fileID: 0}
+    - target: {fileID: 1268692150170193270, guid: 0f0dc93cf040a4c43bfb513fb80ba472,
+        type: 3}
+      propertyPath: m_AffectTranslationY
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1268692150170193270, guid: 0f0dc93cf040a4c43bfb513fb80ba472,
         type: 3}

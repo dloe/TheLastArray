@@ -177,6 +177,7 @@ public class Player : MonoBehaviour
     //transform of the player
     Transform _mainTransform;
     public Transform playerHolderTransform;
+    public Rigidbody rb;
 
     Vector3 moveDir;
     Vector3 lookDir;
@@ -199,6 +200,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         //Debug.Log("Player Start");
+        rb = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
         _mainTransform = transform;
         playerHolderTransform = transform.parent;
@@ -244,7 +246,7 @@ public class Player : MonoBehaviour
                     }
                     else if(!(thingToActivate is CraftingTable))
                     {
-                        Debug.Log(thingToActivate.name + "activated, removing from reachable activatables");
+                        //Debug.Log(thingToActivate.name + "activated, removing from reachable activatables");
                         thingsToActivate.Remove(thingToActivate);
                     }
                     
@@ -378,11 +380,12 @@ public class Player : MonoBehaviour
     {
         moveDir = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
         moveDir.Normalize();
+        moveDir = playerHolderTransform.TransformDirection(moveDir);
         moveDir *= Time.deltaTime * speedStat;
 
         // playerHolderTransform.TransformDirection(moveDir)
-
-        _mainTransform.Translate(playerHolderTransform.TransformDirection(moveDir), Space.World);
+        rb.MovePosition(transform.position + moveDir);
+        //_mainTransform.Translate(playerHolderTransform.TransformDirection(moveDir), Space.World);
 
     }
 
@@ -722,7 +725,7 @@ public class Player : MonoBehaviour
         if (other.TryGetComponent<Activatable>(out Activatable thing))
         {
             thingsToActivate.Add(thing);
-            Debug.Log(thing.name + " trigger entered, added to reachable activatables");
+            //Debug.Log(thing.name + " trigger entered, added to reachable activatables");
         }
 
         //if (other.TryGetComponent<Activatable>(out Activatable thing))
@@ -781,7 +784,7 @@ public class Player : MonoBehaviour
         if(other.TryGetComponent<Activatable>(out Activatable thing))
         {
             thingsToActivate.Remove(thing);
-            Debug.Log(thing.name + " trigger left, removed from reachable activatables");
+            //Debug.Log(thing.name + " trigger left, removed from reachable activatables");
         }
     }
 
