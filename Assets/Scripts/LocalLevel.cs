@@ -84,8 +84,8 @@ public class LocalLevel : MonoBehaviour
         //number of objectives - REMOVED NUMBER 2 WILL READD LATER
         _posObjectives = new List<int> { 1, 2, 3 };
         //LevelFadeIn();
-        StartFadeIn();
-
+        //StartFadeIn();
+        StartCoroutine(FadeIn());
         //ChooseObjective();
     }
 
@@ -245,6 +245,16 @@ public class LocalLevel : MonoBehaviour
     }
 
     #region Scene Transitions
+
+    IEnumerator FadeIn()
+    {
+        Color temp = transBar.color;
+        temp.a = 1;
+        transBar.color = temp;
+        yield return new WaitForSeconds(0.5f);
+        StartFadeIn();
+    }
+
     public void StartFadeIn()
     {
         // Debug.Log("on");
