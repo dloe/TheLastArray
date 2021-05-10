@@ -231,9 +231,9 @@ public class Player : MonoBehaviour
     {
         if (!UI.Instance.PausedStatus && (!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy) && !endScreen.activeInHierarchy)
         {
-            doMovement();
             mouseLook();
-            Debug.DrawRay(_mainTransform.position, lookDir, Color.green);
+            doMovement();
+            
 
             //if there is a grabbable item and the inventory is not full, then E picks up item
             if (Input.GetKeyDown(KeyCode.E) && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
@@ -412,9 +412,10 @@ public class Player : MonoBehaviour
         {
             //if(Input.mousePosition.x)
             lookDir = new Vector3(ray.GetPoint(dist - xLookOffset).x, _mainTransform.position.y, ray.GetPoint(dist - zLookOffset).z);
+            
             //lookDir = new Vector3(ray.GetPoint(dist - xLookOffset).x , _mainTransform.position.y, ray.GetPoint(dist - zLookOffset).z );
             lookDir -= _mainTransform.position;
-
+            Debug.DrawLine(_mainTransform.position, _mainTransform.position + lookDir);
             _mainTransform.rotation = Quaternion.Slerp(_mainTransform.rotation, Quaternion.LookRotation(lookDir), 35f * Time.deltaTime);
 
 
@@ -422,15 +423,20 @@ public class Player : MonoBehaviour
         //Debug.Log(lookDir);
 
 
-        if (inventory.selectedItem != null && inventory.selectedItem.itemData.hasLaserSight)
-        {
-            laserLine.SetPosition(0, transform.position);
-            laserLine.SetPosition(1, transform.position + lookDir);
-        }
+        
 
 
         Vector3 localLook = Quaternion.AngleAxis(-playerHolderTransform.rotation.eulerAngles.y, Vector3.up) * lookDir;
         int zFloor = Mathf.FloorToInt(Mathf.Abs(localLook.z));
+
+        if (inventory.selectedItem != null && inventory.selectedItem.itemData.hasLaserSight)
+        {
+            Vector3 test = new Vector3(transform.localPosition.x, transform.localPosition.y - 1f, transform.localPosition.z);
+            laserLine.SetPosition(0, test);
+            
+            laserLine.SetPosition(1, test + localLook);
+        }
+
         int xFloor = Mathf.FloorToInt(Mathf.Abs(localLook.x));
         
         if (zFloor == 0)
