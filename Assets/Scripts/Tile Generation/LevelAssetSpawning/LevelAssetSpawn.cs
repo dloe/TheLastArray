@@ -367,9 +367,13 @@ public class LevelAssetSpawn : MonoBehaviour
 
     IEnumerator setPlayerPosition(GameObject playerObj, Vector3 spawnPos)
     {
+        Player.Instance.rb.detectCollisions = false;
+        Player.Instance.rb.useGravity = false;
         yield return new WaitForSeconds(0.1f);
         Player.Instance.transform.position = spawnPos;
         Player.Instance.spawnPoint = spawnPos;
+        Player.Instance.rb.detectCollisions = true;
+        Player.Instance.rb.useGravity = true;
 
     }
     

@@ -196,6 +196,7 @@ public class Player : MonoBehaviour
             Destroy(Instance.gameObject);
         }
         Instance = this;
+        rb = GetComponent<Rigidbody>();
         //Debug.Log("Player Awake");
     }
 
@@ -203,7 +204,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         //Debug.Log("Player Start");
-        rb = GetComponent<Rigidbody>();
+        
         _audioSource = GetComponent<AudioSource>();
         _mainTransform = transform;
         playerHolderTransform = transform.parent;
