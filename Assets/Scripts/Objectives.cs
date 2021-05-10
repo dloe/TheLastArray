@@ -127,21 +127,21 @@ public class Objectives : MonoBehaviour
     {
         if(phase == 0)
         {
-            Debug.Log("Spawned boss");
+            //Debug.Log("Spawned boss");
             finalMessage = "Survive";
             mainObjective.objectiveMessage = finalMessage;
             UpdateObjectiveText();
         }
         else if(phase == 1)
         {
-            Debug.Log("Activate array");
+            //Debug.Log("Activate array");
             finalMessage = "Activate Last Array";
             mainObjective.objectiveMessage = finalMessage;
             UpdateObjectiveText();
         }
         else if(phase == 2)
         {
-            Debug.Log("objective complete");
+            //Debug.Log("objective complete");
             finalMessage = "Return to Train for Extraction";
             mainObjective.objectiveMessage = finalMessage;
             mainObjective.complete = true;
@@ -149,7 +149,7 @@ public class Objectives : MonoBehaviour
         }
         else if(phase == 3)
         {
-            Debug.Log("last objective");
+            //Debug.Log("last objective");
             finalMessage = "Locate the Last Array";
             UpdateObjectiveText();
         }
@@ -163,7 +163,7 @@ public class Objectives : MonoBehaviour
         switch (condition)
         {
             case Condition.KillEnemy:
-                Debug.Log("Enemy Killed");
+                //Debug.Log("Enemy Killed");
                 
                 mainObjective.complete = true;
                 break;
