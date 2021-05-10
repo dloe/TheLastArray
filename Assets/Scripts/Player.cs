@@ -302,7 +302,7 @@ public class Player : MonoBehaviour
             }
 
             //drops currently selected item on the ground at the player's feet
-            if (Input.GetKeyDown(KeyCode.Q) && inventory.selectedItem != null )
+            if (Input.GetKeyDown(KeyCode.Q) && inventory.selectedItem != null && !inventory.selectedItem.itemData.reloading)
             {
 
                 inventory.DropItem();
@@ -310,7 +310,7 @@ public class Player : MonoBehaviour
 
 
 
-            if (Input.GetKeyDown(KeyCode.R) && !inventory.selectedItem.itemData.reloading && inventory.selectedItem.itemData.loadedAmmo < inventory.selectedItem.itemData.magSize)
+            if (Input.GetKeyDown(KeyCode.R) && inventory.selectedItem != null && inventory.selectedItem.itemData.itemType == ItemType.RangedWeapon && !inventory.selectedItem.itemData.reloading && inventory.selectedItem.itemData.loadedAmmo < inventory.selectedItem.itemData.magSize)
             {
 
                 reload();

@@ -20,12 +20,14 @@ public class CraftingTable : Activatable
             Destroy(Instance.gameObject);
         }
         Instance = this;
+        Menu = UI.Instance.transform.Find("Crafting Menu").gameObject;
+        optionParent = Menu.transform.Find("Scroll View").Find("Viewport").Find("Content").gameObject;
     }
 
     private void Start()
     {
-        Menu = UI.Instance.transform.Find("Crafting Menu").gameObject;
-        optionParent = Menu.transform.Find("Scroll View").Find("Viewport").Find("Content").gameObject;
+        //Menu = UI.Instance.transform.Find("Crafting Menu").gameObject;
+        //optionParent = Menu.transform.Find("Scroll View").Find("Viewport").Find("Content").gameObject;
         CraftingOption tempOption;
         foreach (CraftingRecipe recipe in recipes)
         {

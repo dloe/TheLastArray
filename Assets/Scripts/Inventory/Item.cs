@@ -35,6 +35,14 @@ public class Item
                 itemData.magSize = data.magSize;
                 itemData.loadedAmmo = data.loadedAmmo;
                 itemData.hasLaserSight = data.hasLaserSight;
+                
+                itemData.usingFireBullets = data.usingFireBullets;
+                if (itemData.usingFireBullets)
+                {
+                    itemData.fireLoadedAmmo = data.fireLoadedAmmo;
+                }
+
+                
             }
             else if (data.itemType == ItemType.Heal)
             {

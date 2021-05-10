@@ -180,6 +180,9 @@ public class ItemDataSave
     public int amountToHeal;
 
     public bool hasLaserSight;
+    public bool hasFireBullets;
+    public int fireBullets;
+
 
     public void SaveFromItemData(ItemData itemData)
     {
@@ -199,6 +202,8 @@ public class ItemDataSave
         loadedAmmo = itemData.loadedAmmo;
         amountToHeal = itemData.amountToHeal;
         hasLaserSight = itemData.hasLaserSight;
+        hasFireBullets = itemData.usingFireBullets;
+        fireBullets = itemData.fireLoadedAmmo;
         //Debug.Log(loadedAmmo + "item save ammo");
         //Debug.Log(itemData.loadedAmmo + "item data ammo");
     }
@@ -221,6 +226,17 @@ public class ItemDataSave
         itemData.loadedAmmo = loadedAmmo;
         itemData.amountToHeal = amountToHeal;
         itemData.hasLaserSight = hasLaserSight;
+
+        if(itemType == ItemType.RangedWeapon)
+        {
+            itemData.usingFireBullets = hasFireBullets;
+            if(hasFireBullets)
+            {
+                itemData.fireLoadedAmmo = fireBullets;
+            }
+           
+        }
+        
 
         //Debug.Log(itemData.loadedAmmo, itemData);
     }
