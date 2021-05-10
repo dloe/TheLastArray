@@ -823,7 +823,7 @@ public class TileGeneration : MonoBehaviour
             }
             else
             {
-                Debug.Log("stop adding random tiles");
+                //Debug.Log("stop adding random tiles");
                 return;
             }
         }
