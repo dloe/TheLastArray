@@ -251,7 +251,7 @@ public class LocalLevel : MonoBehaviour
         Color temp = transBar.color;
         temp.a = 1;
         transBar.color = temp;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.25f);
         StartFadeIn();
     }
 
