@@ -388,13 +388,14 @@ public class Player : MonoBehaviour
         moveDir *= Time.deltaTime * speedStat;
 
         
-        rb.MovePosition(transform.position + moveDir);
+        //rb.MovePosition(transform.position + moveDir);
 
         if(transform.position.y < -5)
         {
             transform.position = spawnPoint;
         }
-        //_mainTransform.Translate(playerHolderTransform.TransformDirection(moveDir), Space.World);
+
+        _mainTransform.Translate(moveDir, Space.World);
 
     }
 
