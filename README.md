@@ -6,6 +6,9 @@ The Last Array is a roguelike, survival, dungeon crawler where the player must s
 Credits:
 
 Lead Designer: Shawn Rogers
+
 Production & 2D Art: Olivia Yee
+
 Programming: Dylan Loe & Jeremy Casada
+
 Level Design and Programming: Alex Olah
