@@ -4,6 +4,7 @@ The Last Array is a roguelike, survival, dungeon crawler where the player must s
 
 
 ITCH.IO PAGE: https://cagd.itch.io/the-last-array
+
 Game Doc: https://docs.google.com/document/d/1Dk4c2A5diAJraO7-_yfEPvV07kpA9qRHfqEXERzxR8I/edit?usp=sharing
 
 Credits:
