@@ -20,7 +20,15 @@ public class EnemyPrefab
 [CreateAssetMenu(fileName = "LevelAssetData", menuName = "ScritableObjects/LevelAssetData", order = 1)]
 public class LevelAssetsData : ScriptableObject
 {
-    
+    /// <summary>
+    /// Level Asset Data Scriptable Obj
+    /// Dylan Loe
+    /// 
+    /// Last Updated: 4/25/21
+    /// 
+    /// - info for all level assets
+    /// - 
+    /// </summary>
     [Header("Refs to Assets Spawned in Scene")]
     public List<GameObject> AssetsSpawned;
     public GameObject emptyObj;

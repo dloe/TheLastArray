@@ -174,7 +174,6 @@ public class TileGeneration : MonoBehaviour
     List<TileInfo> _posSRNeighbors;
 
 
-
     private void Awake()
     {
         //establish level type

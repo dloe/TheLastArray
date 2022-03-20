@@ -24,6 +24,16 @@ public enum EnemyWeightType
 
 public class PossibleEnemy : MonoBehaviour
 {
+    /// <summary>
+    /// Possible Enemy Plceholder Info
+    /// Dylan Loe
+    /// 
+    /// last Updated: 4/25/21
+    /// 
+    /// Values are checked when determining what enemy should spawn here
+    /// - Can be a boss (then upgrade health and damage variant)
+    /// 
+    /// </summary>
     public EnemyWeightType type;
     public bool canBeMiniBoss = false;
 }

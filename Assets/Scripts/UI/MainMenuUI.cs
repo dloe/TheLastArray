@@ -12,16 +12,12 @@ public class MainMenuUI : MonoBehaviour
     public GameObject credits;
     public GameObject howToPlay; 
 
-
-
     private void Start()
     {
         Application.targetFrameRate = Screen.currentResolution.refreshRate;
         LoadAudioLevels();
        // SetGraphics(PlayerPrefs.GetInt("Quality Level", 5));
     }
-
-
 
     /// <summary>
     /// Shows the GameObject screenToShow
@@ -40,7 +36,6 @@ public class MainMenuUI : MonoBehaviour
     {
         screenToHide.SetActive(false);
     }
-
 
     /// <summary>
     /// Loads Level by name using levelName
@@ -180,9 +175,6 @@ public class MainMenuUI : MonoBehaviour
         masterText.text = "Master: " + Mathf.Round(master.value * 100);
         musicText.text = "Music: " + Mathf.Round(music.value * 100);
         sfxText.text = "SFX: " + Mathf.Round(sfx.value * 100);
-
-
-
     }
     #endregion
 }

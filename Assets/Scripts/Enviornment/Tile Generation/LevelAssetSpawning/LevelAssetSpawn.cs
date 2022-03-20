@@ -5,8 +5,18 @@ using UnityEngine;
 public class LevelAssetSpawn : MonoBehaviour
 {
     /// <summary>
+    /// Level Asset Spawn System
+    /// Dylan Loe
+    /// 
+    /// Last Updated: 5/20/21
+    /// 
     /// REQURIES:
     ///     - a LevelInfo Prefab
+    ///     - system used for spawning assets on each tile
+    ///     - has caps for items, enemies and objectives
+    ///     - links rooms into 2 x 2 tiles, also has caps
+    ///     - called mainly from tile gen script
+    ///     
     /// </summary>
     [Header("Tile Gen Script")]
     //ref to tile gen script
@@ -37,7 +47,7 @@ public class LevelAssetSpawn : MonoBehaviour
     public List<GameObject> itemsInLevelList = new List<GameObject>();
     [Header("Weapons In Level")]
     public List<GameObject> weaponsInLevelList = new List<GameObject>();
-
+    //possible objecives
     public List<GameObject> _possibleObjectives = new List<GameObject>();
 
     [Header("Enemies In Level")]
@@ -74,7 +84,6 @@ public class LevelAssetSpawn : MonoBehaviour
     //second number represents the tile numbers that were spawned that amount of times
     List<List<int>> _magAssetCount;
     
-    
     [Header("Ref to player data obj")]
     public GameObject playerPref;
     [Header("Light obj")]
@@ -86,6 +95,7 @@ public class LevelAssetSpawn : MonoBehaviour
     public List<GameObject> _bigTilesList = new List<GameObject>();
 
     static private float twoBYtwo_SpawnChance = 0.25f;
+    GameObject play;
 
     //sets some values when this script is first called
     void StartUpLevelAssetSpawn()
@@ -119,9 +129,6 @@ public class LevelAssetSpawn : MonoBehaviour
     {
         StartUpLevelAssetSpawn();
 
-
-        //Debug.Log("Populating Level with Assets...");
-
         GridAnalysis();
 
         ActivateLevelKey();
@@ -133,15 +140,13 @@ public class LevelAssetSpawn : MonoBehaviour
         //ACTIVATE OBJECTIVES
         ActivateObjectives();
         
-
         //SPAWN IN RESOURCES
         ActivateItems();
 
         //ACTIVATE ENEMIES
         ActivateEnemies();
-
     }
-    GameObject play;
+
     /// <summary>
     /// checks each tile for purpose of adding walls, linking 2 x 2, bringing in 2 x 2 tiles
     /// </summary>
@@ -164,24 +169,20 @@ public class LevelAssetSpawn : MonoBehaviour
             {
                 for (int posResourceCount = 0; posResourceCount < t.presetTile.GetComponent<PresetTileInfo>().possiblePresetItems.Length; posResourceCount++)
                 {
-                    //co++;
-                    // Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                     _possibleItems.Add(t.presetTile.GetComponent<PresetTileInfo>().possiblePresetItems[posResourceCount]);
                 }
 
                 playerSpawn = t.presetTile.GetComponent<PresetTileInfo>().playerSpawn;
                 //SPAWN PLAYER
                 play = Instantiate(playerPref, Vector3.zero, playerSpawn.transform.rotation);
-                //Debug.Log(play);
                 play.transform.GetChild(2).GetComponent<Player>().PlayerCamRot = playerSpawn.transform.eulerAngles.y;
 
                 if (lightObj != null)
                 {
                     lightObj.transform.rotation = Quaternion.Euler(playerSpawn.transform.eulerAngles);//new Quaternion(playerSpawn.transform.rotation);
                 }
-                //Debug.Log("Player Spawn set");
+
                 StartCoroutine(setPlayerPosition(play, playerSpawn.transform.position));
-                //Debug.Log(play.transform.GetChild(1).gameObject.name);
                 //will use getcomponent in scene next time
                 myLocalLevel.myPlayer = play.transform.GetChild(2).gameObject.GetComponent<Player>();
             }
@@ -191,30 +192,21 @@ public class LevelAssetSpawn : MonoBehaviour
         {
             ActivateLvl4Walls();
         }
-
     }
 
     //doors would be active linking tiles, just add doors on sides that dont have doors yeet im so tired please help i feel myself slowly drifitng away into oblivion oh god
     void ActivateLvl4Walls()
     {
-        //Debug.Log("start activate");
         foreach (Tile t in myTileGeneration._allActiveTiles)
         {
             if (t.tileStatus != Tile.TileStatus.startingRoom)
             {
-                //Debug.Log(t.name);
                 GameObject wall;
                     
                 if (t.doors[0] != null && t.upNeighbor != null && t.upNeighbor.doors[1] != null && t.doors[0] != t.upNeighbor.doors[1])
                 {
-                    //Debug.Log(t.doors[0].name + " vs " + t.upNeighbor.doors[1].name);
-                    //Debug.Log(t.doors[0].tag == "Door");
-                    //Debug.Log(t.upNeighbor.doors[1].tag == "Door");
                     if(t.doors[0].tag == "Door" && t.upNeighbor.doors[1].tag == "Door")
                     {
-                        //Debug.Log(t.doors[0].GetComponent<DoorBehavior>().notInUse);
-                        //Debug.Log(t.upNeighbor.doors[1].GetComponent<DoorBehavior>().notInUse);
-                        // Debug.Log("dont spawn wall between " + t.name + " and " + t.upNeighbor.name);
                         t.ReSyncDoors();
                     }
 
@@ -230,21 +222,12 @@ public class LevelAssetSpawn : MonoBehaviour
                             t.doors[0] = wall;
                         }
                     }
-                    //else
-                    //    Debug.Log("dont spawn wall between " + t.name + " and " + t.upNeighbor.name);
-
                 }
 
                 if (t.doors[1] != null && t.downNeighbor != null && t.downNeighbor.doors[0] != null && t.doors[1] != t.downNeighbor.doors[0])
                 {
-                   // Debug.Log(t.doors[1].name + " vs " + t.downNeighbor.doors[0].name);
-                    //Debug.Log(t.doors[1].tag == "Door");
-                   // Debug.Log(t.downNeighbor.doors[0].tag == "Door");
                     if (t.doors[1].tag == "Door" && t.downNeighbor.doors[0].tag == "Door")
                     {
-                        // Debug.Log(t.doors[1].GetComponent<DoorBehavior>().notInUse);
-                        //Debug.Log(t.downNeighbor.doors[0].GetComponent<DoorBehavior>().notInUse);
-                        //Debug.Log("dont spawn wall between " + t.name + " and " + t.downNeighbor.name);
                         t.ReSyncDoors();
                     }
 
@@ -260,21 +243,12 @@ public class LevelAssetSpawn : MonoBehaviour
                             t.doors[1] = wall;
                         }
                     }
-                    //else
-                    //    Debug.Log("dont spawn wall between " + t.name + " and " + t.downNeighbor.name);
-
                 }
 
                 if (t.doors[2] != null && t.leftNeighbor != null && t.leftNeighbor.doors[3] != null && t.doors[2] != t.leftNeighbor.doors[3])
                 {
-                    //Debug.Log(t.doors[2].name + " vs " + t.leftNeighbor.doors[3].name);
-                    //Debug.Log(t.doors[2].tag == "Door");
-                    //Debug.Log(t.leftNeighbor.doors[3].tag == "Door");
                     if (t.doors[2].tag == "Door" && t.leftNeighbor.doors[3].tag == "Door")
                     {
-                        //Debug.Log(t.doors[2].GetComponent<DoorBehavior>().notInUse);
-                        //Debug.Log(t.leftNeighbor.doors[3].GetComponent<DoorBehavior>().notInUse);
-                        // Debug.Log("dont spawn wall between " + t.name + " and " + t.leftNeighbor.name);
                         t.ReSyncDoors();
                     }
 
@@ -290,21 +264,12 @@ public class LevelAssetSpawn : MonoBehaviour
                             t.doors[2] = wall;
                         }
                     }
-                    //else
-                    //    Debug.Log("dont spawn wall between " + t.name + " and " + t.leftNeighbor.name);
-
                 }
 
                 if (t.doors[3] != null && t.rightNeighbor != null && t.rightNeighbor.doors[2] != null && t.doors[3] != t.rightNeighbor.doors[2]) 
                 {
-                    //Debug.Log(t.doors[3].name + " vs " + t.rightNeighbor.doors[2].name);
-                    //Debug.Log(t.doors[3].tag == "Door");
-                    //Debug.Log(t.rightNeighbor.doors[2].tag == "Door");
                     if (t.doors[3].tag == "Door" && t.rightNeighbor.doors[2].tag == "Door")
                     {
-                        //Debug.Log(t.doors[3].GetComponent<DoorBehavior>().notInUse);
-                        //Debug.Log(t.rightNeighbor.doors[2].GetComponent<DoorBehavior>().notInUse);
-                        //Debug.Log("dont spawn wall between " + t.name + " and " + t.rightNeighbor.name);
                         t.ReSyncDoors();
                     }
 
@@ -320,8 +285,6 @@ public class LevelAssetSpawn : MonoBehaviour
                             t.doors[3] = wall;
                         }
                     }
-                    //else
-                    //    Debug.Log("dont spawn wall between " + t.name + " and " + t.rightNeighbor.name);
                 }
             }
         }
@@ -335,34 +298,30 @@ public class LevelAssetSpawn : MonoBehaviour
             //child 3 should not have wall on right side or up side
             Tile tileSub;
             tileSub = tile.transform.GetChild(0).GetComponent<Tile>();
-            //Debug.Log(tileSub.name);
+
             if (tileSub.doors[1] != null)//== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[1]);
             if (tileSub.doors[3] != null)// == myLevelAsset.levelWall)
                 Destroy(tileSub.doors[3]);
             tileSub = tile.transform.GetChild(1).GetComponent<Tile>();
-            //Debug.Log(tileSub.name);
+
             if (tileSub.doors[1] != null)//== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[1]);
             if (tileSub.doors[2] != null)//== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[2]);
             tileSub = tile.transform.GetChild(2).GetComponent<Tile>();
-            //Debug.Log(tileSub.name);
+
            if (tileSub.doors[0] != null)//== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[0]);
             if (tileSub.doors[2] != null)//== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[2]);
             tileSub = tile.transform.GetChild(3).GetComponent<Tile>();
-            //Debug.Log(tileSub.name);
+
             if (tileSub.doors[0] != null) //== myLevelAsset.levelWall)
                 Destroy(tileSub.doors[0]);
             if (tileSub.doors[3] != null) //== myLevelAsset.levelWall)
-                Destroy(tileSub.doors[3]);
-
-
-           
+                Destroy(tileSub.doors[3]);  
         }
-
     }
 
     IEnumerator setPlayerPosition(GameObject playerObj, Vector3 spawnPos)
@@ -374,7 +333,6 @@ public class LevelAssetSpawn : MonoBehaviour
         Player.Instance.spawnPoint = spawnPos;
         Player.Instance.rb.detectCollisions = true;
         Player.Instance.rb.useGravity = true;
-
     }
     
     void ActivateSecretRoom()
@@ -391,25 +349,20 @@ public class LevelAssetSpawn : MonoBehaviour
         //replace wall on neighbor
         if (secret.upNeighbor != null)
         {
-
             //assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y + 90, secret.transform.rotation.z, secret.transform.rotation.w);
-            //Debug.Log(secret.transform.rotation.y + 90);
             preset.transform.localEulerAngles = new Vector3(preset.transform.localEulerAngles.x, preset.transform.localEulerAngles.y + 90, preset.transform.localEulerAngles.z);
             Destroy(secret.upNeighbor.doors[1]);
         }
         else if(secret.downNeighbor != null)
         {
-
             //assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y - 90, secret.transform.rotation.z, secret.transform.rotation.w);
             preset.transform.localEulerAngles = new Vector3(preset.transform.localEulerAngles.x, preset.transform.localEulerAngles.y - 90, preset.transform.localEulerAngles.z);
-            //Debug.Log(secret.transform.rotation.y - 90);
             Destroy(secret.downNeighbor.doors[0]);
         }
         else if(secret.leftNeighbor != null)
         {
             //assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y, secret.transform.rotation.z, secret.transform.rotation.w);
            // preset.transform.localEulerAngles = new Vector3(preset.transform.localEulerAngles.x, preset.transform.localEulerAngles.y + 90, preset.transform.localEulerAngles.z);
-            //Debug.Log(secret.transform.rotation.y);
             Destroy(secret.leftNeighbor.doors[3]);
 
         }
@@ -417,21 +370,14 @@ public class LevelAssetSpawn : MonoBehaviour
         {
             //assetRot = new Quaternion(secret.transform.rotation.x, secret.transform.rotation.y + 180, secret.transform.rotation.z, secret.transform.rotation.w);
             preset.transform.localEulerAngles = new Vector3(preset.transform.localEulerAngles.x, preset.transform.localEulerAngles.y + 180, preset.transform.localEulerAngles.z);
-            // Debug.Log(secret.transform.rotation.y + 180);
             Destroy(secret.rightNeighbor.doors[2]);
         }
         //preset.transform.rotation = assetRot;
-        //Debug.Log(preset.transform.rotation.y);
 
         myTileGeneration.secretRoom.layer = 22;
 
-        //EITHER ADD KEY TO SPAWN RANDOMLY IN LEVEL OR HAVE KEY BE ACQUIRED RANDOMLY EARLIER -  added here before we add the secret tiles items and whatnot
-
-
-
         if (preset.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
         {
-            // Debug.Log(preset.name);
             for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetItems.Length; posResourceCount++)
             {
                 _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
@@ -441,14 +387,11 @@ public class LevelAssetSpawn : MonoBehaviour
                 _possibleEnemiesInLevel.Add(mPresetTileInfo.enemiesOnPreset[posEnemyCount]);
             }
         }
-
-        
-
-
     }
 
     #region Objective Spawn
-
+    //=============================================================================================================
+    //=============================================================================================================
     /// <summary>
     /// - objective will spawn on boss tile
     /// - if final tile is on a 2 x 2, get that tile and spawn an objective from it
@@ -459,7 +402,6 @@ public class LevelAssetSpawn : MonoBehaviour
     {
         if (myLocalLevel.thisLevelTier != levelTier.level4)
         {
-            //Debug.Log("start obj");
             parents = new List<GameObject>();
             //picks random objective in awake in LocalLevel script
             if (myLocalLevel.objective != 1)
@@ -471,15 +413,12 @@ public class LevelAssetSpawn : MonoBehaviour
                 _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
                 objectivesInLevel.Add(obj);
 
-                // Debug.Log("check");
                 //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
                 //if objective is certain types (ie type 3), choose more objectives and add to list
-
                 
                 //make sure we can spawn 2 more objectives!
                 for (int objCount = 0; objCount < 2; objCount++)
                 {
-                    //Debug.Log("check 2");
                     //if this item is null, need to get another one
 
                     //randomly pick an objective (or item?)
@@ -500,34 +439,21 @@ public class LevelAssetSpawn : MonoBehaviour
                             //Destroy(_possibleObjectives[indexO]);
                             GameObject tempToDelete = _possibleObjectives[indexO];
 
-                            //if (tempToDelete.TryGetComponent<PossibleItem>(out PossibleItem mPI))
-                           //     mPI.inUse = true;
-                           // else
-                           //     Debug.Log("bad");
-
-                           // _possibleItems.Remove(_possibleObjectives[indexO]);
                             _possibleObjectives.Remove(_possibleObjectives[indexO]);
-                            //tempToDelete.gameObject.
-                            //DestroyImmediate(tempToDelete);
                             Destroy(tempToDelete);
                             break;
                         }
                     }
-
-                    
                 }
             }
             else if (myLocalLevel.objective == 1)
             {
                 //spawn in enemy
                 Objectives.Instance.SetObjectiveRef(myLocalLevel.objective, null);
-                // eObj.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
-                // objectivesInLevel.Add(eObj);
                 _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
 
                 GameObject objectiveEnemy = objectiveEnemy = myLevelAsset.EnemyMINIBOSSPrefab.dozerEnemy;
                 int choice = Random.Range(1, 3);
-                //Debug.Log(choice);
                 switch (myLocalLevel.thisLevelTier)
                 {
                     case levelTier.level1:
@@ -603,41 +529,37 @@ public class LevelAssetSpawn : MonoBehaviour
             //REMEMBER, to make sure  the player can complete objective, this has to be turned on after boss dies
             endObjTile.GetComponent<Boss_PresetTileInfo>().lastArrayInteractable.GetComponent<BoxCollider>().isTrigger = false;
             GameObject bossDetection = Instantiate(myLevelAsset.bossDetection, endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform);
-            //bossDetection.GetComponent<BossSpawn>().Bossdoor = endObjTile.GetComponent<Boss_PresetTileInfo>().door;
             bossDetection.GetComponent<BossSpawn>().tile = endObjTile.GetComponent<Boss_PresetTileInfo>();
 
-            //bossDetection.GetComponent<BossSpawn>().obj = Objectives.Instance;
             _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
             bossDetection.name = "BossPlaceholder";
             bossDetection.transform.parent = endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn.transform.parent;
-                
-            ///TEMP WILL REMOVE LATER
-            // play.transform.position = endObjTile.GetComponent<Boss_PresetTileInfo>().craftingTableOutside.transform.position;
         }
-
-        //removed extra objectives
-
     }
+
+    //=============================================================================================================
+    //=============================================================================================================
     #endregion
 
     #region Preset Spawning
+    //=============================================================================================================
+    //=============================================================================================================
     /// <summary>
     /// - Analyze Tile, looking at an individual tile, for asset choosing and spawning
     /// - also checks if 4 tiles can be linked, links them if they are and decide weather to use this link to spawn big asset
     /// </summary>
     /// <param name="tile">Tile being analyzed</param>
-    
+
     void AnalyzeTile(Tile tile)
     {
         //will first see if we can link tiles
         _tArray = new Tile[4];
         List<GameObject> bigTileDoors = new List<GameObject>();
         bool obj = false;
-        //check neighbors, first up, then left, then right then down
+        //check neighbors, first up, then left, then right then down, a little unoptimized
         if (!tile.checkFor4Some)
         {
             Tile t;
-            //Debug.Log("Starting at tile: " + tile.posOnGrid.x + " " + tile.posOnGrid.y);
             if (tile.upNeighbor != null && tile.upNeighbor.tileStatus != Tile.TileStatus.nullRoom && !tile.upNeighbor.checkFor4Some && tile.upNeighbor.tileStatus != Tile.TileStatus.secretRoom)
             {
 
@@ -645,25 +567,21 @@ public class LevelAssetSpawn : MonoBehaviour
                 t = tile.upNeighbor;
                 
                 _tArray[0] = t;
-                //Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
                 if (t.rightNeighbor != null && t.rightNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.rightNeighbor.checkFor4Some && t.rightNeighbor.tileStatus != Tile.TileStatus.secretRoom)
                 {
                     bigTileDoors.Add(t.doors[3]);
                     t = t.rightNeighbor;
                     _tArray[1] = t;
-                    //Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
                     if (t.downNeighbor != null && t.downNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.downNeighbor.checkFor4Some && t.downNeighbor.tileStatus != Tile.TileStatus.secretRoom)
                     {
                         bigTileDoors.Add(t.doors[1]);
                         t = t.downNeighbor;
                         _tArray[2] = t;
-                        // Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
                         if (t.leftNeighbor != null && t.leftNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.leftNeighbor.checkFor4Some && t.leftNeighbor.tileStatus != Tile.TileStatus.secretRoom)
                         {
                             bigTileDoors.Add(t.doors[2]);
                             //all of these tiles can be linked
                             t = t.leftNeighbor;
-                            // Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
                             _tArray[3] = t;
 
                             //random chance we dont use this 4 some tile and have og be single
@@ -687,37 +605,28 @@ public class LevelAssetSpawn : MonoBehaviour
                                     Destroy(door);
                                 }
 
-                                //Debug.Log(av);
                                 fourSomeTile.transform.position = _av;
                                 foreach (Tile tile3 in _tArray)
                                 {
-
                                     //could remove doors/walls here as well
 
-
-                                    //Debug.Log("ap");
                                     tile3.levelAssetPlaced = true;
 
                                     if(tile3.tileStatus == Tile.TileStatus.boss)
                                     {
-                                        //Debug.Log("big tile has objectvie");
                                         obj = true;
                                     }
 
-                                    //Debug.Log(tile3.presetNum);
                                     if (tile3.presetNum != -1)
                                     {
-                                       // Debug.Log(tile3.presetNum);
                                         //remove its possible items from _possileItems if it has already assigned preset tile
                                         assetCountArray[tile3.presetNum] -= 1;
                                         if (tile3.presetTile.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
                                         {
-                                            //Debug.Log(tile3.name);
                                             foreach (GameObject item in mPresetTileInfo.GetComponent<PresetTileInfo>().possiblePresetItems)
                                             {
                                                 _possibleItems.Remove(item);
                                                 _possibleObjectives.Remove(item);
-                                                
                                             }
 
                                             //Note to self maybe consider running for loop to remove possible enemies as wells - Added last night 3/10
@@ -734,7 +643,6 @@ public class LevelAssetSpawn : MonoBehaviour
                                             if (mPresetTileInfo.objectiveSpawn != null)
                                             {
                                                 _possibleObjectives.Remove(mPresetTileInfo.objectiveSpawn);
-                                                //Debug.Log("removed bad obj spot");
                                             }
 
                                             _possibleTileObjectivesInLevel.Remove(tile3.presetTile);
@@ -747,7 +655,6 @@ public class LevelAssetSpawn : MonoBehaviour
 
                                     if (tile3.presetTile != null)
                                     {
-                                       // Debug.Log("(Due to 2 x 2 Linkage - Deleting: " + tile3.presetTile.gameObject + tile3.name);
                                         Destroy(tile3.presetTile.gameObject);
                                     }
                                     tile3.checkFor4Some = true;
@@ -778,11 +685,9 @@ public class LevelAssetSpawn : MonoBehaviour
         }
             if (!tile.levelAssetPlaced )
             {
-               // Debug.Log(tile.posOnGrid.x + " " + tile.posOnGrid.y);
                 SpawnLevelSmallAsset(tile);
             }
     }
-
 
     void AnalyzeTile_Lvl4Modifier(Tile tile)
     {
@@ -794,33 +699,31 @@ public class LevelAssetSpawn : MonoBehaviour
         if (!tile.checkFor4Some && tile.tileStatus != Tile.TileStatus.boss)
         {
             Tile t;
-            //Debug.Log("Starting at tile: " + tile.posOnGrid.x + " " + tile.posOnGrid.y);
-            if (tile.upNeighbor != null && tile.upNeighbor.tileStatus != Tile.TileStatus.nullRoom && !tile.upNeighbor.checkFor4Some && tile.upNeighbor.tileStatus != Tile.TileStatus.secretRoom && tile.upNeighbor.tileStatus != Tile.TileStatus.boss)
+            if (tile.upNeighbor != null && tile.upNeighbor.tileStatus != Tile.TileStatus.nullRoom && !tile.upNeighbor.checkFor4Some && tile.upNeighbor.tileStatus 
+                != Tile.TileStatus.secretRoom && tile.upNeighbor.tileStatus != Tile.TileStatus.boss)
             {
-
                 bigTileDoors.Add(tile.doors[0]);
                 t = tile.upNeighbor;
 
                 _tArray[0] = t;
-                //Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
-                if (t.rightNeighbor != null && t.rightNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.rightNeighbor.checkFor4Some && t.rightNeighbor.tileStatus != Tile.TileStatus.secretRoom && t.rightNeighbor.tileStatus != Tile.TileStatus.boss)
+                if (t.rightNeighbor != null && t.rightNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.rightNeighbor.checkFor4Some && t.rightNeighbor.tileStatus
+                    != Tile.TileStatus.secretRoom && t.rightNeighbor.tileStatus != Tile.TileStatus.boss)
                 {
                     bigTileDoors.Add(t.doors[3]);
                     t = t.rightNeighbor;
                     _tArray[1] = t;
-                    //Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
-                    if (t.downNeighbor != null && t.downNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.downNeighbor.checkFor4Some && t.downNeighbor.tileStatus != Tile.TileStatus.secretRoom && t.downNeighbor.tileStatus != Tile.TileStatus.boss)
+                    if (t.downNeighbor != null && t.downNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.downNeighbor.checkFor4Some && t.downNeighbor.tileStatus
+                        != Tile.TileStatus.secretRoom && t.downNeighbor.tileStatus != Tile.TileStatus.boss)
                     {
                         bigTileDoors.Add(t.doors[1]);
                         t = t.downNeighbor;
                         _tArray[2] = t;
-                        // Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
-                        if (t.leftNeighbor != null && t.leftNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.leftNeighbor.checkFor4Some && t.leftNeighbor.tileStatus != Tile.TileStatus.secretRoom && t.leftNeighbor.tileStatus != Tile.TileStatus.boss)
+                        if (t.leftNeighbor != null && t.leftNeighbor.tileStatus != Tile.TileStatus.nullRoom && !t.leftNeighbor.checkFor4Some && t.leftNeighbor.tileStatus
+                            != Tile.TileStatus.secretRoom && t.leftNeighbor.tileStatus != Tile.TileStatus.boss)
                         {
                             bigTileDoors.Add(t.doors[2]);
                             //all of these tiles can be linked
                             t = t.leftNeighbor;
-                            // Debug.Log(t.posOnGrid.x + " " + t.posOnGrid.y);
                             _tArray[3] = t;
 
                             //random chance we dont use this 4 some tile and have og be single
@@ -844,37 +747,26 @@ public class LevelAssetSpawn : MonoBehaviour
                                     Destroy(door);
                                 }
 
-                                //Debug.Log(av);
                                 fourSomeTile.transform.position = _av;
                                 foreach (Tile tile3 in _tArray)
                                 {
-
-                                    //could remove doors/walls here as well
-
-
-                                    //Debug.Log("ap");
                                     tile3.levelAssetPlaced = true;
 
                                     if (tile3.tileStatus == Tile.TileStatus.boss)
                                     {
-                                        //Debug.Log("big tile has objectvie");
                                         obj = true;
                                     }
 
-                                    //Debug.Log(tile3.presetNum);
                                     if (tile3.presetNum != -1)
                                     {
-                                        // Debug.Log(tile3.presetNum);
                                         //remove its possible items from _possileItems if it has already assigned preset tile
                                         assetCountArray[tile3.presetNum] -= 1;
                                         if (tile3.presetTile.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
                                         {
-                                            //Debug.Log(tile3.name);
                                             foreach (GameObject item in mPresetTileInfo.GetComponent<PresetTileInfo>().possiblePresetItems)
                                             {
                                                 _possibleItems.Remove(item);
                                                 _possibleObjectives.Remove(item);
-
                                             }
 
                                             //Note to self maybe consider running for loop to remove possible enemies as wells - Added last night 3/10
@@ -891,17 +783,14 @@ public class LevelAssetSpawn : MonoBehaviour
                                             if (mPresetTileInfo.objectiveSpawn != null)
                                             {
                                                 _possibleObjectives.Remove(mPresetTileInfo.objectiveSpawn);
-                                                //Debug.Log("removed bad obj spot");
                                             }
                                             
-
                                             _possibleTileObjectivesInLevel.Remove(tile3.presetTile);
                                         }
                                     }
 
                                     if (tile3.presetTile != null)
                                     {
-                                        // Debug.Log("(Due to 2 x 2 Linkage - Deleting: " + tile3.presetTile.gameObject + tile3.name);
                                         Destroy(tile3.presetTile.gameObject);
                                     }
                                     if(tile3.endOfBranchPath)
@@ -937,12 +826,10 @@ public class LevelAssetSpawn : MonoBehaviour
         }
         if (!tile.levelAssetPlaced)
         {
-            // Debug.Log(tile.posOnGrid.x + " " + tile.posOnGrid.y);
             SpawnLevelSmallAsset(tile);
         }
     }
 
-    
     /// <summary>
     /// - spawn level asset, called in analyze tile. Spawns in and adds to assetCount array
     /// - will determine position and rotation of where asset goes on tile
@@ -950,12 +837,10 @@ public class LevelAssetSpawn : MonoBehaviour
     /// <param name="tile"> Tile being analyzed and spawned on </param>
     void SpawnLevelSmallAsset(Tile tile)
     {
-        //Debug.Log("PRE");
         //will pick the least used preset but for now it will be random
         int index = FindLowestMagnatudeSMOL();//Random.Range(0, myLevelAsset.presetTileAssets.Count);
 
         GameObject preset = null;
-        // Debug.Log(index);
         if (tile.tileStatus != Tile.TileStatus.boss)
         {
             preset = Instantiate(myLocalLevel.presetTileAssets[index], tile.transform.position, myLocalLevel.presetTileAssets[index].transform.rotation);
@@ -967,8 +852,6 @@ public class LevelAssetSpawn : MonoBehaviour
             if (tile.tileStatus != Tile.TileStatus.startingRoom)
             {
                 int choice = Random.Range(1, 4);
-                //Debug.Log(tile.gameObject.name);
-                //Debug.Log(choice);
                 switch (choice)
                 {
                     case 1:
@@ -990,7 +873,6 @@ public class LevelAssetSpawn : MonoBehaviour
                     default:
                         break;
                 }
-
             }
 
             //check for miniboss
@@ -1005,7 +887,6 @@ public class LevelAssetSpawn : MonoBehaviour
                     possibleminiBossCount++;
                 }
             }
-
             tile.levelAssetPlaced = true;
         }
         else
@@ -1016,13 +897,11 @@ public class LevelAssetSpawn : MonoBehaviour
             {
                 tileObj = myLevelAsset.bossTileLastArray;
             }
-
-
             Vector3 rotation = Vector3.zero;
             //rotate tile based on if neighbor
             if(tile.upNeighbor != null && tile.upNeighbor.pathNumber == tile.pathNumber - 1)
             {
-                
+                //unused atm, found more optimzal way, this will remain here until I can verify 
             }
             else if(tile.downNeighbor != null && tile.downNeighbor.pathNumber == tile.pathNumber - 1)
             {
@@ -1037,22 +916,18 @@ public class LevelAssetSpawn : MonoBehaviour
                 rotation = new Vector3(tile.transform.localEulerAngles.x, 90, tile.transform.localEulerAngles.z);
             }
 
-
             preset = Instantiate(tileObj, tile.transform.position, tile.transform.rotation);
             
-
             preset.transform.parent = tile.transform.parent;
             preset.transform.localEulerAngles = rotation;
             tile.presetTile = preset;
             int tileIndex = myLocalLevel.presetTileAssets.IndexOf(myLocalLevel.presetObjectiveTiles[Random.Range(0, myLocalLevel.presetObjectiveTiles.Count)]);
-            //Debug.Log(tileIndex);
             assetCountArray[tileIndex] += 1;
             tile.presetNum = tileIndex;
             tile.levelAssetPlaced = true;
             endObjTile = preset;
-            
-
-            //Debug.Log("FINAL ROOM OBJECTIVE PLACED");
+          
+            //FINAL ROOM OBJECTIVE PLACED
         }
 
         //Check this tile for any possible locations of resources AND ENEMIES
@@ -1060,16 +935,9 @@ public class LevelAssetSpawn : MonoBehaviour
         //later we can go through as activate these resources (maybe look at how far each of is from other active ones to ensure mass distribution - no clusters of resources)
         if (preset.TryGetComponent<PresetTileInfo>(out PresetTileInfo mPresetTileInfo))
         {
-
-           // Debug.Log(preset.name);
             for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetItems.Length; posResourceCount++)
             {
-                //co++;
-               // Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                 _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
-               // mPresetTileInfo.possiblePresetItems[posResourceCount].GetComponent<PossibleItem>().itemIndex = _possibleItems.Count - 1;
-                //if (tile.tileStatus != Tile.TileStatus.startingRoom)
-                   // _possibleObjectives.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
             }
             for (int posEnemyCount = 0; posEnemyCount < mPresetTileInfo.enemiesOnPreset.Length; posEnemyCount++)
             {
@@ -1089,7 +957,6 @@ public class LevelAssetSpawn : MonoBehaviour
     /// <param name="bigTile"> The parent of the 4 linked tiles being analyzed and spawned on. </param>
     void SpawnLevelBigAsset(GameObject bigTile, bool hasObj, bool canSpawnMiniBoss)
     {
-        //Debug.Log("Spawned big boi");
         //will pick the least used preset but for now it will be random
         int index = Random.Range(0, myLocalLevel.presetBigTileAssets.Count);
         GameObject preset;
@@ -1110,32 +977,30 @@ public class LevelAssetSpawn : MonoBehaviour
             Debug.Log("BIG ASSET WITH OBJ");
         }
 
-
         //random rotation on tile set
-            int choice = Random.Range(1, 4);
-            //Debug.Log(choice);
+        int choice = Random.Range(1, 4);
 
-            switch (choice)
-            {
-                case 1:
-                    //local angle = 0
-                    preset.transform.localEulerAngles = new Vector3(0, 0, 0);
-                    break;
-                case 2:
-                    preset.transform.localEulerAngles = new Vector3(0, 90, 0);
-                    //local angle = 90
-                    break;
-                case 3:
-                    preset.transform.localEulerAngles = new Vector3(0, 180, 0);
-                    //local angle = 180;
-                    break;
-                case 4:
-                    preset.transform.localEulerAngles = new Vector3(0, 270, 0);
-                    //local angle = 270;
-                    break;
-                default:
-                    break;
-            }
+        switch (choice)
+        {
+            case 1:
+                //local angle = 0
+                preset.transform.localEulerAngles = new Vector3(0, 0, 0);
+                break;
+            case 2:
+                preset.transform.localEulerAngles = new Vector3(0, 90, 0);
+                //local angle = 90
+                break;
+            case 3:
+                preset.transform.localEulerAngles = new Vector3(0, 180, 0);
+                //local angle = 180;
+                break;
+            case 4:
+                preset.transform.localEulerAngles = new Vector3(0, 270, 0);
+                //local angle = 270;
+                break;
+            default:
+                break;
+        }
 
         if (canSpawnMiniBoss)
         {
@@ -1154,12 +1019,7 @@ public class LevelAssetSpawn : MonoBehaviour
         {
             for (int posResourceCount = 0; posResourceCount < mPresetTileInfo.possiblePresetItems.Length; posResourceCount++)
             {
-                //co++;
-                //Debug.Log(co + " " + mPresetTileInfo.possiblePresetItems[posResourceCount].name);
                 _possibleItems.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
-               // mPresetTileInfo.possiblePresetItems[posResourceCount].GetComponent<PossibleItem>().itemIndex = _possibleItems.Count;
-                //if()
-                //_possibleObjectives.Add(mPresetTileInfo.possiblePresetItems[posResourceCount]);
             }
             for(int posEnemyCount = 0; posEnemyCount < mPresetTileInfo.enemiesOnPreset.Length; posEnemyCount++)
             {
@@ -1171,10 +1031,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 _possibleObjectives.Add(mPresetTileInfo.objectiveSpawn);
             }
         }
-
-
     }
-
 
     /// <summary>
     /// Finds the least popular asset or if there are multiple assets at the same number, choose a random one
@@ -1194,9 +1051,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 if (assetCountArray[c] == firstNumCount)
                 {
                     temp.Add(c);
-
                 }
-
             }
             _magAssetCount.Add(temp);
         }
@@ -1206,10 +1061,6 @@ public class LevelAssetSpawn : MonoBehaviour
         {
             if(_magAssetCount[listFinder].Count != 0)
             {
-               // for(int test = 0; test < _magAssetCount[listFinder].Count; test++)
-               // {
-                //    Debug.Log(_magAssetCount[listFinder][test]);
-                //}
                 int ranIndex = Random.Range(0, _magAssetCount[listFinder].Count);
                 return _magAssetCount[listFinder][ranIndex];
             }
@@ -1218,12 +1069,13 @@ public class LevelAssetSpawn : MonoBehaviour
         return 0;//Random.Range(0, myLevelAsset.presetTileAssets.Count);
     }
 
+    //=============================================================================================================
+    //=============================================================================================================
     #endregion
 
     //reshuffle list
     List<GameObject> reshuffle(List<GameObject> ar)
     {
-        // Knuth shuffle algorithm :: courtesy of Wikipedia :)
         for (int t = 0; t < ar.Count; t++)
         {
             GameObject tmp = ar[t];
@@ -1235,7 +1087,8 @@ public class LevelAssetSpawn : MonoBehaviour
     }
 
     #region Items
-    
+    //=============================================================================================================
+    //=============================================================================================================
     void ActivateLevelKey()
     {
         int keyInt = Random.Range(0, _possibleItems.Count);
@@ -1249,13 +1102,11 @@ public class LevelAssetSpawn : MonoBehaviour
         _possibleItems.RemoveAt(keyInt);
         _possibleObjectives.Remove(tempToDelete);
         Destroy(tempToDelete);
-       // Destroy(_possibleItems[keyInt]);
         itemsInLevelList.Add(keyObj);
     }
 
     void ActivateItems()
     {
-
         //shuffle _possibleItems
         _possibleItems = reshuffle(_possibleItems);
 
@@ -1287,270 +1138,201 @@ public class LevelAssetSpawn : MonoBehaviour
         //adds 30 to item
         //adds 30 to resoruce
         int pItemC;
-        for(pItemC = 0; pItemC < _possibleItems.Count && pItemC < collectables; pItemC++)
+        for (pItemC = 0; pItemC < _possibleItems.Count && pItemC < collectables; pItemC++)
         {
-          //  if (_possibleItems[pItemC].TryGetComponent<PossibleItem>(out PossibleItem mPossibleItem))
-           // {
-                if (_possibleItems[pItemC].GetComponent<PossibleItem>().inUse)
-                {
-                    Debug.Log("dont use me lol");
-                }
-                switch (_possibleItems[pItemC].GetComponent<PossibleItem>().objectWeight)
-                {
-                    case ObjectWeightType.None:
-                        //randomly picks one of three types
-                        //default %
-                        if (Random.value > 0.80)
+            if (_possibleItems[pItemC].GetComponent<PossibleItem>().inUse)
+            {
+                Debug.Log("dont use me lol");
+            }
+            switch (_possibleItems[pItemC].GetComponent<PossibleItem>().objectWeight)
+            {
+                case ObjectWeightType.None:
+                    //randomly picks one of three types
+                    //default %
+                    if (Random.value > 0.80)
+                    {
+                        //15% for weapon
+                        int wIndex = Random.Range(0, myLevelAsset.weaponList.Count);
+                        GameObject weaponD = Instantiate(myLevelAsset.emptyObj, _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);
+                        weaponD.GetComponent<WorldItem>().worldItemData = myLevelAsset.weaponDataList[wIndex];
+                        //GameObject weapon = Instantiate(myLevelAsset.weaponList[wIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
+                        weaponD.transform.parent = _possibleItems[pItemC].transform.parent;
+                        Destroy(_possibleItems[pItemC]);
+                        weaponsInLevelList.Add(weaponD);
+                    }
+                    else if (Random.value > 0.7)
+                    {
+                        //35% for item
+                        int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
+                        if (iIndex != myLevelAsset.itemList.Count - 1)
                         {
-                            //15% for weapon
-                            //Debug.Log("15");
-                            int wIndex = Random.Range(0, myLevelAsset.weaponList.Count);
-                            GameObject weaponD = Instantiate(myLevelAsset.emptyObj, _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);
-                            weaponD.GetComponent<WorldItem>().worldItemData = myLevelAsset.weaponDataList[wIndex];
-
-                            //GameObject weapon = Instantiate(myLevelAsset.weaponList[wIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
-                            weaponD.transform.parent = _possibleItems[pItemC].transform.parent;
-                            Destroy(_possibleItems[pItemC]);
-                            weaponsInLevelList.Add(weaponD);
-                        }
-                        else if (Random.value > 0.7)
-                        {
-                            //35% for item
-                            //Debug.Log("45");
-                            int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
-                            if (iIndex != myLevelAsset.itemList.Count - 1)
-                            {
-                                GameObject itemD = Instantiate(myLevelAsset.emptyObj, _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);
-                                itemD.GetComponent<WorldItem>().worldItemData = myLevelAsset.itemDataList[iIndex];
-                                itemD.transform.parent = _possibleItems[pItemC].transform.parent;
-                                itemsInLevelList.Add(itemD);
-                            }
-                            else
-                            {
-                                GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
-                                item.transform.parent = _possibleItems[pItemC].transform.parent;
-                                itemsInLevelList.Add(item);
-                            }
-                            Destroy(_possibleItems[pItemC]);
-
-                        }
-                        else // if(Random.value > 0.6)
-                        {
-                            //50% chance its a resource
-                            //Debug.Log("40");
-                            int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
-                            GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
-                            resource.transform.parent = _possibleItems[pItemC].transform.parent;
-                            Destroy(_possibleItems[pItemC]);
-                            resourcesInLevelList.Add(resource);
-                        }
-                        break;
-                    case ObjectWeightType.Weapon:
-                        //weapon = 45
-                        //resource = 45
-                        //item = 10
-                        if (Random.value > 0.55)
-                        {
-                            int wIndex = Random.Range(0, myLevelAsset.weaponList.Count);
-                            GameObject weaponD = Instantiate(myLevelAsset.emptyObj, _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);
-                            weaponD.GetComponent<WorldItem>().worldItemData = myLevelAsset.weaponDataList[wIndex];
-
-                            //GameObject weapon = Instantiate(myLevelAsset.weaponList[wIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
-                            weaponD.transform.parent = _possibleItems[pItemC].transform.parent;
-                            Destroy(_possibleItems[pItemC]);
-                            weaponsInLevelList.Add(weaponD);
-                        }
-                        else if (Random.value > 0.55)
-                        {
-                            int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
-                            GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);// _possibleItems[pItemC].transform.rotation);
-                            resource.transform.parent = _possibleItems[pItemC].transform.parent;
-                            Destroy(_possibleItems[pItemC]);
-                            resourcesInLevelList.Add(resource);
-
-                        }
-                        else // if (Random.value > 0.80)
-                        {
-                            int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
-                            if (iIndex != myLevelAsset.itemList.Count - 1)
-                            {
-                                GameObject itemD = Instantiate(myLevelAsset.emptyObj, _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);
-                                itemD.GetComponent<WorldItem>().worldItemData = myLevelAsset.itemDataList[iIndex];
-                                itemD.transform.parent = _possibleItems[pItemC].transform.parent;
-                                itemsInLevelList.Add(itemD);
-                            }
-                            else
-                            {
-                                GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
-                                item.transform.parent = _possibleItems[pItemC].transform.parent;
-                                itemsInLevelList.Add(item);
-                            }
-                            Destroy(_possibleItems[pItemC]);
-                        }
-                        break;
-                    case ObjectWeightType.Item:
-                        //item = 55
-                        //resource = 35
-                        //weapon = 10
-                        if (Random.value > 0.45)
-                        {
-                            int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
-                            if (iIndex != myLevelAsset.itemList.Count - 1)
-                            {
-                                GameObject itemD = Instantiate(myLevelAsset.emptyObj, _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);
-                                itemD.GetComponent<WorldItem>().worldItemData = myLevelAsset.itemDataList[iIndex];
-                                itemD.transform.parent = _possibleItems[pItemC].transform.parent;
-                                itemsInLevelList.Add(itemD);
-                            }
-                            else
-                            {
-                                GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
-                                item.transform.parent = _possibleItems[pItemC].transform.parent;
-                                itemsInLevelList.Add(item);
-                            }
-                            Destroy(_possibleItems[pItemC]);
-                        }
-                        else if (Random.value > 0.65)
-                        {
-                            int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
-                            GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
-                            resource.transform.parent = _possibleItems[pItemC].transform.parent;
-                            Destroy(_possibleItems[pItemC]);
-                            resourcesInLevelList.Add(resource);
+                            GameObject itemD = Instantiate(myLevelAsset.emptyObj, _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);
+                            itemD.GetComponent<WorldItem>().worldItemData = myLevelAsset.itemDataList[iIndex];
+                            itemD.transform.parent = _possibleItems[pItemC].transform.parent;
+                            itemsInLevelList.Add(itemD);
                         }
                         else
                         {
-                            int wIndex = Random.Range(0, myLevelAsset.weaponList.Count);
-                            GameObject weaponD = Instantiate(myLevelAsset.emptyObj, _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);
-                            weaponD.GetComponent<WorldItem>().worldItemData = myLevelAsset.weaponDataList[wIndex];
+                            GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
+                            item.transform.parent = _possibleItems[pItemC].transform.parent;
+                            itemsInLevelList.Add(item);
+                        }
+                        Destroy(_possibleItems[pItemC]);
 
-                            //GameObject weapon = Instantiate(myLevelAsset.weaponList[wIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
-                            weaponD.transform.parent = _possibleItems[pItemC].transform.parent;
-                            Destroy(_possibleItems[pItemC]);
-                            weaponsInLevelList.Add(weaponD);
-                        }
-                        break;
-                    case ObjectWeightType.Resource:
-                        //resource = 80
-                        //item = 30
-                        //weapon = 10
-                        if (Random.value > 0.20)
+                    }
+                    else // if(Random.value > 0.6)
+                    {
+                        //50% chance its a resource
+                        int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
+                        GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
+                        resource.transform.parent = _possibleItems[pItemC].transform.parent;
+                        Destroy(_possibleItems[pItemC]);
+                        resourcesInLevelList.Add(resource);
+                    }
+                    break;
+                case ObjectWeightType.Weapon:
+                    //weapon = 45
+                    //resource = 45
+                    //item = 10
+                    if (Random.value > 0.55)
+                    {
+                        int wIndex = Random.Range(0, myLevelAsset.weaponList.Count);
+                        GameObject weaponD = Instantiate(myLevelAsset.emptyObj, _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);
+                        weaponD.GetComponent<WorldItem>().worldItemData = myLevelAsset.weaponDataList[wIndex];
+
+                        //GameObject weapon = Instantiate(myLevelAsset.weaponList[wIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
+                        weaponD.transform.parent = _possibleItems[pItemC].transform.parent;
+                        Destroy(_possibleItems[pItemC]);
+                        weaponsInLevelList.Add(weaponD);
+                    }
+                    else if (Random.value > 0.55)
+                    {
+                        int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
+                        GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);// _possibleItems[pItemC].transform.rotation);
+                        resource.transform.parent = _possibleItems[pItemC].transform.parent;
+                        Destroy(_possibleItems[pItemC]);
+                        resourcesInLevelList.Add(resource);
+                    }
+                    else // if (Random.value > 0.80)
+                    {
+                        int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
+                        if (iIndex != myLevelAsset.itemList.Count - 1)
                         {
-                            int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
-                            GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
-                            resource.transform.parent = _possibleItems[pItemC].transform.parent;
-                            Destroy(_possibleItems[pItemC]);
-                            resourcesInLevelList.Add(resource);
-                        }
-                        else if (Random.value > 0.60)
-                        {
-                            int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
-                            if (iIndex != myLevelAsset.itemList.Count - 1)
-                            {
-                                GameObject itemD = Instantiate(myLevelAsset.emptyObj, _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);
-                                itemD.GetComponent<WorldItem>().worldItemData = myLevelAsset.itemDataList[iIndex];
-                                itemD.transform.parent = _possibleItems[pItemC].transform.parent;
-                                itemsInLevelList.Add(itemD);
-                            }
-                            else
-                            {
-                                GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
-                                item.transform.parent = _possibleItems[pItemC].transform.parent;
-                                itemsInLevelList.Add(item);
-                            }
-                            Destroy(_possibleItems[pItemC]);
+                            GameObject itemD = Instantiate(myLevelAsset.emptyObj, _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);
+                            itemD.GetComponent<WorldItem>().worldItemData = myLevelAsset.itemDataList[iIndex];
+                            itemD.transform.parent = _possibleItems[pItemC].transform.parent;
+                            itemsInLevelList.Add(itemD);
                         }
                         else
                         {
-                            int wIndex = Random.Range(0, myLevelAsset.weaponList.Count);
-                            GameObject weaponD = Instantiate(myLevelAsset.emptyObj, _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);
-                            weaponD.GetComponent<WorldItem>().worldItemData = myLevelAsset.weaponDataList[wIndex];
-
-                            //GameObject weapon = Instantiate(myLevelAsset.weaponList[wIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
-                            weaponD.transform.parent = _possibleItems[pItemC].transform.parent;
-                            Destroy(_possibleItems[pItemC]);
-                            weaponsInLevelList.Add(weaponD);
+                            GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
+                            item.transform.parent = _possibleItems[pItemC].transform.parent;
+                            itemsInLevelList.Add(item);
                         }
-                        break;
-                    default:
-                        break;
-                }
-                Destroy(_possibleItems[pItemC]);
-           // }
+                        Destroy(_possibleItems[pItemC]);
+                    }
+                    break;
+                case ObjectWeightType.Item:
+                    //item = 55
+                    //resource = 35
+                    //weapon = 10
+                    if (Random.value > 0.45)
+                    {
+                        int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
+                        if (iIndex != myLevelAsset.itemList.Count - 1)
+                        {
+                            GameObject itemD = Instantiate(myLevelAsset.emptyObj, _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);
+                            itemD.GetComponent<WorldItem>().worldItemData = myLevelAsset.itemDataList[iIndex];
+                            itemD.transform.parent = _possibleItems[pItemC].transform.parent;
+                            itemsInLevelList.Add(itemD);
+                        }
+                        else
+                        {
+                            GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
+                            item.transform.parent = _possibleItems[pItemC].transform.parent;
+                            itemsInLevelList.Add(item);
+                        }
+                        Destroy(_possibleItems[pItemC]);
+                    }
+                    else if (Random.value > 0.65)
+                    {
+                        int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
+                        GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
+                        resource.transform.parent = _possibleItems[pItemC].transform.parent;
+                        Destroy(_possibleItems[pItemC]);
+                        resourcesInLevelList.Add(resource);
+                    }
+                    else
+                    {
+                        int wIndex = Random.Range(0, myLevelAsset.weaponList.Count);
+                        GameObject weaponD = Instantiate(myLevelAsset.emptyObj, _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);
+                        weaponD.GetComponent<WorldItem>().worldItemData = myLevelAsset.weaponDataList[wIndex];
+
+                        //GameObject weapon = Instantiate(myLevelAsset.weaponList[wIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
+                        weaponD.transform.parent = _possibleItems[pItemC].transform.parent;
+                        Destroy(_possibleItems[pItemC]);
+                        weaponsInLevelList.Add(weaponD);
+                    }
+                    break;
+                case ObjectWeightType.Resource:
+                    //resource = 80
+                    //item = 30
+                    //weapon = 10
+                    if (Random.value > 0.20)
+                    {
+                        int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
+                        GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
+                        resource.transform.parent = _possibleItems[pItemC].transform.parent;
+                        Destroy(_possibleItems[pItemC]);
+                        resourcesInLevelList.Add(resource);
+                    }
+                    else if (Random.value > 0.60)
+                    {
+                        int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
+                        if (iIndex != myLevelAsset.itemList.Count - 1)
+                        {
+                            GameObject itemD = Instantiate(myLevelAsset.emptyObj, _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);
+                            itemD.GetComponent<WorldItem>().worldItemData = myLevelAsset.itemDataList[iIndex];
+                            itemD.transform.parent = _possibleItems[pItemC].transform.parent;
+                            itemsInLevelList.Add(itemD);
+                        }
+                        else
+                        {
+                            GameObject item = Instantiate(myLevelAsset.itemList[iIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
+                            item.transform.parent = _possibleItems[pItemC].transform.parent;
+                            itemsInLevelList.Add(item);
+                        }
+                        Destroy(_possibleItems[pItemC]);
+                    }
+                    else
+                    {
+                        int wIndex = Random.Range(0, myLevelAsset.weaponList.Count);
+                        GameObject weaponD = Instantiate(myLevelAsset.emptyObj, _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);
+                        weaponD.GetComponent<WorldItem>().worldItemData = myLevelAsset.weaponDataList[wIndex];
+
+                        //GameObject weapon = Instantiate(myLevelAsset.weaponList[wIndex], _possibleItems[pItemC].transform.position, playerSpawn.transform.rotation);//_possibleItems[pItemC].transform.rotation);
+                        weaponD.transform.parent = _possibleItems[pItemC].transform.parent;
+                        Destroy(_possibleItems[pItemC]);
+                        weaponsInLevelList.Add(weaponD);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            Destroy(_possibleItems[pItemC]);
         }
-        //Debug.Log("Removing unused drops");
-        for(int lastItems = pItemC; lastItems < _possibleItems.Count; lastItems++)
+        for (int lastItems = pItemC; lastItems < _possibleItems.Count; lastItems++)
         {
-            //Debug.Log("Destroying " + _possibleItems[lastItems].name);
             _possibleObjectives.Remove(_possibleItems[lastItems]);
             Destroy(_possibleItems[lastItems]);
         }
         //resources can either spawn at random or based on distance from any other existing resource
         //when activated that gameobject will be removed from the possibleResources and added to resourcesInLevel List
         //when item is activated can either be a weapon, resource or other item
-        //Debug.Log(pItemC);
     }
 
-    /// <summary>
-    /// NOT IN USE
-    /// - Randomly picked objs to be items, resources, weapon
-    /// </summary>
-    /// //get these values from scriptable obj. Total amount we spawn in (will replace theses)
-    int _weaponsInLevel = 1;
-    int _itemsInLevel = 4;
-    int __resourcesInLevel = 10;
-    void oldS()
-    {
-        //first spawn in X amount of weapons
-        for (int weaponCount = 0; weaponCount < _weaponsInLevel; weaponCount++)
-        {
-            if (_possibleItems.Count != 0)
-            {
-                int index = Random.Range(0, _possibleItems.Count);
-                GameObject weaponTemp = _possibleItems[index];
-                //spawn in actual weapon item prefab from scritable item
-                _possibleItems.RemoveAt(index);
-                int wIndex = Random.Range(0, myLevelAsset.weaponList.Count);
-                GameObject weapon = Instantiate(myLevelAsset.weaponList[wIndex], weaponTemp.transform.position, weaponTemp.transform.rotation);
-                weapon.transform.parent = weaponTemp.transform.parent;
-                Destroy(weaponTemp);
-                weaponsInLevelList.Add(weapon);
-            }
-        }
-
-        //then spawn in Y amount of items
-        for (int itemCount = 0; itemCount < _itemsInLevel; itemCount++)
-        {
-            if (_possibleItems.Count != 0)
-            {
-                int index = Random.Range(0, _possibleItems.Count);
-                GameObject itemTemp = _possibleItems[index];
-                _possibleItems.RemoveAt(index);
-                int iIndex = Random.Range(0, myLevelAsset.itemList.Count);
-                GameObject item = Instantiate(myLevelAsset.itemList[iIndex], itemTemp.transform.position, itemTemp.transform.rotation);
-                item.transform.parent = itemTemp.transform.parent;
-                Destroy(itemTemp);
-                itemsInLevelList.Add(item);
-            }
-        }
-
-
-        //then spawn in Z amount of resources
-        for (int resourceCount = 0; resourceCount < __resourcesInLevel; resourceCount++)
-        {
-            if (_possibleItems.Count != 0)
-            {
-                int index = Random.Range(0, _possibleItems.Count);
-                GameObject resourceTemp = _possibleItems[index];
-                _possibleItems.RemoveAt(index);
-                int rIndex = Random.Range(0, myLevelAsset.resourcesList.Count);
-                GameObject resource = Instantiate(myLevelAsset.resourcesList[rIndex], resourceTemp.transform.position, resourceTemp.transform.rotation);
-                resource.transform.parent = resourceTemp.transform.parent;
-                Destroy(resourceTemp);
-                resourcesInLevelList.Add(resource);
-            }
-        }
-    }
+    //=============================================================================================================
+    //=============================================================================================================
     #endregion
 
 
@@ -1559,18 +1341,12 @@ public class LevelAssetSpawn : MonoBehaviour
     void ActivateEnemies()
     {
         _possibleEnemiesInLevel = reshuffle(_possibleEnemiesInLevel);
-
-        //Debug.Log(possibleminiBossCount);
         if(possibleminiBossCount < _miniBossCap)
         {
-            //Debug.Log("added miniboss");
             int enemyIndex = Random.Range(0, _possibleEnemiesInLevel.Count);
             _possibleEnemiesInLevel[enemyIndex].GetComponent<PossibleEnemy>().canBeMiniBoss = true;
-            //_possibleEnemiesInLevel.RemoveAt(enemyIndex);
-            
         }
 
-        //Debug.Log(myLevelAsset.levelTier);
         switch (myLocalLevel.thisLevelTier)
         {
             case levelTier.level1:
@@ -1588,14 +1364,104 @@ public class LevelAssetSpawn : MonoBehaviour
             default:
                 break;
         }
-        //Debug.Log(enemyCount);
     }
+
     /// <summary>
     /// enemy spawning depends on tier
+    /// - each tier has differnt enemies
+    /// - each tier has differnt % spawn chance for each enemy
+    /// - each possible enemy has a predetermined type set
+    /// - runs through each possible enemy, determines who should spawn, and if this enemy type is a miniboss
+    /// - if a type doesnt spawn on that tier, sets a random lower difficult type
+    /// - mini bosses are 50 - 50 if there are mini spawns to spare
+    /// 
+    /// NOTE: This can also be better optimized, for future overhauls or adjustments
+    ///     - USE TEMPLATE FUNCTION FOR OVERHAUL OF THIS SYSTEM
+    ///     - having predetermined enemy types to read may still be more efficient (level designer gets to choose spawn rates, this just reads them)
+    /// 
+    /// TO DO: condence into one function, takes tier as param
+    /// 
     /// </summary>
-    void ActivateEnemiesTier1()
+
+    void ActivateEnemiesT(levelTier thisLevelTier)
     {
 
+        //set stats
+        switch (thisLevelTier)
+        {
+            case levelTier.level1:
+
+                break;
+            case levelTier.level2:
+
+                break;
+            case levelTier.level3:
+
+                break;
+            case levelTier.level4:
+
+                break;
+            default:
+                break;
+        }
+
+        for (enemyCount = 0; enemyCount < _possibleEnemiesInLevel.Count && tier1EnemyCap > enemyCount; enemyCount++)
+        {
+            if (_possibleEnemiesInLevel[enemyCount].TryGetComponent<PossibleEnemy>(out PossibleEnemy mPossibleEnemy))
+            {
+                GameObject enemy = myLevelAsset.enemyPrefab.dogEnemy;
+                int choice = 0;
+
+                switch (mPossibleEnemy.type)
+                {
+                    case EnemyWeightType.None:
+                        break;
+                    case EnemyWeightType.Outcast:
+                        break;
+                    case EnemyWeightType.Dog:
+                        break;
+                    case EnemyWeightType.Warden:
+                        break;
+                    case EnemyWeightType.Stalker:
+                        break;
+                    case EnemyWeightType.Splitter:
+                        break;
+                    case EnemyWeightType.Shadow:
+                        break;
+                    case EnemyWeightType.LostOne:
+                        break;
+                    case EnemyWeightType.Fugly:
+                        break;
+                    case EnemyWeightType.Dozer:
+                        break;
+                    default:
+                        break;
+                }
+
+
+
+                //spawn in this enemy
+                enemy = Instantiate(enemy, mPossibleEnemy.transform.position, mPossibleEnemy.transform.rotation);
+                enemiesInLevel.Add(enemy);
+                enemy.transform.parent = mPossibleEnemy.transform.parent;
+
+                Destroy(_possibleEnemiesInLevel[enemyCount]);
+                if (mPossibleEnemy.canBeMiniBoss)
+                {
+                    enemy.name += "_MINIBOSS";
+                    miniBossesInLevel.Add(enemy);
+                    currentMiniBossCount++;
+                }
+            }
+        }
+        for (int deleteCount = enemyCount; deleteCount < _possibleEnemiesInLevel.Count; deleteCount++)
+        {
+            Destroy(_possibleEnemiesInLevel[deleteCount]);
+        }
+    }
+
+    void ActivateEnemiesTier1()
+    {
         //each level has a range of enemies it spawns
         for(enemyCount = 0; enemyCount < _possibleEnemiesInLevel.Count && tier1EnemyCap > enemyCount; enemyCount++)
         {
@@ -1914,7 +1780,6 @@ public class LevelAssetSpawn : MonoBehaviour
                 Destroy(_possibleEnemiesInLevel[enemyCount]);
                 if (mPossibleEnemy.canBeMiniBoss)
                 {
-                    //Debug.Log("cehck");
                     enemy.name += "_MINIBOSS";
                     miniBossesInLevel.Add(enemy);
                     currentMiniBossCount++;
@@ -2426,24 +2291,4 @@ public class LevelAssetSpawn : MonoBehaviour
     }
 
     #endregion
-
-    //For Debuging whats in list - NOT IN USE
-    void ListDebugger()
-    {
-        for (int count = 0; count < _magAssetCount.Count; count++)
-        {
-
-            string tempS = "Spawned Tile: ";
-            for (int c2 = 0; c2 < _magAssetCount[count].Count; c2++)
-            {
-                tempS += _magAssetCount[count][c2];
-                tempS += " ";
-            }
-            tempS += " At a Count of: " + count.ToString();
-            Debug.Log(tempS);
-        }
-
-
-    }
-
 }

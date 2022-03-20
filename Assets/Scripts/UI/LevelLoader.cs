@@ -5,20 +5,16 @@ using UnityEngine.SceneManagement;
 
 public class LevelLoader : MonoBehaviour
 {
+    /// <summary>
+    /// Level Loader
+    /// Dylan Loe
+    /// 
+    /// Last Updated: 4/25/21
+    /// 
+    /// - handles changing of levels system
+    /// - always keeps an instance present in each level
+    /// </summary>
     public static LevelLoader Instance;
-
-
-    // Update is called once per frame
-    //void Update()
-    //{
-    //    if (CombatSystem.Instance == null) return;
-
-    //    if (CombatSystem.Instance.state == BattleState.Won && loading == false)
-    //    {
-    //        Debug.Log("Level Won");
-    //        LoadNextLevel();
-    //    }
-    //}
 
     private void Awake()
     {
@@ -35,6 +31,4 @@ public class LevelLoader : MonoBehaviour
         PlayerPrefs.SetString("SelectedLevel", level);
         SceneManager.LoadScene("LoadingScreen");
     }
-
-
 }

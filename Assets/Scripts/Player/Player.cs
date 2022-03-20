@@ -8,9 +8,17 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
+    /// <summary>
+    /// Player Script
+    /// Jeremy Castada
+    /// 
+    /// Last Updated: 4/27/21
+    /// 
+    /// Notes:
+    ///  - handles player crafting and player movement
+    /// </summary>
     public static Player Instance;
     public float PlayerCamRot;
-
 
     int layerMask = ~(1 <<18);
 

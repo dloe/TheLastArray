@@ -4,8 +4,16 @@ using UnityEngine;
 
 public class DoorBehavior : MonoBehaviour
 {
-    //when activated, it will not spawn any blockage possibly pick different variants of doors or entryways
-    //otherwise player cannot go through this way so it will spawn walls or something to stop them from progressing
+    /// <summary>
+    /// Door Behavior Scrit
+    /// Dylaan Loe
+    /// 
+    /// Last Udpated: 4/20/21
+    /// 
+    ///     - when activated, it will not spawn any blockage possibly pick different variants of doors or entryways
+    ///     - otherwise player cannot go through this way so it will spawn walls or something to stop them from progressing
+    /// </summary>
+
     public bool isDoor = true;
     public int num;
     public bool replaceme = false;
@@ -13,8 +21,6 @@ public class DoorBehavior : MonoBehaviour
     public bool notInUse = false;
     public void ActivateDoor(bool isActive)
     {
-        
-        //Debug.Log("activated door");
         isDoor = isActive;
         
         if (isActive)
@@ -27,7 +33,6 @@ public class DoorBehavior : MonoBehaviour
         else
         {
             notInUse = true;
-           // Debug.Log("Destroyed door " + this.name);
             Destroy(this.gameObject);
         }
     }
@@ -35,26 +40,24 @@ public class DoorBehavior : MonoBehaviour
     //if an active door already exists in this spot, destroy this door
     public void CheckForReplacementDoor()
     {
-        //Debug.Log(this.name + " Checking for replacements");
         Transform[] _possibleDoors = collidersToTransforms(Physics.OverlapSphere(transform.position, 2.5f));
         foreach (Transform potentialTarget in _possibleDoors)
         {
-            //Debug.Log(this.name + "---pt: " + potentialTarget.name);
             if (potentialTarget.gameObject.tag == "Door")
             {
                 //replace this door in the tile with the door that already exists
                 //WIP
                 notInUse = true;
-                //Debug.Log(this.name + " Destroyed door because of preexisting door " + potentialTarget.gameObject.name);
                 Destroy(this.gameObject);
             }
         }
     }
 
+    //for debug purposes, temporary unused
     private void OnDrawGizmos()
     {
-     //   Gizmos.color = Color.red;
-       // Gizmos.DrawSphere(transform.position, 5);
+        //Gizmos.color = Color.red;
+        // Gizmos.DrawSphere(transform.position, 5);
     }
 
     //locate transforms from colliders found in sphere

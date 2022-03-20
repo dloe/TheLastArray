@@ -6,7 +6,6 @@ using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
 
-
 public enum AmmoType
 {
     LightAmmo,
@@ -26,10 +25,11 @@ public enum ItemType
 [Serializable][CreateAssetMenu]
 public class ItemData : ScriptableObject
 {
-
-
-
-
+    /// <summary>
+    /// Item Data Scriptaable Object
+    /// 
+    /// 
+    /// </summary>
 
     public Sprite itemSprite;
     public ItemType itemType;
@@ -57,13 +57,11 @@ public class ItemData : ScriptableObject
             _FireAmmo = value;
             if(_FireAmmo == 0)
             {
-                
                 InventoryUI.Instance.StartCoroutine(FireToNormal());
             }
         }
         
     }
-
 
     public int amountToHeal = 1;
     public int healthDecrease = 5;
@@ -73,7 +71,6 @@ public class ItemData : ScriptableObject
     public bool reloading = false;
     public bool hasLaserSight = false;
     public bool usingFireBullets = false;
-
 
     public IEnumerator CoolDown()
     {
