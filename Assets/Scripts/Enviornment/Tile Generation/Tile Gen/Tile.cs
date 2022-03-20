@@ -7,6 +7,18 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
+    /// <summary>
+    /// Tile Script
+    /// Dylan Loe
+    /// 
+    /// Last Updated: 5/8/2021
+    /// 
+    /// NOTES:
+    /// - Holds info for each tile (to be referenced heavily by TileGeneration
+    /// - runs through a check to help prefent duplicated linked doors
+    /// - Door system is only active in lvl 4 (final level), every other level simply just has to spawn in the walls
+    /// 
+    /// </summary>
     public enum TileStatus
     {
         nullRoom,
@@ -30,8 +42,6 @@ public class Tile : MonoBehaviour
     public MapType mapType;
 
     //Each tile has a path to its neighbors
-    // public int x;
-    //public int y;
     [Space(5)]
     public Vector2 posOnGrid;
 
@@ -44,17 +54,17 @@ public class Tile : MonoBehaviour
     public Tile leftNeighbor;
     public Tile rightNeighbor;
 
-    //[HideInInspector]
+    [HideInInspector]
     //last tile in path or branch
     public Tile previousTile;
-    //[HideInInspector]
+    [HideInInspector]
     //has been checked in tile system 
     public bool checkedForPath = false;
-    //[HideInInspector]
+    [HideInInspector]
     //tile exists on path itself
     public bool partOfPath = false;
 
-    //[HideInInspector]
+    [HideInInspector]
     //what number does this tile have on path (-1 means not on path)
     public int pathNumber = -1;
     public bool endOfBranchPath = false;
@@ -101,7 +111,6 @@ public class Tile : MonoBehaviour
         SetStandableMat();
         if(!hasDoors)
         {
-            
             foreach (GameObject door in doors)
             {
                 Destroy(door);
@@ -159,7 +168,6 @@ public class Tile : MonoBehaviour
     //establish this tile as being the starting tile
     public void ShadeStarting()
     {
-        //Debug.Log(posOnGrid.x + " " + posOnGrid.y);
         _nodeColor = Color.blue;
         tileStatus = Tile.TileStatus.startingRoom;
     }
@@ -176,19 +184,13 @@ public class Tile : MonoBehaviour
         {
             doors[i].name = doors[i].name + "-" + posOnGrid.x + "-" + posOnGrid.y;
         }
-        
-
-        
     }
 
     //if a neighbor is null, add a wall - specifically for tiles next to null spaces
     public void ActivateWalls()
     {
-        //Debug.Log("Turning on side walls");
-        //Debug.Log(posOnGrid.x + " " + posOnGrid.y);
         if(upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom)
         {
-            //Debug.Log("up");
             //tile length / 2 
             //spawn at local pos -25, 10, 0 with rotation of -90, 0, -90
             GameObject wall = Instantiate(myLevelAssetData.levelWall, transform.position, transform.rotation);
@@ -200,7 +202,6 @@ public class Tile : MonoBehaviour
         }
         if(downNeighbor == null || downNeighbor.tileStatus == TileStatus.nullRoom)
         {
-           // Debug.Log("down");
             //spawn at local pos 25, 10, 0 with rotation of -90, 0, 90
             GameObject wall = Instantiate(myLevelAssetData.levelWall, transform.position, transform.rotation);
             wall.transform.parent = this.transform;
@@ -211,7 +212,6 @@ public class Tile : MonoBehaviour
         }
         if(leftNeighbor == null || leftNeighbor.tileStatus == TileStatus.nullRoom)
         {
-            //Debug.Log("left");
             //spawn at local pos 0, 10, 25 with rotation of -90, 0, -180
             GameObject wall = Instantiate(myLevelAssetData.levelWall, transform.position, transform.rotation);
             wall.transform.parent = this.transform;
@@ -222,7 +222,6 @@ public class Tile : MonoBehaviour
         }
         if(rightNeighbor == null || rightNeighbor.tileStatus == TileStatus.nullRoom)
         {
-            //Debug.Log("right");
             //spawn at local pos 0, 10, -25 with rotation of -90, 0, 0
             GameObject wall = Instantiate(myLevelAssetData.levelWall, transform.position, transform.rotation);
             wall.transform.parent = this.transform;
@@ -231,8 +230,6 @@ public class Tile : MonoBehaviour
             if(hasDoors)
                 doors[3] = wall;
         }
-
-
     }
 
     private void OnDrawGizmos()
@@ -244,7 +241,6 @@ public class Tile : MonoBehaviour
 
     int[] reshuffle(int[] ar)
     {
-        // Knuth shuffle algorithm :: courtesy of Wikipedia :)
         for (int t = 0; t < ar.Length; t++)
         {
             int tmp = ar[t];
@@ -270,8 +266,6 @@ public class Tile : MonoBehaviour
     /// ---------------------------------------------------------------------------------
     /// IN LVL 4
     /// --------------------------------------------------------------------------------
-    /// 
-    /// 
     /// </summary>
     public void ChooseTileMap()
     {
@@ -409,46 +403,36 @@ public class Tile : MonoBehaviour
 
     public void SyncDoors()
     {
-        //    if (hasDoors)
-        //    {
-        //Debug.Log(this.name);
-            for (int doorC = 0; doorC < 4; doorC++)
-            {
-                if (doors[doorC].TryGetComponent<DoorBehavior>(out DoorBehavior mDoor))
-                    mDoor.GetComponent<DoorBehavior>().CheckForReplacementDoor();
-            }
-    //    }
+        for (int doorC = 0; doorC < 4; doorC++)
+        {
+            if (doors[doorC].TryGetComponent<DoorBehavior>(out DoorBehavior mDoor))
+                mDoor.GetComponent<DoorBehavior>().CheckForReplacementDoor();
+        }
 
         //each door is resting on two tiles, this tile and its neighbor
         //if element 0 on doors in not null then there is a door between this tile and up neighbor. set element 1 of up neighbor to equal this tiles element 0
         if (doors[0] != null && upNeighbor != null && doors[0].GetComponent<DoorBehavior>().isDoor && !upNeighbor.doors[1].GetComponent<DoorBehavior>().isDoor)
-            {
-               // Debug.Log("Checking up neighbor");
-                upNeighbor.doors[1] = doors[0];
-            }
+        {
+            upNeighbor.doors[1] = doors[0];
+        }
 
         //if element 1 on doors in not null then there is a door between this tile and down neighbor. set element 0 of down neighbor to equal this tiles element 1
-            if (doors[1] != null && downNeighbor != null && doors[1].GetComponent<DoorBehavior>().isDoor && !downNeighbor.doors[0].GetComponent<DoorBehavior>().isDoor)
-            {
-               // Debug.Log("Checking down neighbor");
-                //Debug.Log(doors[1].name);
-                downNeighbor.doors[0] = doors[1];
-            }
+        if (doors[1] != null && downNeighbor != null && doors[1].GetComponent<DoorBehavior>().isDoor && !downNeighbor.doors[0].GetComponent<DoorBehavior>().isDoor)
+        {
+            downNeighbor.doors[0] = doors[1];
+        }
 
         //if element 2 on doors in not null then there is a door between this tile and left neighbor. set element 3 of left neighbor to equal this tiles element 2
-            if (doors[2] != null && leftNeighbor != null && doors[2].GetComponent<DoorBehavior>().isDoor && !leftNeighbor.doors[3].GetComponent<DoorBehavior>().isDoor)
-            {
-                //Debug.Log("Checking left neighbor");
-                leftNeighbor.doors[3] = doors[2];
-            }
+        if (doors[2] != null && leftNeighbor != null && doors[2].GetComponent<DoorBehavior>().isDoor && !leftNeighbor.doors[3].GetComponent<DoorBehavior>().isDoor)
+        {
+            leftNeighbor.doors[3] = doors[2];
+        }
 
         //if element 3 on doors in not null then there is a door between this tile and right neighbor. set element 2 of up neighbor to equal this tiles element 3
-            if (doors[3] != null && rightNeighbor != null && doors[3].GetComponent<DoorBehavior>().isDoor && !rightNeighbor.doors[2].GetComponent<DoorBehavior>().isDoor)
-            {
-               // Debug.Log("Checking right neighbor");
-                rightNeighbor.doors[2] = doors[3];
-            }
-
+        if (doors[3] != null && rightNeighbor != null && doors[3].GetComponent<DoorBehavior>().isDoor && !rightNeighbor.doors[2].GetComponent<DoorBehavior>().isDoor)
+        {
+            rightNeighbor.doors[2] = doors[3];
+        }
     }
 
     /// <summary>
@@ -456,7 +440,6 @@ public class Tile : MonoBehaviour
     /// </summary>
     public void ReSyncDoors()
     {
-        //Debug.Log(this.name);
         for (int doorC = 0; doorC < 4; doorC++)
         {
             if (doors[doorC].TryGetComponent<DoorBehavior>(out DoorBehavior mDoor))
@@ -467,26 +450,21 @@ public class Tile : MonoBehaviour
         //if element 0 on doors in not null then there and the second door been deleted
         if (doors[0] != null && upNeighbor != null && upNeighbor.doors[1] == null)
         {
-            // Debug.Log("Checking up neighbor");
             upNeighbor.doors[1] = doors[0];
         }
 
         if (doors[1] != null && downNeighbor != null && downNeighbor.doors[0] == null)
         {
-            // Debug.Log("Checking down neighbor");
-            //Debug.Log(doors[1].name);
             downNeighbor.doors[0] = doors[1];
         }
 
         if (doors[2] != null && leftNeighbor != null && leftNeighbor.doors[3] == null)
         {
-            //Debug.Log("Checking left neighbor");
             leftNeighbor.doors[3] = doors[2];
         }
 
         if (doors[3] != null && rightNeighbor != null && rightNeighbor.doors[2] == null)
         {
-            // Debug.Log("Checking right neighbor");
             rightNeighbor.doors[2] = doors[3];
         }
     }
@@ -503,18 +481,14 @@ public class Tile : MonoBehaviour
 
         for (int count = 0; count < 4; count++)
         {
-            // Debug.Log(count);
             //will see which of its neighbors are paths/or active
             switch (doorsToCheck[count])
             {
                 case 1:
-                    // Debug.Log(0);
                     //if any neighbor is boss room, or path, deactivate that door
                     if (upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom || upNeighbor.tileStatus == TileStatus.boss || upNeighbor.tileStatus == TileStatus.path)
                     {
-                        //Debug.Log("off");
                         doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
-                      //  doors[0] = null;
                     }
                     else
                     {
@@ -542,20 +516,15 @@ public class Tile : MonoBehaviour
                             else
                             {
                                 doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
-                               // doors[0] = null;
                             }
-
                         }
                     }
                     break;
                 case 2:
-                    // Debug.Log(1);
                     //if any neighbor is boss room, or path, deactivate that door
                     if (downNeighbor == null || downNeighbor.tileStatus == TileStatus.nullRoom || downNeighbor.tileStatus == TileStatus.boss || downNeighbor.tileStatus == TileStatus.path)
                     {
-                        //Debug.Log("off");
                         doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
-                       // doors[1] = null;
                     }
                     else
                     {
@@ -583,20 +552,15 @@ public class Tile : MonoBehaviour
                             else
                             {
                                 doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
-                               // doors[1] = null;
                             }
-
                         }
                     }
                     break;
                 case 3:
-                    // Debug.Log(2);
                     //if any neighbor is boss room, or path, deactivate that door
                     if (leftNeighbor == null || leftNeighbor.tileStatus == TileStatus.nullRoom || leftNeighbor.tileStatus == TileStatus.boss || leftNeighbor.tileStatus == TileStatus.path)
                     {
-                        //Debug.Log("off");
                         doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
-                       // doors[2] = null;
                     }
                     else
                     {
@@ -626,18 +590,14 @@ public class Tile : MonoBehaviour
                                 doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
                                // doors[2] = null;
                             }
-
                         }
                     }
                     break;
                 case 4:
-                    //  Debug.Log(3);
                     //if any neighbor is boss room, or path, deactivate that door
                     if (rightNeighbor == null || rightNeighbor.tileStatus == TileStatus.nullRoom || rightNeighbor.tileStatus == TileStatus.boss || rightNeighbor.tileStatus == TileStatus.path)
                     {
-                        //Debug.Log("off");
                         doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
-                       // doors[3] = null;
                     }
                     else
                     {
@@ -665,7 +625,6 @@ public class Tile : MonoBehaviour
                             else
                             {
                                 doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
-                               // doors[3] = null;
                             }
                         }
                     }
@@ -674,9 +633,7 @@ public class Tile : MonoBehaviour
                     break;
             }
         }
-
-        //Debug.Log("doors activated branch");
-
+        //doors are now activated branch
     }
 
     static private float linkToRoomMutliple_RandomRoom = 0.25f;
@@ -693,18 +650,14 @@ public class Tile : MonoBehaviour
 
         for (int count = 0; count < 4; count++)
         {
-            // Debug.Log(count);
             //will see which of its neighbors are paths/or active
             switch (doorsToCheck[count])
             {
                 case 1:
-                    // Debug.Log(0);
                     //if any neighbor is null, boss room, or path, deactivate that door
                     if (upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom || upNeighbor.tileStatus == TileStatus.boss)
                     {
-                        //Debug.Log("off");
                         doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
-                      //  doors[0] = null;
                     }
                     else
                     {
@@ -713,7 +666,6 @@ public class Tile : MonoBehaviour
                         {
                             if (activateGarantee == false)
                             {
-                                //Debug.Log("on");
                                 activateGarantee = true;
                                 doorsOn++;
                                 doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
@@ -721,28 +673,22 @@ public class Tile : MonoBehaviour
                             }
                             else if (Random.value < (float)linkToRoomMutliple_RandomRoom / doorsOn)
                             {
-                                //Debug.Log("on");
                                 doorsOn++;
                                 doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
                                 doorsActivated++;
                             }
                             else
                             {
-                                //Debug.Log("off");
                                 doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
-                              //  doors[0] = null;
                             }
                         }
                     }
                     break;
                 case 2:
-                    // Debug.Log(1);
                     //if any neighbor is null, boss room, or path, deactivate that door
                     if (downNeighbor == null || downNeighbor.tileStatus == TileStatus.nullRoom || downNeighbor.tileStatus == TileStatus.boss)
                     {
-                        //Debug.Log("off");
                         doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
-                       // doors[1] = null;
                     }
                     else
                     {
@@ -751,7 +697,6 @@ public class Tile : MonoBehaviour
                         {
                             if (activateGarantee == false)
                             {
-                                //Debug.Log("on");
                                 activateGarantee = true;
                                 doorsOn++;
                                 doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
@@ -759,16 +704,13 @@ public class Tile : MonoBehaviour
                             }
                             else if (Random.value < (float)linkToRoomMutliple_RandomRoom / doorsOn)
                             {
-                                //Debug.Log("on");
                                 doorsOn++;
                                 doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
                                 doorsActivated++;
                             }
                             else
                             {
-                                //Debug.Log("off");
                                 doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
-                               // doors[1] = null;
                             }
                         }
                     }
@@ -776,9 +718,7 @@ public class Tile : MonoBehaviour
                 case 3:
                     if (leftNeighbor == null || leftNeighbor.tileStatus == TileStatus.nullRoom || leftNeighbor.tileStatus == TileStatus.boss)
                     {
-                        //Debug.Log("off");
                         doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
-                      //  doors[2] = null;
                     }
                     else
                     {
@@ -787,7 +727,6 @@ public class Tile : MonoBehaviour
                         {
                             if (activateGarantee == false)
                             {
-                                //Debug.Log("on");
                                 activateGarantee = true;
                                 doorsOn++;
                                 doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
@@ -795,16 +734,13 @@ public class Tile : MonoBehaviour
                             }
                             else if (Random.value < (float)linkToRoomMutliple_RandomRoom / doorsOn)
                             {
-                                //Debug.Log("on");
                                 doorsOn++;
                                 doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
                                 doorsActivated++;
                             }
                             else
                             {
-                                //Debug.Log("off");
                                 doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
-                               // doors[2] = null;
                             }
                         }
                     }
@@ -812,9 +748,7 @@ public class Tile : MonoBehaviour
                 case 4:
                     if (rightNeighbor == null || rightNeighbor.tileStatus == TileStatus.nullRoom || rightNeighbor.tileStatus == TileStatus.boss)
                     {
-                        //Debug.Log("off");
                         doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
-                      //  doors[3] = null;
                     }
                     else
                     {
@@ -823,7 +757,6 @@ public class Tile : MonoBehaviour
                         {
                             if (activateGarantee == false)
                             {
-                                //Debug.Log("on");
                                 activateGarantee = true;
                                 doorsOn++;
                                 doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
@@ -831,16 +764,13 @@ public class Tile : MonoBehaviour
                             }
                             else if (Random.value < (float)linkToRoomMutliple_RandomRoom / doorsOn)
                             {
-                                //Debug.Log("on");
                                 doorsOn++;
                                 doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
                                 doorsActivated++;
                             }
                             else
                             {
-                                //Debug.Log("off");
                                 doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
-                               // doors[3] = null;
                             }
                         }
                     }
@@ -851,71 +781,54 @@ public class Tile : MonoBehaviour
         }
 
         doorsActivated = doorsOn;
-        //Debug.Log("doors activated random");
+        //doors activated via random
     }
 
     public void ActivateDoorToPath()
     {
-        //int totalDoors = 4;
-        // Debug.Log(posOnGrid.x + " " + posOnGrid.y);
         int[] doorsToCheck = new int[] { 1, 2, 3, 4 };
         doorsToCheck = reshuffle(doorsToCheck);
-
-        // doorsToCheck.
 
         //checks with neighbor is part of path and turn that door on (only if neighbor is starting room or path)
         for (int count = 0; count < 4; count++)
         {
-            // Debug.Log(count);
             switch (doorsToCheck[count])
             {
                 case 1:
-                    //Debug.Log(0);
                     //will see which of its neighbors are paths/or active
                     if (upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom || upNeighbor.tileStatus == TileStatus.boss || connectedToPath)
                     {
-                        //  Debug.Log("off");
                         doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
-                       // doors[0] = null;
                     }
                     else if (upNeighbor.tileStatus == TileStatus.path || upNeighbor.tileStatus == TileStatus.startingRoom)
                     {
-                        // Debug.Log("on");
                         doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
                         doorsActivated++;
                         connectedToPath = true;
-                        //Debug.Log(doors[0].name);
                     }
                     break;
                 case 2:
-                    // Debug.Log(1);
                     //dont want to add doors that create shortcuts through path
                     if (downNeighbor == null || downNeighbor.tileStatus == TileStatus.nullRoom || downNeighbor.tileStatus == TileStatus.boss || connectedToPath)
                     {
-                        // Debug.Log("off");
                         doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
                        // doors[1] = null;
                     }
                     else if ((downNeighbor.tileStatus == TileStatus.path || downNeighbor.tileStatus == TileStatus.startingRoom))
                     {
-                        // Debug.Log("on");
                         doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
                         doorsActivated++;
                         connectedToPath = true;
-                        //Debug.Log(doors[1].name);
                     }
                     break;
                 case 3:
-                    //Debug.Log(2);
                     if (leftNeighbor == null || leftNeighbor.tileStatus == TileStatus.nullRoom || leftNeighbor.tileStatus == TileStatus.boss || connectedToPath)
                     {
-                        // Debug.Log("off");
                         doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
                        // doors[2] = null;
                     }
                     else if (leftNeighbor.tileStatus == TileStatus.path || leftNeighbor.tileStatus == TileStatus.startingRoom)
                     {
-                        // Debug.Log("on");
                         doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
                         doorsActivated++;
                         connectedToPath = true;
@@ -923,53 +836,42 @@ public class Tile : MonoBehaviour
                     }
                     break;
                 case 4:
-                    //Debug.Log(3);
                     if (rightNeighbor == null || rightNeighbor.tileStatus == TileStatus.nullRoom || rightNeighbor.tileStatus == TileStatus.boss || connectedToPath)
                     {
-                        // Debug.Log("off");
                         doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
                         //doors[3] = null;
                     }
                     else if (rightNeighbor.tileStatus == TileStatus.path || rightNeighbor.tileStatus == TileStatus.startingRoom)
                     {
-                        //  Debug.Log("on");
-
-                        // Debug.Log("This number: " + pathNumber + " vs right n number: " + rightNeighbor.pathNumber);
                         doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
                         doorsActivated++;
                         connectedToPath = true;
-                        //Debug.Log(doors[3].name);
                     }
                     break;
                 default:
                     break;
             }
         }
-        //Debug.Log("doors activated path");
+        //doors activated via path
     }
 
     public void ActivateDoors()
     {
-        //Debug.Log(this.name);
         //will see which of its neighbors are paths/or active
         if ((upNeighbor == null || upNeighbor.tileStatus == TileStatus.nullRoom))
         {
-            //Debug.Log("off");
             doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
            // doors[0] = null;
         }
         else if ((upNeighbor.tileStatus == TileStatus.path || upNeighbor.tileStatus == TileStatus.room || upNeighbor.tileStatus == TileStatus.boss))
         {
-            //   Debug.Log("on");
             if (pathNumber + 1 == upNeighbor.pathNumber)
             {
-                // Debug.Log("This number: " + pathNumber + " vs up n number: " + upNeighbor.pathNumber);
                 doors[0].GetComponent<DoorBehavior>().ActivateDoor(true);
                 doorsActivated++;
             }
             else
             {
-                // Debug.Log("This number: " + pathNumber + " vs up n number: " + upNeighbor.pathNumber);
                 doors[0].GetComponent<DoorBehavior>().ActivateDoor(false);
                // doors[0] = null;
             }
@@ -985,22 +887,18 @@ public class Tile : MonoBehaviour
         //dont want to add doors that create shortcuts through path
         if ((downNeighbor == null || downNeighbor.tileStatus == TileStatus.nullRoom))
         {
-            // Debug.Log("off");
             doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
            // doors[1] = null;
         }
         else if ((downNeighbor.tileStatus == TileStatus.path || downNeighbor.tileStatus == TileStatus.room || downNeighbor.tileStatus == TileStatus.boss))
         {
-            // Debug.Log("on");
             if (pathNumber + 1 == downNeighbor.pathNumber)
             {
-                // Debug.Log("This number: " + pathNumber + " vs down n number: " + downNeighbor.pathNumber);
                 doors[1].GetComponent<DoorBehavior>().ActivateDoor(true);
                 doorsActivated++;
             }
             else
             {
-                // Debug.Log("This number: " + pathNumber + " vs down n number: " + downNeighbor.pathNumber);
                 doors[1].GetComponent<DoorBehavior>().ActivateDoor(false);
                // doors[1] = null;
             }
@@ -1015,22 +913,18 @@ public class Tile : MonoBehaviour
 
         if ((leftNeighbor == null || leftNeighbor.tileStatus == TileStatus.nullRoom))
         {
-            // Debug.Log("off");
             doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
            // doors[2] = null;
         }
         else if ((leftNeighbor.tileStatus == TileStatus.path || leftNeighbor.tileStatus == TileStatus.room || leftNeighbor.tileStatus == TileStatus.boss))
         {
-            //Debug.Log("on");
             if (pathNumber + 1 == leftNeighbor.pathNumber)
             {
-                // Debug.Log("This number: " + pathNumber + " vs left n number: " + leftNeighbor.pathNumber);
                 doors[2].GetComponent<DoorBehavior>().ActivateDoor(true);
                 doorsActivated++;
             }
             else
             {
-                // Debug.Log("This number: " + pathNumber + " vs left n number: " + leftNeighbor.pathNumber);
                 doors[2].GetComponent<DoorBehavior>().ActivateDoor(false);
                // doors[2] = null;
             }
@@ -1045,22 +939,18 @@ public class Tile : MonoBehaviour
 
         if ((rightNeighbor == null || rightNeighbor.tileStatus == TileStatus.nullRoom))
         {
-            // Debug.Log("off");
             doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
             //doors[3] = null;
         }
         else if ((rightNeighbor.tileStatus == TileStatus.path || rightNeighbor.tileStatus == TileStatus.room || rightNeighbor.tileStatus == TileStatus.boss))
         {
-            // Debug.Log("on");
             if (pathNumber + 1 == rightNeighbor.pathNumber)
             {
-                // Debug.Log("This number: " + pathNumber + " vs right n number: " + rightNeighbor.pathNumber);
                 doors[3].GetComponent<DoorBehavior>().ActivateDoor(true);
                 doorsActivated++;
             }
             else
             {
-                // Debug.Log("This number: " + pathNumber + " vs right n number: " + rightNeighbor.pathNumber);
                 doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
                 //doors[3] = null;
             }
@@ -1071,8 +961,6 @@ public class Tile : MonoBehaviour
             doors[3].GetComponent<DoorBehavior>().ActivateDoor(false);
             //doors[3] = null;
         }
-
-       // Debug.Log("Done " + this.name);
     }
 
     public void DeactivateDoors()
@@ -1080,7 +968,6 @@ public class Tile : MonoBehaviour
         foreach (GameObject door in doors)
         {
             door.GetComponent<DoorBehavior>().ActivateDoor(false);
-
         }
     }
     #endregion
@@ -1089,6 +976,10 @@ public class Tile : MonoBehaviour
 /// <summary>
 /// ---------------------------
 /// NOT IN USE
+/// - Intended to be used to color code Tiles during generation phase before tile assets were assigned
+/// - Red -- not in use
+/// - green -- in use, part of path to exit
+/// - blue -- in use, not necessarly part of path
 /// ---------------------------
 /// </summary>
 public class NodeRef : MonoBehaviour
@@ -1104,7 +995,7 @@ public class NodeRef : MonoBehaviour
     }
     public void ShadeActiveRoom()
     {
-        _nodeColor = Color.green;
+        _nodeColor = Color.blue;
     }
 
     private void OnDrawGizmos()
