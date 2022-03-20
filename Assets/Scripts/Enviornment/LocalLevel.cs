@@ -15,8 +15,20 @@ public enum levelTier
 public class LocalLevel : MonoBehaviour
 {
     /// <summary>
+    /// Local Level Script
+    /// Dylan Loe
+    /// 
+    /// Updated: 5/17/22
+    /// 
     /// REQURIES:
     ///     - a TileGen Prefab
+    /// Notes:
+    /// - keeps track of local level info
+    /// - handles scene transitions into level
+    /// - sets one of the objectvie types
+    /// - saves player info
+    /// - sets what type of tile assets we use
+    /// 
     /// </summary>
     public bool tempEndLevel = false;
     //holds objective info and game loop info
@@ -51,8 +63,6 @@ public class LocalLevel : MonoBehaviour
     //determines difficulty of level
     [Header("Tier of Level")]
     public levelTier thisLevelTier;
-    //public Text objectiveText;
-    //private int objectiveCountStart = 0;
     public static LocalLevel Instance;
 
     [Header("Starting Tile Prefabs")]
@@ -66,7 +76,6 @@ public class LocalLevel : MonoBehaviour
     [Header("Big Tile Prefabs with objectives")]
     public List<GameObject> presetBigObjectiveTiles;
     public GameObject presetStartingTile;
-
 
     private void Awake()
     {
@@ -83,10 +92,7 @@ public class LocalLevel : MonoBehaviour
         _myTileGen = FindObjectOfType<TileGeneration>();
         //number of objectives - REMOVED NUMBER 2 WILL READD LATER
         _posObjectives = new List<int> { 1, 2, 3 };
-        //LevelFadeIn();
-        //StartFadeIn();
         StartCoroutine(FadeIn());
-        //ChooseObjective();
     }
 
     private void Update()
@@ -115,11 +121,6 @@ public class LocalLevel : MonoBehaviour
     /// </summary>
     public void ChooseObjective()
     {
-        // Debug.Log("picking obj");
-
-
-        // objective = 2;
-        // return;
         if (thisLevelTier != levelTier.level4)
         {
             //picks objective - cant be the previous objective
@@ -127,18 +128,13 @@ public class LocalLevel : MonoBehaviour
             {
                 //randomly pick any
                 int rand = Random.Range(0, _posObjectives.Count);
-                //Debug.Log(_posObjectives.Count);
                 objective = _posObjectives[rand];
-
             }
             else
             {
                 //exclude previous obj index from choice
-                //Debug.Log(_posObjectives.Count);
-                //_posObjectives.RemoveAt(myPlayerData.previouslyCompletedObj);
                 _posObjectives.Remove(myPlayerData.previouslyCompletedObj);
                 _posObjectives = reshuffle(_posObjectives);
-                //Debug.Log(_posObjectives.Count);
                 objective = _posObjectives[Random.Range(0, _posObjectives.Count)];
             }
         }
@@ -147,15 +143,7 @@ public class LocalLevel : MonoBehaviour
             //final objective
             objective = 4;
         }
-        //_myObjs = FindObjectOfType<Objectives>();
-        //PlayerUIHolder myUIVARs = FindObjectOfType<PlayerUIHolder>();
-        //player = GameObject.Find("PlayerHolder");
-        //objectiveText = myUIVARs.objectiveText;
-        // objectiveText.text = objective.ToString();
-        //  transBar = myUIVARs.panel;
         myPlayerData.previouslyCompletedObj = objective;
-
-        //Debug.Log("Picked Objective: " + objective);
     }
 
     public void LevelBeat()
@@ -191,7 +179,6 @@ public class LocalLevel : MonoBehaviour
     //reshuffle list
     List<int> reshuffle(List<int> ar)
     {
-        // Knuth shuffle algorithm :: courtesy of Wikipedia :)
         for (int t = 0; t < ar.Count; t++)
         {
             int tmp = ar[t];

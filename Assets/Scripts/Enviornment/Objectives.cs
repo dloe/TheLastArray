@@ -13,6 +13,15 @@ public enum Condition
 }
 public class Objectives : MonoBehaviour
 {
+    /// <summary>
+    /// Objectives
+    /// Dylan Loe
+    /// 
+    /// updated: 5/25/22
+    /// 
+    /// - players need objectives to get to boss room/exit level
+    /// - 
+    /// </summary>
     public static Objectives Instance;
     public GameObject gasolineObject, generatorObject;
     public string killMessage, gasMessage, generatorMessage, finalMessage;
@@ -127,21 +136,18 @@ public class Objectives : MonoBehaviour
     {
         if(phase == 0)
         {
-            //Debug.Log("Spawned boss");
             finalMessage = "Survive";
             mainObjective.objectiveMessage = finalMessage;
             UpdateObjectiveText();
         }
         else if(phase == 1)
         {
-            //Debug.Log("Activate array");
             finalMessage = "Activate Last Array";
             mainObjective.objectiveMessage = finalMessage;
             UpdateObjectiveText();
         }
         else if(phase == 2)
         {
-            //Debug.Log("objective complete");
             finalMessage = "Return to Train for Extraction";
             mainObjective.objectiveMessage = finalMessage;
             mainObjective.complete = true;
@@ -149,22 +155,16 @@ public class Objectives : MonoBehaviour
         }
         else if(phase == 3)
         {
-            //Debug.Log("last objective");
             finalMessage = "Locate the Last Array";
             UpdateObjectiveText();
         }
     }
-    
-
 
     public void SendCompletedMessage(Condition condition)
     {
-       // Debug.Log(mainObjective.complete);
         switch (condition)
         {
-            case Condition.KillEnemy:
-                //Debug.Log("Enemy Killed");
-                
+            case Condition.KillEnemy:                
                 mainObjective.complete = true;
                 break;
             case Condition.GetGasCan:
@@ -179,28 +179,10 @@ public class Objectives : MonoBehaviour
                 break;
         }
         UpdateObjectiveText();
-
-        //Debug.Log(mainObjective.complete);
         if (mainObjective.complete)
         {
-         //   if(SceneManager.GetActiveScene().name == Player.Instance.baseData.levelFourName)
-         //   {
-         //       objectiveText.text = "YOU WIN!";
-          //      Player.Instance.endScreenText.text = "You Win!";
-          //      Time.timeScale = 0;
-          //      Player.Instance.endScreen.SetActive(true);
-           // }
-         //   else
-         //   {
-                objectiveText.text = "Return to Train";
-            //  }
-
+            objectiveText.text = "Return to Train";
             TrainEntry.Instance.trainText.text = "Enter Train \n" + "(Press E)";
-
-
         }
-        
-            
     }
-
 }
