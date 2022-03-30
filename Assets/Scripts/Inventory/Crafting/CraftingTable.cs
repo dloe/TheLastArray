@@ -5,6 +5,14 @@ using UnityEngine.UI;
 
 public class CraftingTable : Activatable
 {
+    /// <summary>
+    /// CraftingTable
+    /// Jeremy Casada 
+    ///
+    /// Last Updated: 5/28/22
+    /// 
+    /// - Crafting Table interactions
+    /// </summary>
     public GameObject Menu;
     public GameObject optionParent;
     public GameObject craftingOptionPrefab;

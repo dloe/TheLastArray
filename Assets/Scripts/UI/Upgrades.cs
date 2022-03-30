@@ -6,6 +6,14 @@ using UnityEngine.SceneManagement;
 
 public class Upgrades : MonoBehaviour
 {
+    /// <summary>
+    /// Upgrades
+    /// Jeremy Castada
+    /// 
+    /// Last Updated: 5/15/22
+    /// 
+    /// 
+    /// </summary>
     public enum StatType
     {
         health,

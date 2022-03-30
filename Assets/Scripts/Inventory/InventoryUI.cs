@@ -5,6 +5,16 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
+    /// <summary>
+    /// Inventory UI
+    /// Dylan Loe and Jeremy Casada
+    /// 
+    /// Last updated: 5/20/22
+    /// 
+    /// General UI system for player in game.
+    /// </summary>
+
+
     public static InventoryUI Instance;
     public Transform slotParent;
     //public Transform selector;
@@ -88,11 +98,6 @@ public class InventoryUI : MonoBehaviour
             AddSlot();
         }
 #endif
-        //else if(Input.GetKeyDown(KeyCode.O))
-        //{
-        //    Debug.Log("yesir");
-        //    ResetSlots();
-        //}
 
     }
 

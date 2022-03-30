@@ -7,6 +7,15 @@ using UnityEngine;
 
 public class Inventory
 {
+    /// <summary>
+    /// Inventory 
+    /// Jeremy Casada
+    /// 
+    /// Last Updated: 5/28/22
+    /// 
+    /// - adding items, talks with UI and player
+    /// 
+    /// </summary>
     [SerializeField]
     private List<Item> itemList;
 

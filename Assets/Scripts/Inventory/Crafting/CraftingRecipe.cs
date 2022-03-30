@@ -43,6 +43,14 @@ public class Result
 [CreateAssetMenu]
 public class CraftingRecipe : ScriptableObject
 {
+    /// <summary>
+    /// CraftingRecipe
+    /// Jeremy Casada
+    /// 
+    /// Last Updated: 5/22/22
+    /// 
+    /// - Handles crafting recipes
+    /// </summary>
     public List<ResourceRequirement> Requirements;
 
     public Result craftingResult;

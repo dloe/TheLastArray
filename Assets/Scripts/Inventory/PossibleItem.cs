@@ -11,6 +11,15 @@ public enum ObjectWeightType
 }
 public class PossibleItem : MonoBehaviour
 {
+    /// <summary>
+    /// PossibleItem
+    /// Dylan Loe
+    /// 
+    /// Updated: 5/25/22
+    /// 
+    /// - Stores possible item that the tile generation reads in for determining items
+    /// 
+    /// </summary>
     public ObjectWeightType objectWeight;
     [HideInInspector]
     public bool inUse = false;

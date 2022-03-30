@@ -7,7 +7,15 @@ using UnityEngine;
 [System.Serializable][CreateAssetMenu(fileName = "PlayerData", menuName = "ScritableObjects/PlayerData", order = 2)]
 public class PlayerData : ScriptableObject
 {
-
+    /// <summary>
+    /// PlayerData scriptable object
+    /// Dylan Loe
+    /// 
+    /// last Updated: 5/10/22
+    /// 
+    /// - Handles general player info
+    /// </summary>
+    
     public bool levelLoaded;
     [Header("Previously completed objective")]
     public int previouslyCompletedObj;

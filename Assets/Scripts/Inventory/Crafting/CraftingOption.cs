@@ -6,6 +6,15 @@ using UnityEngine.UI;
 
 public class CraftingOption : MonoBehaviour
 {
+    /// <summary>
+    /// CraftingOption
+    /// Jeremy Casada
+    /// 
+    /// Last Updated:
+    /// 
+    ///  - handles drop down results while crafting
+    /// 
+    /// </summary>
    // public int requiredScrap;
    // public int requiredMeds;
    // public int requiredCloth;

@@ -5,7 +5,13 @@ using UnityEngine;
 [System.Serializable]
 public class Item
 {
-    
+    /// <summary>
+    /// Item class script
+    /// Jeremy Casaada
+    /// 
+    /// Item class for items that spawn in. Serializable
+    /// 
+    /// </summary>
     public ItemData itemData;
 
     public Item(ItemData data)
