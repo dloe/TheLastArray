@@ -5,9 +5,17 @@ using UnityEngine.SceneManagement;
 
 public class TrainExit : Activatable
 {
+    /// <summary>
+    /// Activatable
+    /// Dylan Loe
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - activatable exit door used by the player to exit the train hub space
+    /// </summary>
     public PlayerData playerData;
     public Transitions myTransition;
-    
+
     public override void Activate()
     {
         if (!isActivated)
@@ -17,7 +25,6 @@ public class TrainExit : Activatable
             Player.Instance.SavePlayer();
             StartCoroutine(ExitTransition());
         }
-
     }
 
     IEnumerator ExitTransition()

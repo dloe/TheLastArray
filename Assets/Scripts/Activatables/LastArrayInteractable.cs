@@ -6,6 +6,13 @@ using UnityEditor;
 
 public class LastArrayInteractable : WorldItem
 {
+    /// <summary>
+    /// Activatable
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - World Item, used for level objectives
+    /// </summary>
     public GameObject bossDoor;
     public GameObject ammoDrop;
 

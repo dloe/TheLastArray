@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Gasoline : Activatable
 {
+    /// <summary>
+    /// Activatable
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - activatable object used as an objective
+    /// </summary>
     public override void Activate()
     {
         Objectives.Instance.SendCompletedMessage(Condition.GetGasCan);

@@ -5,6 +5,14 @@ using UnityEngine.UI;
 
 public class TrainEntry : Activatable
 {
+    /// <summary>
+    /// Activatable
+    /// Dylan Loe
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - activatable used for the player to enter the train
+    /// </summary>
     public static TrainEntry Instance;
     public Text trainText;
     LocalLevel localLevel;
@@ -30,7 +38,6 @@ public class TrainEntry : Activatable
             isActivated = true;
 
             localLevel.LevelBeat();
-
         }
         else if (!isActivated && Objectives.Instance.mainObjective.complete && localLevel.thisLevelTier == levelTier.level4)
         {
@@ -40,6 +47,5 @@ public class TrainEntry : Activatable
             Player.Instance.endScreen.SetActive(true);
             Objectives.Instance.SendCompletedMessage(Condition.KillEnemy);
         }
-
     }
 }

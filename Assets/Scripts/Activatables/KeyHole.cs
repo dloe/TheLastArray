@@ -4,20 +4,24 @@ using UnityEngine;
 
 public class KeyHole : Activatable
 {
+    /// <summary>
+    /// Activatable
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - activatable, requires a key to open door
+    /// </summary>
     public GameObject doorObject;
     public ItemData keyData;
     public GameObject interior;
 
     public void Start()
     {
-        
         if(TrainEntry.Instance)
         {
             this.transform.rotation = TrainEntry.Instance.transform.rotation;
         }
         
-
-
         if (interior != null)
         {
             foreach (Transform child in interior.transform)
@@ -65,10 +69,7 @@ public class KeyHole : Activatable
                     }
                 }
             }
-
             Destroy(gameObject);
         }
-
-        
     }
 }

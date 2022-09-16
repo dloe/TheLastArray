@@ -5,6 +5,14 @@ using UnityEngine.UI;
 
 public class Resource : Activatable
 {
+    /// <summary>
+    /// Activatable
+    /// Dylan Loe
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - activatable used to add resources to the players inventory
+    /// </summary>
     public enum ResourceType
     {
         scrap,
@@ -41,5 +49,4 @@ public class Resource : Activatable
         Debug.Log("Resource Picked Up: " + amountToAdd + " " + resourceType);
         Destroy(gameObject);
     }
-
 }

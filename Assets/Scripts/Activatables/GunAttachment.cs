@@ -10,6 +10,13 @@ public enum AttachType
 
 public class GunAttachment : Activatable
 {
+    /// <summary>
+    /// Activatable
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - activatable object used as a gun attachment
+    /// </summary>
     public AttachType attachType;
 
     public override void Activate()

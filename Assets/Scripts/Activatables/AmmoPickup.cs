@@ -5,6 +5,14 @@ using UnityEngine.UI;
 
 public class AmmoPickup : Activatable
 {
+    /// <summary>
+    /// Activatable
+    /// Jeremy
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - pickup activatable, restores ammo to weapon
+    /// </summary>
     public AmmoType ammoType;
     public int amountToAdd;
     public Text displayText;
@@ -67,8 +75,6 @@ public class AmmoPickup : Activatable
         }
 
         InventoryUI.Instance.RefreshUI();
-
-        
     }
 
     public void RefreshText()

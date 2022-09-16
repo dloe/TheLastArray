@@ -6,12 +6,18 @@ using UnityEngine.UI;
 
 public class WorldItem : Activatable
 {
+    /// <summary>
+    /// Activatable
+    /// Dylan Loe
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - activatable world item, pickup items the player can use and is stored in inventory
+    /// </summary>
     public ItemData worldItemData;
-
 
     private void Start()
     {
-        
         gameObject.GetComponentInChildren<Text>().text = worldItemData.itemName;
         if(worldItemData.itemSprite != null)
         {
@@ -51,13 +57,11 @@ public class WorldItem : Activatable
                 Destroy(gameObject);
                 Player.Instance.thingToActivate = null;
             }
-            
         }
         else
         {
             Debug.Log("Can't add " + worldItemData.itemName + " to inventory because its full");
         }
     }
-
 }
 

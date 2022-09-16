@@ -18,6 +18,5 @@ public class Generator : Activatable
             Objectives.Instance.SendCompletedMessage(Condition.FindGenerator);
             objectiveMarker.SetActive(false);
         }
-        
     }
 }
