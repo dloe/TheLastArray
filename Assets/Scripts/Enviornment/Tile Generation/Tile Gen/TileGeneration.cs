@@ -84,6 +84,9 @@ public class TileGeneration : MonoBehaviour
     ///     
     /// </summary>
 
+    //flag for enabling debugs for testing purposes, THIS WILL WRITE TO A TEXT FILE IN CASE THIS CRASHES, SO I CAN SEE ALL THE VALUES
+    public bool debugPrints = false;
+
     //gets from level data (set in inspector)
     //so far ive only test with width and height being the same number, same number recommended (might need to make slight adjustments to one line to test both being different)
     [Header("Grid Size")]
@@ -173,7 +176,6 @@ public class TileGeneration : MonoBehaviour
     //used for secret room gen, neighbor tracker, made of tileinfo objs
     List<TileInfo> _posSRNeighbors;
 
-
     private void Awake()
     {
         //establish level type
@@ -182,6 +184,9 @@ public class TileGeneration : MonoBehaviour
 
     void Start()
     {
+        if (debugPrints)
+            debugPathOn = true;
+
         if (debugPathOn)
         {
             _lr = gameObject.AddComponent<LineRenderer>();
@@ -237,6 +242,10 @@ public class TileGeneration : MonoBehaviour
     //grid creation, set values from levelWidth and levelHeight
     void CreateGrid()
     {
+        if (debugPrints)
+            Debug.Log("Entered Grid Creation");
+
+
         _grid2DArray = new GameObject[_levelWidth, _levelHeight];
 
         //runs throug grid
@@ -279,6 +288,9 @@ public class TileGeneration : MonoBehaviour
     //run through grid, establish and link whos next to who
     void AssignNeighbors()
     {
+        if (debugPrints)
+            Debug.Log("Linking Neighbors on Grid in AssignNeighbors");
+
         for (int rows = 0; rows < _levelWidth; rows++)
         {
             for (int col = 0; col < _levelHeight; col++)
@@ -325,6 +337,9 @@ public class TileGeneration : MonoBehaviour
     /// </summary>
     void GeneratePath()
     {
+        if (debugPrints)
+            Debug.Log("Generating Main Path...");
+
         //starts at _startTile
         levelPath.Add(_startTile);
         //mark start as part of path and checked
@@ -377,6 +392,9 @@ public class TileGeneration : MonoBehaviour
             }
         
         }
+
+        if (debugPrints)
+            Debug.Log("Setup Start Room, adding rest of path");
 
         foreach ( Tile t in levelPath)
         {
@@ -575,6 +593,9 @@ public class TileGeneration : MonoBehaviour
 
     void AddRandomRooms()
     {
+        if (debugPrints)
+            Debug.Log("Adding Random Rooms...");
+
         //chooses random tile, then sees if we can add a room to it
         //if we can we add room otherwise we check again
         //cant add rooms to boss room
@@ -608,6 +629,9 @@ public class TileGeneration : MonoBehaviour
                 }
             }
         }
+
+        if (debugPrints)
+            Debug.Log("Adding Random Branches");
 
         //default to rooms left over/row count
         branchCount = Random.Range(1, ((_grid2DArray.Length - levelPath.Count) / _levelWidth) + 1);
@@ -687,6 +711,8 @@ public class TileGeneration : MonoBehaviour
 
     void AddSingleRooms()
     {
+        if (debugPrints)
+            Debug.Log("Adding Single Rooms...");
         //when we add a room, remove from _avalibleTileSpots, add to _allActiveTileSpots
 
         //default to half the rooms left over
@@ -1023,6 +1049,9 @@ public class TileGeneration : MonoBehaviour
 
     void CreateSpawnRoom()
     {
+        if (debugPrints)
+            Debug.Log("Creating Spawn Room...");
+
         GameObject startingNode = new GameObject();
         startingNode.name = "StartingNode";
         startingNode.transform.parent = this.transform;
@@ -1087,6 +1116,9 @@ public class TileGeneration : MonoBehaviour
 
     void ChooseStartEndRooms()
     {
+        if (debugPrints)
+            Debug.Log("Choosing Start and End Rooms in ChooseStartEndRooms()");
+
         //first we get the start room and end room
         int startX = 0; //= Random.Range(0, _levelWidth);
         int startY = 0; //= Random.Range(0, _levelHeight);
@@ -1121,6 +1153,9 @@ public class TileGeneration : MonoBehaviour
                 break;
         }
 
+        if (debugPrints)
+            Debug.Log("Starting Tile is designated as " + startX + "," + startY);
+
         _startTile = _grid2DArray[startX, startY].transform.GetChild(0).GetComponent<Tile>();
         _startTile.tileStatus = Tile.TileStatus.startingRoom;
         _startTile.ShadeStarting();
@@ -1132,13 +1167,14 @@ public class TileGeneration : MonoBehaviour
         endY = _levelHeight - startY - 1;
 
         //add a little variation so boss room can anywhere in that quarter
+        //buffer pushes our boss room away from end
         int xBuffer = _levelWidth / 2;
         endXF = endX + Random.Range(-xBuffer + 1, xBuffer - 1);
         int yBuffer = _levelHeight / 2;
         endYF = endY + Random.Range(-yBuffer + 1, yBuffer - 1);
 
         //should always try to keep a minimum distance from start (the xBuffer), cant be on same x as buffer
-
+        //reshuffling until we hit a param
         while (endXF > _levelWidth - 1 || endXF == startX || endXF < 0)
         {
             endXF = endX + Random.Range(-xBuffer + 1, xBuffer);
@@ -1147,19 +1183,19 @@ public class TileGeneration : MonoBehaviour
         {
             endYF = endY + Random.Range(-yBuffer + 1, yBuffer);
         }
-        //yield return new WaitForSeconds(0.1f);
+        
         //in case the start point is towards the middle and the end point is also in the middle, really close to each other
         //check if Mathf.Abs(endXF - startX) < xbuffer && Mathf.Abs(endYF - startY)
         //NORMALLY THIS IS A WHILE, but there is some edge case causing issues - will investigate later
-        // NOTE: this can be drastically optimized
+        // NOTE: this can be drastically optimized and will be revisited
         int oldX, oldY;
+        
         while (Mathf.Abs(endXF - startX) < xBuffer && Mathf.Abs(endYF - startY) < yBuffer)
         {
             oldX = endXF;
             oldY = endYF;
             //rerolling
-            //yield return new WaitForSeconds(0.25f);
-            //chooses then either reroll x or y (50-50 chance to reroll either one
+            //chooses then either reroll x or y (50-50 chance to reroll either one)
             if (Random.value < 0.5f)
             {
                 endXF = endX + Random.Range(-xBuffer + 1, xBuffer);
@@ -1185,7 +1221,6 @@ public class TileGeneration : MonoBehaviour
         _endTile.tileStatus = Tile.TileStatus.boss;
         _endTile.ShadeBoosRoom();
 
-        //Debug.Log("Generating Main Path...");
         GeneratePath();
     }
 
@@ -1195,6 +1230,8 @@ public class TileGeneration : MonoBehaviour
     /// </summary>
     void FinalTileSetup()
     {
+        if (debugPrints)
+            Debug.Log("Removing Unwanted tiles...");
         //must go though all active tiles 
         foreach (GameObject tile in _grid2DArray)
         {

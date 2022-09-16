@@ -14,7 +14,7 @@ public class LevelAssetSpawn : MonoBehaviour
     ///     - a LevelInfo Prefab
     ///     - system used for spawning assets on each tile
     ///     - has caps for items, enemies and objectives
-    ///     - links rooms into 2 x 2 tiles, also has caps
+    ///     - links some rooms into 2 x 2 tiles, also has caps
     ///     - called mainly from tile gen script
     ///     
     /// </summary>
@@ -80,6 +80,7 @@ public class LevelAssetSpawn : MonoBehaviour
     static int tier2CollectableCap = 20;
     static int tier3CollectableCap = 17;
     public int currentMiniBossCount = 0;
+
     //first number represents the number of times tiles in that list were spawned
     //second number represents the tile numbers that were spawned that amount of times
     List<List<int>> _magAssetCount;
@@ -97,9 +98,52 @@ public class LevelAssetSpawn : MonoBehaviour
     static private float twoBYtwo_SpawnChance = 0.25f;
     GameObject play;
 
+    //debug prints from TileGeneration
+    bool debugPrints;
+
+    //set up prints to carry over here as well
+    private void Awake()
+    {
+        debugPrints = myTileGeneration.debugPrints;
+    }
+
+    
+
+    /// <summary>
+    /// Populate grid with assets, called from TileGeneration once it is done setting up
+    /// </summary>
+    public void PopulateGrid()
+    {
+        if (debugPrints)
+            Debug.Log("Populating Grid....");
+
+        StartUpLevelAssetSpawn();
+
+        GridAnalysis();
+
+        ActivateLevelKey();
+
+        if(myLocalLevel.thisLevelTier > levelTier.level2)
+            ActivateSecretRoom();
+
+        myLocalLevel.ChooseObjective();
+        
+        //ACTIVATE OBJECTIVES
+        ActivateObjectives();
+        
+        //SPAWN IN RESOURCES
+        ActivateItems();
+
+        //ACTIVATE ENEMIES
+        ActivateEnemies();
+    }
+
     //sets some values when this script is first called
     void StartUpLevelAssetSpawn()
     {
+        if (debugPrints)
+            Debug.Log("Establishing Level Asset Values....");
+
         assetCountArray = new int[myLocalLevel.presetTileAssets.Count];
         bigAssetCountArray = new int[myLocalLevel.presetBigTileAssets.Count];
 
@@ -123,35 +167,13 @@ public class LevelAssetSpawn : MonoBehaviour
     }
 
     /// <summary>
-    /// Populate grid with assets, called from TileGeneration once it is done setting up
-    /// </summary>
-    public void PopulateGrid()
-    {
-        StartUpLevelAssetSpawn();
-
-        GridAnalysis();
-
-        ActivateLevelKey();
-
-        if(myLocalLevel.thisLevelTier > levelTier.level2)
-            ActivateSecretRoom();
-
-        myLocalLevel.ChooseObjective();
-        //ACTIVATE OBJECTIVES
-        ActivateObjectives();
-        
-        //SPAWN IN RESOURCES
-        ActivateItems();
-
-        //ACTIVATE ENEMIES
-        ActivateEnemies();
-    }
-
-    /// <summary>
     /// checks each tile for purpose of adding walls, linking 2 x 2, bringing in 2 x 2 tiles
     /// </summary>
     void GridAnalysis()
     {
+        if (debugPrints)
+            Debug.Log("Entering Grid Analysis....");
+
         //activate walls
         foreach (Tile t in myTileGeneration._allActiveTiles)
         {
@@ -187,6 +209,8 @@ public class LevelAssetSpawn : MonoBehaviour
                 myLocalLevel.myPlayer = play.transform.GetChild(2).gameObject.GetComponent<Player>();
             }
         }
+        if (debugPrints)
+            Debug.Log("Finished Grid Analysis....");
 
         if (myTileGeneration.hasDoors)
         {
@@ -194,9 +218,12 @@ public class LevelAssetSpawn : MonoBehaviour
         }
     }
 
-    //doors would be active linking tiles, just add doors on sides that dont have doors yeet im so tired please help i feel myself slowly drifitng away into oblivion oh god
+    //doors would be active linking tiles, just add doors on sides that dont have doors yet
     void ActivateLvl4Walls()
     {
+        if (debugPrints)
+            Debug.Log("Activating Walls for walled levels...");
+
         foreach (Tile t in myTileGeneration._allActiveTiles)
         {
             if (t.tileStatus != Tile.TileStatus.startingRoom)
@@ -289,8 +316,11 @@ public class LevelAssetSpawn : MonoBehaviour
             }
         }
 
+        if (debugPrints)
+            Debug.Log("Synching Big Tiles....");
+
         //remove access walls on big tiles
-        foreach(GameObject tile in _bigTilesList)
+        foreach (GameObject tile in _bigTilesList)
         {
             //child 0 should not have wall on right side or down side
             //child 1 should not have wall on left side or down side
@@ -337,6 +367,9 @@ public class LevelAssetSpawn : MonoBehaviour
     
     void ActivateSecretRoom()
     {
+        if (debugPrints)
+            Debug.Log("St up Secret Room....");
+
         //picks secret room
         //spawn it in AT THE SAME ROTATION OF THE SECRETROOM GAMEOBJECT
         GameObject preset = null;
@@ -400,6 +433,9 @@ public class LevelAssetSpawn : MonoBehaviour
     /// </summary>
     public void ActivateObjectives()
     {
+        if (debugPrints)
+            Debug.Log("Activating Objectives....");
+
         if (myLocalLevel.thisLevelTier != levelTier.level4)
         {
             parents = new List<GameObject>();
@@ -1091,6 +1127,9 @@ public class LevelAssetSpawn : MonoBehaviour
     //=============================================================================================================
     void ActivateLevelKey()
     {
+        if (debugPrints)
+            Debug.Log("Setting up Level Keys....");
+
         int keyInt = Random.Range(0, _possibleItems.Count);
 
         GameObject keyObj = Instantiate(myLevelAsset.emptyObj, _possibleItems[keyInt].transform.position, playerSpawn.transform.rotation);
@@ -1107,6 +1146,9 @@ public class LevelAssetSpawn : MonoBehaviour
 
     void ActivateItems()
     {
+        if (debugPrints)
+            Debug.Log("Activating Items....");
+
         //shuffle _possibleItems
         _possibleItems = reshuffle(_possibleItems);
 
@@ -1340,6 +1382,9 @@ public class LevelAssetSpawn : MonoBehaviour
 
     void ActivateEnemies()
     {
+        if (debugPrints)
+            Debug.Log("Activating Enemies....");
+
         _possibleEnemiesInLevel = reshuffle(_possibleEnemiesInLevel);
         if(possibleminiBossCount < _miniBossCap)
         {

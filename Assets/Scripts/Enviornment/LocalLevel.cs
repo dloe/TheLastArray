@@ -281,7 +281,7 @@ public class LocalLevel : MonoBehaviour
                 u = 1;
                 fading = false;
                 fadeOut = false;
-                Debug.Log("off");
+                //Debug.Log("off");
             }
 
             a01 = (1 - u) * a0 + u * a1;
@@ -312,7 +312,7 @@ public class LocalLevel : MonoBehaviour
                 u = 0;
                 fading = false;
                 fadeIn = false;
-               // Debug.Log("off");
+               //Debug.Log("off");
             }
 
             a01 = (1 - u) * a0 + u * a1;

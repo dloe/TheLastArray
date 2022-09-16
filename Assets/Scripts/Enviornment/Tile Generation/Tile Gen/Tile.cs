@@ -264,7 +264,8 @@ public class Tile : MonoBehaviour
     #region Doors
     /// <summary>
     /// ---------------------------------------------------------------------------------
-    /// IN LVL 4
+    /// IN LVL 4, a way to make variant room sizes
+    /// - UNUSED
     /// --------------------------------------------------------------------------------
     /// </summary>
     public void ChooseTileMap()
@@ -437,6 +438,7 @@ public class Tile : MonoBehaviour
 
     /// <summary>
     /// Double check to fix small bug in which a duplicate door can rarly appear and not be removed and synced causing mass caos and walls to spawn in places they should not be spawning
+    /// - fixes an edge case in which a specific angled door doesnt sync properly, for now this will have to do but a better algorithim may be the actual fix
     /// </summary>
     public void ReSyncDoors()
     {

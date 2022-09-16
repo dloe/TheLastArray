@@ -31,7 +31,6 @@ public class Objectives : MonoBehaviour
 
     public Text objectiveText;
 
-
     [System.Serializable]
     public class Objective
     {
