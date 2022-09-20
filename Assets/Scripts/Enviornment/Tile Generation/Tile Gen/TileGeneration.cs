@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -86,6 +87,10 @@ public class TileGeneration : MonoBehaviour
 
     //flag for enabling debugs for testing purposes, THIS WILL WRITE TO A TEXT FILE IN CASE THIS CRASHES, SO I CAN SEE ALL THE VALUES
     public bool debugPrints = false;
+    public string debugPrintLogName = "DebugPrintLog.txt";
+    string _printLogPath;
+    //first time only time flag logic for text log setup
+    bool _printLogFirstTime = false;
 
     //gets from level data (set in inspector)
     //so far ive only test with width and height being the same number, same number recommended (might need to make slight adjustments to one line to test both being different)
@@ -184,8 +189,11 @@ public class TileGeneration : MonoBehaviour
 
     void Start()
     {
+        _printLogPath = Application.dataPath + "/Scripts/" + debugPrintLogName;
         if (debugPrints)
             debugPathOn = true;
+
+        PrintToLog(null,false);
 
         if (debugPathOn)
         {
@@ -208,16 +216,7 @@ public class TileGeneration : MonoBehaviour
         }
     }
 
-    //basic setup for line renderer on debug mode
-    void SetLineRenderer()
-    {
-        _lr = GetComponent<LineRenderer>();
-        for(int t = 0; t < levelPath.Count; t++)
-        {
-            _lr.SetPosition(t, levelPath[t].transform.position);
-        }
-        //turn on colored spheres on each tile
-    }
+
 
     #region Initial Generation Main
     //=============================================================================================================
@@ -243,7 +242,7 @@ public class TileGeneration : MonoBehaviour
     void CreateGrid()
     {
         if (debugPrints)
-            Debug.Log("Entered Grid Creation");
+            PrintToLog("Entered Grid Creation",false);
 
 
         _grid2DArray = new GameObject[_levelWidth, _levelHeight];
@@ -289,7 +288,7 @@ public class TileGeneration : MonoBehaviour
     void AssignNeighbors()
     {
         if (debugPrints)
-            Debug.Log("Linking Neighbors on Grid in AssignNeighbors");
+            PrintToLog("Linking Neighbors on Grid in AssignNeighbors",false);
 
         for (int rows = 0; rows < _levelWidth; rows++)
         {
@@ -338,7 +337,7 @@ public class TileGeneration : MonoBehaviour
     void GeneratePath()
     {
         if (debugPrints)
-            Debug.Log("Generating Main Path...");
+            PrintToLog("Generating Main Path...",false);
 
         //starts at _startTile
         levelPath.Add(_startTile);
@@ -394,7 +393,7 @@ public class TileGeneration : MonoBehaviour
         }
 
         if (debugPrints)
-            Debug.Log("Setup Start Room, adding rest of path");
+            PrintToLog("Setup Start Room, adding rest of path",false);
 
         foreach ( Tile t in levelPath)
         {
@@ -594,7 +593,7 @@ public class TileGeneration : MonoBehaviour
     void AddRandomRooms()
     {
         if (debugPrints)
-            Debug.Log("Adding Random Rooms...");
+            PrintToLog("Adding Random Rooms...",false);
 
         //chooses random tile, then sees if we can add a room to it
         //if we can we add room otherwise we check again
@@ -631,7 +630,7 @@ public class TileGeneration : MonoBehaviour
         }
 
         if (debugPrints)
-            Debug.Log("Adding Random Branches");
+            PrintToLog("Adding Random Branches",false);
 
         //default to rooms left over/row count
         branchCount = Random.Range(1, ((_grid2DArray.Length - levelPath.Count) / _levelWidth) + 1);
@@ -712,7 +711,7 @@ public class TileGeneration : MonoBehaviour
     void AddSingleRooms()
     {
         if (debugPrints)
-            Debug.Log("Adding Single Rooms...");
+            PrintToLog("Adding Single Rooms...",false);
         //when we add a room, remove from _avalibleTileSpots, add to _allActiveTileSpots
 
         //default to half the rooms left over
@@ -1038,6 +1037,10 @@ public class TileGeneration : MonoBehaviour
                 break;
             default:
                 Debug.Log("ERROR: the array on n is null");
+                if(debugPrints)
+                {
+                    PrintToLog("ERROR: the array on n is null", true);
+                }
                 break;
         }
         secretRoom.name = "SecretRoom";
@@ -1050,7 +1053,7 @@ public class TileGeneration : MonoBehaviour
     void CreateSpawnRoom()
     {
         if (debugPrints)
-            Debug.Log("Creating Spawn Room...");
+            PrintToLog("Creating Spawn Room...",false);
 
         GameObject startingNode = new GameObject();
         startingNode.name = "StartingNode";
@@ -1117,7 +1120,7 @@ public class TileGeneration : MonoBehaviour
     void ChooseStartEndRooms()
     {
         if (debugPrints)
-            Debug.Log("Choosing Start and End Rooms in ChooseStartEndRooms()");
+            PrintToLog("Choosing Start and End Rooms in ChooseStartEndRooms()",false);
 
         //first we get the start room and end room
         int startX = 0; //= Random.Range(0, _levelWidth);
@@ -1154,7 +1157,7 @@ public class TileGeneration : MonoBehaviour
         }
 
         if (debugPrints)
-            Debug.Log("Starting Tile is designated as " + startX + "," + startY);
+            PrintToLog("Starting Tile is designated as " + startX + "," + startY, false);
 
         _startTile = _grid2DArray[startX, startY].transform.GetChild(0).GetComponent<Tile>();
         _startTile.tileStatus = Tile.TileStatus.startingRoom;
@@ -1231,7 +1234,7 @@ public class TileGeneration : MonoBehaviour
     void FinalTileSetup()
     {
         if (debugPrints)
-            Debug.Log("Removing Unwanted tiles...");
+            PrintToLog("Removing Unwanted tiles...",false);
         //must go though all active tiles 
         foreach (GameObject tile in _grid2DArray)
         {
@@ -1245,6 +1248,41 @@ public class TileGeneration : MonoBehaviour
 
     //=============================================================================================================
     //=============================================================================================================
+    #endregion
+
+    #region Debug and Visuals
+
+    public void PrintToLog(string textToLog, bool addBreakage)
+    {
+        StreamWriter writer = new StreamWriter(_printLogPath, true);
+
+        if(!_printLogFirstTime)
+        {
+            _printLogFirstTime = true;
+            writer.WriteLine("Log Debug Text");
+            writer.WriteLine(System.DateTime.Now);
+            writer.WriteLine("=================================================================================");
+
+        }
+
+        writer.WriteLine(textToLog);
+
+        if(addBreakage)
+            writer.WriteLine("=================================================================================");
+
+        writer.Close();
+    }
+
+    //basic setup for line renderer on debug mode
+    void SetLineRenderer()
+    {
+        _lr = GetComponent<LineRenderer>();
+        for (int t = 0; t < levelPath.Count; t++)
+        {
+            _lr.SetPosition(t, levelPath[t].transform.position);
+        }
+        //turn on colored spheres on each tile
+    }
     #endregion
 }
 

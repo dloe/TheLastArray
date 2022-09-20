@@ -115,7 +115,7 @@ public class LevelAssetSpawn : MonoBehaviour
     public void PopulateGrid()
     {
         if (debugPrints)
-            Debug.Log("Populating Grid....");
+            myTileGeneration.PrintToLog("Populating Grid....", false);
 
         StartUpLevelAssetSpawn();
 
@@ -142,7 +142,7 @@ public class LevelAssetSpawn : MonoBehaviour
     void StartUpLevelAssetSpawn()
     {
         if (debugPrints)
-            Debug.Log("Establishing Level Asset Values....");
+            myTileGeneration.PrintToLog("Establishing Level Asset Values....",false);
 
         assetCountArray = new int[myLocalLevel.presetTileAssets.Count];
         bigAssetCountArray = new int[myLocalLevel.presetBigTileAssets.Count];
@@ -172,7 +172,7 @@ public class LevelAssetSpawn : MonoBehaviour
     void GridAnalysis()
     {
         if (debugPrints)
-            Debug.Log("Entering Grid Analysis....");
+            myTileGeneration.PrintToLog("Entering Grid Analysis....",false);
 
         //activate walls
         foreach (Tile t in myTileGeneration._allActiveTiles)
@@ -210,7 +210,7 @@ public class LevelAssetSpawn : MonoBehaviour
             }
         }
         if (debugPrints)
-            Debug.Log("Finished Grid Analysis....");
+            myTileGeneration.PrintToLog("Finished Grid Analysis....",false);
 
         if (myTileGeneration.hasDoors)
         {
@@ -222,7 +222,7 @@ public class LevelAssetSpawn : MonoBehaviour
     void ActivateLvl4Walls()
     {
         if (debugPrints)
-            Debug.Log("Activating Walls for walled levels...");
+            myTileGeneration.PrintToLog("Activating Walls for walled levels...",false);
 
         foreach (Tile t in myTileGeneration._allActiveTiles)
         {
@@ -317,7 +317,7 @@ public class LevelAssetSpawn : MonoBehaviour
         }
 
         if (debugPrints)
-            Debug.Log("Synching Big Tiles....");
+            myTileGeneration.PrintToLog("Synching Big Tiles....",false);
 
         //remove access walls on big tiles
         foreach (GameObject tile in _bigTilesList)
@@ -368,7 +368,7 @@ public class LevelAssetSpawn : MonoBehaviour
     void ActivateSecretRoom()
     {
         if (debugPrints)
-            Debug.Log("St up Secret Room....");
+            myTileGeneration.PrintToLog("St up Secret Room....",false);
 
         //picks secret room
         //spawn it in AT THE SAME ROTATION OF THE SECRETROOM GAMEOBJECT
@@ -434,7 +434,7 @@ public class LevelAssetSpawn : MonoBehaviour
     public void ActivateObjectives()
     {
         if (debugPrints)
-            Debug.Log("Activating Objectives....");
+            myTileGeneration.PrintToLog("Activating Objectives....",false);
 
         if (myLocalLevel.thisLevelTier != levelTier.level4)
         {
@@ -1010,7 +1010,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
             bigAssetCountArray[1] += 1;
             endObjTile = preset;
-            Debug.Log("BIG ASSET WITH OBJ");
+            myTileGeneration.PrintToLog("BIG ASSET WITH OBJ",false);
         }
 
         //random rotation on tile set
@@ -1128,7 +1128,7 @@ public class LevelAssetSpawn : MonoBehaviour
     void ActivateLevelKey()
     {
         if (debugPrints)
-            Debug.Log("Setting up Level Keys....");
+            myTileGeneration.PrintToLog("Setting up Level Keys....",false);
 
         int keyInt = Random.Range(0, _possibleItems.Count);
 
@@ -1147,7 +1147,7 @@ public class LevelAssetSpawn : MonoBehaviour
     void ActivateItems()
     {
         if (debugPrints)
-            Debug.Log("Activating Items....");
+            myTileGeneration.PrintToLog("Activating Items....",false);
 
         //shuffle _possibleItems
         _possibleItems = reshuffle(_possibleItems);
@@ -1383,7 +1383,7 @@ public class LevelAssetSpawn : MonoBehaviour
     void ActivateEnemies()
     {
         if (debugPrints)
-            Debug.Log("Activating Enemies....");
+            myTileGeneration.PrintToLog("Activating Enemies....",false);
 
         _possibleEnemiesInLevel = reshuffle(_possibleEnemiesInLevel);
         if(possibleminiBossCount < _miniBossCap)
