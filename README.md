@@ -7,6 +7,8 @@ ITCH.IO PAGE: https://cagd.itch.io/the-last-array
 
 Game Doc: https://docs.google.com/document/d/1Dk4c2A5diAJraO7-_yfEPvV07kpA9qRHfqEXERzxR8I/edit?usp=sharing
 
+Unity 2019.4.18 f1  
+
 Credits:
 
 Lead Designer: Shawn Rogers
