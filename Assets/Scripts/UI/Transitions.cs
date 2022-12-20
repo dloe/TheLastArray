@@ -5,8 +5,17 @@ using UnityEngine;
 
 public class Transitions : MonoBehaviour
 {
-
-    //interpolation
+    /// <summary>
+    /// Transition Level Start behaviors
+    /// Dylan Loe
+    /// 
+    /// Last Updated: 4/27/21
+    /// 
+    /// Notes:
+    ///  - Scene transitions on scene startups
+    ///     - using interpolation formula
+    /// </summary>
+    
     bool fadeIn = false;
     bool fadeOut = false;
     float timeStart;
@@ -36,8 +45,6 @@ public class Transitions : MonoBehaviour
         }
 
     }
-
-   
 
     #region Scene Transitions
     void StartFadeIn()

@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class MinionAirDropBehavior : MonoBehaviour
 {
+    /// <summary>
+    /// Minion Airdrop behavior
+    /// Dylan Loe
+    /// Updated: 4-12
+    /// 
+    /// - Minions can spawn in the boss room
+    /// - special behavior needed to add cool entrance
+    ///     - Sets line renderer inital values
+    /// </summary>
     public int damage;
     public float speed;
     public float checkRadius = 2;
@@ -17,12 +26,6 @@ public class MinionAirDropBehavior : MonoBehaviour
 
     public GameObject minion;
 
-    /// <summary>
-    /// Dylan Loe
-    /// Updated: 4-12
-    /// 
-    /// Sets line renderer inital values
-    /// </summary>
     void Start()
     {
         airdropLine = GetComponent<LineRenderer>();

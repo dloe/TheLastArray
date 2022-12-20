@@ -7,6 +7,16 @@ using UnityEngine.Audio;
 
 public class MainMenuUI : MonoBehaviour
 {
+    /// <summary>
+    /// Main Menu UI 
+    /// Jeremy Castada
+    /// 
+    /// Last Updated: 4/27/21
+    /// 
+    /// Notes:
+    ///  - main menu buttons and setup
+    /// </summary>
+    
     public GameObject mainMenu;
     public GameObject options;
     public GameObject credits;

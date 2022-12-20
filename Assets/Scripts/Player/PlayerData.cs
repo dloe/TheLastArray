@@ -51,9 +51,4 @@ public class PlayerData : ScriptableObject
     public int skillPoints = 0;
     public ItemData initialItem;
 
-
-
-
-
-
 }

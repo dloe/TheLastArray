@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class AvoidenceTest : MonoBehaviour
 {
+    /// <summary>
+    /// Avoidance Test
+    /// Alex
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - 
+    /// </summary>
     public float speed = 10;
 
     int rays = 25;

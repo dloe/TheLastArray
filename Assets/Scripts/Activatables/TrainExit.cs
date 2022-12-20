@@ -34,6 +34,7 @@ public class TrainExit : Activatable
         LevelLoader.Instance.LoadLevel(GetLevelToLoad(playerData.previousLevelName));
     }
 
+    //load level based pn what our previous level was set to
     public string GetLevelToLoad(string previousLevelName)
     {
         string result = "";

@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class NewBehaviourScript : MonoBehaviour
 {
+    /// <summary>
+    /// Dylan Loe
+    /// Updated: 4-12
+    /// 
+    /// Test script for boss tracking behaviors
+    /// 
+    /// - NOT IN USE CURRENTLY, TESTING ONLY
+    /// </summary>
     public GameObject target;
     public float angle;
 

@@ -7,7 +7,7 @@ public class Item
 {
     /// <summary>
     /// Item class script
-    /// Jeremy Casaada
+    /// Jeremy Casada
     /// 
     /// Item class for items that spawn in. Serializable
     /// 

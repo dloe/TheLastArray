@@ -9,11 +9,18 @@ using UnityEngine.UI;
 
 public class UILook : MonoBehaviour
 {
+    /// <summary>
+    /// Camera lock on player behavior
+    /// Jeremy Castada
+    /// 
+    /// Last Updated: 4/27/21
+    /// 
+    /// Notes:
+    ///  - Keep camera angle consistent for player angle
+    /// </summary>
+
     private Transform _mainTransform;
     private Camera _mainCamera;
-
-
-    
 
     // Start is called before the first frame update
     void Start()

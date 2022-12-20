@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class Shadow : BaseEnemy
 {
+    /// <summary>
+    /// Shadow Behavior
+    /// Alex
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - inherited from BaseEnemy parent
+    /// </summary>
     public int teleTime;
     bool hidden;
     //public int range = 10;
     bool _InattackingMovement = false;
     float _speed;
-   
 
     public override void specialAttack(Vector3 temp)
     {
@@ -42,7 +49,6 @@ public class Shadow : BaseEnemy
         {
             this.transform.position += temp * Time.deltaTime;
         }
-
     }
 
     IEnumerator Teleport()

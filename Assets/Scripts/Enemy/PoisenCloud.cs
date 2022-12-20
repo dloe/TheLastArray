@@ -4,7 +4,16 @@ using UnityEngine;
 
 public class PoisenCloud : MonoBehaviour
 {
-
+    /// <summary>
+    /// Poison Cloud Behaviors
+    /// Alex
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - when touching player, they take damage
+    /// - lingers for a short time (lifeTime)
+    /// </summary>
+    
     public int lifeTime = 10;
     public int damage;
 

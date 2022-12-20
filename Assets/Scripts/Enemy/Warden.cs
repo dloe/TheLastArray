@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class Warden : BaseEnemy
 {
+    /// <summary>
+    /// Warden Enemy Behaviors
+    /// Alex
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - inherited from BaseEnemy parent
+    /// </summary>
+    
     [Header ("Wardens special mchanics")]
     public GameObject sprout;
     public GameObject spawnpoint;

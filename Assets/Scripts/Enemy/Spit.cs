@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class Spit : MonoBehaviour
 {
+    /// <summary>
+    /// Spit Enemy Behaviors
+    /// Alex
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - inherited from BaseEnemy parent
+    /// </summary>
+    
     public int speed;
     public GameObject gas;
     int _lifeTime = 4;

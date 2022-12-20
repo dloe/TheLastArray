@@ -7,6 +7,16 @@ using UnityEngine.Audio;
 
 public class UI : MonoBehaviour
 {
+    /// <summary>
+    /// UI player menu
+    /// Jeremy Castada
+    /// 
+    /// Last Updated: 4/27/21
+    /// 
+    /// Notes:
+    ///  - player pause menu UI
+    /// </summary>
+
     public GameObject pauseMenu;
     //public GameObject controlMenu;
     public GameObject optionMenu;
@@ -16,9 +26,6 @@ public class UI : MonoBehaviour
     public GameObject quitPrompt;
     public GameObject pauseBG;
    // public GameObject howToPlay;
-
-
-   
 
     public static UI Instance;
 
@@ -71,8 +78,6 @@ public class UI : MonoBehaviour
         //    LevelFadeOut();
         //}
     }
-
-
 
     /// <summary>
     /// Pause Game
@@ -187,6 +192,7 @@ public class UI : MonoBehaviour
 
     public Text masterText, musicText, sfxText; //, qualityText;
 
+    //reimplment if we ever go fully 3D
    //public void SetGraphics(float qualityIndex)
    //{
    //    QualitySettings.SetQualityLevel((int)qualityIndex);
@@ -213,9 +219,6 @@ public class UI : MonoBehaviour
         }
         //StartCoroutine(DebugResolution());
     }
-
-   
-
 
     /// <summary>
     /// Sets the Volume of Master based on the float sliderValue
@@ -295,107 +298,10 @@ public class UI : MonoBehaviour
             sfx.value = Mathf.Pow(10f, (sfxValue / 20));
         }
 
-
-
         masterText.text = "Master: " + Mathf.Round(master.value * 100);
         musicText.text = "Music: " + Mathf.Round(music.value * 100);
         sfxText.text = "SFX: " + Mathf.Round(sfx.value * 100);
-
-
-
     }
     #endregion
-
-    //#region Scene Transitions
-    ////interpolation
-    //bool fadeIn = false;
-    //bool fadeOut = false;
-    //float timeStart;
-    //float u;
-    //bool ctc = false;
-    //float a0, a1, a01;
-    //bool fading = false;
-    //[SerializeField]
-    //public Image transBar;
-    //public void StartFadeIn()
-    //{
-    //    // Debug.Log("on");
-    //    fadeIn = true;
-    //    ctc = true;
-    //    u = 1.0f;
-    //}
-    //
-    //public void StartFadeOut()
-    //{
-    //    fadeOut = true;
-    //    ctc = true;
-    //    u = 0.0f;
-    //}
-    ///// <summary>
-    ///// Scene Transitions, will incorperate a fade in and out
-    ///// - will not use animator on canvas to avoid stuff being in update
-    ///// - will use interpolation on panels alpha
-    ///// </summary>
-    //public void LevelFadeOut()
-    //{
-    //    if (ctc)
-    //    {
-    //        a0 = 0f;
-    //        a1 = 1.0f;
-    //        ctc = false;
-    //        fading = true;
-    //        timeStart = Time.time;
-    //    }
-    //    if (fading)
-    //    {
-    //        u = (Time.time - timeStart);
-    //        //u = 1 - u;
-    //        if (u >= 1.0)
-    //        {
-    //            u = 1;
-    //            fading = false;
-    //            fadeOut = false;
-    //            Debug.Log("off");
-    //        }
-    //
-    //        a01 = (1 - u) * a0 + u * a1;
-    //
-    //        Color temp = transBar.color;
-    //        temp.a = a01;
-    //        transBar.color = temp;
-    //    }
-    //}
-    //
-    //
-    //public void LevelFadeIn()
-    //{
-    //    if (ctc)
-    //    {
-    //        a0 = 1.0f;
-    //        a1 = 0f;
-    //        ctc = false;
-    //        fading = true;
-    //        timeStart = Time.time;
-    //    }
-    //    if (fading)
-    //    {
-    //        u = (Time.time - timeStart) / 1.0f;
-    //        u = 1 - u;
-    //        if (u <= 0.0f)
-    //        {
-    //            u = 0;
-    //            fading = false;
-    //            fadeIn = false;
-    //            // Debug.Log("off");
-    //        }
-    //
-    //        a01 = (1 - u) * a0 + u * a1;
-    //
-    //        Color temp = transBar.color;
-    //        temp.a = 1 - a01;
-    //        transBar.color = temp;
-    //    }
-    //}
-    //#endregion
 
 }

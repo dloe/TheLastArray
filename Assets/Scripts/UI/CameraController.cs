@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    /// <summary>
+    /// Camera Controller
+    /// Jeremy Castada
+    /// 
+    /// Last Updated: 4/27/21
+    /// 
+    /// Notes:
+    ///  - manages camera movement throughout levels
+    /// </summary>
     public static CameraController Instance;
     private GameObject playerObject;
     public Vector3 offset;
@@ -52,22 +61,17 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        //not in use
         //transform.localPosition = playerObject.transform.localPosition + offset;
-
         //transform.Translate((playerObject.transform.position + offset).normalized);
         transform.position = playerObject.transform.position + Player.Instance.playerHolderTransform.TransformPoint(offset);
 
         if((!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy) && !Upgrades.Instance.upgradeMenu.activeInHierarchy )
         {
-            
             panCamera();
         }
         
         clampOffset();
-
-
-
     }
 
     private void panCamera()
@@ -99,7 +103,6 @@ public class CameraController : MonoBehaviour
             {
                 offset.x += xModifier * panSpeed * Time.deltaTime;
             }
-
         }
         else
         {
@@ -117,7 +120,6 @@ public class CameraController : MonoBehaviour
             {
                 offset.z -= zModifier * panSpeed * Time.deltaTime;
             }
-            
         }
         else if (Input.mousePosition.y > getScrnFrac(false, 2f) + getScrnFrac(false, verticalNeutralZone))
         {

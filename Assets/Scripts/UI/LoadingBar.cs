@@ -6,6 +6,17 @@ using UnityEngine.SceneManagement;
 
 public class LoadingBar : MonoBehaviour
 {
+    /// <summary>
+    /// Player Script
+    /// Dylan Loe
+    /// 
+    /// Last Updated: 4/27/21
+    /// 
+    /// Notes:
+    ///  - Level loading screen UI
+    ///  
+    /// - This needs a second look though, main goal is for this to run when levels are generating not just for Unity level load
+    /// </summary>
     public Image progress;
 
     void Start()

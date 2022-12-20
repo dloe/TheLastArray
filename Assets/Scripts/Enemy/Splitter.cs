@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class Splitter : BaseEnemy
 {
+    /// <summary>
+    /// Splitter Enemy Behaviors
+    /// Alex
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - inherited from BaseEnemy parent
+    /// </summary>
+    
     [Header("spliter shit")]
     public GameObject Splited;
     public GameObject loc1, loc2;

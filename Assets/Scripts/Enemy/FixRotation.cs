@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class FixRotation : MonoBehaviour
 {
-    //Quaternion rotation;
-    //void Awake()
-    //{
-    //    rotation = transform.rotation;
-    //}
+    /// <summary>
+    /// Boss Rotation Behavior
+    /// Dylan
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - Additional rotation behavior for the boss enemy
+    /// </summary>
     public bool isBoss = false;
     float yRot;
     void LateUpdate()

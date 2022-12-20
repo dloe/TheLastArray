@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class Dog : BaseEnemy
 {
+    /// <summary>
+    /// Dog Behaviors
+    /// Alex
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - inherited from BaseEnemy parent
+    /// </summary>
     public bool root = true;
     public GameObject sp1, sp2;
     public GameObject dog;

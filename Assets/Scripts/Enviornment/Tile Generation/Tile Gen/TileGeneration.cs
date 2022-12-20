@@ -259,7 +259,7 @@ public class TileGeneration : MonoBehaviour
                 tilePlaceholderRef.transform.parent = nodeTile.transform;
                 tilePlaceholderRef.GetComponent<Tile>().posOnGrid = new Vector2(rows, col);
                 tilePlaceholderRef.GetComponent<Tile>().hasDoors = hasDoors;
-                //small issue were tile no longer automatically deltes doros on start
+                //small issue were tile no longer automatically deltes doors on start
                 //if(!hasDoors)
                     //tilePlaceholderRef.GetComponent<Tile>().RemoveDoors();
 

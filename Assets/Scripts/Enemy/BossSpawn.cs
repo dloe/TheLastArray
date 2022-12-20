@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class BossSpawn : MonoBehaviour
 {
+    /// <summary>
+    /// Boss Spawn Event
+    /// Dylan Loe
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - checks for player to enter radius
+    /// - when player enters radius, change objective, look door behind player and spawn boss
+    ///     - boss must be defeated for player to leave area
+    /// </summary>
 
-    //checks for player to enter radius
-    //when player enters radisu, change objective, look door behind player and spawn boss
     public Boss_PresetTileInfo tile;
     public GameObject bossdoor;
-   // public Objectives obj;
     public float radius = 6.25f;
     public GameObject bossObj;
     bool startCheck = false;

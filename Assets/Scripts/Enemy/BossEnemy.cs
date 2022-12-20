@@ -7,6 +7,16 @@ using UnityEngine.UI;
 
 public class BossEnemy : MonoBehaviour
 {
+    /// <summary>
+    /// Boss Enemy
+    /// Dylan
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - Boss Enenmy Behaviors
+    ///     - 2 phases and multiple attack types
+    /// </summary>
+    
     public Image EnemyImage;
     [HideInInspector]
     public int imageDirMod = 1;

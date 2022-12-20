@@ -13,11 +13,17 @@ public struct Dropable
 
 public class OutCast : BaseEnemy
 {
-
+    /// <summary>
+    /// Outcast Behaviors
+    /// Alex
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - inherited from BaseEnemy parent
+    /// </summary>
     public Dropable[] dropableItem;
 
-
-
+    //drop item event, happens on death
     void DropItem()
     {
         int i = UnityEngine.Random.Range(0, 100);

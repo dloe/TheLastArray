@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    /// <summary>
+    /// Bullet projectile behavior
+    /// Jeremy Castada
+    /// 
+    /// Last Updated: 4/27/21
+    /// 
+    /// Notes:
+    ///  - handles bullet side collisions
+    /// </summary>
+    
     public int damageToDeal = 1;
     public float speed = 10f;
     public float lifeTime = 5f;
@@ -22,13 +32,10 @@ public class Bullet : MonoBehaviour
         CheckCollision();
         transform.Translate(Vector3.forward * speed * Time.deltaTime, Space.Self);
         CheckCollision();
-
-
     }
 
     void CheckCollision()
     {
-        
         RaycastHit hit;
         if(Physics.SphereCast(transform.position, 0.01f,transform.forward,out hit, 0.3f))
         {
@@ -65,19 +72,14 @@ public class Bullet : MonoBehaviour
                 
             }
 
-
             if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enviroment")
             {
                 Destroy(gameObject);
             }
-
         }
-
-        
     }
     private void OnDrawGizmos()
     {
-        
         Gizmos.color = Color.red;
         Gizmos.DrawSphere(transform.position + transform.forward * 0.3f, 0.1f);
     }

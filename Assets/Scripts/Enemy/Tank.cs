@@ -4,9 +4,16 @@ using UnityEngine;
 
 public class Tank : BaseEnemy
 {
-    public float knockback = 0;
-
+    /// <summary>
+    /// Tank Enemy Behaviors
+    /// Alex
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - inherited from BaseEnemy parent
+    /// </summary>
     
+    public float knockback = 0;
 
     public override void specialAttack(Vector3 temp)
     {

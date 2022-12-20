@@ -13,6 +13,8 @@ public class GunAttachment : Activatable
     /// <summary>
     /// Activatable
     /// 
+    /// Jeremy
+    /// 
     /// Last Updated: 4/15/21
     /// 
     /// - activatable object used as a gun attachment

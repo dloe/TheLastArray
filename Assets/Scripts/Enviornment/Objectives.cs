@@ -40,7 +40,6 @@ public class Objectives : MonoBehaviour
         public bool complete;
 
         public int numTimes = 0;
-
     }
     void Awake()
     {
@@ -60,7 +59,6 @@ public class Objectives : MonoBehaviour
         }
     }
 
-
     public void UpdateObjectiveText()
     {
         //Debug.Log("check");
@@ -73,7 +71,6 @@ public class Objectives : MonoBehaviour
             objectiveText.text = mainObjective.objectiveMessage;
         }
     }
-
 
     public GameObject SetObjectiveRef(int objectiveInt, GameObject spot)
     {

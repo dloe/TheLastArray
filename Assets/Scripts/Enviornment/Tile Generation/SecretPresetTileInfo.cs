@@ -16,5 +16,4 @@ public class SecretPresetTileInfo : PresetTileInfo
     /// </summary>
     public KeyHole keyHole;
     public GameObject interior;
-
 }

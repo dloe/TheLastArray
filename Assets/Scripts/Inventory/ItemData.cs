@@ -27,8 +27,11 @@ public class ItemData : ScriptableObject
 {
     /// <summary>
     /// Item Data Scriptaable Object
+    /// Jeremy Casada
     /// 
+    ///  Last updated: 5/20/22
     /// 
+    /// Scriptable object for all item data stats.
     /// </summary>
 
     public Sprite itemSprite;

@@ -4,9 +4,17 @@ using UnityEngine;
 
 public class Stalker : BaseEnemy
 {
+    /// <summary>
+    /// Stalker Enemy Behaviors
+    /// Alex
+    /// 
+    /// Last Updated: 4/15/21
+    /// 
+    /// - inherited from BaseEnemy parent
+    /// </summary>
+    
     public int stealthTime;
     bool hidden;
-
     public override void specialAttack(Vector3 temp)
     {
         if (myState != enemyState.attacking && readyToAttack == true)

@@ -3,10 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FPSDisplay : MonoBehaviour
-{
+{/// <summary>
+ /// UI FPS Display
+ /// Jeremy Castada
+ /// 
+ /// Last Updated: 4/27/21
+ /// 
+ /// Notes:
+ ///  - used to display FPS to player
+ /// </summary>
     float deltaTime = 0.0f;
-
-
 
     void Update()
     {
@@ -28,6 +34,4 @@ public class FPSDisplay : MonoBehaviour
         string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);
         GUI.Label(rect, text, style);
     }
-
-
 }

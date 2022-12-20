@@ -12,6 +12,7 @@ public class Resource : Activatable
     /// Last Updated: 4/15/21
     /// 
     /// - activatable used to add resources to the players inventory
+    /// - see game doc for resource uses
     /// </summary>
     public enum ResourceType
     {

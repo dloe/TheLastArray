@@ -193,10 +193,6 @@ public class Player : MonoBehaviour
     Vector3 lookDir;
     Plane rayPlane = new Plane(Vector3.up, 0.5f);
 
-
-
-    
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -242,7 +238,6 @@ public class Player : MonoBehaviour
             mouseLook();
             doMovement();
             
-
             //if there is a grabbable item and the inventory is not full, then E picks up item
             if (Input.GetKeyDown(KeyCode.E) && !Upgrades.Instance.upgradeMenu.activeInHierarchy)
             {
@@ -316,15 +311,11 @@ public class Player : MonoBehaviour
                 inventory.DropItem();
             }
 
-
-
             if (Input.GetKeyDown(KeyCode.R) && inventory.selectedItem != null && inventory.selectedItem.itemData.itemType == ItemType.RangedWeapon && !inventory.selectedItem.itemData.reloading && inventory.selectedItem.itemData.loadedAmmo < inventory.selectedItem.itemData.magSize)
             {
 
                 reload();
             }
-
-
 
 #if UNITY_EDITOR
             //for testing damage and healing
@@ -384,7 +375,6 @@ public class Player : MonoBehaviour
         meleeVisual.SetActive(active);
     }
 
-
     /// <summary>
     /// Moves Player Based On WASD
     /// </summary>
@@ -395,7 +385,6 @@ public class Player : MonoBehaviour
         moveDir = playerHolderTransform.TransformDirection(moveDir);
         moveDir *= Time.deltaTime * speedStat;
 
-        
         //rb.MovePosition(transform.position + moveDir);
 
         if(transform.position.y < -5)
@@ -412,8 +401,6 @@ public class Player : MonoBehaviour
     /// </summary>
     private void mouseLook()
     {
-
-
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
         float dist;
@@ -430,10 +417,6 @@ public class Player : MonoBehaviour
 
         }
         //Debug.Log(lookDir);
-
-
-        
-
 
         Vector3 localLook = Quaternion.AngleAxis(-playerHolderTransform.rotation.eulerAngles.y, Vector3.up) * lookDir;
         int zFloor = Mathf.FloorToInt(Mathf.Abs(localLook.z));
@@ -522,8 +505,6 @@ public class Player : MonoBehaviour
                         inventory.selectedItem.itemData.loadedAmmo--;
                     }
 
-                    
-
                     // Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
                     WeaponFireAudio(4);
                 }
@@ -532,7 +513,6 @@ public class Player : MonoBehaviour
                     WeaponFireAudio(6);
                     reload();
                 }
-
             }
             else if (inventory.selectedItem.itemData.ammoType == AmmoType.HeavyAmmo)
             {
@@ -552,7 +532,6 @@ public class Player : MonoBehaviour
                         inventory.selectedItem.itemData.loadedAmmo--;
                     }
                     
-
                     // Debug.Log("Fire Weapon: " + inventory.selectedItem.itemData.itemName);
                     WeaponFireAudio(1);
                 }
@@ -564,7 +543,6 @@ public class Player : MonoBehaviour
             }
             InventoryUI.Instance.RefreshUI();
         }
-
     }
 
     /// <summary>
@@ -624,7 +602,6 @@ public class Player : MonoBehaviour
     /// </summary>
     private void meleeAttack()
     {
-
         RaycastHit hit;
         if (inventory.selectedItem.itemData.canAttack)
         {
@@ -633,7 +610,6 @@ public class Player : MonoBehaviour
             //Debug.Log("Melee Attack");
             if (Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward, out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange, layerMask))
             {
-
                 StartCoroutine(inventory.selectedItem.itemData.CoolDown());
 
                 if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy" && hit.transform.TryGetComponent<BossEnemy>(out BossEnemy mBossEnemy))
@@ -655,11 +631,8 @@ public class Player : MonoBehaviour
                             if (inventory.selectedItem.itemData.name.Contains("Instance"))
                             {
                                 Destroy(inventory.selectedItem.itemData);
-
-
                             }
                             inventory.RemoveItem(inventory.selectedItem);
-
                         }
                         InventoryUI.Instance.RefreshUI();
                     }
@@ -667,8 +640,6 @@ public class Player : MonoBehaviour
                 }
             }
         }
-
-
     }
 
     /// <summary>
@@ -715,20 +686,16 @@ public class Player : MonoBehaviour
             }
 
             //Debug.Log("Damage Before Resistance: " + damage);
-            
-            
             double resistance = dmgResist / (2 * levelMod + dmgResist);
             //Debug.Log("Damage After Resistance: " + (damage - (int)(damage * resistance)));
             Health -= (damage - (int)(damage * resistance));
             StartCoroutine(Damaged());
         }
-
     }
 
     bool ow = false;
     public void poisned(int damage)
     {
-        
         if(!ow)
         {
             ow = true;
@@ -745,7 +712,6 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-
         if (other.TryGetComponent<Activatable>(out Activatable thing))
         {
             thingsToActivate.Add(thing);
@@ -811,8 +777,6 @@ public class Player : MonoBehaviour
             //Debug.Log(thing.name + " trigger left, removed from reachable activatables");
         }
     }
-
-
     IEnumerator Damaged()
     {
         playerImage.color = Color.red;
@@ -837,7 +801,6 @@ public class Player : MonoBehaviour
     }
 
     int originalMax;
-
     IEnumerator UnstableStimmy()
     {
         usingStimmy = true;

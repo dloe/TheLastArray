@@ -46,8 +46,6 @@ public class Inventory
         
     }
 
-
-
     public bool Contains(ItemData itemData)
     {
         bool result = false;
@@ -123,8 +121,6 @@ public class Inventory
         itemList.Add(new Item(itemData));
 
     }
-
-
 
     public void RemoveItem(Item item)
     {
@@ -280,7 +276,5 @@ public class Inventory
            // Debug.Log(itemData.itemName + " ammo: " + itemData.loadedAmmo);
             AddItemNoUI(itemData);
         }
-
-        
     }
 }
