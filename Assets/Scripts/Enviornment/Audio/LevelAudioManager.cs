@@ -33,7 +33,7 @@ public class LevelAudioManager : MonoBehaviour
     {
         if(overrideChoice == null && ambientAudioClips.Length != 0)
         {
-            audioSourceComponent.clip = ambientAudioClips[Random.Range(0, ambientAudioClips.Length)];
+            audioSourceComponent.clip = ambientAudioClips[Random.Range(0, ambientAudioClips.Length - 1)];
         }
         else
         {

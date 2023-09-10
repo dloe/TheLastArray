@@ -115,6 +115,9 @@ public class LevelAssetSpawn : MonoBehaviour
         if (debugPrints)
             myTileGeneration.PrintToLog("Populating Grid....", false);
 
+        RenameTileGrid();
+        
+
         StartUpLevelAssetSpawn();
 
         GridAnalysis();
@@ -134,6 +137,31 @@ public class LevelAssetSpawn : MonoBehaviour
 
         //ACTIVATE ENEMIES
         ActivateEnemies();
+    }
+
+    void RenameTileGrid()
+    {
+        if (this.transform.name == "TileGen")
+        {
+            //based on what level we are on, we are renaming the map from TileGen
+            switch (myLocalLevel.thisLevelTier)
+            {
+                case levelTier.level1:
+                    this.transform.name = "Level1_GridMap_Forest";
+                    break;
+                case levelTier.level2:
+                    this.transform.name = "Level2_GridMap_Outskirts";
+                    break;
+                case levelTier.level3:
+                    this.transform.name = "Level3_GridMap_Urban";
+                    break;
+                case levelTier.level4:
+                    this.transform.name = "Level4_GridMap_LastArray";
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     //sets some values when this script is first called
