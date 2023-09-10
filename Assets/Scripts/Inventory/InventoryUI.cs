@@ -154,10 +154,6 @@ public class InventoryUI : MonoBehaviour
         SelectSlot(selectedItemIndex);
         inventory.Equip(selectedItemIndex);
 
-
-
-
-        //DYLAN WAS HERE
         //for currently equiped item text
         if (inventory.selectedItem != null)
         {

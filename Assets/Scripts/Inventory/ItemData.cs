@@ -41,12 +41,12 @@ public class ItemData : ScriptableObject
 
     public bool hasDurability = false;
     public int damage = 1;
-    //ammo?
     public int durability = -1;
     public float coolDownPeriod = 0.5f;
     public float reloadTime = 1f;
 
     public float meleeRange = 1f;
+    public Sprite UIReticle;
 
     public AmmoType ammoType;
     public int magSize = 5;
@@ -163,6 +163,7 @@ public class ItemData : ScriptableObject
 public class ItemDataSave
 {
     public string itemSpritePath;
+    public string UIReticleSpritePath;
     public ItemType itemType;
     public string itemName ;
 
@@ -189,6 +190,8 @@ public class ItemDataSave
     {
         //Debug.Log(itemData.itemSprite.name);
         itemSpritePath = "ItemSprites/" + itemData.itemSprite.name;
+        UIReticleSpritePath = "ItemSprites/" + itemData.UIReticle.name;
+
         //Debug.Log(itemSpritePath) ;
         itemType = itemData.itemType;
         itemName = itemData.itemName;
@@ -212,6 +215,7 @@ public class ItemDataSave
     public void LoadToItemData(ItemData itemData)
     {
         itemData.itemSprite = Resources.Load<Sprite>(itemSpritePath);
+        itemData.UIReticle = Resources.Load<Sprite>(UIReticleSpritePath);
         //Debug.Log(itemSpritePath);
         //Debug.Log(itemData.itemSprite, itemData.itemSprite);
         itemData.itemType = itemType;
@@ -285,6 +289,7 @@ public class ItemDataEditor : Editor
             itemData.damage = EditorGUILayout.IntField("Damage to Deal", itemData.damage);
             itemData.coolDownPeriod = EditorGUILayout.FloatField("Attack Cooldown", itemData.coolDownPeriod);
             itemData.meleeRange = EditorGUILayout.FloatField("Melee Range", itemData.meleeRange);
+            itemData.UIReticle = (Sprite)EditorGUILayout.ObjectField(itemData.UIReticle, typeof(Sprite), false, GUILayout.Width(80), GUILayout.Height(80));
         }
 
         if (itemData.itemType == ItemType.RangedWeapon)

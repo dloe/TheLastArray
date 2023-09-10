@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
 
     public PlayerData baseData;
 
-    public GameObject meleeVisual;
+    public GameObject[] meleeVisual;
 
     [Header("Prefabs for Bullet")]
     public GameObject pistolBulletPrefab;
@@ -370,11 +370,28 @@ public class Player : MonoBehaviour
     /// <param name="active"></param>
     public void SetMeleeVisualActive(bool active)
     {
+        int meleeType = 0;
+        //set meleeVisual depending on type of melee
+        if (Player.Instance.inventory.selectedItem.itemData.itemType == ItemType.MeleeWeapon && inventory.selectedItem.itemData.itemName == "Knife")
+        {
+            //Debug.Log(Player.Instance.inventory.selectedItem.itemData.name);
+            //use small melee redicle aka index 0
+            meleeType = 0;
+            //can set the reticle based on ItemData
+            meleeVisual[0].transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = inventory.selectedItem.itemData.UIReticle;
+
+        } else if (Player.Instance.inventory.selectedItem.itemData.itemType == ItemType.MeleeWeapon && inventory.selectedItem.itemData.itemName == "Metal Spear")
+        {
+            //use bigger melee redacle aka index 1
+            meleeType = 1;
+            meleeVisual[1].transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = inventory.selectedItem.itemData.UIReticle;
+        }
+
         if (active)
         {
-            meleeVisual.transform.position = _mainTransform.position + (_mainTransform.forward * inventory.selectedItem.itemData.meleeRange);
+            meleeVisual[meleeType].transform.position = _mainTransform.position + (_mainTransform.forward * inventory.selectedItem.itemData.meleeRange);
         }
-        meleeVisual.SetActive(active);
+        meleeVisual[meleeType].SetActive(active);
     }
 
     /// <summary>
@@ -617,7 +634,7 @@ public class Player : MonoBehaviour
                 if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy" && hit.transform.TryGetComponent<BossEnemy>(out BossEnemy mBossEnemy))
                 {
                     mBossEnemy.TakeDamage(inventory.selectedItem.itemData.damage + damageModifier);
-                    Debug.Log("yep boss hit");
+                    //Debug.Log("yep boss hit");
                 }
                 else if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
                 {
@@ -828,6 +845,7 @@ public class Player : MonoBehaviour
 
     public void SetStatsToBase()
     {
+        Debug.Log("setting stats to base");
         maxHealth = baseData.maxHealth;
         Health = baseData.health;
         dmgResist = baseData.dmgResist;
@@ -937,6 +955,7 @@ public class Player : MonoBehaviour
     {
         if (SaveExists())
         {
+            Debug.Log("save exists");
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Application.persistentDataPath + "/player_save.dat", FileMode.Open);
             PlayerSave playerSave = (PlayerSave)bf.Deserialize(file);
