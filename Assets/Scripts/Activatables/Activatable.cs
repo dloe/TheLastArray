@@ -16,10 +16,16 @@ public class Activatable : MonoBehaviour
     ///     - objectives
     ///     - entrances
     ///     - crafting table
+    ///     
+    /// 
+    /// TO DO:
+    /// - consider removing the Player.Instance.thingsToActivate.Remove(<WORLDITEM>); for every intractable that we end 
+    /// up destorying. It sometimes moves them up the list which can cause problems.
     /// </summary>
     public bool isActivated = false;
 
     //virtual activation function that is overwritten for every time that spawns
+    //
     public virtual void Activate()
     {
         Debug.Log("Unset Activatable has be activated...");

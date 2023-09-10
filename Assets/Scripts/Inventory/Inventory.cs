@@ -16,6 +16,7 @@ public class Inventory
     /// - adding items, talks with UI and player
     /// 
     /// </summary>
+    
     [SerializeField]
     private List<Item> itemList;
 
@@ -58,6 +59,22 @@ public class Inventory
             }
         }
         return result;
+    }
+
+    //finds our corresponding item in our inventory and returns a reference
+    //for picking up dublicate weapons
+    public Item Find(ItemData itemData)
+    {
+        foreach (Item invItem in itemList)
+        {
+            if (invItem.itemData.itemName == itemData.itemName)
+            {
+                return invItem;
+                break;
+            }
+        }
+
+        return null;
     }
 
     public bool Contains(Item item)

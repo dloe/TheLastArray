@@ -41,6 +41,7 @@ public class ItemData : ScriptableObject
 
     public bool hasDurability = false;
     public int damage = 1;
+    //ammo?
     public int durability = -1;
     public float coolDownPeriod = 0.5f;
     public float reloadTime = 1f;

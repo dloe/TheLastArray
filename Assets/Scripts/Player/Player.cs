@@ -58,6 +58,7 @@ public class Player : MonoBehaviour
     [Header("Melee Forward Detection Distance")]
     public float meleeDist = 1f;
 
+    #region Audio
     [Space(20)]
     AudioSource _audioSource;
     [Header("Weapon Audio")]
@@ -71,6 +72,7 @@ public class Player : MonoBehaviour
     [Header("Damage Audio")]
     public AudioClip[] takeDamage_clip;
     public AudioClip[] armorDamage_clip;
+    #endregion
 
     #region Ammo
     public int currentLightAmmo = 0;
@@ -180,8 +182,8 @@ public class Player : MonoBehaviour
     #endregion
 
     public Material damaged, norm;
-   
 
+    #region PlayerMovement
     //transform of the player
     Transform _mainTransform;
     public Transform playerHolderTransform;
@@ -192,6 +194,8 @@ public class Player : MonoBehaviour
     Vector3 moveDir;
     Vector3 lookDir;
     Plane rayPlane = new Plane(Vector3.up, 0.5f);
+
+    #endregion
 
     private void Awake()
     {
@@ -258,8 +262,6 @@ public class Player : MonoBehaviour
                     }
                     
                     
-                    
-
                     thingToActivate.Activate();
                     thingToActivate = null;
 
