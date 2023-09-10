@@ -115,9 +115,6 @@ public class LevelAssetSpawn : MonoBehaviour
         if (debugPrints)
             myTileGeneration.PrintToLog("Populating Grid....", false);
 
-        RenameTileGrid();
-        
-
         StartUpLevelAssetSpawn();
 
         GridAnalysis();
@@ -137,6 +134,20 @@ public class LevelAssetSpawn : MonoBehaviour
 
         //ACTIVATE ENEMIES
         ActivateEnemies();
+
+        
+    }
+
+    //rename TileGrid for easy debugging when tile system is finished
+    private void Start()
+    {
+        StartCoroutine(LateStart(3.0f));
+    }
+
+    IEnumerator LateStart(float waitTime)
+    {
+        yield return new WaitForSeconds(waitTime);
+        RenameTileGrid();
     }
 
     void RenameTileGrid()

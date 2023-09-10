@@ -14,13 +14,19 @@ public class LoadingBar : MonoBehaviour
     /// 
     /// Notes:
     ///  - Level loading screen UI
+    ///  - also for loading tips
     ///  
     /// - This needs a second look though, main goal is for this to run when levels are generating not just for Unity level load
     /// </summary>
     public Image progress;
 
+    public Text helpFullTipText;
+    public LoadingScreenTipsData tipData;
+    public Image bgImage;
+
     void Start()
     {
+        LoadingTipAndBG();
         StartCoroutine(LoadNextScene());
     }
 
@@ -44,5 +50,13 @@ public class LoadingBar : MonoBehaviour
             Debug.LogError("Invalid Scene Name: " + NextScene);
             SceneManager.LoadScene(0);
         }
+    }
+
+    void LoadingTipAndBG()
+    {
+        string tip = tipData.loadingScreenTips[Random.Range(0, tipData.loadingScreenTips.Length - 1)];
+        helpFullTipText.text = tip;
+
+        bgImage.sprite = tipData.loadingScreenBackgroundImages[Random.Range(0, tipData.loadingScreenBackgroundImages.Length - 1)];
     }
 }
