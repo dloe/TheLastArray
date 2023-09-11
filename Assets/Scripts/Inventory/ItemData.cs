@@ -46,6 +46,8 @@ public class ItemData : ScriptableObject
     public float reloadTime = 1f;
 
     public float meleeRange = 1f;
+    //multiplier for melee knockback
+    public float meleeKnockback = 1f;
     public Sprite UIReticle;
 
     public AmmoType ammoType;
@@ -174,6 +176,7 @@ public class ItemDataSave
     public float reloadTime;
 
     public float meleeRange;
+    public float meleeKnockback;
 
     public AmmoType ammoType;
     public int magSize;
@@ -201,6 +204,7 @@ public class ItemDataSave
         coolDownPeriod = itemData.coolDownPeriod;
         reloadTime = itemData.reloadTime;
         meleeRange = itemData.meleeRange;
+        meleeKnockback = itemData.meleeKnockback;
         ammoType = itemData.ammoType;
         magSize = itemData.magSize;
         loadedAmmo = itemData.loadedAmmo;
@@ -226,6 +230,7 @@ public class ItemDataSave
         itemData.coolDownPeriod = coolDownPeriod;
         itemData.reloadTime= reloadTime;
         itemData.meleeRange = meleeRange;
+        itemData.meleeKnockback = meleeKnockback;
         itemData.ammoType = ammoType;
         itemData.magSize = magSize;
         itemData.loadedAmmo = loadedAmmo;
@@ -289,6 +294,7 @@ public class ItemDataEditor : Editor
             itemData.damage = EditorGUILayout.IntField("Damage to Deal", itemData.damage);
             itemData.coolDownPeriod = EditorGUILayout.FloatField("Attack Cooldown", itemData.coolDownPeriod);
             itemData.meleeRange = EditorGUILayout.FloatField("Melee Range", itemData.meleeRange);
+            itemData.meleeKnockback = EditorGUILayout.FloatField("Melee Knockback", itemData.meleeKnockback);
             itemData.UIReticle = (Sprite)EditorGUILayout.ObjectField(itemData.UIReticle, typeof(Sprite), false, GUILayout.Width(80), GUILayout.Height(80));
         }
 

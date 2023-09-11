@@ -30,6 +30,7 @@ public class Item
                 itemData.damage = data.damage;
                 itemData.coolDownPeriod = data.coolDownPeriod;
                 itemData.meleeRange = data.meleeRange;
+                itemData.meleeKnockback = data.meleeKnockback;
                 itemData.hasDurability = data.hasDurability;
                 itemData.durability = data.durability;
             }

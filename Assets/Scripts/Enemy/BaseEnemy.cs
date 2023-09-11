@@ -427,10 +427,27 @@ public class BaseEnemy : MonoBehaviour
         z = -z;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, Transform instigator, float damageKnockBack)
     {
         TakeDamageAudio();
         baseHealth -= damage;
+
+        if(instigator != null)
+        {
+            float kbMultiplier = damage;
+            if(damageKnockBack != 0)
+            {
+                kbMultiplier = damageKnockBack;
+            } else if(damageKnockBack < 0) { 
+                kbMultiplier = 0.0f;
+            }
+
+            //push back enemy
+            //for now might try to have a basic scale with damage
+            gameObject.GetComponent<Rigidbody>().AddForce(instigator.forward * kbMultiplier);
+        }
+        
+
         StartCoroutine(Damaged());
     }
 
@@ -444,7 +461,7 @@ public class BaseEnemy : MonoBehaviour
         for(int i = 0; i < 3; i++)
         {
             Debug.Log("Fire damage " + i);
-            TakeDamage(dmgPerSecond);
+            TakeDamage(dmgPerSecond, null, -1.0f);
             yield return new WaitForSeconds(1f);
         }
     }

@@ -640,7 +640,8 @@ public class Player : MonoBehaviour
                 {
                     Debug.Log("Durability Before: " + inventory.selectedItem.itemData.durability);
 
-                    hit.transform.GetComponent<BaseEnemy>().TakeDamage(inventory.selectedItem.itemData.damage + damageModifier);
+                    hit.transform.GetComponent<BaseEnemy>().TakeDamage(inventory.selectedItem.itemData.damage + damageModifier, _mainTransform, inventory.selectedItem.itemData.meleeKnockback);
+
                     if (inventory.selectedItem.itemData.hasDurability)
                     {
                         inventory.selectedItem.itemData.durability--;

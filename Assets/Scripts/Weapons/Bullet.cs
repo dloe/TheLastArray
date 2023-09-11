@@ -18,6 +18,9 @@ public class Bullet : MonoBehaviour
     public float speed = 10f;
     public float lifeTime = 5f;
 
+    //Possible update to have high cal rounds to provide futher knockback on non-boss enemies
+    public float bulletKnockBack = 0.01f;
+
     public bool isEnemyBullet;
     public bool isFireBullet = false;
     // Start is called before the first frame update
@@ -54,7 +57,7 @@ public class Bullet : MonoBehaviour
                 else if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
                 {
 
-                    hit.transform.GetComponent<BaseEnemy>().TakeDamage(damageToDeal);
+                    hit.transform.GetComponent<BaseEnemy>().TakeDamage(damageToDeal, null, bulletKnockBack);
                     if (isFireBullet && hit.transform.gameObject != null)
                     {
                         hit.transform.GetComponent<BaseEnemy>().TakeFireDamge(1);
