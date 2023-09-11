@@ -14,6 +14,7 @@ public class MinionAirDropBehavior : MonoBehaviour
     ///     - Sets line renderer inital values
     /// </summary>
     public int damage;
+    public float baseMeleeKnockback = 7f;
     public float speed;
     public float checkRadius = 2;
     Vector3 rayHitTrans;
@@ -101,7 +102,7 @@ public class MinionAirDropBehavior : MonoBehaviour
             if (potentialTarget.gameObject.tag == "Player")
             {
                 //player in range, damage player
-                potentialTarget.gameObject.GetComponent<Player>().TakeDamage(1);
+                potentialTarget.gameObject.GetComponent<Player>().TakeDamage(1, baseMeleeKnockback, this.transform);
             }
         }
 

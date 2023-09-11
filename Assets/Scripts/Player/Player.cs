@@ -323,7 +323,7 @@ public class Player : MonoBehaviour
             //for testing damage and healing
             if (Input.GetKeyDown(KeyCode.Delete))
             {
-                TakeDamage(1);
+                TakeDamage(1, -1f, null);
             }
             else if (Input.GetKeyDown(KeyCode.T))
             {
@@ -673,7 +673,7 @@ public class Player : MonoBehaviour
     /// <summary>
     /// Damages Player Based On Amount to Heal from Selected Item
     /// </summary>
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, float knockBack, Transform instigator)
     {
         TakeDamageAudio(hasArmorPlate);
         if (hasArmorPlate)
@@ -705,6 +705,18 @@ public class Player : MonoBehaviour
                 levelMod = 1.0;
             }
 
+            if(instigator != null)
+            {
+                //apply knockback 
+                float kbMultiplier = 0.0f;
+                if(knockBack > 0)
+                {
+                    kbMultiplier = knockBack;
+                }
+
+                gameObject.GetComponent<Rigidbody>().AddForce(instigator.forward * kbMultiplier);
+            }
+
             //Debug.Log("Damage Before Resistance: " + damage);
             double resistance = dmgResist / (2 * levelMod + dmgResist);
             //Debug.Log("Damage After Resistance: " + (damage - (int)(damage * resistance)));
@@ -725,7 +737,7 @@ public class Player : MonoBehaviour
    
     IEnumerator pois(int damage)
     {
-        TakeDamage(damage);
+        TakeDamage(damage, -1.0f, null);
         yield return new WaitForSeconds(2);//shawn here 
         ow = false;
     }

@@ -53,6 +53,8 @@ public class BaseEnemy : MonoBehaviour
     //enemys base attack value
     public int baseAttack = 5;
 
+    public float baseMeleeKnockback = 10f;
+
     // the base move speed
     public float baseSpeed;
 
@@ -329,7 +331,7 @@ public class BaseEnemy : MonoBehaviour
                     readyToAttack = false;
                     attackCD = attackSpeed;
                     StartCoroutine(CoolDown());
-                    attackRay.transform.GetComponent<Player>().TakeDamage(baseAttack);
+                    attackRay.transform.GetComponent<Player>().TakeDamage(baseAttack, baseMeleeKnockback, this.transform);
                     
                     //Debug.LogError("HitPlayer");
                 }

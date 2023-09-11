@@ -19,7 +19,7 @@ public class Bullet : MonoBehaviour
     public float lifeTime = 5f;
 
     //Possible update to have high cal rounds to provide futher knockback on non-boss enemies
-    public float bulletKnockBack = 0.01f;
+    public float bulletKnockBack = 1f;
 
     public bool isEnemyBullet;
     public bool isFireBullet = false;
@@ -69,7 +69,7 @@ public class Bullet : MonoBehaviour
             {
                 if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Player")
                 {
-                    hit.transform.GetComponent<Player>().TakeDamage(damageToDeal);
+                    hit.transform.GetComponent<Player>().TakeDamage(damageToDeal, bulletKnockBack, this.transform);
                     Destroy(gameObject);
                 }
                 

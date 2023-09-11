@@ -41,8 +41,7 @@ public class BossEnemy : MonoBehaviour
 
     [Header("Base_Stats")]
 
-    //what enemy am I
-    //public EnemyType myType;
+    
 
     public enemyState myState = enemyState.following;
 
@@ -52,10 +51,15 @@ public class BossEnemy : MonoBehaviour
     //enemys base attack value - changes based on attack
     [Header("attack stats")]
     public int baseAttack = 5;
+    public float baseAttackKnockback = 10f;
     public int thrustAttack = 5;
+    public float thrustKnockback = 30f;
     public int shotgunPelletDamage = 3;
+    public float shotgunKnockback = 5f;
     public int bulletRingDamage = 3;
+    public float bulletRingKnockback = 2f;
     public int slamDamage = 5;
+    
 
     // the base move speed
     float baseSpeed = 5;
@@ -476,7 +480,7 @@ public class BossEnemy : MonoBehaviour
                 if (LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Player")
                 {
                     //Debug.Log("HitPlayer");
-                    attackRay.transform.GetComponent<Player>().TakeDamage(thrustAttack);
+                    attackRay.transform.GetComponent<Player>().TakeDamage(thrustAttack,thrustKnockback, this.transform);
                     yield return new WaitForSeconds(1.5f);
                     StartCoroutine(CoolDown());
                     StopCoroutine(ThrustForward());
@@ -734,7 +738,7 @@ public class BossEnemy : MonoBehaviour
            // if (playerDistanceFromBoss <= slamDistance - 1.5f)
             //{
                 Debug.Log((int)((multiplier) * slamDamage));
-                _target.GetComponent<Player>().TakeDamage((int)(1 / multiplier * slamDamage));
+                _target.GetComponent<Player>().TakeDamage((int)(1 / multiplier * slamDamage), -1.0f, null);
             //}
         }
         yield return new WaitForSeconds(1f);
