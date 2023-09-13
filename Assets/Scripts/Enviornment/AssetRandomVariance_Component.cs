@@ -29,13 +29,16 @@ public class AssetRandomVariance_Component : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        RandomizeBasesMaterial();
+        if(SetMaterialToRandomize)
+            RandomizeBasesMaterial();
 
-        RandomizeLights();
+        if(SetLightsToRandomize)
+            RandomizeLights();
     }
 
     void RandomizeBasesMaterial()
     {
+        
         Material choosenMat = possibleMatColors[Random.Range(0, possibleMatColors.Length - 1)];
 
         for(int index = 0; index < meshesToColor.Length; index++)
@@ -71,8 +74,9 @@ public class AssetRandomVariance_Component : MonoBehaviour
     {
         light.intensity += Random.Range(-25, 4);
         light.range += Random.Range(-6, 4);
-        light.color = new Color(light.color.r + Random.Range(-3, 3), light.color.g + Random.Range(-3, 3), 
-            light.color.b + Random.Range(-3, 3), light.color.a + Random.Range(-15, 15)); //Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+        light.spotAngle += Random.Range(-2, 5);
+        light.color = new Color(light.color.r + Random.Range(-0.06f, 0.06f), light.color.g + Random.Range(-0.06f, 0.06f), 
+            light.color.b + Random.Range(-0.06f, 0.06f), light.color.a + Random.Range(-6, 5)); //Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
     }
 
 

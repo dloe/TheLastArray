@@ -70,7 +70,6 @@ public class Inventory
             if (invItem.itemData.itemName == itemData.itemName)
             {
                 return invItem;
-                break;
             }
         }
 
