@@ -22,10 +22,13 @@ public class Dog : BaseEnemy
         base.Start();
         if(root)
         {
-            Instantiate(dog, sp1.transform.position, this.transform.rotation);
-            
-            Instantiate(dog, sp1.transform.position, this.transform.rotation);
-            
+            GameObject dogclone1 = Instantiate(dog, sp1.transform.position, this.transform.rotation);
+            dogclone1.transform.parent = this.transform.parent;
+            dogclone1.name += "_CloneOf_" + this.transform.name;
+
+            GameObject dogclone2 = Instantiate(dog, sp1.transform.position, this.transform.rotation);
+            dogclone2.transform.parent = this.transform.parent;
+            dogclone2.name += "_Clone2Of_" + this.transform.name;
         }
     }
 

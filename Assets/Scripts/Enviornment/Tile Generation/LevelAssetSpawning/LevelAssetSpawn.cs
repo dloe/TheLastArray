@@ -141,7 +141,7 @@ public class LevelAssetSpawn : MonoBehaviour
     //rename TileGrid for easy debugging when tile system is finished
     private void Start()
     {
-        StartCoroutine(LateStart(3.0f));
+        StartCoroutine(LateStart(2.0f));
     }
 
     IEnumerator LateStart(float waitTime)
@@ -221,7 +221,7 @@ public class LevelAssetSpawn : MonoBehaviour
             else
                 AnalyzeTile_Lvl4Modifier(t);
 
-            //condisider first linking 2 x 2s then goingthrough to activate walls
+            //considerings first linking 2 x 2s then going through to activate walls
 
             //add starting tile resources
             if (t.tileStatus == Tile.TileStatus.startingRoom)
@@ -1471,18 +1471,18 @@ public class LevelAssetSpawn : MonoBehaviour
 
     /// <summary>
     /// enemy spawning depends on tier
-    /// - each tier has differnt enemies
-    /// - each tier has differnt % spawn chance for each enemy
+    /// - each tier has different enemies
+    /// - each tier has different % spawn chance for each enemy
     /// - each possible enemy has a predetermined type set
     /// - runs through each possible enemy, determines who should spawn, and if this enemy type is a miniboss
-    /// - if a type doesnt spawn on that tier, sets a random lower difficult type
+    /// - if a type doest spawn on that tier, sets a random lower difficult type
     /// - mini bosses are 50 - 50 if there are mini spawns to spare
     /// 
     /// NOTE: This can also be better optimized, for future overhauls or adjustments
     ///     - USE TEMPLATE FUNCTION FOR OVERHAUL OF THIS SYSTEM
     ///     - having predetermined enemy types to read may still be more efficient (level designer gets to choose spawn rates, this just reads them)
     /// 
-    /// TO DO: condence into one function, takes tier as param
+    /// TO DO: condense into one function, takes tier as param
     /// 
     /// </summary>
 
@@ -1555,6 +1555,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     miniBossesInLevel.Add(enemy);
                     currentMiniBossCount++;
                 }
+                enemy.name += "_" + (enemiesInLevel.Count - 1).ToString();
             }
         }
         for (int deleteCount = enemyCount; deleteCount < _possibleEnemiesInLevel.Count; deleteCount++)
@@ -1887,6 +1888,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     miniBossesInLevel.Add(enemy);
                     currentMiniBossCount++;
                 }
+                enemy.name += "_" + (enemiesInLevel.Count - 1).ToString();
             }
         }
         for(int deleteCount = enemyCount; deleteCount < _possibleEnemiesInLevel.Count; deleteCount++)
@@ -2208,7 +2210,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     miniBossesInLevel.Add(enemy);
                     currentMiniBossCount++;
                 }
-
+                enemy.name += "_" + (enemiesInLevel.Count - 1).ToString();
             }
         }
         for (int deleteCount = enemyCount; deleteCount < _possibleEnemiesInLevel.Count; deleteCount++)
@@ -2376,8 +2378,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 enemiesInLevel.Add(enemy);
                 enemy.transform.parent = mPossibleEnemy.transform.parent;
                 Destroy(_possibleEnemiesInLevel[enemyCount]);
-                //_possibleEnemiesInLevel.RemoveAt(enemyCount);
-                //Destroy(mPossibleEnemy.gameObject);
+                
                 if (mPossibleEnemy.canBeMiniBoss)
                 {
                     //Debug.Log("cehck");
@@ -2385,6 +2386,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     miniBossesInLevel.Add(enemy);
                     currentMiniBossCount++;
                 }
+                enemy.name += "_" + (enemiesInLevel.Count - 1).ToString();
             }
         }
         for (int deleteCount = enemyCount; deleteCount < _possibleEnemiesInLevel.Count; deleteCount++)
