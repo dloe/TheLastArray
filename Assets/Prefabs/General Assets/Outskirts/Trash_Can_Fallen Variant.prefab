@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8273403496858828597}
   - component: {fileID: 5741049543091032504}
+  - component: {fileID: 8703975760310278092}
   m_Layer: 14
   m_Name: Trash_Can_Fallen Variant
   m_TagString: Untagged
@@ -25,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2555553414117054177}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.504, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1597333993643021297}
@@ -40,6 +41,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2555553414117054177}
   m_Mesh: {fileID: -3660054878780362843, guid: 74c1d9bd05b4a444882d7c9cd6f120e0, type: 3}
+--- !u!65 &8703975760310278092
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2555553414117054177}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.25, y: 1, z: 0.25}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &1585019655770528026
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -55,17 +69,17 @@ PrefabInstance:
     - target: {fileID: 276338296597596907, guid: fcf54bc4b57d745428cac50fcf27aa42,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.146
+      value: -0.211
       objectReference: {fileID: 0}
     - target: {fileID: 276338296597596907, guid: fcf54bc4b57d745428cac50fcf27aa42,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.5
+      value: -0.219
       objectReference: {fileID: 0}
     - target: {fileID: 276338296597596907, guid: fcf54bc4b57d745428cac50fcf27aa42,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.033
+      value: -0.048
       objectReference: {fileID: 0}
     - target: {fileID: 276338296597596907, guid: fcf54bc4b57d745428cac50fcf27aa42,
         type: 3}
