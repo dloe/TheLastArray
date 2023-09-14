@@ -13,40 +13,63 @@ public class RandomAssetSpawn : MonoBehaviour
     /// 
     /// Notes:
     /// - For adding more variance on specific assets
-    /// - if we want an asset like a tree that has multiple variance to be randomly choose we can attatch this script
+    /// - if we want an asset like a tree that has multiple variance to be randomly choose we can attach this script
     /// 
     /// TO DO:
     /// - 
     /// 
     /// </summary>
 
+    [Header("Select this if you want this object to be randomly selected")]
     public bool chooseVariance = false;
 
+    [Header("Leave null if we don't want a default object to go to")]
     public GameObject overrideVariant;
 
     public GameObject[] variantObjects;
 
-    public GameObject placeHolder;
+    //public GameObject placeHolder;
 
     private void Awake()
     {
-        GameObject spawn;
-        //choose a random index from array
-        if (overrideVariant == null && variantObjects.Length != 0)
-        {
-            placeHolder.SetActive(false);
-            spawn = variantObjects[Random.Range(0, variantObjects.Length - 1)];
-            Instantiate(spawn, placeHolder.transform);
-        }
-        else
-        {
-            if (overrideVariant != null)
-            {
-                placeHolder.SetActive(false);
-                spawn = overrideVariant;
-                Instantiate(spawn, placeHolder.transform);
-            }
-        }
+
+        PickRandomAsset();
     }
 
+
+    void PickRandomAsset()
+    {
+        if (chooseVariance)
+        {
+            GameObject spawn;
+            //choose a random index from array
+            if (overrideVariant == null && variantObjects.Length != 0)
+            {
+                this.gameObject.SetActive(false);
+                spawn = variantObjects[Random.Range(0, variantObjects.Length - 1)];
+                if(spawn == null)
+                {
+                    Destroy(this.gameObject);
+                    return;
+                }
+            }
+            else
+            {
+                if (overrideVariant != null)
+                {
+                    this.gameObject.SetActive(false);
+                    spawn = overrideVariant;
+                }
+                else
+                {
+                    Destroy(this.gameObject);
+                    return;
+                }
+            }
+            GameObject spawnedObj = Instantiate(spawn, this.transform);
+            spawnedObj.transform.parent = this.transform.parent;
+            spawnedObj.name = "RandomlySpawnedObj_" + spawn.name;
+            Destroy(this.gameObject);
+        }
+    }
 }
