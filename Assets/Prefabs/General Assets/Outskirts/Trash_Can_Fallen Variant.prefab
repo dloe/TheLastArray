@@ -1,11 +1,51 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &8143854555973023198
+--- !u!1 &2555553414117054177
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8273403496858828597}
+  - component: {fileID: 5741049543091032504}
+  m_Layer: 14
+  m_Name: Trash_Can_Fallen Variant
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8273403496858828597
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2555553414117054177}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1597333993643021297}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &5741049543091032504
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2555553414117054177}
+  m_Mesh: {fileID: -3660054878780362843, guid: 74c1d9bd05b4a444882d7c9cd6f120e0, type: 3}
+--- !u!1001 &1585019655770528026
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 8273403496858828597}
     m_Modifications:
     - target: {fileID: 276338296597596907, guid: fcf54bc4b57d745428cac50fcf27aa42,
         type: 3}
@@ -15,57 +55,63 @@ PrefabInstance:
     - target: {fileID: 276338296597596907, guid: fcf54bc4b57d745428cac50fcf27aa42,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: -0.053
       objectReference: {fileID: 0}
     - target: {fileID: 276338296597596907, guid: fcf54bc4b57d745428cac50fcf27aa42,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.105
+      value: -0.178
       objectReference: {fileID: 0}
     - target: {fileID: 276338296597596907, guid: fcf54bc4b57d745428cac50fcf27aa42,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.002
+      value: -0.012
       objectReference: {fileID: 0}
     - target: {fileID: 276338296597596907, guid: fcf54bc4b57d745428cac50fcf27aa42,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.70976955
+      value: 0.72282404
       objectReference: {fileID: 0}
     - target: {fileID: 276338296597596907, guid: fcf54bc4b57d745428cac50fcf27aa42,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.69678795
+      value: -0.67572296
       objectReference: {fileID: 0}
     - target: {fileID: 276338296597596907, guid: fcf54bc4b57d745428cac50fcf27aa42,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.072512195
+      value: 0.105668955
       objectReference: {fileID: 0}
     - target: {fileID: 276338296597596907, guid: fcf54bc4b57d745428cac50fcf27aa42,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.07386313
+      value: -0.09878331
       objectReference: {fileID: 0}
     - target: {fileID: 276338296597596907, guid: fcf54bc4b57d745428cac50fcf27aa42,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -88.943
+      value: -72.937004
       objectReference: {fileID: 0}
     - target: {fileID: 276338296597596907, guid: fcf54bc4b57d745428cac50fcf27aa42,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 77.309006
       objectReference: {fileID: 0}
     - target: {fileID: 276338296597596907, guid: fcf54bc4b57d745428cac50fcf27aa42,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 11.882001
+      value: -76.745
       objectReference: {fileID: 0}
     - target: {fileID: 5941354946452267839, guid: fcf54bc4b57d745428cac50fcf27aa42,
         type: 3}
       propertyPath: m_Name
-      value: Trash_Can_Fallen Variant
+      value: Trash_Can
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fcf54bc4b57d745428cac50fcf27aa42, type: 3}
+--- !u!4 &1597333993643021297 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 276338296597596907, guid: fcf54bc4b57d745428cac50fcf27aa42,
+    type: 3}
+  m_PrefabInstance: {fileID: 1585019655770528026}
+  m_PrefabAsset: {fileID: 0}
