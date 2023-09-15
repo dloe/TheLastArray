@@ -858,7 +858,7 @@ public class Player : MonoBehaviour
 
     public void SetStatsToBase()
     {
-        Debug.Log("setting stats to base");
+        Debug.Log("Player: Setting stats to base.");
         maxHealth = baseData.maxHealth;
         Health = baseData.health;
         dmgResist = baseData.dmgResist;

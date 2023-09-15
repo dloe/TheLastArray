@@ -174,7 +174,7 @@ public class InventoryUI : MonoBehaviour
                     {
                         equipedWeaponReservesText.text = "∞";
                     }
-                    currentAmmoName.text = "Durability Left";
+                    currentAmmoName.text = "Durability:";
 
                     Player.Instance.SetMeleeVisualActive(true);
                     Player.Instance.laserLine.gameObject.SetActive(false);

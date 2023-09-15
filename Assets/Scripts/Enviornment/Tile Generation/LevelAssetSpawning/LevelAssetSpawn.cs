@@ -1005,7 +1005,7 @@ public class LevelAssetSpawn : MonoBehaviour
             tile.presetTile = preset;
             int indexOfRandomTile = Random.Range(0, myLocalLevel.presetObjectiveTiles.Count);
             int tileIndex = myLocalLevel.presetTileAssets.IndexOf(myLocalLevel.presetObjectiveTiles[indexOfRandomTile]);
-            Debug.Log(indexOfRandomTile);
+            //Debug.Log(indexOfRandomTile);
             assetCountArray[tileIndex] += 1;
             tile.presetNum = tileIndex;
             tile.levelAssetPlaced = true;
