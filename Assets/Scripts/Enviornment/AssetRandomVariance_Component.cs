@@ -18,6 +18,7 @@ public class AssetRandomVariance_Component : MonoBehaviour
     public Light[] assetLights;
     public int mandatoryLightOverride = 1;
     int lightsToActivate = 0;
+    public float intensityOverride = -1;
 
     [Space(10)]
     [Header("Set Light Components to randomize")]
@@ -55,8 +56,19 @@ public class AssetRandomVariance_Component : MonoBehaviour
         }
         //mix up array of lights
 
-        if (mandatoryLightOverride != -1)
+        if (mandatoryLightOverride > 1)
             lightsToActivate = Random.Range(mandatoryLightOverride, assetLights.Length - 1);
+        else if (mandatoryLightOverride == 1)
+        {
+            lightsToActivate = 0;
+            SetupRandomLight(assetLights[lightsToActivate]);
+            return;
+        }
+        else
+        {
+            //if neg 1, then any of them are fair game
+            lightsToActivate = Random.Range(0, assetLights.Length - 1);
+        }
 
         for (int index = 0; index < assetLights.Length; index++)
         {
@@ -72,11 +84,14 @@ public class AssetRandomVariance_Component : MonoBehaviour
     //set up slight variance in intensity
     void SetupRandomLight(Light light)
     {
-        light.intensity += Random.Range(-25, 4);
-        light.range += Random.Range(-6, 4);
+        if(intensityOverride > 0)
+            light.intensity += Random.Range(-intensityOverride, 0);
+        else
+            light.intensity += Random.Range(-20, 0);
+        light.range += Random.Range(-6, 0);
         light.spotAngle += Random.Range(-2, 5);
         light.color = new Color(light.color.r + Random.Range(-0.06f, 0.06f), light.color.g + Random.Range(-0.06f, 0.06f), 
-            light.color.b + Random.Range(-0.06f, 0.06f), light.color.a + Random.Range(-6, 5)); //Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
+            light.color.b + Random.Range(-0.06f, 0.06f), light.color.a + Random.Range(-6, 2)); //Random.ColorHSV(0f, 1f, 1f, 1f, 0.5f, 1f);
     }
 
 

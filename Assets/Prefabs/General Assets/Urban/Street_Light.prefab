@@ -110,7 +110,8 @@ MonoBehaviour:
   SetLightsToRandomize: 1
   assetLights:
   - {fileID: 4075982412405112108}
-  mandatoryLightOverride: 0
+  mandatoryLightOverride: 1
+  intensityOverride: 7
   SetMaterialToRandomize: 0
   possibleMatColors: []
   meshesToColor: []
@@ -156,11 +157,11 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 0.9056604, g: 0.8184401, b: 0.512638, a: 1}
-  m_Intensity: 1
-  m_Range: 6.36
-  m_SpotAngle: 30
-  m_InnerSpotAngle: 21.80208
+  m_Color: {r: 0.9056604, g: 0.8184401, b: 0.512638, a: 0.9137255}
+  m_Intensity: 13
+  m_Range: 14
+  m_SpotAngle: 60
+  m_InnerSpotAngle: 3
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
