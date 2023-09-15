@@ -983,7 +983,7 @@ public class LevelAssetSpawn : MonoBehaviour
             //rotate tile based on if neighbor
             if(tile.upNeighbor != null && tile.upNeighbor.pathNumber == tile.pathNumber - 1)
             {
-                //unused atm, found more optimzal way, this will remain here until I can verify 
+                //unused atm, found more optimal way, this will remain here until I can verify 
             }
             else if(tile.downNeighbor != null && tile.downNeighbor.pathNumber == tile.pathNumber - 1)
             {
@@ -1003,7 +1003,9 @@ public class LevelAssetSpawn : MonoBehaviour
             preset.transform.parent = tile.transform.parent;
             preset.transform.localEulerAngles = rotation;
             tile.presetTile = preset;
-            int tileIndex = myLocalLevel.presetTileAssets.IndexOf(myLocalLevel.presetObjectiveTiles[Random.Range(0, myLocalLevel.presetObjectiveTiles.Count)]);
+            int indexOfRandomTile = Random.Range(0, myLocalLevel.presetObjectiveTiles.Count);
+            int tileIndex = myLocalLevel.presetTileAssets.IndexOf(myLocalLevel.presetObjectiveTiles[indexOfRandomTile]);
+            Debug.Log(indexOfRandomTile);
             assetCountArray[tileIndex] += 1;
             tile.presetNum = tileIndex;
             tile.levelAssetPlaced = true;
