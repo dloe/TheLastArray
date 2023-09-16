@@ -659,7 +659,7 @@ public class Player : MonoBehaviour
                         }
                         InventoryUI.Instance.RefreshUI();
                     }
-                    Debug.Log("yep enemy hit");
+                    //Debug.Log("yep enemy hit");
                 }
             }
         }

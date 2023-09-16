@@ -23,8 +23,7 @@ public class Item
 
             itemData.itemName = data.itemName;
             itemData.itemSprite = data.itemSprite;
-            if(data.UIReticle)
-                itemData.UIReticle = data.UIReticle;
+                
             itemData.itemType = data.itemType;
             if (data.itemType == ItemType.MeleeWeapon)
             {
@@ -34,6 +33,7 @@ public class Item
                 itemData.meleeKnockback = data.meleeKnockback;
                 itemData.hasDurability = data.hasDurability;
                 itemData.durability = data.durability;
+                itemData.UIReticle = data.UIReticle;
             }
             else if (data.itemType == ItemType.RangedWeapon)
             {
