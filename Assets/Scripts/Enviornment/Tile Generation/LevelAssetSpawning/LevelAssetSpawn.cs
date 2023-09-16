@@ -1058,7 +1058,8 @@ public class LevelAssetSpawn : MonoBehaviour
 
             bigAssetCountArray[1] += 1;
             endObjTile = preset;
-            myTileGeneration.PrintToLog("BIG ASSET WITH OBJ",false);
+            if (debugPrints)
+                myTileGeneration.PrintToLog("BIG ASSET WITH OBJ",false);
         }
 
         //random rotation on tile set

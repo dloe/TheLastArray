@@ -193,7 +193,8 @@ public class TileGeneration : MonoBehaviour
         if (debugPrints)
             debugPathOn = true;
 
-        PrintToLog(null,false);
+        if (debugPrints)
+            PrintToLog(null,false);
 
         if (debugPathOn)
         {
