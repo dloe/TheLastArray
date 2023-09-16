@@ -191,9 +191,10 @@ public class ItemDataSave
 
     public void SaveFromItemData(ItemData itemData)
     {
-        //Debug.Log(itemData.itemSprite.name);
+        Debug.Log(itemData.name);
         itemSpritePath = "ItemSprites/" + itemData.itemSprite.name;
-        UIReticleSpritePath = "ItemSprites/" + itemData.UIReticle.name;
+        if(itemData.UIReticle)
+            UIReticleSpritePath = "ItemSprites/" + itemData.UIReticle.name;
 
         //Debug.Log(itemSpritePath) ;
         itemType = itemData.itemType;
@@ -219,7 +220,8 @@ public class ItemDataSave
     public void LoadToItemData(ItemData itemData)
     {
         itemData.itemSprite = Resources.Load<Sprite>(itemSpritePath);
-        itemData.UIReticle = Resources.Load<Sprite>(UIReticleSpritePath);
+        if(UIReticleSpritePath != null)
+            itemData.UIReticle = Resources.Load<Sprite>(UIReticleSpritePath);
         //Debug.Log(itemSpritePath);
         //Debug.Log(itemData.itemSprite, itemData.itemSprite);
         itemData.itemType = itemType;
@@ -295,7 +297,8 @@ public class ItemDataEditor : Editor
             itemData.coolDownPeriod = EditorGUILayout.FloatField("Attack Cooldown", itemData.coolDownPeriod);
             itemData.meleeRange = EditorGUILayout.FloatField("Melee Range", itemData.meleeRange);
             itemData.meleeKnockback = EditorGUILayout.FloatField("Melee Knockback", itemData.meleeKnockback);
-            itemData.UIReticle = (Sprite)EditorGUILayout.ObjectField(itemData.UIReticle, typeof(Sprite), false, GUILayout.Width(80), GUILayout.Height(80));
+            if(itemData.UIReticle)
+                itemData.UIReticle = (Sprite)EditorGUILayout.ObjectField(itemData.UIReticle, typeof(Sprite), false, GUILayout.Width(80), GUILayout.Height(80));
         }
 
         if (itemData.itemType == ItemType.RangedWeapon)

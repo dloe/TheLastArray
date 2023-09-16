@@ -33,7 +33,7 @@ public class Player : MonoBehaviour
     //inventory of the player
     public Inventory inventory = new Inventory();
 
-    [Header("Activatable / Interactable To Use")]
+    [Header("Activatable / Intractable To Use")]
     public List<Activatable> thingsToActivate = new List<Activatable>();
     public Activatable thingToActivate;
     //public CraftingTable craftTable;
@@ -57,6 +57,7 @@ public class Player : MonoBehaviour
     public Vector3 meleeExtents = new Vector3();
     [Header("Melee Forward Detection Distance")]
     public float meleeDist = 1f;
+    public SpriteRenderer[] MeleeReticle;
 
     #region Audio
     [Space(20)]
@@ -211,7 +212,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Debug.Log("Player Start");
+        Debug.Log("Player Start");
         
         _audioSource = GetComponent<AudioSource>();
         _mainTransform = transform;
@@ -375,16 +376,18 @@ public class Player : MonoBehaviour
         if (Player.Instance.inventory.selectedItem.itemData.itemType == ItemType.MeleeWeapon && inventory.selectedItem.itemData.itemName == "Knife")
         {
             //Debug.Log(Player.Instance.inventory.selectedItem.itemData.name);
-            //use small melee redicle aka index 0
+            //use small melee reticle aka index 0
             meleeType = 0;
             //can set the reticle based on ItemData
-            meleeVisual[0].transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = inventory.selectedItem.itemData.UIReticle;
+            //meleeVisual[0].transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = inventory.selectedItem.itemData.UIReticle;
+            MeleeReticle[0].sprite = inventory.selectedItem.itemData.UIReticle;
 
         } else if (Player.Instance.inventory.selectedItem.itemData.itemType == ItemType.MeleeWeapon && inventory.selectedItem.itemData.itemName == "Metal Spear")
         {
-            //use bigger melee redacle aka index 1
+            //use bigger melee reticle aka index 1
             meleeType = 1;
-            meleeVisual[1].transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = inventory.selectedItem.itemData.UIReticle;
+            //meleeVisual[1].transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = inventory.selectedItem.itemData.UIReticle;
+            MeleeReticle[1].sprite = inventory.selectedItem.itemData.UIReticle;
         }
 
         if (active)
@@ -504,7 +507,7 @@ public class Player : MonoBehaviour
     {
         if (inventory.selectedItem.itemData.canAttack && !inventory.selectedItem.itemData.reloading)
         {
-            Debug.Log(inventory.selectedItem.itemData.loadedAmmo);
+            //Debug.Log(inventory.selectedItem.itemData.loadedAmmo);
             if (inventory.selectedItem.itemData.ammoType == AmmoType.LightAmmo)
             {
                 if (inventory.selectedItem.itemData.loadedAmmo > 0)
@@ -638,7 +641,7 @@ public class Player : MonoBehaviour
                 }
                 else if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "Enemy")
                 {
-                    Debug.Log("Durability Before: " + inventory.selectedItem.itemData.durability);
+                    //Debug.Log("Durability Before: " + inventory.selectedItem.itemData.durability);
 
                     hit.transform.GetComponent<BaseEnemy>().TakeDamage(inventory.selectedItem.itemData.damage + damageModifier, _mainTransform, inventory.selectedItem.itemData.meleeKnockback);
 
@@ -934,6 +937,7 @@ public class Player : MonoBehaviour
     #region Saving / Loading
     public void SavePlayer()
     {
+        Debug.Log("Saving...");
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(Application.persistentDataPath + "/player_save.dat");
 
@@ -961,6 +965,7 @@ public class Player : MonoBehaviour
         playerSave.numInvSlots = InventoryUI.Instance.slotList.Count;
 
         bf.Serialize(file, playerSave);
+        Debug.Log("Finish Save...");
         file.Close();
     }
 

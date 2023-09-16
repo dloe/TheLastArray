@@ -23,7 +23,8 @@ public class Item
 
             itemData.itemName = data.itemName;
             itemData.itemSprite = data.itemSprite;
-            itemData.UIReticle = data.UIReticle;
+            if(data.UIReticle)
+                itemData.UIReticle = data.UIReticle;
             itemData.itemType = data.itemType;
             if (data.itemType == ItemType.MeleeWeapon)
             {
