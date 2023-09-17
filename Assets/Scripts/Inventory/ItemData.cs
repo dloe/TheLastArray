@@ -191,12 +191,7 @@ public class ItemDataSave
 
     public void SaveFromItemData(ItemData itemData)
     {
-        Debug.Log(itemData.name);
         itemSpritePath = "ItemSprites/" + itemData.itemSprite.name;
-        if(itemData.itemType == ItemType.MeleeWeapon)
-            UIReticleSpritePath = "ItemSprites/" + itemData.UIReticle.name;
-
-        //Debug.Log(itemSpritePath) ;
         itemType = itemData.itemType;
         itemName = itemData.itemName;
         hasDurability = itemData.hasDurability;
@@ -213,17 +208,12 @@ public class ItemDataSave
         hasLaserSight = itemData.hasLaserSight;
         hasFireBullets = itemData.usingFireBullets;
         fireBullets = itemData.fireLoadedAmmo;
-        //Debug.Log(loadedAmmo + "item save ammo");
-        //Debug.Log(itemData.loadedAmmo + "item data ammo");
+        UIReticleSpritePath = "ItemSprites/" + itemData.UIReticle.name;
     }
 
     public void LoadToItemData(ItemData itemData)
     {
         itemData.itemSprite = Resources.Load<Sprite>(itemSpritePath);
-        if(itemData.itemType == ItemType.MeleeWeapon)
-            itemData.UIReticle = Resources.Load<Sprite>(UIReticleSpritePath);
-        //Debug.Log(itemSpritePath);
-        //Debug.Log(itemData.itemSprite, itemData.itemSprite);
         itemData.itemType = itemType;
         itemData.itemName = itemName;
         itemData.hasDurability = hasDurability;
@@ -238,8 +228,7 @@ public class ItemDataSave
         itemData.loadedAmmo = loadedAmmo;
         itemData.amountToHeal = amountToHeal;
         itemData.hasLaserSight = hasLaserSight;
-
-        if(itemType == ItemType.RangedWeapon)
+        if (itemType == ItemType.RangedWeapon)
         {
             itemData.usingFireBullets = hasFireBullets;
             if(hasFireBullets)
@@ -248,9 +237,10 @@ public class ItemDataSave
             }
            
         }
-        
-
-        //Debug.Log(itemData.loadedAmmo, itemData);
+        if (itemType == ItemType.MeleeWeapon)
+        {
+            itemData.UIReticle = Resources.Load<Sprite>(UIReticleSpritePath);
+        }
     }
 }
 

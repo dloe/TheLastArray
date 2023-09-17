@@ -16,7 +16,6 @@ public class Item
 
     public Item(ItemData data)
     {
-
         if (!data.name.Contains("Instance"))
         {
             itemData = ScriptableObject.CreateInstance<ItemData>();
@@ -51,22 +50,18 @@ public class Item
                     itemData.fireLoadedAmmo = data.fireLoadedAmmo;
                 }
 
-                
             }
             else if (data.itemType == ItemType.Heal)
             {
                 itemData.amountToHeal = data.amountToHeal;
             }
 
-
             itemData.name = data.itemName + "(Instance)";
-
         }
         else
         {
             itemData = data;
         }
-        
     }
 
 

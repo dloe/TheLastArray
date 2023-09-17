@@ -213,7 +213,7 @@ public class Inventory
         }
         itemList.Clear();
         selectedItem = null;
-        Debug.Log("Inventory Cleared Count is Now: " + Count);
+        //Debug.Log("Inventory Cleared Count is Now: " + Count);
     }
 
     public void DropItem()
@@ -289,7 +289,6 @@ public class Inventory
             JsonUtility.FromJsonOverwrite(json, itemSave);
             itemData = ScriptableObject.CreateInstance<ItemData>();
             itemSave.LoadToItemData(itemData);
-           // Debug.Log(itemData.itemName + " ammo: " + itemData.loadedAmmo);
             AddItemNoUI(itemData);
         }
     }

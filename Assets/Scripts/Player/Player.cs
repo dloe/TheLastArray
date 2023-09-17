@@ -375,7 +375,6 @@ public class Player : MonoBehaviour
         //set meleeVisual depending on type of melee
         if (Player.Instance.inventory.selectedItem.itemData.itemType == ItemType.MeleeWeapon && inventory.selectedItem.itemData.itemName == "Knife")
         {
-            //Debug.Log(Player.Instance.inventory.selectedItem.itemData.name);
             //use small melee reticle aka index 0
             meleeType = 0;
             //can set the reticle based on ItemData
