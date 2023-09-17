@@ -565,7 +565,7 @@ public class BossEnemy : MonoBehaviour
                 //set variables to bullet
                 Quaternion rot = new Quaternion(0, Random.rotation.y, Random.rotation.y, Random.rotation.w);
                 bullet.transform.rotation = Quaternion.RotateTowards(bullet.transform.rotation, rot, spreadAngle);
-                bullet.transform.parent = GameObject.Find("TileGen").transform;
+                bullet.transform.parent = GameObject.Find("Level4_GridMap_LastArray").transform;
                 //change this attack stat later or balancing
                 bullet.GetComponent<Bullet>().damageToDeal = shotgunPelletDamage;
                 bullet.transform.localEulerAngles = new Vector3(Random.Range(-2,5), bullet.transform.localEulerAngles.y, bullet.transform.localEulerAngles.z);
@@ -609,7 +609,7 @@ public class BossEnemy : MonoBehaviour
 
                     //change this damage value later for balancing
                     bullet.GetComponent<Bullet>().damageToDeal = bulletRingDamage;
-                    bullet.transform.parent = GameObject.Find("TileGen").transform;
+                    bullet.transform.parent = GameObject.Find("Level4_GridMap_LastArray").transform;
                     //bullet.transform.parent = this.transform;
                     //bullet.GetComponent<Bullet>().speed = bullet.GetComponent<Bullet>().speed / 2;
                 }

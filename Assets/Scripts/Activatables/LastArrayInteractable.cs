@@ -38,6 +38,7 @@ public class LastArrayInteractable : WorldItem
             Objectives.Instance.UpdateFinalObjective(2);
             bossDoor.SetActive(false);
             Instantiate(ammoDrop, this.transform.position, this.transform.rotation);
+
             Destroy(this.gameObject);
         }
     }

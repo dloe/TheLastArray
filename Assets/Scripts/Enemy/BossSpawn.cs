@@ -37,12 +37,13 @@ public class BossSpawn : MonoBehaviour
 
     public void CheckForPlayer()
     {
-        Transform[] _possiblePlayer = collidersToTransforms((Physics.OverlapSphere(transform.position, radius)));
+        //Transform[] _possiblePlayer = collidersToTransforms((Physics.OverlapSphere(transform.position, radius)));
+        Transform[] _possiblePlayer = collidersToTransforms((Physics.OverlapBox(transform.position, new Vector3(23.5f, 15, 10))));
         foreach(Transform potentialTarget in _possiblePlayer)
         {
             if(potentialTarget.gameObject.tag == "Player")
             {
-                Debug.Log("begininng boss fight");
+                Debug.Log("Begininng boss fight");
                 bossdoor.SetActive(true);
                 Objectives.Instance.UpdateFinalObjective(0);
 
@@ -65,7 +66,9 @@ public class BossSpawn : MonoBehaviour
     private void OnDrawGizmos()
     {
            Gizmos.color = Color.red;
-         Gizmos.DrawSphere(transform.position, radius);
+        // Gizmos.DrawSphere(transform.position, radius);
+       // Gizmos.color = Color.green;
+        Gizmos.DrawCube(transform.position, new Vector3(23.5f,15,10));
     }
 
     //locate transforms from colliders found in sphere
