@@ -75,13 +75,13 @@ public class Shadow : BaseEnemy
                 readyToAttack = true;
                 hidden = false;
                 _InattackingMovement = false;
-                Debug.Log("check");
+                //Debug.Log("check");
                 attacking = false;
                 StopCoroutine(Teleport());
             }
             
             
-            Debug.Log("teleporting");
+            //Debug.Log("teleporting");
             hidden = true;
             Vector3 poi = hit.point;
             //move to that location

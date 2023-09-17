@@ -20,7 +20,7 @@ public class TrainExit : Activatable
     {
         if (!isActivated)
         {
-            Debug.Log("Train Exit Called");
+            Debug.Log("Exiting Level!");
             isActivated = true;
             Player.Instance.SavePlayer();
             StartCoroutine(ExitTransition());
@@ -34,11 +34,11 @@ public class TrainExit : Activatable
         LevelLoader.Instance.LoadLevel(GetLevelToLoad(playerData.previousLevelName));
     }
 
-    //load level based pn what our previous level was set to
+    //load level based on what our previous level was set to
     public string GetLevelToLoad(string previousLevelName)
     {
         string result = "";
-
+        
         if(previousLevelName == playerData.levelOneName)
         {
             result = playerData.levelTwoName;

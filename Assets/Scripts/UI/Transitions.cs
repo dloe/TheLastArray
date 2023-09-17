@@ -85,7 +85,7 @@ public class Transitions : MonoBehaviour
                 u = 1;
                 fading = false;
                 fadeOut = false;
-                Debug.Log("off");
+                //Debug.Log("off");
             }
 
             a01 = (1 - u) * a0 + u * a1;

@@ -131,9 +131,10 @@ public class UI : MonoBehaviour
     /// </summary>
     public void Restart()
     {
-        Debug.Log("Restart Level");
+        //Debug.Log("Restart Level");
         Time.timeScale = 1;
-        SceneManager.LoadScene(player.baseData.levelOneName);
+
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     /// <summary>

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine.Audio;
 
 public class MainMenuUI : MonoBehaviour
@@ -20,12 +22,19 @@ public class MainMenuUI : MonoBehaviour
     public GameObject mainMenu;
     public GameObject options;
     public GameObject credits;
-    public GameObject howToPlay; 
+    public GameObject howToPlay;
+    public GameObject ClearSaveButton;
 
+    public GameObject[] levelLoadButtons;
+    public GameObject playerWinText;
+    public PlayerData baseData;
+    bool gameBeaten = false;
     private void Start()
     {
         Application.targetFrameRate = Screen.currentResolution.refreshRate;
         LoadAudioLevels();
+
+        SetLoadLevelAndWin();
        // SetGraphics(PlayerPrefs.GetInt("Quality Level", 5));
     }
 
@@ -74,6 +83,130 @@ public class MainMenuUI : MonoBehaviour
     {
         Application.OpenURL(url);
     }
+
+    #region Level Loader
+
+    /// <summary>
+    /// Set Load Levels based on which levels are beaten in PlayerData
+    /// </summary>
+    public void SetLoadLevelAndWin()
+    {
+        if(File.Exists(Application.persistentDataPath + "/player_save.dat"))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + "/player_save.dat", FileMode.Open);
+            PlayerSave playerSave = (PlayerSave)bf.Deserialize(file);
+            file.Close();
+
+            bool[] levelsBeaten = playerSave.levelsBeaten;
+
+            if(levelsBeaten[0])
+            {
+                Debug.Log("Level 1 Beaten");
+                levelLoadButtons[0].GetComponent<Button>().interactable = true;
+                levelLoadButtons[0].gameObject.GetComponentInChildren<Text>().text = "Level 2: \nThe Outskirts";
+                levelLoadButtons[0].gameObject.GetComponentInChildren<Text>().fontSize = 35;
+            }
+            if (levelsBeaten[1])
+            {
+                Debug.Log("Level 2 Beaten");
+                levelLoadButtons[1].GetComponent<Button>().interactable = true;
+                levelLoadButtons[1].gameObject.GetComponentInChildren<Text>().text = "Level 3: \nThe Urbans";
+                levelLoadButtons[1].gameObject.GetComponentInChildren<Text>().fontSize = 35;
+            }
+            if (levelsBeaten[2])
+            {
+                Debug.Log("Level 3 Beaten");
+                levelLoadButtons[2].GetComponent<Button>().interactable = true;
+                levelLoadButtons[2].gameObject.GetComponentInChildren<Text>().text = "Level 4: \nThe Array";
+                levelLoadButtons[2].gameObject.GetComponentInChildren<Text>().fontSize = 35;
+            }
+            if (levelsBeaten[2])
+            {
+                Debug.Log("Level 4 Beaten");
+                //Player has beaten final level, trigger text on main menu!
+                playerWinText.SetActive(true);
+                ClearSaveButton.SetActive(true);
+                gameBeaten = true;
+                Debug.Log("Player Won Game, any level selectable");
+            }
+        }
+        else
+        {
+            Debug.Log("No Player Data, Only level 1 can be active.");
+            SetOnlyLvl1();
+
+        }
+    }
+
+    public void ActiveClearSaveButton()
+    {
+        if (gameBeaten)
+        {
+            ClearSaveButton.SetActive(true);
+        }
+    }
+
+    public void ClearSave()
+    {
+        Debug.Log("Clearing Save...");
+
+
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(Application.persistentDataPath + "/player_save.dat");
+
+        PlayerSave playerSave = new PlayerSave();
+
+        
+        playerSave.maxHealth = baseData.maxHealth;
+        playerSave.health = baseData.health;
+        playerSave.dmgResist = baseData.dmgResist;
+        playerSave.speedStat = baseData.speedStat;
+        playerSave.levelsBeaten = new bool[4];
+
+        playerSave.scrap = baseData.scrap;
+        playerSave.cloth = baseData.cloth;
+        playerSave.meds = baseData.meds;
+        playerSave.skillPoints = baseData.skillPoints;
+        playerSave.lightAmmo = 0;
+        playerSave.heavyAmmo = 0;
+
+        playerSave.hasBackPack = false;
+        playerSave.hasArmorPlate = false;
+        //playerSave.ArmorPlateImage.gameObject.SetActive(false);
+
+        Inventory inventory = new Inventory();
+        inventory.selectedItem = null;
+        inventory.numInvSlots = 4;
+        inventory.AddItemNoUI(baseData.initialItem);
+        playerSave.invJsonList = inventory.SaveToJsonList();
+        playerSave.numInvSlots = 4;
+
+
+        bf.Serialize(file, playerSave);
+        file.Close();
+
+        SetOnlyLvl1();
+
+    }
+
+    void SetOnlyLvl1()
+    {
+        Debug.Log("No Player Data, Only level 1 can be active.");
+        levelLoadButtons[0].GetComponent<Button>().interactable = false;
+        levelLoadButtons[0].gameObject.GetComponentInChildren<Text>().text = "<REDACTED>";
+        levelLoadButtons[0].gameObject.GetComponentInChildren<Text>().fontSize = 50;
+        levelLoadButtons[1].GetComponent<Button>().interactable = false;
+        levelLoadButtons[1].gameObject.GetComponentInChildren<Text>().text = "<REDACTED>";
+        levelLoadButtons[1].gameObject.GetComponentInChildren<Text>().fontSize = 50;
+        levelLoadButtons[2].GetComponent<Button>().interactable = false;
+        levelLoadButtons[2].gameObject.GetComponentInChildren<Text>().text = "<REDACTED>";
+        levelLoadButtons[2].gameObject.GetComponentInChildren<Text>().fontSize = 50;
+        playerWinText.SetActive(false);
+        ClearSaveButton.SetActive(false);
+    }
+
+    #endregion
 
     #region Options
     public AudioMixer mixer;

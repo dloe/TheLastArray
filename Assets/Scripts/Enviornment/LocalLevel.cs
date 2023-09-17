@@ -162,7 +162,8 @@ public class LocalLevel : MonoBehaviour
     {
         StartFadeOut();
         //save player data to scriptable obj
-
+        Debug.Log("Level " + ((int)thisLevelTier + 1) + " is beaten!");
+        myPlayer.levelsBeaten[(int)thisLevelTier] = true;
         myPlayer.SavePlayer();
 
         yield return new WaitForSeconds(1.0f);
@@ -171,8 +172,11 @@ public class LocalLevel : MonoBehaviour
         myPlayerData.previousLevelName = SceneManager.GetActiveScene().name;
         //transition scene
 
-        LevelLoader.Instance.LoadLevel("Train");
-        
+        if((int)thisLevelTier < 3)
+            LevelLoader.Instance.LoadLevel("Train");
+        else
+            LevelLoader.Instance.LoadLevel("MainMenu");
+
         Debug.Log("Loading next scene");
     }
 

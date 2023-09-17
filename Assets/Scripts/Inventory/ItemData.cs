@@ -208,7 +208,8 @@ public class ItemDataSave
         hasLaserSight = itemData.hasLaserSight;
         hasFireBullets = itemData.usingFireBullets;
         fireBullets = itemData.fireLoadedAmmo;
-        UIReticleSpritePath = "ItemSprites/" + itemData.UIReticle.name;
+        if(itemData.itemType == ItemType.MeleeWeapon)
+            UIReticleSpritePath = "ItemSprites/" + itemData.UIReticle.name;
     }
 
     public void LoadToItemData(ItemData itemData)

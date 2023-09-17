@@ -48,6 +48,7 @@ public class Player : MonoBehaviour
     //public int healthUpgradesLeft;
     //public int dmgResistUpgradesLeft;
     //public int speedUpgradesLeft;
+    public bool[] levelsBeaten;
 
     [Header("Used to adjust look Direction to better align to mouse")]
     public float xLookOffset = 3f;
@@ -212,7 +213,7 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Player Start");
+        //Debug.Log("Player Start");
         
         _audioSource = GetComponent<AudioSource>();
         _mainTransform = transform;
@@ -865,7 +866,7 @@ public class Player : MonoBehaviour
         Health = baseData.health;
         dmgResist = baseData.dmgResist;
         speedStat = baseData.speedStat;
-
+        levelsBeaten = new bool[4];
 
         ScrapCount = baseData.scrap;
         ClothCount = baseData.cloth;
@@ -936,7 +937,6 @@ public class Player : MonoBehaviour
     #region Saving / Loading
     public void SavePlayer()
     {
-        Debug.Log("Saving...");
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Create(Application.persistentDataPath + "/player_save.dat");
 
@@ -958,13 +958,12 @@ public class Player : MonoBehaviour
         playerSave.hasArmorPlate = hasArmorPlate;
         playerSave.lightAmmo = currentLightAmmo;
         playerSave.heavyAmmo = currentHeavyAmmo;
-
+        playerSave.levelsBeaten = levelsBeaten;
 
         playerSave.invJsonList = inventory.SaveToJsonList();
         playerSave.numInvSlots = InventoryUI.Instance.slotList.Count;
 
         bf.Serialize(file, playerSave);
-        Debug.Log("Finish Save...");
         file.Close();
     }
 
@@ -972,7 +971,7 @@ public class Player : MonoBehaviour
     {
         if (SaveExists())
         {
-            Debug.Log("save exists");
+            //Debug.Log("save exists");
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Application.persistentDataPath + "/player_save.dat", FileMode.Open);
             PlayerSave playerSave = (PlayerSave)bf.Deserialize(file);
@@ -991,6 +990,7 @@ public class Player : MonoBehaviour
 
             currentLightAmmo = playerSave.lightAmmo;
             currentHeavyAmmo = playerSave.heavyAmmo;
+            levelsBeaten = playerSave.levelsBeaten;
 
             inventory.numInvSlots = playerSave.numInvSlots;
             inventory.LoadFromJsonList(playerSave.invJsonList);
@@ -1033,7 +1033,7 @@ public class PlayerSave
     public int skillPoints;
     public bool hasBackPack;
     public bool hasArmorPlate;
-
+    public bool[] levelsBeaten;
     public int lightAmmo;
     public int heavyAmmo;
 
