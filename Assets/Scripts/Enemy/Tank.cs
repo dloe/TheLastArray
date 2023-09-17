@@ -17,6 +17,7 @@ public class Tank : BaseEnemy
 
     public override void specialAttack(Vector3 temp)
     {
+        //Debug.Log("special Attack");
         if (myState != enemyState.attacking && readyToAttack == true)
         {
             this.transform.position += temp * Time.deltaTime;
@@ -28,7 +29,7 @@ public class Tank : BaseEnemy
             attacking = true;
             _target.GetComponent<Rigidbody>().AddForce(this.transform.forward * knockback * 10);
             _target.GetComponent<Rigidbody>().AddForce(Vector3.up * knockback * 5);
-            _target.GetComponent<Player>().TakeDamage(baseAttack, baseMeleeKnockback, this.transform);
+            //_target.GetComponent<Player>().TakeDamage(baseAttack, baseMeleeKnockback, this.transform);
 
         }
         else if (myState == enemyState.attacking && readyToAttack == false)

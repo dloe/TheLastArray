@@ -373,25 +373,25 @@ public class Player : MonoBehaviour
     public void SetMeleeVisualActive(bool active)
     {
         int meleeType = 0;
-        //set meleeVisual depending on type of melee
-        if (Player.Instance.inventory.selectedItem.itemData.itemType == ItemType.MeleeWeapon && inventory.selectedItem.itemData.itemName == "Knife")
-        {
-            //use small melee reticle aka index 0
-            meleeType = 0;
-            //can set the reticle based on ItemData
-            //meleeVisual[0].transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = inventory.selectedItem.itemData.UIReticle;
-            MeleeReticle[0].sprite = inventory.selectedItem.itemData.UIReticle;
-
-        } else if (Player.Instance.inventory.selectedItem.itemData.itemType == ItemType.MeleeWeapon && inventory.selectedItem.itemData.itemName == "Metal Spear")
-        {
-            //use bigger melee reticle aka index 1
-            meleeType = 1;
-            //meleeVisual[1].transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = inventory.selectedItem.itemData.UIReticle;
-            MeleeReticle[1].sprite = inventory.selectedItem.itemData.UIReticle;
-        }
-
         if (active)
         {
+            //set meleeVisual depending on type of melee
+            if (Player.Instance.inventory.selectedItem.itemData.itemType == ItemType.MeleeWeapon && inventory.selectedItem.itemData.itemName == "Knife")
+            {
+                //use small melee reticle aka index 0
+                meleeType = 0;
+                //can set the reticle based on ItemData
+                //meleeVisual[0].transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = inventory.selectedItem.itemData.UIReticle;
+                MeleeReticle[0].sprite = inventory.selectedItem.itemData.UIReticle;
+
+            }
+            else if (Player.Instance.inventory.selectedItem.itemData.itemType == ItemType.MeleeWeapon && inventory.selectedItem.itemData.itemName == "Metal Spear")
+            {
+                //use bigger melee reticle aka index 1
+                meleeType = 1;
+                //meleeVisual[1].transform.GetChild(0).GetComponent<SpriteRenderer>().sprite = inventory.selectedItem.itemData.UIReticle;
+                MeleeReticle[1].sprite = inventory.selectedItem.itemData.UIReticle;
+            }
             meleeVisual[meleeType].transform.position = _mainTransform.position + (_mainTransform.forward * inventory.selectedItem.itemData.meleeRange);
         }
         meleeVisual[meleeType].SetActive(active);

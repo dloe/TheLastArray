@@ -155,7 +155,7 @@ public class UI : MonoBehaviour
         if (value)
         {
             Time.timeScale = 1;
-            SceneManager.LoadScene("MainMenuTest");
+            SceneManager.LoadScene("MainMenu");
             Debug.Log("Go To Main Menu");
         }
         else

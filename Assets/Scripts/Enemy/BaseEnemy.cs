@@ -333,7 +333,7 @@ public class BaseEnemy : MonoBehaviour
                     StartCoroutine(CoolDown());
                     attackRay.transform.GetComponent<Player>().TakeDamage(baseAttack, baseMeleeKnockback, this.transform);
                     
-                    //Debug.LogError("HitPlayer");
+                    //Debug.Log(this.gameObject.name + ": HitPlayer for " + baseAttack);
                 }
             }
 

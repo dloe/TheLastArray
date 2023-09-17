@@ -102,38 +102,38 @@ public class MainMenuUI : MonoBehaviour
 
             if(levelsBeaten[0])
             {
-                Debug.Log("Level 1 Beaten");
+                //Debug.Log("Level 1 Beaten");
                 levelLoadButtons[0].GetComponent<Button>().interactable = true;
                 levelLoadButtons[0].gameObject.GetComponentInChildren<Text>().text = "Level 2: \nThe Outskirts";
                 levelLoadButtons[0].gameObject.GetComponentInChildren<Text>().fontSize = 35;
             }
             if (levelsBeaten[1])
             {
-                Debug.Log("Level 2 Beaten");
+                //Debug.Log("Level 2 Beaten");
                 levelLoadButtons[1].GetComponent<Button>().interactable = true;
                 levelLoadButtons[1].gameObject.GetComponentInChildren<Text>().text = "Level 3: \nThe Urbans";
                 levelLoadButtons[1].gameObject.GetComponentInChildren<Text>().fontSize = 35;
             }
             if (levelsBeaten[2])
             {
-                Debug.Log("Level 3 Beaten");
+                //Debug.Log("Level 3 Beaten");
                 levelLoadButtons[2].GetComponent<Button>().interactable = true;
                 levelLoadButtons[2].gameObject.GetComponentInChildren<Text>().text = "Level 4: \nThe Array";
                 levelLoadButtons[2].gameObject.GetComponentInChildren<Text>().fontSize = 35;
             }
             if (levelsBeaten[2])
             {
-                Debug.Log("Level 4 Beaten");
+                //Debug.Log("Level 4 Beaten");
                 //Player has beaten final level, trigger text on main menu!
                 playerWinText.SetActive(true);
                 ClearSaveButton.SetActive(true);
                 gameBeaten = true;
-                Debug.Log("Player Won Game, any level selectable");
+                //Debug.Log("Player Won Game, any level selectable");
             }
         }
         else
         {
-            Debug.Log("No Player Data, Only level 1 can be active.");
+            //Debug.Log("No Player Data, Only level 1 can be active.");
             SetOnlyLvl1();
 
         }
