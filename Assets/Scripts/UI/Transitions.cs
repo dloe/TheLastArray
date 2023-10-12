@@ -49,7 +49,6 @@ public class Transitions : MonoBehaviour
     #region Scene Transitions
     void StartFadeIn()
     {
-        // Debug.Log("on");
         fadeIn = true;
         ctc = true;
         u = 1.0f;
@@ -62,7 +61,7 @@ public class Transitions : MonoBehaviour
         u = 0.0f;
     }
     /// <summary>
-    /// Scene Transitions, will incorperate a fade in and out
+    /// Scene Transitions, will incorporate a fade in and out
     /// - will not use animator on canvas to avoid stuff being in update
     /// - will use interpolation on panels alpha
     /// </summary>
@@ -85,7 +84,6 @@ public class Transitions : MonoBehaviour
                 u = 1;
                 fading = false;
                 fadeOut = false;
-                //Debug.Log("off");
             }
 
             a01 = (1 - u) * a0 + u * a1;
@@ -116,7 +114,6 @@ public class Transitions : MonoBehaviour
                 u = 0;
                 fading = false;
                 fadeIn = false;
-                // Debug.Log("off");
             }
 
             a01 = (1 - u) * a0 + u * a1;

@@ -8,7 +8,7 @@ public class Door : MonoBehaviour
     /// Door Script
     /// Dylan Loe
     /// 
-    /// Lasat Updated: 4/20/21
+    /// Last Updated: 4/20/21
     /// 
     ///     - UNUSED
     ///     Doors act as connectors, each door must have a reference to each room its connected to otherwise, its a no longer a door

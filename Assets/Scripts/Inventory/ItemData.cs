@@ -96,16 +96,12 @@ public class ItemData : ScriptableObject
         {
             reloading = true;
 
-            Debug.Log("Reloading...");
             for(int i = (int)reloadTime; i > 0; i--)
             {
                 InventoryUI.Instance.currentAmmoName.text = "Reloading... " + i;
                 yield return new WaitForSeconds(1);
             }
 
-            
-            //yield return new WaitForSeconds(reloadTime);
-            Debug.Log("Reloaded");
             loadedAmmo += amountToReload;
             switch (ammoType)
             {
@@ -137,14 +133,11 @@ public class ItemData : ScriptableObject
         {
             reloading = true;
 
-            Debug.Log("Reloading...");
             for (int i = (int)reloadTime; i > 0; i--)
             {
                 InventoryUI.Instance.currentAmmoName.text = "Reloading... " + i;
                 yield return new WaitForSeconds(1);
             }
-            Debug.Log("Reloaded");
-
 
             usingFireBullets = false;
             InventoryUI.Instance.RefreshUI();

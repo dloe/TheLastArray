@@ -9,11 +9,11 @@ public class BossEnemy : MonoBehaviour
 {
     /// <summary>
     /// Boss Enemy
-    /// Dylan
+    /// Dylan Loe
     /// 
     /// Last Updated: 4/15/21
     /// 
-    /// - Boss Enenmy Behaviors
+    /// - Boss Enemy Behaviors
     ///     - 2 phases and multiple attack types
     /// </summary>
     
@@ -64,13 +64,13 @@ public class BossEnemy : MonoBehaviour
     // the base move speed
     float baseSpeed = 5;
 
-    // the radius around the enemy that it will ditect its target
+    // the radius around the enemy that it will detect its target
     float detectionRadius = 16;
 
     // the internal timer used for the enemy makes it so not everything is not in update
     float tickRate = 0.5f;
 
-    //currect object that has the enemys attention
+    //currect object that has the enemy's attention
     Vector3 poi;
 
     [Header("Movement_Stats")]
@@ -103,7 +103,7 @@ public class BossEnemy : MonoBehaviour
     //how close the enemy needs to be to attack the player
     public float attackDistance;
 
-    // what is the enemy targting
+    // what is the enemy targeting
     public GameObject _target;
 
     [Header("is attacking?")]
@@ -228,7 +228,7 @@ public class BossEnemy : MonoBehaviour
         switch (mAttackType)
         {
             case attackTypes.none:
-                //idea: if boss is to close to player, dont move towards it anymore
+                //idea: if boss is to close to player, don t move towards it anymore
                 //Debug.Log("moving");
                 this.transform.position += delta * Time.deltaTime;
                 break;
@@ -376,7 +376,6 @@ public class BossEnemy : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("far");
                     //25 - 15 - 20 - 30
                     if (Random.value <= 0.30f)
                         SpawnMinions();
@@ -479,21 +478,17 @@ public class BossEnemy : MonoBehaviour
                 
                 if (LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Player")
                 {
-                    //Debug.Log("HitPlayer");
                     attackRay.transform.GetComponent<Player>().TakeDamage(thrustAttack,thrustKnockback, this.transform);
                     yield return new WaitForSeconds(1.5f);
                     StartCoroutine(CoolDown());
                     StopCoroutine(ThrustForward());
-                    //yield break; ;
                     break;
                 }
-                else if(LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Enviroment")
+                else if(LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Environment")
                 {
-                    //Debug.Log("hit wall stawp");
                     yield return new WaitForSeconds(1.5f);
                     StartCoroutine(CoolDown());
                     StopCoroutine(ThrustForward());
-                    //yield break;
                     break;
                 } 
             }
@@ -501,7 +496,6 @@ public class BossEnemy : MonoBehaviour
         }
         //delay after attack
         yield return new WaitForSeconds(1.5f);
-        //GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
         StartCoroutine(CoolDown());
     }
 
@@ -510,7 +504,6 @@ public class BossEnemy : MonoBehaviour
     {
         mAttackType = attackTypes.secondAttack;
         readyToAttack = false;
-        Debug.Log("Ring attack");
         StartCoroutine(BulletRingAttackMovement());
     }
 
@@ -518,7 +511,6 @@ public class BossEnemy : MonoBehaviour
     {
         mAttackType = attackTypes.forthAttack;
         readyToAttack = false;
-        //Debug.Log("Shutgun");
         StartCoroutine(ShotGunBlast());
     }
 
@@ -581,7 +573,7 @@ public class BossEnemy : MonoBehaviour
 
     IEnumerator BulletRingAttackMovement()
     {
-        //selects random starting index, this is the one that doesnt shoot
+        //selects random starting index, this is the one that doesn't shoot
         int indexAvoid = Random.Range(0, bulletRing.Length - 1);
         //Debug.Log(indexAvoid);
         int ringsFired = 1;
@@ -644,7 +636,6 @@ public class BossEnemy : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         //first determine how many minions to spawn
         int minionsToSpawn = Random.Range(2, 4);
-        Debug.Log(minionsToSpawn);
 
         for (int spawnCount = 0; spawnCount < minionsToSpawn; spawnCount++)
         {
@@ -664,14 +655,12 @@ public class BossEnemy : MonoBehaviour
                     //if sphere hits ground
                     if (LayerMask.LayerToName(hit.transform.gameObject.layer) == "FloorBossDetection")
                     {
-                        Debug.Log("found");
                         Instantiate(minionAirdrop, spawnPos, transform.rotation);
                         break;
                     }
 
                     
                 }
-                //Debug.Log("reroll");
             }
         }
         yield return new WaitForSeconds(3.0f);
@@ -682,7 +671,6 @@ public class BossEnemy : MonoBehaviour
     {
         mAttackType = attackTypes.thirdAttack;
         readyToAttack = false;
-        Debug.Log("Starting slam");
 
         StartCoroutine(SlamAttackMovement());
     }
@@ -711,7 +699,6 @@ public class BossEnemy : MonoBehaviour
                 //if sphere hits ground
                 if (LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "FloorBossDetection")
                 {
-                    Debug.Log("hit floor stawp");
                     this.transform.position = new Vector3(transform.position.x, 1, transform.position.z);
                     break;
                 }
@@ -727,7 +714,6 @@ public class BossEnemy : MonoBehaviour
             Debug.Log(multiplier);
 
             //if in range takes damage based on proximity and pushed away
-            //Debug.Log("Player in range");
             transform.LookAt(_target.transform.position);
 
             //push target based on how close they are to boss
@@ -757,10 +743,7 @@ public class BossEnemy : MonoBehaviour
         else
             attackSpeed = Random.Range(2, 3);
 
-        //Debug.Log("cooling down");
         yield return new WaitForSeconds(attackSpeed);
-        //spawningMinions = false;
-        //Debug.Log("ready to attack");
         attackCD = 0;
         readyToAttack = true;
         attacking = false;
@@ -782,7 +765,6 @@ public class BossEnemy : MonoBehaviour
         else if (Vector3.Distance(transform.position, _target.gameObject.transform.position) >= agroLoseDis)
         {
             agro = false;
-
         }
     }
 
@@ -843,14 +825,8 @@ public class BossEnemy : MonoBehaviour
         lastArray.GetComponent<BoxCollider>().isTrigger = true;
         Objectives.Instance.UpdateFinalObjective(1);
 
-        //  if (isObjectiveEnemy)
-        //  {
-        //Objectives.Instance.SendCompletedMessage(Condition.KillEnemy);
-      //  }
         Destroy(this.gameObject);
     }
-
-
 
     private void OnDrawGizmos()
     {
@@ -862,16 +838,12 @@ public class BossEnemy : MonoBehaviour
             Gizmos.DrawRay(this.transform.position, dir);
         }
 
-
         //detection
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
 
-        
-
         //Gizmos.color = Color.blue;
         //Gizmos.DrawCube(transform.position + Vector3.forward, )
-
 
         if (agro)
         {
@@ -883,9 +855,9 @@ public class BossEnemy : MonoBehaviour
         }
         else
         {
-            //wander
-          //  Gizmos.color = Color.blue;
-          //  Gizmos.DrawWireSphere(_spawnPoint, wanderRadius);
+            //wander - no longer in use
+            //Gizmos.color = Color.blue;
+            //Gizmos.DrawWireSphere(_spawnPoint, wanderRadius);
         }
 
         Gizmos.color = Color.black;
@@ -893,8 +865,6 @@ public class BossEnemy : MonoBehaviour
 
         Gizmos.color = Color.cyan;
         Gizmos.DrawSphere(wanderPoint, .2f);
-
-
 
     }
 }

@@ -32,7 +32,7 @@ public class LevelAssetsData : ScriptableObject
     [Header("Refs to Assets Spawned in Scene")]
     public List<GameObject> AssetsSpawned;
     public GameObject emptyObj;
-    [Header("Enterance Room Variations")]
+    [Header("Entrance Room Variations")]
     public GameObject[] EnterenceRooms;
     [Header("Level Wall Prefabs")]
     public GameObject levelWall;
@@ -59,10 +59,10 @@ public class LevelAssetsData : ScriptableObject
     public GameObject bossDetection;
     public GameObject bossTileLastArray;
 
-    [Header("Secret Room Varations")]
+    [Header("Secret Room Variations")]
     public List<GameObject> secretRoomAssets;
     [Space(10)]
-    [Header("Different varients of perset tile (by themes)")]
+    [Header("Different variants of preset tile (by themes)")]
     [Header("Forest")]
     [Header("Tile Mat")]
     public Material forest_mat;

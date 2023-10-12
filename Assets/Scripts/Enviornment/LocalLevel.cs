@@ -25,7 +25,7 @@ public class LocalLevel : MonoBehaviour
     /// Notes:
     /// - keeps track of local level info
     /// - handles scene transitions into level
-    /// - sets one of the objectvie types
+    /// - sets one of the objective types
     /// - saves player info
     /// - sets what type of tile assets we use
     /// 
@@ -53,7 +53,7 @@ public class LocalLevel : MonoBehaviour
     [SerializeField]
     public Image transBar;
 
-    [Header("Objective Number - choosen in this script")]
+    [Header("Objective Number - chosen in this script")]
     public int objective;
     [Header("Objective Asset Obj")]
     public Objectives _myObjs;
@@ -153,7 +153,7 @@ public class LocalLevel : MonoBehaviour
 
     /// <summary>
     ///  - when player accomplishes object and gets to extraction
-    ///     - saves data to scriptable obj
+    ///     - saves data to Scriptable obj
     ///     - fade out
     ///     - player leaves this scene, goes to crafting scene (for now next level)
     ///     - update levels beaten var
@@ -161,7 +161,7 @@ public class LocalLevel : MonoBehaviour
     IEnumerator LevelWonEvent()
     {
         StartFadeOut();
-        //save player data to scriptable obj
+        //save player data to Scriptable obj
         Debug.Log("Level " + ((int)thisLevelTier + 1) + " is beaten!");
         myPlayer.levelsBeaten[(int)thisLevelTier] = true;
         myPlayer.SavePlayer();
@@ -261,7 +261,7 @@ public class LocalLevel : MonoBehaviour
         u = 0.0f;
     }
     /// <summary>
-    /// Scene Transitions, will incorperate a fade in and out
+    /// Scene Transitions, will incorporate a fade in and out
     /// - will not use animator on canvas to avoid stuff being in update
     /// - will use interpolation on panels alpha
     /// </summary>

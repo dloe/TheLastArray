@@ -94,7 +94,7 @@ public class MinionAirDropBehavior : MonoBehaviour
     void Detonation()
     {
         //run particle effect
-        Debug.Log("HIT FLOOR");
+        Debug.Log("Detonation: HIT FLOOR");
         //damage player
         Transform[] _nearby = collidersToTransforms(Physics.OverlapSphere(transform.position, checkRadius));
         foreach (Transform potentialTarget in _nearby)

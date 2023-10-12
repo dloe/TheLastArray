@@ -69,7 +69,7 @@ public class TileGenerationInspector : Editor
 public class TileGeneration : MonoBehaviour
 {
     /// <summary>
-    /// Tile Genaraation Script
+    /// Tile generation Script
     /// Dylan Loe
     /// 
     /// Last Updated: 5/9/2021
@@ -80,7 +80,7 @@ public class TileGeneration : MonoBehaviour
     ///     - spawns the tiles
     ///     - each level has a given amount of space to give in terms of room size
     ///     - cant have levels be to big
-    ///     - starts with starting room then works out choosing each puzzle peices with given space
+    ///     - starts with starting room then works out choosing each puzzle pieces with given space
     ///     -  ****once grid is made, we make a path from start to end. Then we make sure all the rooms are connected to main path****
     ///     
     /// </summary>
@@ -93,7 +93,7 @@ public class TileGeneration : MonoBehaviour
     bool _printLogFirstTime = false;
 
     //gets from level data (set in inspector)
-    //so far ive only test with width and height being the same number, same number recommended (might need to make slight adjustments to one line to test both being different)
+    //so far Ive only test with width and height being the same number, same number recommended (might need to make slight adjustments to one line to test both being different)
     [Header("Grid Size")]
     public int _levelWidth = 4;
     public int _levelHeight = 4;
@@ -105,7 +105,7 @@ public class TileGeneration : MonoBehaviour
     //for visible nodes
     GameObject[,] _grid2DArray;
 
-    //depends on size of indivual tiles to ensure no overlap
+    //depends on size of individual tiles to ensure no overlap
     float _distanceBetweenNodes = 50.0f;
 
     //player spawn not included the path
@@ -129,7 +129,7 @@ public class TileGeneration : MonoBehaviour
     public int branchCount;
     [Header("Amount of extra single rooms added")]
     public int fillerRooms;
-    //all availble tile spots
+    //all available tile spots
     public List<Tile> _avalibleTileSpots = new List<Tile>();
     //divergent path branch
     List<Tile> _branch = new List<Tile>();
@@ -225,9 +225,9 @@ public class TileGeneration : MonoBehaviour
     //=============================================================================================================
 
     /// <summary>
-    /// - Possible setups for chooseing start and end rooms:
+    /// - Possible setups for choosing start and end rooms:
     ///         - can either start from one corner (1 1/4) and have player move across path of other corner (opposite 1/4)
-    ///                 - will incorperate most tiles
+    ///                 - will incorporate most tiles
     ///                 - give game a tile limit for grid size so its not to big, once it generates a path the extra rooms and tiles can vary as game gets more difficult
     ///         - have player start in center and have path be a corner
     ///                 - Will not be able to use low amount of tiles
@@ -248,7 +248,7 @@ public class TileGeneration : MonoBehaviour
 
         _grid2DArray = new GameObject[_levelWidth, _levelHeight];
 
-        //runs throug grid
+        //runs through grid
         for (int rows = 0; rows < _levelWidth; rows++)
         {
             for (int col = 0; col < _levelHeight; col++)
@@ -260,7 +260,7 @@ public class TileGeneration : MonoBehaviour
                 tilePlaceholderRef.transform.parent = nodeTile.transform;
                 tilePlaceholderRef.GetComponent<Tile>().posOnGrid = new Vector2(rows, col);
                 tilePlaceholderRef.GetComponent<Tile>().hasDoors = hasDoors;
-                //small issue were tile no longer automatically deltes doors on start
+                //small issue were tile no longer automatically deletes doors on start
                 //if(!hasDoors)
                     //tilePlaceholderRef.GetComponent<Tile>().RemoveDoors();
 
@@ -285,7 +285,7 @@ public class TileGeneration : MonoBehaviour
         AssignNeighbors();
     }
 
-    //run through grid, establish and link whos next to who
+    //run through grid, establish and link who's next to who
     void AssignNeighbors()
     {
         if (debugPrints)
@@ -298,7 +298,7 @@ public class TileGeneration : MonoBehaviour
                 Tile tile = _grid2DArray[rows, col].transform.GetChild(0).GetComponent<Tile>();
                 int newRef;
  
-                //assign this tiles neightbors
+                //assign this tiles neighbors
                 if (rows < _levelWidth - 1)
                 {
                      newRef = rows + 1;
@@ -327,13 +327,13 @@ public class TileGeneration : MonoBehaviour
 
     /// <summary>
     /// - each tile has 4 possible directions the path can go (up, down, left and right)
-    /// - creates list of all avalible spots right outside of path
+    /// - creates list of all available spots right outside of path
     ///     - chooses one of these tiles to start branch
     ///     - goes random directions extending branch
-    ///     - reapeat random amount of times
+    ///     - repeat random amount of times
     ///     - adds individual rooms as well
     /// - chooses random direction to start possible path
-    ///     - if path doesnt have any possible directions that are not already on the array, we backtrack one
+    ///     - if path doesn't have any possible directions that are not already on the array, we backtrack one
     /// </summary>
     void GeneratePath()
     {
@@ -453,10 +453,10 @@ public class TileGeneration : MonoBehaviour
     /// </summary>
     void CheckTile(Tile tile, List<Tile> current)
     {
-        //failsafe to stop possible infinate loop, causes being looked at
+        //failsafe to stop possible infinite loop, causes being looked at
         if (failsafeCount == _levelHeight * _levelWidth * 2)
         {
-            //lets say we dont make it to the boss room for some logical error that i couldnt find, simply make the end of the levelPath array the boss room. FAILSAFE 
+            //lets say we don't make it to the boss room for some logical error that i couldn't find, simply make the end of the levelPath array the boss room. FAILSAFE 
             _endTile = levelPath[levelPath.Count - 1];
             _endTile.tileStatus = Tile.TileStatus.boss;
             _endTile.ShadeBoosRoom();
@@ -470,7 +470,8 @@ public class TileGeneration : MonoBehaviour
 
         //checks this tile
         //if it has no neighbors or all neighbors are marked as checked go back to previous. mark this tile as checked and unmark path status as path
-        if ((tile.rightNeighbor == null || tile.rightNeighbor.checkedForPath) && (tile.leftNeighbor == null || tile.leftNeighbor.checkedForPath) && (tile.upNeighbor == null || tile.upNeighbor.checkedForPath) && (tile.downNeighbor == null || tile.downNeighbor.checkedForPath))
+        if ((tile.rightNeighbor == null || tile.rightNeighbor.checkedForPath) && (tile.leftNeighbor == null || tile.leftNeighbor.checkedForPath) && 
+            (tile.upNeighbor == null || tile.upNeighbor.checkedForPath) && (tile.downNeighbor == null || tile.downNeighbor.checkedForPath))
         {
             tile.checkedForPath = true;
             tile.ShadeNull();
@@ -523,7 +524,8 @@ public class TileGeneration : MonoBehaviour
                 switch (nsToCheck[count])
                 {
                     case 1:
-                        if (tile.upNeighbor != null && tile.upNeighbor.tileStatus != Tile.TileStatus.startingRoom && !tile.upNeighbor.checkedForPath && tile.upNeighbor.tileStatus == Tile.TileStatus.nullRoom)
+                        if (tile.upNeighbor != null && tile.upNeighbor.tileStatus != Tile.TileStatus.startingRoom && !tile.upNeighbor.checkedForPath && 
+                            tile.upNeighbor.tileStatus == Tile.TileStatus.nullRoom)
                         {
                             tile.upNeighbor.previousTile = tile;
                             current.Add(tile);
@@ -534,7 +536,8 @@ public class TileGeneration : MonoBehaviour
                         }
                         break;
                     case 2:
-                        if (tile.downNeighbor != null && tile.downNeighbor.tileStatus != Tile.TileStatus.startingRoom && !tile.downNeighbor.checkedForPath && tile.downNeighbor.tileStatus == Tile.TileStatus.nullRoom)
+                        if (tile.downNeighbor != null && tile.downNeighbor.tileStatus != Tile.TileStatus.startingRoom && !tile.downNeighbor.checkedForPath && 
+                            tile.downNeighbor.tileStatus == Tile.TileStatus.nullRoom)
                         {
                             tile.downNeighbor.previousTile = tile;
                             current.Add(tile);
@@ -545,7 +548,8 @@ public class TileGeneration : MonoBehaviour
                         }
                         break;
                     case 3:
-                        if (tile.leftNeighbor != null && tile.leftNeighbor.tileStatus != Tile.TileStatus.startingRoom && !tile.leftNeighbor.checkedForPath && tile.leftNeighbor.tileStatus == Tile.TileStatus.nullRoom)
+                        if (tile.leftNeighbor != null && tile.leftNeighbor.tileStatus != Tile.TileStatus.startingRoom && !tile.leftNeighbor.checkedForPath && 
+                            tile.leftNeighbor.tileStatus == Tile.TileStatus.nullRoom)
                         {
                             tile.leftNeighbor.previousTile = tile;
                             current.Add(tile);
@@ -556,7 +560,8 @@ public class TileGeneration : MonoBehaviour
                         }
                         break;
                     case 4:
-                        if (tile.rightNeighbor != null && tile.rightNeighbor.tileStatus != Tile.TileStatus.startingRoom && !tile.rightNeighbor.checkedForPath && tile.rightNeighbor.tileStatus == Tile.TileStatus.nullRoom)
+                        if (tile.rightNeighbor != null && tile.rightNeighbor.tileStatus != Tile.TileStatus.startingRoom && !tile.rightNeighbor.checkedForPath && 
+                            tile.rightNeighbor.tileStatus == Tile.TileStatus.nullRoom)
                         {
                             tile.rightNeighbor.previousTile = tile;
                             current.Add(tile);
@@ -637,13 +642,13 @@ public class TileGeneration : MonoBehaviour
         branchCount = Random.Range(1, ((_grid2DArray.Length - levelPath.Count) / _levelWidth) + 1);
 
         //start with making branches
-        //change 1 to branchCount after im done debugging
+        //change 1 to branchCount after I'm done debugging
         for(int branch = 0; branch < branchCount; branch++)
         {
             //wont add any more rooms if there are no spaces left to add meaning grid2DArray.Length - levelPath.Count <= 0
 
             //first we find where this branch will start, need to find how many tiles this branch will be
-            //for now imma use the length or level
+            //for now I'm use the length or level
             //if at any point the path has no where to go, we move on to next branch or exit completely
             int branchlength = Random.Range(1, _levelWidth + 1);
             //not sure we want to back track for branches, just end it when the reach a dead end
@@ -675,7 +680,7 @@ public class TileGeneration : MonoBehaviour
                     else if(_avalibleTileSpots.Contains(_branch[t]))
                         _avalibleTileSpots.Remove(_branch[t]);
 
-                    //if this tile is on the active tile list, remove it so we dont see it again later
+                    //if this tile is on the active tile list, remove it so we don t see it again later
                 }
                 if(t == _branch.Count - 1)
                 {
@@ -700,7 +705,7 @@ public class TileGeneration : MonoBehaviour
             //start of this branch will have the door connecting to previous tile, the rest of the path will not have a door connecting to anything part of the path
             //tiles on this branch can only connect to existing tiles in the list
 
-            //once we make branch, we go back through and remake the avalible tile spots
+            //once we make branch, we go back through and remake the available tile spots
             RemakeAvalibleSpots();
             _branch.Clear();
         }
@@ -732,7 +737,7 @@ public class TileGeneration : MonoBehaviour
                     _allActiveTiles.Add(current);
                     current.description = "random room";
                     //activate doors
-                    //remake avaliblespots
+                    //remake available spots
 
                     //DOORS
                     if (hasDoors)
@@ -752,7 +757,7 @@ public class TileGeneration : MonoBehaviour
 
     void RemakeAvalibleSpots()
     {
-        //Remaking avalible spots
+        //Remaking available spots
         for (int tileC = 0; tileC < _allActiveTiles.Count; tileC++)
         {
             Tile current = _allActiveTiles[tileC];
@@ -788,7 +793,7 @@ public class TileGeneration : MonoBehaviour
 
             if ((tile.rightNeighbor == null || tile.rightNeighbor.tileStatus != Tile.TileStatus.nullRoom) && (tile.leftNeighbor == null || tile.leftNeighbor.tileStatus != Tile.TileStatus.nullRoom) && (tile.upNeighbor == null || tile.upNeighbor.tileStatus != Tile.TileStatus.nullRoom) && (tile.downNeighbor == null || tile.downNeighbor.tileStatus != Tile.TileStatus.nullRoom))
             {
-                //if it has no avalible neighbors, we exit this branch
+                //if it has no available neighbors, we exit this branch
                 length = 0;
 
                 return;
@@ -1037,7 +1042,7 @@ public class TileGeneration : MonoBehaviour
                 t.tile.rightNeighbor = secretRoom.GetComponent<Tile>();
                 break;
             default:
-                Debug.Log("ERROR: the array on n is null");
+                Debug.LogError("ERROR: the array on n is null");
                 if(debugPrints)
                 {
                     PrintToLog("ERROR: the array on n is null", true);
@@ -1152,8 +1157,6 @@ public class TileGeneration : MonoBehaviour
                 _side = spawnRoomSide.left;
                 break;
             default:
-                Debug.Log(num);
-                Debug.Log("No side picked?");
                 break;
         }
 

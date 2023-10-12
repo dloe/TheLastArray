@@ -15,7 +15,7 @@ public class Tile : MonoBehaviour
     /// 
     /// NOTES:
     /// - Holds info for each tile (to be referenced heavily by TileGeneration
-    /// - runs through a check to help prefent duplicated linked doors
+    /// - runs through a check to help prevent duplicated linked doors
     /// - Door system is only active in lvl 4 (final level), every other level simply just has to spawn in the walls
     /// 
     /// </summary>
@@ -96,7 +96,7 @@ public class Tile : MonoBehaviour
     public int doorsActivated = 0;
     public GameObject doorRef;
     public bool hasDoors = false;
-    //when door is activated, it will not spawn any blockage or enviornment where the door is located, otherwise that direction/doorway will be blocked for the player
+    //when door is activated, it will not spawn any blockage or environment where the door is located, otherwise that direction/doorway will be blocked for the player
     public GameObject[] doors;
 
     //visible mesh player stands on, material will be set based on which level we one
@@ -270,7 +270,7 @@ public class Tile : MonoBehaviour
     /// </summary>
     public void ChooseTileMap()
     {
-        //will have a checklist of possible shapes the doosr can make, as we get though checking all the doors, we can narrow down which tile shapes it will be
+        //will have a checklist of possible shapes the doors can make, as we get though checking all the doors, we can narrow down which tile shapes it will be
         int _doorsOn = 0;
         for(int c = 0; c < doors.Length; c++)
         {
@@ -300,18 +300,18 @@ public class Tile : MonoBehaviour
                 break;
         }
 
-        //make sure we choose and rotate tile map to propery mapType
+        //make sure we choose and rotate tile map to proper mapType
         switch (mapType)
         {
             case MapType.none:
                 break;
             case MapType.SingleDoor:
-                //chooses random map variant made for incorperating 1 door
+                //chooses random map variant made for incorporating 1 door
                 //make sure room is rotated (either 90, 180, or 270) so door is facing right side
                 //single door rooms most likely orientated having the front of the room being where the door is 
                 break;
             case MapType.DoubleStraight:
-                //double straights are oriented having front be one of the doors (not really imporant which one)
+                //double straights are oriented having front be one of the doors (not really important which one)
                 break;
             case MapType.DoubleLShape:
                 //double L shapes are oriented having front be left most door on L
@@ -320,7 +320,7 @@ public class Tile : MonoBehaviour
                 //T shaped rooms oriented having front be the middle door (so we have room on either side of front
                 break;
             case MapType.All4:
-                //doesnt matter (we dont rotate this room so orientation doesnt matter)
+                //doesnt matter (we don t rotate this room so orientation doesn't matter)
                 break;
             default:
                 break;
@@ -330,7 +330,7 @@ public class Tile : MonoBehaviour
 
     void Determine2DoorVariant()
     {
-        //go through doors array, check doors neighbors to see if they are actvie, if we find any neighbors that are active, then this is an L shape, else it is a straight line shape
+        //go through doors array, check doors neighbors to see if they are active, if we find any neighbors that are active, then this is an L shape, else it is a straight line shape
         for (int c = 0; c < doors.Length; c++)
         {
             if (doors[c].GetComponent<DoorBehavior>().isDoor)
@@ -399,7 +399,7 @@ public class Tile : MonoBehaviour
             }
         }
         mapType = MapType.none;
-        Debug.Log("UUHH");
+        Debug.LogError("Tile - Map set to None.");
     }
 
     public void SyncDoors()
@@ -437,8 +437,8 @@ public class Tile : MonoBehaviour
     }
 
     /// <summary>
-    /// Double check to fix small bug in which a duplicate door can rarly appear and not be removed and synced causing mass caos and walls to spawn in places they should not be spawning
-    /// - fixes an edge case in which a specific angled door doesnt sync properly, for now this will have to do but a better algorithim may be the actual fix
+    /// Double check to fix small bug in which a duplicate door can rarely appear and not be removed and synced causing mass chaos and walls to spawn in places they should not be spawning
+    /// - fixes an edge case in which a specific angled door doesn't sync properly, for now this will have to do but a better algorithm may be the actual fix
     /// </summary>
     public void ReSyncDoors()
     {
@@ -644,7 +644,7 @@ public class Tile : MonoBehaviour
     {
         bool activateGarantee = false;
         int doorsOn = 0;
-        //goes through and turns on 1 door garenteed, then has a very low chance of turning on another door, and even lower chance of another door and even lower chance of another door, etc
+        //goes through and turns on 1 door guaranteed, then has a very low chance of turning on another door, and even lower chance of another door and even lower chance of another door, etc
 
         //bool firstBranchDoor = false;
         int[] doorsToCheck = new int[] { 1, 2, 3, 4 };
@@ -981,7 +981,7 @@ public class Tile : MonoBehaviour
 /// - Intended to be used to color code Tiles during generation phase before tile assets were assigned
 /// - Red -- not in use
 /// - green -- in use, part of path to exit
-/// - blue -- in use, not necessarly part of path
+/// - blue -- in use, not necessarily part of path
 /// ---------------------------
 /// </summary>
 public class NodeRef : MonoBehaviour

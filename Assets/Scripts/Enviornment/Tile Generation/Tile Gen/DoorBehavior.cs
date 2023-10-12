@@ -5,10 +5,10 @@ using UnityEngine;
 public class DoorBehavior : MonoBehaviour
 {
     /// <summary>
-    /// Door Behavior Scrit
-    /// Dylaan Loe
+    /// Door Behavior Script
+    /// Dylan Loe
     /// 
-    /// Last Udpated: 4/20/21
+    /// Last Updated: 4/20/21
     /// 
     ///     - when activated, it will not spawn any blockage possibly pick different variants of doors or entryways
     ///     - otherwise player cannot go through this way so it will spawn walls or something to stop them from progressing

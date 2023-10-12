@@ -5,7 +5,7 @@ using UnityEngine;
 /// <summary>
 /// Enemy types
 /// - Levels 1 - 4 == tier 1
-/// - Levels 2 - 4 == teir 2
+/// - Levels 2 - 4 == tier 2
 /// - Levels 3 - 4 == tier 3
 /// </summary>
 public enum EnemyWeightType
@@ -25,7 +25,7 @@ public enum EnemyWeightType
 public class PossibleEnemy : MonoBehaviour
 {
     /// <summary>
-    /// Possible Enemy Plceholder Info
+    /// Possible Enemy Placeholder Info
     /// Dylan Loe
     /// 
     /// last Updated: 4/25/21

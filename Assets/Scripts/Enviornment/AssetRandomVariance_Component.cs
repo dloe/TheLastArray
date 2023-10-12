@@ -10,7 +10,7 @@ public class AssetRandomVariance_Component : MonoBehaviour
     /// 
     /// Last Updated: 9/11/23
     /// 
-    /// - having configurable, adjustable params that can be choosen at random for things like lights on cars, lights, particle effects, etc
+    /// - having configurable, adjustable params that can be chosen at random for things like lights on cars, lights, particle effects, etc
     /// </summary>
 
     [Header("Set Light Components to randomize")]

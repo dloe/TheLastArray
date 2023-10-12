@@ -47,7 +47,7 @@ public class LevelAssetSpawn : MonoBehaviour
     public List<GameObject> itemsInLevelList = new List<GameObject>();
     [Header("Weapons In Level")]
     public List<GameObject> weaponsInLevelList = new List<GameObject>();
-    //possible objecives
+    //possible objectives
     public List<GameObject> _possibleObjectives = new List<GameObject>();
 
     [Header("Enemies In Level")]
@@ -63,7 +63,7 @@ public class LevelAssetSpawn : MonoBehaviour
     public List<GameObject> objectivesInLevel = new List<GameObject>();
     public List<GameObject> _possibleTileObjectivesInLevel = new List<GameObject>();
 
-    [Header("Total Collectables Spawned")]
+    [Header("Total Collectibles Spawned")]
     public int collectables;
     [Header("Amount of enemies spawned in level")]
     public int enemyCount;
@@ -255,7 +255,7 @@ public class LevelAssetSpawn : MonoBehaviour
         }
     }
 
-    //doors would be active linking tiles, just add doors on sides that dont have doors yet
+    //doors would be active linking tiles, just add doors on sides that don t have doors yet
     void ActivateLvl4Walls()
     {
         if (debugPrints)
@@ -491,7 +491,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 _possibleObjectives.Remove(endObjTile.GetComponent<PresetTileInfo>().objectiveSpawn);
                 objectivesInLevel.Add(obj);
 
-                //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is availbile (so 1))
+                //based on objective, we may need to get some more objectives throughout level. Will randomly pick 2 more (if there are not 2 more then just add whatever is available (so 1))
                 //if objective is certain types (ie type 3), choose more objectives and add to list
                 
                 //make sure we can spawn 2 more objectives!
@@ -502,7 +502,7 @@ public class LevelAssetSpawn : MonoBehaviour
                     //randomly pick an objective (or item?)
                     _possibleObjectives = reshuffle(_possibleObjectives);
 
-                    //run check to see if this is an adiquate location to use, otherwise rechoose
+                    //run check to see if this is an adequate location to use, otherwise rechoose
                     for (int indexO = 0; indexO < _possibleObjectives.Count; indexO++)
                     {
                         if (_possibleObjectives[indexO])
@@ -666,7 +666,7 @@ public class LevelAssetSpawn : MonoBehaviour
                             t = t.leftNeighbor;
                             _tArray[3] = t;
 
-                            //random chance we dont use this 4 some tile and have og be single
+                            //random chance we don t use this 4 some tile and have original be single
                             if (Random.value <= twoBYtwo_SpawnChance)
                             {
                                 fourSomeCount++;
@@ -808,7 +808,7 @@ public class LevelAssetSpawn : MonoBehaviour
                             t = t.leftNeighbor;
                             _tArray[3] = t;
 
-                            //random chance we dont use this 4 some tile and have og be single
+                            //random chance we don t use this 4 some tile and have original be single
                             if (Random.value <= twoBYtwo_SpawnChance)
                             {
                                 fourSomeCount++;
@@ -1227,13 +1227,13 @@ public class LevelAssetSpawn : MonoBehaviour
         //weapon = 20%
         //weight adds 30 to weapon
         //adds 30 to item
-        //adds 30 to resoruce
+        //adds 30 to resource
         int pItemC;
         for (pItemC = 0; pItemC < _possibleItems.Count && pItemC < collectables; pItemC++)
         {
             if (_possibleItems[pItemC].GetComponent<PossibleItem>().inUse)
             {
-                Debug.Log("dont use me lol");
+                Debug.Log("LevelAssetSpawn: Do not use. Please Change.");
             }
             switch (_possibleItems[pItemC].GetComponent<PossibleItem>().objectWeight)
             {
@@ -2208,7 +2208,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 Destroy(_possibleEnemiesInLevel[enemyCount]);
                 if (mPossibleEnemy.canBeMiniBoss)
                 {
-                    //Debug.Log("cehck");
+                    //Debug.Log("check");
                     enemy.name += "_MINIBOSS";
                     miniBossesInLevel.Add(enemy);
                     currentMiniBossCount++;
@@ -2384,7 +2384,7 @@ public class LevelAssetSpawn : MonoBehaviour
                 
                 if (mPossibleEnemy.canBeMiniBoss)
                 {
-                    //Debug.Log("cehck");
+                    //Debug.Log("check");
                     enemy.name += "_MINIBOSS";
                     miniBossesInLevel.Add(enemy);
                     currentMiniBossCount++;

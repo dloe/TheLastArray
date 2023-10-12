@@ -190,7 +190,7 @@ public class CraftingRecipe : ScriptableObject
     {
         if(player.inventory.IsFull() && craftingResult.resultType == ResultType.item && craftingResult.itemResult.itemType != ItemType.BackPack)
         {
-            Debug.Log("can't craft, inventory is full chief");
+            Debug.Log("Player Crafting Limit: can't craft, inventory is full chief");
         }
         else
         {
