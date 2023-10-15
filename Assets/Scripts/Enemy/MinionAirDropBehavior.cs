@@ -11,29 +11,29 @@ public class MinionAirDropBehavior : MonoBehaviour
     /// 
     /// - Minions can spawn in the boss room
     /// - special behavior needed to add cool entrance
-    ///     - Sets line renderer inital values
+    ///     - Sets line renderer initial values
     /// </summary>
     public int damage;
     public float baseMeleeKnockback = 7f;
     public float speed;
     public float checkRadius = 2;
-    Vector3 rayHitTrans;
+    Vector3 _rayHitTrans;
 
-    LineRenderer airdropLine;
+    LineRenderer _airdropLine;
 
     public float lineSpeed = 1.0f;
-    float distance;
-    float increment;
+    float _distance;
+    float _increment;
 
     public GameObject minion;
 
     void Start()
     {
-        airdropLine = GetComponent<LineRenderer>();
-        airdropLine.positionCount = 2;
-        airdropLine.startWidth = 0.45f;
-        airdropLine.SetPosition(0, this.transform.position);
-        airdropLine.SetPosition(1, this.transform.position);
+        _airdropLine = GetComponent<LineRenderer>();
+        _airdropLine.positionCount = 2;
+        _airdropLine.startWidth = 0.45f;
+        _airdropLine.SetPosition(0, this.transform.position);
+        _airdropLine.SetPosition(1, this.transform.position);
         CastLine();
     }
 
@@ -56,18 +56,18 @@ public class MinionAirDropBehavior : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        if (increment < distance)
+        if (_increment < _distance)
         {
-            increment += .1f / lineSpeed;
+            _increment += .1f / lineSpeed;
 
-            float x = Mathf.Lerp(0, distance, increment);
+            float x = Mathf.Lerp(0, _distance, _increment);
 
             Vector3 pointA = this.transform.position;
-            Vector3 pointB = rayHitTrans;
+            Vector3 pointB = _rayHitTrans;
 
             Vector3 alongLine = x * Vector3.Normalize(pointB - pointA) + pointA;
-            airdropLine.SetPosition(0, this.transform.position);
-            airdropLine.SetPosition(1, alongLine);
+            _airdropLine.SetPosition(0, this.transform.position);
+            _airdropLine.SetPosition(1, alongLine);
         }
     }
 
@@ -84,7 +84,7 @@ public class MinionAirDropBehavior : MonoBehaviour
             Detonation();
     }
 
-    bool check = false;
+    bool _check = false;
     /// <summary>
     /// Dylan Loe
     /// Updated: 4-12
@@ -109,9 +109,9 @@ public class MinionAirDropBehavior : MonoBehaviour
         //spawn minion
         //Debug.Log("Spawn minion");
         //set y pos to 0.5f in case detonation takes place to soon
-        if (!check)
+        if (!_check)
         {
-            check = true;
+            _check = true;
             Instantiate(minion, transform.position, transform.rotation);
         }
 
@@ -130,9 +130,9 @@ public class MinionAirDropBehavior : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(transform.position, -transform.up, out hit))
         {
-            airdropLine.enabled = true;
-            rayHitTrans = hit.point;
-            distance = Vector3.Distance(this.transform.position, rayHitTrans);
+            _airdropLine.enabled = true;
+            _rayHitTrans = hit.point;
+            _distance = Vector3.Distance(this.transform.position, _rayHitTrans);
         }
     }
 

@@ -154,7 +154,7 @@ public class TileGeneration : MonoBehaviour
     //some levels have a secret room
     public GameObject secretRoom;
 
-    int failsafeCount = 0;
+    int _failsafeCount = 0;
 
     //for setup of spawn room (level orientation)
     enum spawnRoomSide
@@ -454,7 +454,7 @@ public class TileGeneration : MonoBehaviour
     void CheckTile(Tile tile, List<Tile> current)
     {
         //failsafe to stop possible infinite loop, causes being looked at
-        if (failsafeCount == _levelHeight * _levelWidth * 2)
+        if (_failsafeCount == _levelHeight * _levelWidth * 2)
         {
             //lets say we don't make it to the boss room for some logical error that i couldn't find, simply make the end of the levelPath array the boss room. FAILSAFE 
             _endTile = levelPath[levelPath.Count - 1];
@@ -465,7 +465,7 @@ public class TileGeneration : MonoBehaviour
         }
         else
         {
-            failsafeCount++;
+            _failsafeCount++;
         }
 
         //checks this tile

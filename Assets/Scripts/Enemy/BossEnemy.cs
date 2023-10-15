@@ -48,7 +48,7 @@ public class BossEnemy : MonoBehaviour
     // the base health of the enemy
     public int baseHealth = 100;
 
-    //enemys base attack value - changes based on attack
+    //enemy's base attack value - changes based on attack
     [Header("attack stats")]
     public int baseAttack = 5;
     public float baseAttackKnockback = 10f;
@@ -62,23 +62,23 @@ public class BossEnemy : MonoBehaviour
     
 
     // the base move speed
-    float baseSpeed = 5;
+    float _baseSpeed = 5;
 
     // the radius around the enemy that it will detect its target
-    float detectionRadius = 16;
+    float _detectionRadius = 16;
 
     // the internal timer used for the enemy makes it so not everything is not in update
-    float tickRate = 0.5f;
+    float _tickRate = 0.5f;
 
-    //currect object that has the enemy's attention
-    Vector3 poi;
+    //current object that has the enemy's attention
+    Vector3 _poi;
 
     [Header("Movement_Stats")]
 
     public float avodinceRange = 2f;
 
-    int rays = 25;
-    float angle = 90;
+    int _rays = 25;
+    float _angle = 90;
 
     //the starting point of the enemy
     Vector3 _spawnPoint;
@@ -96,7 +96,7 @@ public class BossEnemy : MonoBehaviour
     //rate at which the attack will come out
     public float attackSpeed;
 
-    float attackCD = 0;
+    float _attackCD = 0;
 
     public float combatSpeed;
 
@@ -116,7 +116,7 @@ public class BossEnemy : MonoBehaviour
     public bool _currentlyInAttackMovement = false;
     public float playerDistanceFromBoss;
     //how far the enemy needs to get away from its target to lose agro
-    float agroLoseDis = 25;
+    float _agroLoseDis = 25;
     public float speed = 5;
     public float speed_phase2 = 6;
 
@@ -139,14 +139,17 @@ public class BossEnemy : MonoBehaviour
     [HideInInspector]
     public GameObject lastArray;
 
-    
+    public int pelletCountMin = 3;
+    public int pelletCountMax = 5;
+    public float spreadAngle = 10;
+    List<Quaternion> _pellets;
 
     private void Start()
     {
 
         _spawnPoint = transform.position;
         wanderPoint = _spawnPoint;
-        poi = wanderPoint;
+        _poi = wanderPoint;
         _target = Player.Instance.gameObject;
         StartCoroutine(Tick());
 
@@ -168,7 +171,7 @@ public class BossEnemy : MonoBehaviour
             speed = speed_phase2;
         }
 
-        playerDistanceFromBoss = (transform.position - poi).magnitude;
+        playerDistanceFromBoss = (transform.position - _poi).magnitude;
     }
 
     /// <summary>
@@ -179,7 +182,7 @@ public class BossEnemy : MonoBehaviour
         BaseAttack();
         SetTarget();
         StateChanger();
-        yield return new WaitForSeconds(tickRate);
+        yield return new WaitForSeconds(_tickRate);
         StartCoroutine(Tick());
     }
 
@@ -194,10 +197,10 @@ public class BossEnemy : MonoBehaviour
         switch (myState)
         {
             case enemyState.wandering:
-                speed = baseSpeed;
+                speed = _baseSpeed;
                 break;
             case enemyState.following:
-                speed = baseSpeed;
+                speed = _baseSpeed;
                 break;
             case enemyState.attacking:
                 if (mAttackType != attackTypes.thirdAttack)
@@ -209,19 +212,19 @@ public class BossEnemy : MonoBehaviour
         }
         Vector3 delta = Vector3.zero;
 
-        for (int i = 0; i < rays; i++)
+        for (int i = 0; i < _rays; i++)
         {
             Quaternion rot = this.transform.rotation;
-            var rotMod = Quaternion.AngleAxis((i / ((float)rays - 1)) * angle * 2 - angle, this.transform.up);
+            var rotMod = Quaternion.AngleAxis((i / ((float)_rays - 1)) * _angle * 2 - _angle, this.transform.up);
             var dir = rot * rotMod * Vector3.forward;
 
             Ray ray = new Ray(this.transform.position, dir);
             RaycastHit hitInfo;
 
             if (Physics.Raycast(ray, out hitInfo, avodinceRange) && !attacking)
-            { delta -= (1f / rays) * speed * dir; }
+            { delta -= (1f / _rays) * speed * dir; }
             else
-            { delta += (1f / rays) * speed * dir; }
+            { delta += (1f / _rays) * speed * dir; }
         }
         //Debug.Log(delta);
 
@@ -287,7 +290,7 @@ public class BossEnemy : MonoBehaviour
                     }
                 }
 
-                //doesnt move if spawning shit
+                //doesn't move if spawning shit
                 break;
             default:
                 break;
@@ -295,13 +298,13 @@ public class BossEnemy : MonoBehaviour
 
         if (!_currentlyInAttackMovement)
         {
-            this.transform.LookAt(poi);
+            this.transform.LookAt(_poi);
 
         }
         else
         {
             //look slowly at poi
-            var rotation = Quaternion.LookRotation(poi - transform.position);
+            var rotation = Quaternion.LookRotation(_poi - transform.position);
 
             transform.rotation = Quaternion.Slerp(transform.rotation, rotation, Time.deltaTime * thrustRotateDamp);
             
@@ -309,7 +312,7 @@ public class BossEnemy : MonoBehaviour
 
         if (EnemyImage != null)
         {
-            Vector3 localLook = Quaternion.AngleAxis(EnemyImage.transform.parent.rotation.eulerAngles.y, Vector3.up) * (imageDirMod * (poi - transform.position).normalized);
+            Vector3 localLook = Quaternion.AngleAxis(EnemyImage.transform.parent.rotation.eulerAngles.y, Vector3.up) * (imageDirMod * (_poi - transform.position).normalized);
             if (localLook.x < 0.01)
             {
                 EnemyImage.transform.localScale = new Vector3(-1, 1, 1);
@@ -462,7 +465,7 @@ public class BossEnemy : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
         
-        attackCD = attackSpeed;
+        _attackCD = attackSpeed;
         yield return new WaitForSeconds(1.0f);
         
         for(int distance = 0; distance <= 8; distance++)
@@ -514,10 +517,7 @@ public class BossEnemy : MonoBehaviour
         StartCoroutine(ShotGunBlast());
     }
 
-    public int pelletCountMin = 3;
-    public int pelletCountMax = 5;
-    public float spreadAngle = 10;
-    List<Quaternion> pellets;
+
     IEnumerator ShotGunBlast()
     {
         int repeat = 1;
@@ -541,18 +541,18 @@ public class BossEnemy : MonoBehaviour
             else
                 pelletNum = Random.Range(pelletCountMin + 2, pelletCountMax + 1);
 
-            pellets = new List<Quaternion>(pelletNum);
+            _pellets = new List<Quaternion>(pelletNum);
             for (int a = 0; a < pelletNum; a++)
             {
-                pellets.Add(Quaternion.Euler(Vector3.zero));
+                _pellets.Add(Quaternion.Euler(Vector3.zero));
             }
 
             //fire shot
             //Debug.Log("PEW");
             //int i = 0;
-            for (int c = 0; c < pellets.Count; c++)
+            for (int c = 0; c < _pellets.Count; c++)
             {
-                pellets[c] = Random.rotation;
+                _pellets[c] = Random.rotation;
                 GameObject bullet = Instantiate(projectile, transform.position, transform.rotation);
                 //set variables to bullet
                 Quaternion rot = new Quaternion(0, Random.rotation.y, Random.rotation.y, Random.rotation.w);
@@ -576,22 +576,22 @@ public class BossEnemy : MonoBehaviour
         //selects random starting index, this is the one that doesn't shoot
         int indexAvoid = Random.Range(0, bulletRing.Length - 1);
         //Debug.Log(indexAvoid);
-        int ringsFired = 1;
-        float pauseBetweenRings = 1.0f;
+        int _ringsFired = 1;
+        float _pauseBetweenRings = 1.0f;
         //can repeat this multiple times
         //shoots everything else
         if (mbossPhase == bossPhases.phase1)
         {
-            ringsFired = Random.Range(1, 4);
-            pauseBetweenRings = Random.Range(0.9f, 1.2f);
+            _ringsFired = Random.Range(1, 4);
+            _pauseBetweenRings = Random.Range(0.9f, 1.2f);
         }
         else
         {
-            ringsFired = Random.Range(2, 5);
-            pauseBetweenRings = Random.Range(0.7f, 0.9f);
+            _ringsFired = Random.Range(2, 5);
+            _pauseBetweenRings = Random.Range(0.7f, 0.9f);
         }
         
-        for(int fired = 0; fired < ringsFired; fired++)
+        for(int fired = 0; fired < _ringsFired; fired++)
         {
             for(int index = 0; index < bulletRing.Length; index++)
             {
@@ -607,8 +607,8 @@ public class BossEnemy : MonoBehaviour
                 }
             }
 
-            if(fired != ringsFired - 1)
-                yield return new WaitForSeconds(pauseBetweenRings);
+            if(fired != _ringsFired - 1)
+                yield return new WaitForSeconds(_pauseBetweenRings);
         }
         
 
@@ -625,7 +625,7 @@ public class BossEnemy : MonoBehaviour
         Debug.Log("Starting spawn");
         //attacking = false;
         
-        attackCD = attackSpeed;
+        _attackCD = attackSpeed;
 
         StartCoroutine(Spawning());
     }
@@ -744,7 +744,7 @@ public class BossEnemy : MonoBehaviour
             attackSpeed = Random.Range(2, 3);
 
         yield return new WaitForSeconds(attackSpeed);
-        attackCD = 0;
+        _attackCD = 0;
         readyToAttack = true;
         attacking = false;
         _currentlyInAttackMovement = false;
@@ -756,13 +756,13 @@ public class BossEnemy : MonoBehaviour
     /// </summary>
     void SetTarget()
     {
-        if (Vector3.Distance(transform.position, _target.gameObject.transform.position) <= detectionRadius)
+        if (Vector3.Distance(transform.position, _target.gameObject.transform.position) <= _detectionRadius)
         {
             agro = true;
             myState = enemyState.following;
         }
 
-        else if (Vector3.Distance(transform.position, _target.gameObject.transform.position) >= agroLoseDis)
+        else if (Vector3.Distance(transform.position, _target.gameObject.transform.position) >= _agroLoseDis)
         {
             agro = false;
         }
@@ -771,9 +771,9 @@ public class BossEnemy : MonoBehaviour
     void Atention()
     {
         if (!agro)
-        { poi = wanderPoint; }
+        { _poi = wanderPoint; }
         else if (agro)
-        { poi = _target.transform.position; }
+        { _poi = _target.transform.position; }
     }
 
     public void TakeDamage(int damage)
@@ -830,17 +830,17 @@ public class BossEnemy : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        for (int i = 0; i < rays; i++)
+        for (int i = 0; i < _rays; i++)
         {
             Quaternion rot = this.transform.rotation;
-            var rotMod = Quaternion.AngleAxis((i / ((float)rays - 1)) * angle * 2 - angle, this.transform.up);
+            var rotMod = Quaternion.AngleAxis((i / ((float)_rays - 1)) * _angle * 2 - _angle, this.transform.up);
             var dir = rot * rotMod * Vector3.forward;
             Gizmos.DrawRay(this.transform.position, dir);
         }
 
         //detection
         Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
+        Gizmos.DrawWireSphere(transform.position, _detectionRadius);
 
         //Gizmos.color = Color.blue;
         //Gizmos.DrawCube(transform.position + Vector3.forward, )
@@ -861,7 +861,7 @@ public class BossEnemy : MonoBehaviour
         }
 
         Gizmos.color = Color.black;
-        Gizmos.DrawSphere(poi, .1f);
+        Gizmos.DrawSphere(_poi, .1f);
 
         Gizmos.color = Color.cyan;
         Gizmos.DrawSphere(wanderPoint, .2f);

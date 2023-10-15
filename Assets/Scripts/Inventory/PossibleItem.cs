@@ -23,6 +23,4 @@ public class PossibleItem : MonoBehaviour
     public ObjectWeightType objectWeight;
     [HideInInspector]
     public bool inUse = false;
-   // [HideInInspector]
-   // public int itemIndex = -1;
 }
