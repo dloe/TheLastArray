@@ -16,13 +16,13 @@ public class Transitions : MonoBehaviour
     ///     - using interpolation formula
     /// </summary>
     
-    bool fadeIn = false;
-    bool fadeOut = false;
-    float timeStart;
-    float u;
-    bool ctc = false;
-    float a0, a1, a01;
-    bool fading = false;
+    bool _fadeIn = false;
+    bool _fadeOut = false;
+    float _timeStart;
+    float _u;
+    bool _ctc = false;
+    float _a0, _a1, _a01;
+    bool _fading = false;
     [SerializeField]
     public Image transBar;
 
@@ -35,11 +35,11 @@ public class Transitions : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (fadeIn)
+        if (_fadeIn)
         {
             LevelFadeIn();
         }
-        else if (fadeOut)
+        else if (_fadeOut)
         {
             LevelFadeOut();
         }
@@ -49,16 +49,16 @@ public class Transitions : MonoBehaviour
     #region Scene Transitions
     void StartFadeIn()
     {
-        fadeIn = true;
-        ctc = true;
-        u = 1.0f;
+        _fadeIn = true;
+        _ctc = true;
+        _u = 1.0f;
     }
 
     public void StartFadeOut()
     {
-        fadeOut = true;
-        ctc = true;
-        u = 0.0f;
+        _fadeOut = true;
+        _ctc = true;
+        _u = 0.0f;
     }
     /// <summary>
     /// Scene Transitions, will incorporate a fade in and out
@@ -67,29 +67,29 @@ public class Transitions : MonoBehaviour
     /// </summary>
     void LevelFadeOut()
     {
-        if (ctc)
+        if (_ctc)
         {
-            a0 = 0f;
-            a1 = 1.0f;
-            ctc = false;
-            fading = true;
-            timeStart = Time.time;
+            _a0 = 0f;
+            _a1 = 1.0f;
+            _ctc = false;
+            _fading = true;
+            _timeStart = Time.time;
         }
-        if (fading)
+        if (_fading)
         {
-            u = (Time.time - timeStart);
+            _u = (Time.time - _timeStart);
             //u = 1 - u;
-            if (u >= 1.0)
+            if (_u >= 1.0)
             {
-                u = 1;
-                fading = false;
-                fadeOut = false;
+                _u = 1;
+                _fading = false;
+                _fadeOut = false;
             }
 
-            a01 = (1 - u) * a0 + u * a1;
+            _a01 = (1 - _u) * _a0 + _u * _a1;
 
             Color temp = transBar.color;
-            temp.a = a01;
+            temp.a = _a01;
             transBar.color = temp;
         }
     }
@@ -97,29 +97,29 @@ public class Transitions : MonoBehaviour
 
     void LevelFadeIn()
     {
-        if (ctc)
+        if (_ctc)
         {
-            a0 = 1.0f;
-            a1 = 0f;
-            ctc = false;
-            fading = true;
-            timeStart = Time.time;
+            _a0 = 1.0f;
+            _a1 = 0f;
+            _ctc = false;
+            _fading = true;
+            _timeStart = Time.time;
         }
-        if (fading)
+        if (_fading)
         {
-            u = (Time.time - timeStart) / 1.0f;
-            u = 1 - u;
-            if (u <= 0.0f)
+            _u = (Time.time - _timeStart) / 1.0f;
+            _u = 1 - _u;
+            if (_u <= 0.0f)
             {
-                u = 0;
-                fading = false;
-                fadeIn = false;
+                _u = 0;
+                _fading = false;
+                _fadeIn = false;
             }
 
-            a01 = (1 - u) * a0 + u * a1;
+            _a01 = (1 - _u) * _a0 + _u * _a1;
 
             Color temp = transBar.color;
-            temp.a = 1 - a01;
+            temp.a = 1 - _a01;
             transBar.color = temp;
         }
     }

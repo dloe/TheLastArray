@@ -13,16 +13,16 @@ public class ExcludeFromMinimapCam : MonoBehaviour
     /// Notes:
     ///  - Basic behavior on start for minimap
     /// </summary>
-    private Camera cam;
+    private Camera _cam;
     [Header("FOR NOW ON: Please include layers you don't want cam to see here instead of handling it in multiple areas of project")]
     public LayerMask toExclude;
 
     // Start is called before the first frame update
     void Start()
     {
-        cam = GetComponent<Camera>();
+        _cam = GetComponent<Camera>();
 
-        cam.cullingMask = ~toExclude;
+        _cam.cullingMask = ~toExclude;
        // foreach (LayerMask layer in toExclude)
        //{
        //     cam.cullingMask += ~layer;

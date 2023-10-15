@@ -28,7 +28,7 @@ public class MainMenuUI : MonoBehaviour
     public GameObject[] levelLoadButtons;
     public GameObject playerWinText;
     public PlayerData baseData;
-    bool gameBeaten = false;
+    bool _gameBeaten = false;
     private void Start()
     {
         Application.targetFrameRate = Screen.currentResolution.refreshRate;
@@ -127,7 +127,7 @@ public class MainMenuUI : MonoBehaviour
                 //Player has beaten final level, trigger text on main menu!
                 playerWinText.SetActive(true);
                 ClearSaveButton.SetActive(true);
-                gameBeaten = true;
+                _gameBeaten = true;
                 //Debug.Log("Player Won Game, any level selectable");
             }
         }
@@ -141,7 +141,7 @@ public class MainMenuUI : MonoBehaviour
 
     public void ActiveClearSaveButton()
     {
-        if (gameBeaten)
+        if (_gameBeaten)
         {
             ClearSaveButton.SetActive(true);
         }

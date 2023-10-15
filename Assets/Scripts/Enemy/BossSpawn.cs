@@ -19,7 +19,7 @@ public class BossSpawn : MonoBehaviour
     public GameObject bossdoor;
     public float radius = 6.25f;
     public GameObject bossObj;
-    bool startCheck = false;
+    bool _startCheck = false;
 
     // Start is called before the first frame update
     void Start()
@@ -30,7 +30,7 @@ public class BossSpawn : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(startCheck)
+        if(_startCheck)
             CheckForPlayer();
     }
 
@@ -43,7 +43,7 @@ public class BossSpawn : MonoBehaviour
         {
             if(potentialTarget.gameObject.tag == "Player")
             {
-                Debug.Log("Begininng boss fight");
+                Debug.Log("Beginning boss fight");
                 bossdoor.SetActive(true);
                 Objectives.Instance.UpdateFinalObjective(0);
 
@@ -59,7 +59,7 @@ public class BossSpawn : MonoBehaviour
     IEnumerator DelayedStart()
     {
         yield return new WaitForSeconds(1.0f);
-        startCheck = true;
+        _startCheck = true;
         bossdoor = tile.door;
     }
 

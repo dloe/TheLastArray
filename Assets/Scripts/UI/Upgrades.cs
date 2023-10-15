@@ -22,7 +22,7 @@ public class Upgrades : MonoBehaviour
 
     }
     public static Upgrades Instance;
-    Player player;
+    Player _player;
     public GameObject upgradeMenu;
 
     public Text skillPointText, maxHealthText, dmgResistanceText, speedText;
@@ -36,12 +36,12 @@ public class Upgrades : MonoBehaviour
     {
         get
         {
-            return player.skillPoints;
+            return _player.skillPoints;
         }
         set
         {
-            player.skillPoints = value;
-            skillPointText.text = player.skillPoints.ToString();
+            _player.skillPoints = value;
+            skillPointText.text = _player.skillPoints.ToString();
             UpdateExchangeButton();
         }
     }
@@ -50,13 +50,13 @@ public class Upgrades : MonoBehaviour
     {
         get
         {
-            return player.maxHealth;
+            return _player.maxHealth;
         }
         set
         {
-            player.maxHealth = value;
-            maxHealthText.text = player.maxHealth.ToString();
-            player.Health = player.Health;
+            _player.maxHealth = value;
+            maxHealthText.text = _player.maxHealth.ToString();
+            _player.Health = _player.Health;
         }
     }
 
@@ -64,12 +64,12 @@ public class Upgrades : MonoBehaviour
     {
         get
         {
-            return player.dmgResist;
+            return _player.dmgResist;
         }
         set
         {
-            player.dmgResist = value;
-            dmgResistanceText.text = player.dmgResist.ToString();
+            _player.dmgResist = value;
+            dmgResistanceText.text = _player.dmgResist.ToString();
         }
     }
 
@@ -77,12 +77,12 @@ public class Upgrades : MonoBehaviour
     {
         get
         {
-            return player.speedStat;
+            return _player.speedStat;
         }
         set
         {
-            player.speedStat = value;
-            speedText.text = player.speedStat.ToString("#0.0");
+            _player.speedStat = value;
+            speedText.text = _player.speedStat.ToString("#0.0");
         }
     }
     #endregion
@@ -98,7 +98,7 @@ public class Upgrades : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = Player.Instance;
+        _player = Player.Instance;
 
 
     }
@@ -129,7 +129,7 @@ public class Upgrades : MonoBehaviour
             MaxHealth = MaxHealth;
             DmgResistance = DmgResistance;
             Speed = Speed;
-            UpdateDropDowns(player.ScrapCount, player.ClothCount, player.MedsCount);
+            UpdateDropDowns(_player.ScrapCount, _player.ClothCount, _player.MedsCount);
             
             upgradeMenu.SetActive(true);
             UpdateExchangeButton();
@@ -142,7 +142,7 @@ public class Upgrades : MonoBehaviour
         clothDropDown.ClearOptions();
         medsDropDown.ClearOptions();
         List<string> optionNums = new List<string>();
-        if(player.ScrapCount != 0)
+        if(_player.ScrapCount != 0)
         {
             for (int index = 0; index < scrap + 1 && index < 11; index++)
             {
@@ -159,7 +159,7 @@ public class Upgrades : MonoBehaviour
 
         optionNums.Clear();
 
-        if (player.ClothCount != 0)
+        if (_player.ClothCount != 0)
         {
             
             for (int index = 0; index < cloth +1 && index < 11 ; index++)
@@ -177,7 +177,7 @@ public class Upgrades : MonoBehaviour
 
         optionNums.Clear();
 
-        if (player.MedsCount != 0)
+        if (_player.MedsCount != 0)
         {
             
             for (int index = 0; index < meds + 1 && index < 11; index++)
@@ -222,7 +222,7 @@ public class Upgrades : MonoBehaviour
 
     public void UpdateExchangeButton()
     {
-        if (SceneManager.GetActiveScene().name == player.baseData.trainSceneName)
+        if (SceneManager.GetActiveScene().name == _player.baseData.trainSceneName)
         {
             if ((scrapDropDown.value + clothDropDown.value + medsDropDown.value) == 10)
             {
@@ -262,11 +262,11 @@ public class Upgrades : MonoBehaviour
     public void ExhangeForSkillPoint()
     {
         SkillPoints++;
-        player.ScrapCount -= scrapDropDown.value;
-        player.ClothCount -= clothDropDown.value;
-        player.MedsCount -= medsDropDown.value;
+        _player.ScrapCount -= scrapDropDown.value;
+        _player.ClothCount -= clothDropDown.value;
+        _player.MedsCount -= medsDropDown.value;
 
-        UpdateDropDowns(player.ScrapCount, player.ClothCount, player.MedsCount);
+        UpdateDropDowns(_player.ScrapCount, _player.ClothCount, _player.MedsCount);
         UpdateExchangeButton();
     }
 
@@ -275,7 +275,7 @@ public class Upgrades : MonoBehaviour
         if(button.name == maxHealthExchangeButton.name)
         {
             MaxHealth += 5;
-            player.Health += 5;
+            _player.Health += 5;
         }
         else if(button.name == speedExchangeButton.name)
         {

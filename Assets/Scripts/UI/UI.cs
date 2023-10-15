@@ -33,7 +33,7 @@ public class UI : MonoBehaviour
 
     public bool PausedStatus { get { return _isPaused; } }
 
-    Player player;
+    Player _player;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -50,7 +50,7 @@ public class UI : MonoBehaviour
         //SetGraphics(PlayerPrefs.GetInt("Quality Level", 5));
 
 
-        player = Player.Instance;
+        _player = Player.Instance;
         //StartFadeIn();
     }
 
@@ -63,7 +63,7 @@ public class UI : MonoBehaviour
             {
                 UnPause();
             }
-            else if(player.Health > 0)
+            else if(_player.Health > 0)
             {
                 Pause();
             }

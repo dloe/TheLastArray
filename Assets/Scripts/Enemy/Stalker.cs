@@ -14,7 +14,7 @@ public class Stalker : BaseEnemy
     /// </summary>
     
     public int stealthTime;
-    bool hidden;
+    bool _hidden;
     public override void specialAttack(Vector3 temp)
     {
         if (myState != enemyState.attacking && readyToAttack == true)
@@ -26,7 +26,7 @@ public class Stalker : BaseEnemy
         {
             this.transform.position += temp * Time.deltaTime;
             attacking = true;
-            if(!hidden)
+            if(!_hidden)
             StartCoroutine(Stealth());
         }
         else if (myState == enemyState.attacking && readyToAttack == false)
@@ -40,7 +40,7 @@ public class Stalker : BaseEnemy
     {
         Color trans = new Color(EnemyImage.color.r, EnemyImage.color.g, EnemyImage.color.b, 0.2f);
         EnemyImage.color = trans;
-        hidden = true;
+        _hidden = true;
         yield return new WaitForSeconds(stealthTime);
         if(isObjectiveEnemy)
         {
@@ -50,7 +50,7 @@ public class Stalker : BaseEnemy
         {
             EnemyImage.color = Color.white;
         }
-        hidden = false;
+        _hidden = false;
     }
 
 }

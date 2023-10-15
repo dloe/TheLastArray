@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     public static Player Instance;
     public float PlayerCamRot;
 
-    int layerMask = ~(1 <<18);
+    int _layerMask = ~(1 <<18);
 
     public PlayerData baseData;
 
@@ -630,7 +630,7 @@ public class Player : MonoBehaviour
             WeaponFireAudio(7);
            // Debug.Log("check");
             //Debug.Log("Melee Attack");
-            if (Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward, out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange, layerMask))
+            if (Physics.BoxCast(_mainTransform.position, meleeExtents, _mainTransform.forward, out hit, _mainTransform.rotation, inventory.selectedItem.itemData.meleeRange, _layerMask))
             {
                 StartCoroutine(inventory.selectedItem.itemData.CoolDown());
 

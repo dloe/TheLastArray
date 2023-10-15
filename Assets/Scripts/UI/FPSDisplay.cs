@@ -12,11 +12,11 @@ public class FPSDisplay : MonoBehaviour
  /// Notes:
  ///  - used to display FPS to player
  /// </summary>
-    float deltaTime = 0.0f;
+    float _deltaTime = 0.0f;
 
     void Update()
     {
-        deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
+        _deltaTime += (Time.unscaledDeltaTime - _deltaTime) * 0.1f;
     }
 
     void OnGUI()
@@ -29,8 +29,8 @@ public class FPSDisplay : MonoBehaviour
         style.alignment = TextAnchor.UpperLeft;
         style.fontSize = h * 2 / 70;
         style.normal.textColor = Color.white;
-        float msec = deltaTime * 1000.0f;
-        float fps = 1.0f / deltaTime;
+        float msec = _deltaTime * 1000.0f;
+        float fps = 1.0f / _deltaTime;
         string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);
         GUI.Label(rect, text, style);
     }

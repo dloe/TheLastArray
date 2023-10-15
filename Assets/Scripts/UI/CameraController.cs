@@ -14,19 +14,19 @@ public class CameraController : MonoBehaviour
     ///  - manages camera movement throughout levels
     /// </summary>
     public static CameraController Instance;
-    private GameObject playerObject;
+    private GameObject _playerObject;
     public Vector3 offset;
     public float offsetLimitX = 1f;
     public float offsetLimitZ = 1f;
     public float horizontalNeutralZone = 6f;
     public float verticalNeutralZone = 4f;
     public float panSpeed = 5f;
-    private Vector3 baseOffset;
+    private Vector3 _baseOffset;
 
     public float originalOffsetLimitX;
     public float originalOffsetLimitZ;
 
-    private float xModifier, zModifier;
+    private float _xModifier, _zModifier;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -41,13 +41,13 @@ public class CameraController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (playerObject == null)
+        if (_playerObject == null)
         {
-            playerObject = Player.Instance.gameObject;
+            _playerObject = Player.Instance.gameObject;
         }
 
-        offset = transform.localPosition - Player.Instance.playerHolderTransform.TransformPoint(playerObject.transform.position);
-        baseOffset = offset;
+        offset = transform.localPosition - Player.Instance.playerHolderTransform.TransformPoint(_playerObject.transform.position);
+        _baseOffset = offset;
 
         //originalOffsetLimitX = offsetLimitX;
         //originalOffsetLimitZ = offsetLimitZ;
@@ -64,7 +64,7 @@ public class CameraController : MonoBehaviour
         //not in use
         //transform.localPosition = playerObject.transform.localPosition + offset;
         //transform.Translate((playerObject.transform.position + offset).normalized);
-        transform.position = playerObject.transform.position + Player.Instance.playerHolderTransform.TransformPoint(offset);
+        transform.position = _playerObject.transform.position + Player.Instance.playerHolderTransform.TransformPoint(offset);
 
         if((!CraftingTable.Instance || !CraftingTable.Instance.Menu.activeInHierarchy) && !Upgrades.Instance.upgradeMenu.activeInHierarchy )
         {
@@ -77,72 +77,72 @@ public class CameraController : MonoBehaviour
     private void panCamera()
     {
 
-        xModifier = Mathf.Abs(Input.mousePosition.x - getScrnFrac(true, 2f)) / getScrnFrac(true, 2f);
-        zModifier = Mathf.Abs(Input.mousePosition.y - getScrnFrac(false, 2f)) / getScrnFrac(false, 2f);
+        _xModifier = Mathf.Abs(Input.mousePosition.x - getScrnFrac(true, 2f)) / getScrnFrac(true, 2f);
+        _zModifier = Mathf.Abs(Input.mousePosition.y - getScrnFrac(false, 2f)) / getScrnFrac(false, 2f);
 
         if (Input.mousePosition.x < getScrnFrac(true, 2f) - getScrnFrac(true, horizontalNeutralZone))
         {
-            if(offset.x > baseOffset.x)
+            if(offset.x > _baseOffset.x)
             {
-                offset.x -= xModifier * panSpeed * 1.2f * Time.deltaTime;
+                offset.x -= _xModifier * panSpeed * 1.2f * Time.deltaTime;
             }
             else
             {
-                offset.x -= xModifier * panSpeed * Time.deltaTime;
+                offset.x -= _xModifier * panSpeed * Time.deltaTime;
             }
             
             //offset.x = -Mathf.MoveTowards(offset.x,offsetLimitX - xModifier*-offsetLimitX , 0.1f);
         }
         else if (Input.mousePosition.x > getScrnFrac(true, 2f) + getScrnFrac(true, horizontalNeutralZone))
         {
-            if (offset.x < baseOffset.x)
+            if (offset.x < _baseOffset.x)
             {
-                offset.x += xModifier * panSpeed * 1.2f * Time.deltaTime;
+                offset.x += _xModifier * panSpeed * 1.2f * Time.deltaTime;
             }
             else
             {
-                offset.x += xModifier * panSpeed * Time.deltaTime;
+                offset.x += _xModifier * panSpeed * Time.deltaTime;
             }
         }
         else
         {
             //offset.x = Mathf.Lerp(offset.x, baseOffset.x, panSpeed * 0.5f * Time.deltaTime);
-            offset.x = Mathf.MoveTowards(offset.x, baseOffset.x, panSpeed * Time.deltaTime);
+            offset.x = Mathf.MoveTowards(offset.x, _baseOffset.x, panSpeed * Time.deltaTime);
         }
 
         if (Input.mousePosition.y < getScrnFrac(false, 2f) - getScrnFrac(false, verticalNeutralZone))
         {
-            if(offset.z > baseOffset.z)
+            if(offset.z > _baseOffset.z)
             {
-                offset.z -= zModifier * panSpeed * 1.2f* Time.deltaTime;
+                offset.z -= _zModifier * panSpeed * 1.2f* Time.deltaTime;
             }
             else
             {
-                offset.z -= zModifier * panSpeed * Time.deltaTime;
+                offset.z -= _zModifier * panSpeed * Time.deltaTime;
             }
         }
         else if (Input.mousePosition.y > getScrnFrac(false, 2f) + getScrnFrac(false, verticalNeutralZone))
         {
-            if (offset.z < baseOffset.z)
+            if (offset.z < _baseOffset.z)
             {
-                offset.z += zModifier * panSpeed * 1.2f * Time.deltaTime;
+                offset.z += _zModifier * panSpeed * 1.2f * Time.deltaTime;
             }
             else
             {
-                offset.z += zModifier * panSpeed * Time.deltaTime;
+                offset.z += _zModifier * panSpeed * Time.deltaTime;
             }
         }
         else
         {
             //offset.z = Mathf.Lerp(offset.z, baseOffset.z, panSpeed * 0.5f * Time.deltaTime);
-            offset.z = Mathf.MoveTowards(offset.z, baseOffset.z, panSpeed * Time.deltaTime);
+            offset.z = Mathf.MoveTowards(offset.z, _baseOffset.z, panSpeed * Time.deltaTime);
         }
     }
 
     private void clampOffset()
     {
-        offset.x = Mathf.Clamp(offset.x, baseOffset.x - offsetLimitX, baseOffset.x + offsetLimitX);
-        offset.z = Mathf.Clamp(offset.z, baseOffset.z - offsetLimitZ, baseOffset.z + offsetLimitZ);
+        offset.x = Mathf.Clamp(offset.x, _baseOffset.x - offsetLimitX, _baseOffset.x + offsetLimitX);
+        offset.z = Mathf.Clamp(offset.z, _baseOffset.z - offsetLimitZ, _baseOffset.z + offsetLimitZ);
     }
 
     public void ToggleBinocularMode(bool state)

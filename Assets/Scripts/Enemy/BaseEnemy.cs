@@ -58,22 +58,22 @@ public class BaseEnemy : MonoBehaviour
     // the base move speed
     public float baseSpeed;
 
-    // the radius around the enemy that it will ditect its target
+    // the radius around the enemy that it will direct its target
     public float detectionRadius;
 
     // the internal timer used for the enemy makes it so not everything is not in update
     public float tickRate;
 
-    //currect object that has the enemys attention
-    Vector3 poi;
+    //current object that has the enemy's attention
+    Vector3 _poi;
 
     [Header("Movement_Stats")]
 
     public float avodinceRange = 2f;
 
-    int rays = 25;
+    int _rays = 25;
 
-    float angle = 90;
+    float _angle = 90;
 
 
 
@@ -87,7 +87,7 @@ public class BaseEnemy : MonoBehaviour
     //the starting point of the enemy
     Vector3 _spawnPoint;
 
-    Vector3 wanderPoint = new Vector3();
+    Vector3 _wanderPoint = new Vector3();
 
     [Header("Combat_Stats")]
     //how do I attack
@@ -99,7 +99,7 @@ public class BaseEnemy : MonoBehaviour
     //rate at which the attack will come out
     public float attackSpeed;
 
-    float attackCD = 0;
+    float _attackCD = 0;
 
 
     public float combatSpeed;
@@ -107,7 +107,7 @@ public class BaseEnemy : MonoBehaviour
     //how close the enemy needs to be to attack the player
     public float attackDistance;
 
-    // what is the enemy targting
+    // what is the enemy targeting
     public GameObject _target;
 
     public bool attacking;
@@ -131,18 +131,25 @@ public class BaseEnemy : MonoBehaviour
     public AudioClip rifleSound;
     [Space(25)]
     AudioSource _audioSource;
+    bool _audioPrevent = true;
+    protected float speed;
 
-    bool onAgroStart = false;
+    bool _onAgroStart = false;
     [Header("Minimap Objective Marker")]
     public GameObject objectiveMinimapMarker;
+
+    float _x;
+    float _z;
+
+    bool _start = false;
 
     public virtual void Start()
     {
         StartCoroutine(AgroStartCoolDown());
         _audioSource = GetComponent<AudioSource>();
         _spawnPoint = transform.position;
-        wanderPoint = _spawnPoint;
-        poi = wanderPoint;
+        _wanderPoint = _spawnPoint;
+        _poi = _wanderPoint;
         _target = Player.Instance.gameObject;
         StartCoroutine(Tick());
         if(isObjectiveEnemy)
@@ -150,11 +157,9 @@ public class BaseEnemy : MonoBehaviour
             EnemyImage.color = Color.yellow;
             objectiveMinimapMarker.SetActive(true);
         }
-            
-
     }
 
-    bool audioPrevent = true;
+
     private void Update()
     {
         //as of 3/7/21
@@ -165,7 +170,7 @@ public class BaseEnemy : MonoBehaviour
         if (baseHealth <= 0)
         { OnDeath(); }
 
-        if(agro == true && audioPrevent)
+        if(agro == true && _audioPrevent)
         {
            // PlayAgroSound();
             //audio cooldown
@@ -175,16 +180,16 @@ public class BaseEnemy : MonoBehaviour
 
     IEnumerator AudioCoolDown()
     {
-        audioPrevent = false;
+        _audioPrevent = false;
         yield return new WaitForSeconds(10f);
-        audioPrevent = true;
+        _audioPrevent = true;
     }
 
     //spawning system causes enemies to agro immediately on startup (wait a few seconds before they can agro)
     IEnumerator AgroStartCoolDown()
     {
         yield return new WaitForSeconds(2.0f);
-        onAgroStart = true;
+        _onAgroStart = true;
     }
     /// <summary>
     /// this will handles functions that do not need to be run in update 
@@ -198,7 +203,7 @@ public class BaseEnemy : MonoBehaviour
         StartCoroutine(Tick());
     }
 
-    protected float speed;
+
     void Stearing()
     {
         speed = 0;
@@ -219,10 +224,10 @@ public class BaseEnemy : MonoBehaviour
 
 
 
-        for (int i = 0; i < rays; i++)
+        for (int i = 0; i < _rays; i++)
         {
             Quaternion rot = this.transform.rotation;
-            var rotMod = Quaternion.AngleAxis((i / ((float)rays - 1)) * angle * 2 - angle, this.transform.up);
+            var rotMod = Quaternion.AngleAxis((i / ((float)_rays - 1)) * _angle * 2 - _angle, this.transform.up);
             var dir = rot * rotMod * Vector3.forward;
 
             Ray ray = new Ray(this.transform.position, dir);
@@ -231,9 +236,9 @@ public class BaseEnemy : MonoBehaviour
 
 
             if (Physics.Raycast(ray, out hitInfo, avodinceRange) && !attacking )
-            { delta -= (1f / rays) * speed * dir; }
+            { delta -= (1f / _rays) * speed * dir; }
             else
-            { delta += (1f / rays) * speed * dir; }
+            { delta += (1f / _rays) * speed * dir; }
 
 
         }
@@ -281,10 +286,10 @@ public class BaseEnemy : MonoBehaviour
         }
 
 
-        this.transform.LookAt(new Vector3(poi.x,this.transform.position.y,poi.z));
+        this.transform.LookAt(new Vector3(_poi.x,this.transform.position.y,_poi.z));
         if(EnemyImage != null)
         {
-            Vector3 localLook = Quaternion.AngleAxis(EnemyImage.transform.parent.rotation.eulerAngles.y, Vector3.up) * (imageDirMod*(poi - transform.position).normalized);
+            Vector3 localLook = Quaternion.AngleAxis(EnemyImage.transform.parent.rotation.eulerAngles.y, Vector3.up) * (imageDirMod*(_poi - transform.position).normalized);
             if (localLook.x < 0.01)
             {
                 EnemyImage.transform.localScale = new Vector3(-1, 1, 1);
@@ -325,11 +330,11 @@ public class BaseEnemy : MonoBehaviour
         {
             if (Physics.BoxCast(this.transform.position, Vector3.zero, transform.forward, out attackRay, transform.rotation, attackRange))
             {
-                if (LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Player" && attackCD <= 0 && myState == enemyState.attacking)
+                if (LayerMask.LayerToName(attackRay.transform.gameObject.layer) == "Player" && _attackCD <= 0 && myState == enemyState.attacking)
                 {
                     attacking = false;
                     readyToAttack = false;
-                    attackCD = attackSpeed;
+                    _attackCD = attackSpeed;
                     StartCoroutine(CoolDown());
                     attackRay.transform.GetComponent<Player>().TakeDamage(baseAttack, baseMeleeKnockback, this.transform);
                     
@@ -340,7 +345,7 @@ public class BaseEnemy : MonoBehaviour
         }
         else if (attackType == AttackType.ranged)
         {
-            if(myState == enemyState.attacking && attackCD <= 0 && readyToAttack == true)
+            if(myState == enemyState.attacking && _attackCD <= 0 && readyToAttack == true)
             {
                 _audioSource.clip = rifleSound;
                 _audioSource.Play();
@@ -360,7 +365,7 @@ public class BaseEnemy : MonoBehaviour
         //Debug.Log("cooling down");
         yield return new WaitForSeconds(attackSpeed);
         //Debug.Log("ready to attack");
-        attackCD = 0;
+        _attackCD = 0;
         readyToAttack = true;
 
     }
@@ -370,7 +375,7 @@ public class BaseEnemy : MonoBehaviour
     /// </summary>
     void SetTarget()
     {
-        if (Vector3.Distance(transform.position, _target.gameObject.transform.position) <= detectionRadius && onAgroStart)
+        if (Vector3.Distance(transform.position, _target.gameObject.transform.position) <= detectionRadius && _onAgroStart)
         {
             //Debug.Log(this.transform.position);
             agro = true;
@@ -388,9 +393,9 @@ public class BaseEnemy : MonoBehaviour
     void Atention()
     {
         if (!agro)
-        { poi = wanderPoint; }
+        { _poi = _wanderPoint; }
         else if (agro)
-        { poi = _target.transform.position; }
+        { _poi = _target.transform.position; }
     }
 
     /// <summary>
@@ -401,32 +406,29 @@ public class BaseEnemy : MonoBehaviour
 
     }
 
-    float x;
-    float z;
 
-    bool start = false;
     void WanderingPoint()
     {
 
 
-        if (start == false)
+        if (_start == false)
         {
-            x = Random.Range(-1f, 1f);
-            z = Random.Range(-1f, 1f);
+            _x = Random.Range(-1f, 1f);
+            _z = Random.Range(-1f, 1f);
 
-            start = true;
+            _start = true;
         }
 
-        if (Vector3.Distance(wanderPoint, _spawnPoint) >= wanderRadius)
+        if (Vector3.Distance(_wanderPoint, _spawnPoint) >= wanderRadius)
         {
             ChangeDirW();
         }
-        wanderPoint += new Vector3(x, 0, z).normalized * (wanderSpeed * 1.5f) * Time.deltaTime;
+        _wanderPoint += new Vector3(_x, 0, _z).normalized * (wanderSpeed * 1.5f) * Time.deltaTime;
     }
     void ChangeDirW()
     {
-        x = -x;
-        z = -z;
+        _x = -_x;
+        _z = -_z;
     }
 
     public void TakeDamage(int damage, Transform instigator, float damageKnockBack)
@@ -590,10 +592,10 @@ public class BaseEnemy : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        for (int i = 0; i < rays; i++)
+        for (int i = 0; i < _rays; i++)
         {
             Quaternion rot = this.transform.rotation;
-            var rotMod = Quaternion.AngleAxis((i / ((float)rays - 1)) * angle * 2 - angle, this.transform.up);
+            var rotMod = Quaternion.AngleAxis((i / ((float)_rays - 1)) * _angle * 2 - _angle, this.transform.up);
             var dir = rot * rotMod * Vector3.forward;
             Gizmos.DrawRay(this.transform.position, dir);
         }
@@ -620,10 +622,10 @@ public class BaseEnemy : MonoBehaviour
         }
 
         Gizmos.color = Color.black;
-        Gizmos.DrawSphere(poi, .1f);
+        Gizmos.DrawSphere(_poi, .1f);
 
         Gizmos.color = Color.cyan;
-        Gizmos.DrawSphere(wanderPoint, .2f);
+        Gizmos.DrawSphere(_wanderPoint, .2f);
 
 
 
@@ -647,7 +649,7 @@ public class BaseEnemy : MonoBehaviour
     void MakePath()// old
     {
         /*
-        print("avoidence " + this.gameObject + "vector " + avoidence);
+        print("avoidance " + this.gameObject + "vector " + avoidence);
         avoidence = Vector3.zero;
         foreach (GameObject g in surrounding)
         {

@@ -96,15 +96,15 @@ public class LevelAssetSpawn : MonoBehaviour
     public List<GameObject> _bigTilesList = new List<GameObject>();
 
     static private float twoBYtwo_SpawnChance = 0.25f;
-    GameObject play;
+    GameObject _play;
 
     //debug prints from TileGeneration
-    bool debugPrints;
+    bool _debugPrints;
 
     //set up prints to carry over here as well
     private void Awake()
     {
-        debugPrints = myTileGeneration.debugPrints;
+        _debugPrints = myTileGeneration.debugPrints;
     }
 
     /// <summary>
@@ -112,7 +112,7 @@ public class LevelAssetSpawn : MonoBehaviour
     /// </summary>
     public void PopulateGrid()
     {
-        if (debugPrints)
+        if (_debugPrints)
             myTileGeneration.PrintToLog("Populating Grid....", false);
 
         StartUpLevelAssetSpawn();
@@ -178,7 +178,7 @@ public class LevelAssetSpawn : MonoBehaviour
     //sets some values when this script is first called
     void StartUpLevelAssetSpawn()
     {
-        if (debugPrints)
+        if (_debugPrints)
             myTileGeneration.PrintToLog("Establishing Level Asset Values....",false);
 
         assetCountArray = new int[myLocalLevel.presetTileAssets.Count];
@@ -208,7 +208,7 @@ public class LevelAssetSpawn : MonoBehaviour
     /// </summary>
     void GridAnalysis()
     {
-        if (debugPrints)
+        if (_debugPrints)
             myTileGeneration.PrintToLog("Entering Grid Analysis....",false);
 
         //activate walls
@@ -233,20 +233,20 @@ public class LevelAssetSpawn : MonoBehaviour
 
                 playerSpawn = t.presetTile.GetComponent<PresetTileInfo>().playerSpawn;
                 //SPAWN PLAYER
-                play = Instantiate(playerPref, Vector3.zero, playerSpawn.transform.rotation);
-                play.transform.GetChild(2).GetComponent<Player>().PlayerCamRot = playerSpawn.transform.eulerAngles.y;
+                _play = Instantiate(playerPref, Vector3.zero, playerSpawn.transform.rotation);
+                _play.transform.GetChild(2).GetComponent<Player>().PlayerCamRot = playerSpawn.transform.eulerAngles.y;
 
                 if (lightObj != null)
                 {
                     lightObj.transform.rotation = Quaternion.Euler(playerSpawn.transform.eulerAngles);//new Quaternion(playerSpawn.transform.rotation);
                 }
 
-                StartCoroutine(setPlayerPosition(play, playerSpawn.transform.position));
+                StartCoroutine(setPlayerPosition(_play, playerSpawn.transform.position));
                 //will use getcomponent in scene next time
-                myLocalLevel.myPlayer = play.transform.GetChild(2).gameObject.GetComponent<Player>();
+                myLocalLevel.myPlayer = _play.transform.GetChild(2).gameObject.GetComponent<Player>();
             }
         }
-        if (debugPrints)
+        if (_debugPrints)
             myTileGeneration.PrintToLog("Finished Grid Analysis....",false);
 
         if (myTileGeneration.hasDoors)
@@ -258,7 +258,7 @@ public class LevelAssetSpawn : MonoBehaviour
     //doors would be active linking tiles, just add doors on sides that don t have doors yet
     void ActivateLvl4Walls()
     {
-        if (debugPrints)
+        if (_debugPrints)
             myTileGeneration.PrintToLog("Activating Walls for walled levels...",false);
 
         foreach (Tile t in myTileGeneration._allActiveTiles)
@@ -357,7 +357,7 @@ public class LevelAssetSpawn : MonoBehaviour
             }
         }
 
-        if (debugPrints)
+        if (_debugPrints)
             myTileGeneration.PrintToLog("Synching Big Tiles....",false);
 
         //remove access walls on big tiles
@@ -409,7 +409,7 @@ public class LevelAssetSpawn : MonoBehaviour
     
     void ActivateSecretRoom()
     {
-        if (debugPrints)
+        if (_debugPrints)
             myTileGeneration.PrintToLog("St up Secret Room....",false);
 
         //picks secret room
@@ -475,7 +475,7 @@ public class LevelAssetSpawn : MonoBehaviour
     /// </summary>
     public void ActivateObjectives()
     {
-        if (debugPrints)
+        if (_debugPrints)
             myTileGeneration.PrintToLog("Activating Objectives....",false);
 
         if (myLocalLevel.thisLevelTier != levelTier.level4)
@@ -1058,7 +1058,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
             bigAssetCountArray[1] += 1;
             endObjTile = preset;
-            if (debugPrints)
+            if (_debugPrints)
                 myTileGeneration.PrintToLog("BIG ASSET WITH OBJ",false);
         }
 
@@ -1176,7 +1176,7 @@ public class LevelAssetSpawn : MonoBehaviour
     //=============================================================================================================
     void ActivateLevelKey()
     {
-        if (debugPrints)
+        if (_debugPrints)
             myTileGeneration.PrintToLog("Setting up Level Keys....",false);
 
         int keyInt = Random.Range(0, _possibleItems.Count);
@@ -1195,7 +1195,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
     void ActivateItems()
     {
-        if (debugPrints)
+        if (_debugPrints)
             myTileGeneration.PrintToLog("Activating Items....",false);
 
         //shuffle _possibleItems
@@ -1443,7 +1443,7 @@ public class LevelAssetSpawn : MonoBehaviour
 
     void ActivateEnemies()
     {
-        if (debugPrints)
+        if (_debugPrints)
             myTileGeneration.PrintToLog("Activating Enemies....",false);
 
         _possibleEnemiesInLevel = reshuffle(_possibleEnemiesInLevel);

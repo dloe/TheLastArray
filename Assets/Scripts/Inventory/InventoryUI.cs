@@ -18,7 +18,7 @@ public class InventoryUI : MonoBehaviour
     public static InventoryUI Instance;
     public Transform slotParent;
     //public Transform selector;
-    private Player player;
+    private Player _player;
     public Inventory inventory;
     public int selectedItemIndex = 0;
     public List<Transform> slotList = new List<Transform>();
@@ -47,8 +47,8 @@ public class InventoryUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = Player.Instance;
-        inventory = player.inventory;
+        _player = Player.Instance;
+        inventory = _player.inventory;
         foreach (Transform slot in slotParent)
         {
             slotList.Add(slot);
@@ -270,7 +270,7 @@ public class InventoryUI : MonoBehaviour
 
     public void SpawnItem(Item item)
     {
-        Vector3 dropPos = new Vector3(player.transform.position.x, 0.5f, player.transform.position.z);
+        Vector3 dropPos = new Vector3(_player.transform.position.x, 0.5f, _player.transform.position.z);
 
         WorldItem worldItem = Instantiate(emptyWorldItem, dropPos, Player.Instance.playerHolderTransform.rotation).GetComponent<WorldItem>();
 

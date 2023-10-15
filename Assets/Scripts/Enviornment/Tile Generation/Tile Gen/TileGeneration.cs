@@ -12,7 +12,7 @@ public class TileGenerationInspector : Editor
 
     //Temporary turned to false
     TileGeneration myTileGeneration;
-    string showDebugPathActive = "Debug Path Inactive";
+    string _showDebugPathActive = "Debug Path Inactive";
 
     private void OnEnable()
     {
@@ -30,12 +30,12 @@ public class TileGenerationInspector : Editor
 
         if(!myTileGeneration.debugPathOn)
         {
-            showDebugPathActive = "Debug Path Inactive";
+            _showDebugPathActive = "Debug Path Inactive";
         }
         else
-            showDebugPathActive = "Debug Path Active";
+            _showDebugPathActive = "Debug Path Active";
 
-        if (GUILayout.Button(showDebugPathActive))
+        if (GUILayout.Button(_showDebugPathActive))
         {
             
             if(myTileGeneration.debugPathOn)

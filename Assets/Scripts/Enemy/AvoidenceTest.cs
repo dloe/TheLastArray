@@ -14,9 +14,9 @@ public class AvoidenceTest : MonoBehaviour
     /// </summary>
     public float speed = 10;
 
-    int rays = 25;
+    int _rays = 25;
 
-    float angle = 90;
+    float _angle = 90;
 
 
     public float range = 2;
@@ -29,10 +29,10 @@ public class AvoidenceTest : MonoBehaviour
 
         Vector3 delta = Vector3.zero;
 
-        for (int i = 0; i < rays; i++)
+        for (int i = 0; i < _rays; i++)
         {
             Quaternion rot = this.transform.rotation;
-            var rotMod = Quaternion.AngleAxis((i / ((float)rays - 1)) * angle * 2 - angle, this.transform.up);
+            var rotMod = Quaternion.AngleAxis((i / ((float)_rays - 1)) * _angle * 2 - _angle, this.transform.up);
             var dir = rot * rotMod * Vector3.forward;
 
 
@@ -43,11 +43,11 @@ public class AvoidenceTest : MonoBehaviour
 
             if (Physics.Raycast(ray, out hitInfo, range))
             {
-                delta -= (1f / rays) * speed * dir;
+                delta -= (1f / _rays) * speed * dir;
             }
             else
             {
-                delta += (1f / rays) * speed * dir;
+                delta += (1f / _rays) * speed * dir;
             }
 
             print(hitInfo);
@@ -59,10 +59,10 @@ public class AvoidenceTest : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        for (int i = 0; i < rays; i++)
+        for (int i = 0; i < _rays; i++)
         {
             Quaternion rot = this.transform.rotation;
-            var rotMod = Quaternion.AngleAxis((i / ((float)rays - 1)) * angle * 2 - angle, this.transform.up);
+            var rotMod = Quaternion.AngleAxis((i / ((float)_rays - 1)) * _angle * 2 - _angle, this.transform.up);
             var dir = rot * rotMod * Vector3.forward;
             Gizmos.DrawRay(this.transform.position, dir);
         }

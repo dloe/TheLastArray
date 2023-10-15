@@ -17,7 +17,7 @@ public class AssetRandomVariance_Component : MonoBehaviour
     public bool SetLightsToRandomize = false;
     public Light[] assetLights;
     public int mandatoryLightOverride = 1;
-    int lightsToActivate = 0;
+    int _lightsToActivate = 0;
     public float intensityOverride = -1;
 
     [Space(10)]
@@ -57,22 +57,22 @@ public class AssetRandomVariance_Component : MonoBehaviour
         //mix up array of lights
 
         if (mandatoryLightOverride > 1)
-            lightsToActivate = Random.Range(mandatoryLightOverride, assetLights.Length - 1);
+            _lightsToActivate = Random.Range(mandatoryLightOverride, assetLights.Length - 1);
         else if (mandatoryLightOverride == 1)
         {
-            lightsToActivate = 0;
-            SetupRandomLight(assetLights[lightsToActivate]);
+            _lightsToActivate = 0;
+            SetupRandomLight(assetLights[_lightsToActivate]);
             return;
         }
         else
         {
             //if neg 1, then any of them are fair game
-            lightsToActivate = Random.Range(0, assetLights.Length - 1);
+            _lightsToActivate = Random.Range(0, assetLights.Length - 1);
         }
 
         for (int index = 0; index < assetLights.Length; index++)
         {
-            if (index < lightsToActivate)
+            if (index < _lightsToActivate)
                 SetupRandomLight(assetLights[index]);
             else
                 assetLights[index].intensity = 0;

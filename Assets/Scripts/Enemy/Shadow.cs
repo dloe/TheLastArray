@@ -13,7 +13,7 @@ public class Shadow : BaseEnemy
     /// - inherited from BaseEnemy parent
     /// </summary>
     public int teleTime;
-    bool hidden;
+    bool _hidden;
     //public int range = 10;
     bool _InattackingMovement = false;
     float _speed;
@@ -36,8 +36,7 @@ public class Shadow : BaseEnemy
         {
             this.transform.position += temp * Time.deltaTime;
             attacking = true;
-            //  Debug.Log("running coro teleporting");
-            if (!hidden && !_InattackingMovement && Vector3.Distance(this.transform.position, _target.transform.position) > attackDistance / 3)
+            if (!_hidden && !_InattackingMovement && Vector3.Distance(this.transform.position, _target.transform.position) > attackDistance / 3)
             {
                 _InattackingMovement = true;
                 StartCoroutine(Teleport());
@@ -73,7 +72,7 @@ public class Shadow : BaseEnemy
             if(Vector3.Distance(transform.position, hit.point) < 1)
             {
                 readyToAttack = true;
-                hidden = false;
+                _hidden = false;
                 _InattackingMovement = false;
                 //Debug.Log("check");
                 attacking = false;
@@ -82,7 +81,7 @@ public class Shadow : BaseEnemy
             
             
             //Debug.Log("teleporting");
-            hidden = true;
+            _hidden = true;
             Vector3 poi = hit.point;
             //move to that location
 
@@ -98,7 +97,7 @@ public class Shadow : BaseEnemy
             yield return new WaitForSeconds(1.0f);
         }
         speed = _speed;
-        hidden = false;
+        _hidden = false;
 
         // StartCoroutine(CoolDown());
 

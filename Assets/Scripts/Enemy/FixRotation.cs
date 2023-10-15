@@ -13,14 +13,14 @@ public class FixRotation : MonoBehaviour
     /// - Additional rotation behavior for the boss enemy
     /// </summary>
     public bool isBoss = false;
-    float yRot;
+    float _yRot;
     void LateUpdate()
     {
         
         
         if (Mathf.FloorToInt( Player.Instance.playerImage.transform.parent.rotation.eulerAngles.y) == 0)
         {
-            yRot = 180;
+            _yRot = 180;
             if(isBoss)
             {
                 transform.parent.parent.GetComponent<BossEnemy>().imageDirMod = -1;
@@ -33,10 +33,10 @@ public class FixRotation : MonoBehaviour
         }
         else
         {
-            yRot = -Player.Instance.playerImage.transform.parent.rotation.eulerAngles.y;
-            if(yRot == -180)
+            _yRot = -Player.Instance.playerImage.transform.parent.rotation.eulerAngles.y;
+            if(_yRot == -180)
             {
-                yRot += 180;
+                _yRot += 180;
                 if(isBoss)
                 {
                     transform.parent.parent.GetComponent<BossEnemy>().imageDirMod = -1;
@@ -61,6 +61,6 @@ public class FixRotation : MonoBehaviour
             
         }
         
-        transform.rotation = Quaternion.Euler(Player.Instance.transform.parent.rotation.eulerAngles.x, yRot, Player.Instance.transform.parent.rotation.eulerAngles.z);
+        transform.rotation = Quaternion.Euler(Player.Instance.transform.parent.rotation.eulerAngles.x, _yRot, Player.Instance.transform.parent.rotation.eulerAngles.z);
     }
 }

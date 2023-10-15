@@ -15,7 +15,7 @@ public class TrainEntry : Activatable
     /// </summary>
     public static TrainEntry Instance;
     public Text trainText;
-    LocalLevel localLevel;
+    LocalLevel _localLevel;
 
     private void Awake()
     {
@@ -28,18 +28,18 @@ public class TrainEntry : Activatable
 
     public void Start()
     {
-        localLevel = FindObjectOfType<LocalLevel>();
+        _localLevel = FindObjectOfType<LocalLevel>();
     }
 
     public override void Activate()
     {
-        if (!isActivated && Objectives.Instance.mainObjective.complete && localLevel.thisLevelTier != levelTier.level4)
+        if (!isActivated && Objectives.Instance.mainObjective.complete && _localLevel.thisLevelTier != levelTier.level4)
         {
             isActivated = true;
 
-            localLevel.LevelBeat();
+            _localLevel.LevelBeat();
         }
-        else if (!isActivated && Objectives.Instance.mainObjective.complete && localLevel.thisLevelTier == levelTier.level4)
+        else if (!isActivated && Objectives.Instance.mainObjective.complete && _localLevel.thisLevelTier == levelTier.level4)
         {
             Objectives.Instance.objectiveText.text = "You Win!";
             Player.Instance.endScreenText.text = "You Win!";
