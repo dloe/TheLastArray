@@ -786,7 +786,8 @@ public class TileGeneration : MonoBehaviour
             current.Add(tile);
             tile.tileStatus = Tile.TileStatus.room;
 
-            if ((tile.rightNeighbor == null || tile.rightNeighbor.tileStatus != Tile.TileStatus.nullRoom) && (tile.leftNeighbor == null || tile.leftNeighbor.tileStatus != Tile.TileStatus.nullRoom) && (tile.upNeighbor == null || tile.upNeighbor.tileStatus != Tile.TileStatus.nullRoom) && (tile.downNeighbor == null || tile.downNeighbor.tileStatus != Tile.TileStatus.nullRoom))
+            if ((tile.rightNeighbor == null || tile.rightNeighbor.tileStatus != Tile.TileStatus.nullRoom) && (tile.leftNeighbor == null || tile.leftNeighbor.tileStatus != Tile.TileStatus.nullRoom) 
+                && (tile.upNeighbor == null || tile.upNeighbor.tileStatus != Tile.TileStatus.nullRoom) && (tile.downNeighbor == null || tile.downNeighbor.tileStatus != Tile.TileStatus.nullRoom))
             {
                 //if it has no avalible neighbors, we exit this branch
                 length = 0;
