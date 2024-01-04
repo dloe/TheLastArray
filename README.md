@@ -23,7 +23,7 @@ Level Design and Programming: Alex Olah
 Additonal 3D Art and Support: Gillian Cornwall
 
 Music Provided By:
-Dark Fantasy Studios
+Dark Fantasy Studios,
 Phat Phrog Studios
 
 Thanks for playing!
